@@ -11,14 +11,16 @@
             "id": "84a33e49e87f283c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "kanban",
               "state": {
-                "file": "01-Projet/Roadmap.md",
-                "mode": "source",
-                "source": false
+                "file": "01-Projet/Kanban.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": []
+                }
               },
-              "icon": "lucide-file",
-              "title": "Roadmap"
+              "icon": "lucide-trello",
+              "title": "Kanban"
             }
           },
           {
@@ -108,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "01-Projet/Roadmap.md",
+                "file": "01-Projet/Kanban.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +120,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Rétrolien pour Roadmap"
+              "title": "Rétrolien pour Kanban"
             }
           },
           {
@@ -127,12 +129,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "01-Projet/Roadmap.md",
+                "file": "01-Projet/Kanban.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Liens sortants de Roadmap"
+              "title": "Liens sortants de Kanban"
             }
           },
           {
@@ -170,13 +172,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01-Projet/Roadmap.md",
+                "file": "01-Projet/Kanban.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Plan de Roadmap"
+              "title": "Plan de Kanban"
             }
           },
           {
@@ -212,17 +214,35 @@
   },
   "active": "84a33e49e87f283c",
   "lastOpenFiles": [
-    "CLAUDE.md",
-    "00-HOME.md",
-    "03-Concepts/MOC-Concepts.md",
-    "02-Etat-de-l-art/MOC-Etat-de-l-art.md",
-    "01-Projet/Decisions-architecturales.md",
-    "01-Projet/Journal.md",
     "01-Projet/Roadmap.md",
-    "01-Projet/Objectifs.md",
-    "Sans titre.canvas",
-    "Untitled Kanban.md",
+    "00-HOME.md",
     "Excalidraw/Drawing 2026-04-09 14.09.18.excalidraw.md",
+    "02-Etat-de-l-art/MOC-Etat-de-l-art.md",
+    "02-Etat-de-l-art/Agents-LLM/ArXiv-2026-LLM-Agents-Law-Taxonomy.md",
+    "01-Projet/Decisions-architecturales.md",
+    "01-Projet/journal/2026-04-09.md",
+    "02-Etat-de-l-art/Benchmarks/DEEP-PolyU-2026-GraphRAG-Benchmark-ICLR.md",
+    "02-Etat-de-l-art/Benchmarks/Zheng-2025-Stanford-Legal-RAG-Benchmark.md",
+    "02-Etat-de-l-art/Donnees-ouvertes-FR/REGLEX-Fondamentaux.md",
+    "02-Etat-de-l-art/Donnees-ouvertes-FR/Open-Data-Decisions-Justice-Cadre-Legal.md",
+    "02-Etat-de-l-art/Donnees-ouvertes-FR/API-Legifrance-DILA.md",
+    "02-Etat-de-l-art/Donnees-ouvertes-FR/Open-Data-Justice-Administrative-CE.md",
+    "02-Etat-de-l-art/Donnees-ouvertes-FR/API-Judilibre-Cour-Cassation.md",
+    "02-Etat-de-l-art/Prediction-citations/Wang-2022-Legal-Judgment-Heterogeneous-Graphs.md",
+    "02-Etat-de-l-art/Prediction-citations/ACL-2025-LeCNet-Citation-Network.md",
+    "02-Etat-de-l-art/Prediction-citations/Liu-2023-ML-LJP-Multi-Law-Judgment.md",
+    "02-Etat-de-l-art/Prediction-citations/Tang-2024-CaseLink-Inductive-Graph-Learning.md",
+    "02-Etat-de-l-art/Prediction-citations/Wendlinger-2025-Joint-Legal-Citation-Prediction.md",
+    "02-Etat-de-l-art/Agents-LLM/ScienceDirect-2025-LLMs-Legal-Reasoning.md",
+    "02-Etat-de-l-art/Agents-LLM/Zhang-2025-Prompt-Engineering-MultiDim-KG.md",
+    "02-Etat-de-l-art/Agents-LLM/Survey-2025-Single-Multi-Agent-Legal.md",
+    "02-Etat-de-l-art/NLP-juridique/Martin-2020-CamemBERT.md",
+    "02-Etat-de-l-art/NLP-juridique/Ariai-2025-NLP-Legal-Domain-Survey.md",
+    "02-Etat-de-l-art/NLP-juridique/Karamitsos-2025-LegNER-Legal-NER.md",
+    "02-Etat-de-l-art/NLP-juridique/Leitner-2019-Fine-Grained-NER-Legal-German.md",
+    "02-Etat-de-l-art/Donnees-ouvertes-FR",
+    "etat_art_kg_juridique.xlsx",
+    "Sans titre.canvas",
     "Sans titre 4.base",
     "Excalidraw",
     "Sans titre 3.base",
@@ -230,26 +250,8 @@
     "Sans titre 2.base",
     "Sans titre 1.base",
     "Sans titre 1.canvas",
-    "08-Templates/Template-Article.md",
     "Sans titre.base",
     "09-Archives/attachments",
-    "09-Archives/pdfs",
-    "09-Archives",
-    "08-Templates/Template-Question.md",
-    "08-Templates/Template-Journal.md",
-    "08-Templates/Template-Decision.md",
-    "08-Templates/Template-Concept.md",
-    "08-Templates",
-    "07-Redaction/MOC-Redaction.md",
-    "06-Analyses/MOC-Analyses.md",
-    "05-Technique/MOC-Technique.md",
-    "04-Donnees/MOC-Donnees.md",
-    "01-Projet/journal/2026-04-09.md",
-    "vault/01-Projet/journal/2026-04-09.md",
-    "vault/08-Templates/Template-Question.md",
-    "vault/08-Templates/Template-Journal.md",
-    "vault/08-Templates/Template-Decision.md",
-    "vault/08-Templates/Template-Concept.md",
-    "vault/08-Templates/Template-Article.md"
+    "09-Archives/pdfs"
   ]
 }
