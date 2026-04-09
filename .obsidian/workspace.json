@@ -1,0 +1,255 @@
+{
+  "main": {
+    "id": "5768bc5cbc8a5942",
+    "type": "split",
+    "children": [
+      {
+        "id": "107cb7e86077a269",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "84a33e49e87f283c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01-Projet/Roadmap.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Roadmap"
+            }
+          },
+          {
+            "id": "ef903308305aabc2",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CLAUDE.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "CLAUDE"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "3de31e7aad831b5a",
+    "type": "split",
+    "children": [
+      {
+        "id": "06f872088c7101ac",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7cadf2a03948b970",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorateur de fichiers"
+            }
+          },
+          {
+            "id": "bcd5297ce1e8b622",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Rechercher"
+            }
+          },
+          {
+            "id": "7c98d6cc59957cce",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Signets"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e62a32ef59f0dce7",
+    "type": "split",
+    "children": [
+      {
+        "id": "645068c0dd5cc906",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c44d6b7e1be2e2df",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "01-Projet/Roadmap.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Rétrolien pour Roadmap"
+            }
+          },
+          {
+            "id": "512fe532e3129bf5",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "01-Projet/Roadmap.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Liens sortants de Roadmap"
+            }
+          },
+          {
+            "id": "f2af7a4b089689b3",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Mots-clés"
+            }
+          },
+          {
+            "id": "234bca3bc1ceba3c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Toutes les propriétés"
+            }
+          },
+          {
+            "id": "0a342f36d4b70a07",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "01-Projet/Roadmap.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Plan de Roadmap"
+            }
+          },
+          {
+            "id": "0604c23fc87ad73a",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "horizontal",
+    "width": 533.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Créer une nouvelle toile": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false,
+      "bases:Créer une nouvelle base": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "obsidian-git:Open Git source control": false,
+      "obsidian-kanban:Create new board": false
+    }
+  },
+  "active": "84a33e49e87f283c",
+  "lastOpenFiles": [
+    "CLAUDE.md",
+    "00-HOME.md",
+    "03-Concepts/MOC-Concepts.md",
+    "02-Etat-de-l-art/MOC-Etat-de-l-art.md",
+    "01-Projet/Decisions-architecturales.md",
+    "01-Projet/Journal.md",
+    "01-Projet/Roadmap.md",
+    "01-Projet/Objectifs.md",
+    "Sans titre.canvas",
+    "Untitled Kanban.md",
+    "Excalidraw/Drawing 2026-04-09 14.09.18.excalidraw.md",
+    "Sans titre 4.base",
+    "Excalidraw",
+    "Sans titre 3.base",
+    "Sans titre 2.canvas",
+    "Sans titre 2.base",
+    "Sans titre 1.base",
+    "Sans titre 1.canvas",
+    "08-Templates/Template-Article.md",
+    "Sans titre.base",
+    "09-Archives/attachments",
+    "09-Archives/pdfs",
+    "09-Archives",
+    "08-Templates/Template-Question.md",
+    "08-Templates/Template-Journal.md",
+    "08-Templates/Template-Decision.md",
+    "08-Templates/Template-Concept.md",
+    "08-Templates",
+    "07-Redaction/MOC-Redaction.md",
+    "06-Analyses/MOC-Analyses.md",
+    "05-Technique/MOC-Technique.md",
+    "04-Donnees/MOC-Donnees.md",
+    "01-Projet/journal/2026-04-09.md",
+    "vault/01-Projet/journal/2026-04-09.md",
+    "vault/08-Templates/Template-Question.md",
+    "vault/08-Templates/Template-Journal.md",
+    "vault/08-Templates/Template-Decision.md",
+    "vault/08-Templates/Template-Concept.md",
+    "vault/08-Templates/Template-Article.md"
+  ]
+}
