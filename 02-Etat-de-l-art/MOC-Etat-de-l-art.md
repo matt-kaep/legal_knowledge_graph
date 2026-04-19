@@ -47,7 +47,7 @@ FROM "02-Etat-de-l-art/Ontologies-standards"
 SORT pertinence ASC, annee DESC
 ```
 
-### GraphRAG (8 articles)
+### GraphRAG (9 articles)
 
 ```dataview
 TABLE auteurs as Auteurs, annee as Annee, status as Statut, pertinence as Pertinence

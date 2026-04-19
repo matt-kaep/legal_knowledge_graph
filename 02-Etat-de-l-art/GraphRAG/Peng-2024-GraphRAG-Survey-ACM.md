@@ -1,16 +1,18 @@
 ---
-tags: [article, graphrag]
-categorie: "GraphRAG"
+tags:
+  - article
+  - graphrag
+categorie: GraphRAG
 titre_complet: "Graph Retrieval-Augmented Generation: A Survey (ACM TOIS)"
-auteurs: "Peng et al."
+auteurs: Peng et al.
 annee: 2024
-type: "Survey"
+type: Survey
 venue: ""
-url: "arxiv.org/abs/2408.08921"
+url: https://dl.acm.org/doi/pdf/10.1145/3777378
 doi: ""
 pdf_local: ""
-status: "a-lire"
-pertinence: "haute"
+status: a-lire
+pertinence: haute
 created: 2026-04-09
 modified: 2026-04-09
 ---

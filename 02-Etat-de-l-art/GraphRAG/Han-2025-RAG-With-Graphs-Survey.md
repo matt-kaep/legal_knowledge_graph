@@ -1,16 +1,18 @@
 ---
-tags: [article, graphrag]
-categorie: "GraphRAG"
-titre_complet: "Retrieval-Augmented Generation with Graphs (GraphRAG)"
-auteurs: "Han et al."
+tags:
+  - article
+  - graphrag
+categorie: GraphRAG
+titre_complet: Retrieval-Augmented Generation with Graphs (GraphRAG)
+auteurs: Han et al.
 annee: 2025
-type: "Survey"
+type: Survey
 venue: ""
-url: "arxiv.org/abs/2501.00309"
+url: https://arxiv.org/pdf/2501.13958
 doi: ""
 pdf_local: ""
-status: "a-lire"
-pertinence: "haute"
+status: a-lire
+pertinence: haute
 created: 2026-04-09
 modified: 2026-04-09
 ---

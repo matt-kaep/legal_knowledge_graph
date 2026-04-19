@@ -6,7 +6,6 @@ kanban-plugin: basic
 
 ## Backlog
 
-- [ ] Lire les papiers KG juridique (Belikov, Guha, Li, d'Amato, Colombo, Dhani, Neo4j, Lynx, NyayGraph) #phase-0
 - [ ] Lire les papiers Ontologies & Standards (ELI, ELI-I, ECLI, Loutsaris, LLI, LegalRuleML, LKIF) #phase-0
 - [ ] Lire les papiers GraphRAG (Peng survey, Han survey, Microsoft, Awesome-GraphRAG, arXiv 2026, 47Billion, Yang, Scaffidi) #phase-0
 - [ ] Lire les papiers Construction KG + LLMs (Bian survey, Ontogenia, EDC) #phase-0
@@ -41,7 +40,7 @@ kanban-plugin: basic
 
 ## En cours
 
-- [ ] Structurer le vault et la roadmap #phase-0
+- [ ] Lire les papiers KG juridique (Belikov, Guha, Li, d'Amato, Colombo, Dhani, Neo4j, Lynx, NyayGraph) #phase-0
 
 ## Termine
 
@@ -49,6 +48,7 @@ kanban-plugin: basic
 - [x] Recherche bibliographique initiale (50 sources) #phase-0
 - [x] Construire le tableau etat de l'art #phase-0
 - [x] Creer la structure du vault Obsidian #phase-0
+- [x] Structurer le vault et la roadmap #phase-0
 
 
 %% kanban:settings

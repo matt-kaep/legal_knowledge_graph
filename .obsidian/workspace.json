@@ -24,20 +24,49 @@
             }
           },
           {
-            "id": "ef903308305aabc2",
+            "id": "75391ed4693b97da",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "02-Etat-de-l-art/KG-juridique/Li-2024-CLKG-Construction-LLM.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CLAUDE"
+              "title": "Li-2024-CLKG-Construction-LLM"
+            }
+          },
+          {
+            "id": "3603cd5cd460b29e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "02-Etat-de-l-art/KG-juridique/DAmato-2025-KG-Violence-Women-CEDH.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "DAmato-2025-KG-Violence-Women-CEDH"
+            }
+          },
+          {
+            "id": "f6c441c313a2745a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "02-Etat-de-l-art/GraphRAG/Zhang-2025-GraphRAG-Survey-Customized-LLMs.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Zhang-2025-GraphRAG-Survey-Customized-LLMs"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -94,7 +123,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "e62a32ef59f0dce7",
@@ -110,7 +139,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "01-Projet/Kanban.md",
+                "file": "02-Etat-de-l-art/GraphRAG/Zhang-2025-GraphRAG-Survey-Customized-LLMs.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -120,7 +149,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Rétrolien pour Kanban"
+              "title": "Rétrolien pour Zhang-2025-GraphRAG-Survey-Customized-LLMs"
             }
           },
           {
@@ -129,12 +158,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "01-Projet/Kanban.md",
+                "file": "02-Etat-de-l-art/GraphRAG/Zhang-2025-GraphRAG-Survey-Customized-LLMs.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Liens sortants de Kanban"
+              "title": "Liens sortants de Zhang-2025-GraphRAG-Survey-Customized-LLMs"
             }
           },
           {
@@ -172,13 +201,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01-Projet/Kanban.md",
+                "file": "02-Etat-de-l-art/GraphRAG/Zhang-2025-GraphRAG-Survey-Customized-LLMs.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Plan de Kanban"
+              "title": "Plan de Zhang-2025-GraphRAG-Survey-Customized-LLMs"
             }
           },
           {
@@ -196,7 +225,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 533.5
+    "width": 533.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -212,46 +242,50 @@
       "obsidian-kanban:Create new board": false
     }
   },
-  "active": "84a33e49e87f283c",
+  "active": "f6c441c313a2745a",
   "lastOpenFiles": [
-    "01-Projet/Roadmap.md",
-    "00-HOME.md",
-    "Excalidraw/Drawing 2026-04-09 14.09.18.excalidraw.md",
-    "02-Etat-de-l-art/MOC-Etat-de-l-art.md",
-    "02-Etat-de-l-art/Agents-LLM/ArXiv-2026-LLM-Agents-Law-Taxonomy.md",
-    "01-Projet/Decisions-architecturales.md",
-    "01-Projet/journal/2026-04-09.md",
+    "02-Etat-de-l-art/Benchmarks/Hector-AI-Benchmark-Interne.md",
+    "02-Etat-de-l-art/Benchmarks/Louis-2022-BSARD.md",
+    "05-Technique/methodologies/Benchmark-KG-Juridique-FR-Design.md",
+    "02-Etat-de-l-art/Donnees-ouvertes-FR/VinceGx33-2025-Mistral-Legal-French-Dataset.md",
+    "02-Etat-de-l-art/NLP-juridique/Colombo-2024-Saul-Instruct.md",
+    "02-Etat-de-l-art/Benchmarks/Alhajar-2025-Les-Audits-Affaires.md",
+    "03-Concepts/Format-QCM-benchmark-juridique-FR.md",
+    "02-Etat-de-l-art/Benchmarks/Niklaus-2023-LEXTREME.md",
+    "02-Etat-de-l-art/Benchmarks/Zheng-2021-CaseHOLD.md",
+    "02-Etat-de-l-art/Benchmarks/Chalkidis-2022-LexGLUE.md",
+    "02-Etat-de-l-art/Benchmarks/Guha-2023-LegalBench.md",
+    "02-Etat-de-l-art/Benchmarks/Harvard-LIL-2024-Open-French-Law-RAG.md",
+    "01-Projet/journal/2026-04-14.md",
+    "Pasted image 20260413131450.png",
+    "02-Etat-de-l-art/GraphRAG/Zhang-2025-GraphRAG-Survey-Customized-LLMs.md",
+    "02-Etat-de-l-art/GraphRAG/Yang-2024-Legal-Document-RAG-MultiAgent.md",
+    "02-Etat-de-l-art/GraphRAG/Scaffidi-2025-GraphRAG-KG-Schema-Impact.md",
+    "02-Etat-de-l-art/GraphRAG/Peng-2024-GraphRAG-Survey-ACM.md",
+    "02-Etat-de-l-art/GraphRAG/Microsoft-2024-GraphRAG.md",
+    "02-Etat-de-l-art/Construction-KG-LLM/Bian-2025-LLM-KG-Construction-Survey.md",
     "02-Etat-de-l-art/Benchmarks/DEEP-PolyU-2026-GraphRAG-Benchmark-ICLR.md",
-    "02-Etat-de-l-art/Benchmarks/Zheng-2025-Stanford-Legal-RAG-Benchmark.md",
-    "02-Etat-de-l-art/Donnees-ouvertes-FR/REGLEX-Fondamentaux.md",
-    "02-Etat-de-l-art/Donnees-ouvertes-FR/Open-Data-Decisions-Justice-Cadre-Legal.md",
-    "02-Etat-de-l-art/Donnees-ouvertes-FR/API-Legifrance-DILA.md",
-    "02-Etat-de-l-art/Donnees-ouvertes-FR/Open-Data-Justice-Administrative-CE.md",
-    "02-Etat-de-l-art/Donnees-ouvertes-FR/API-Judilibre-Cour-Cassation.md",
-    "02-Etat-de-l-art/Prediction-citations/Wang-2022-Legal-Judgment-Heterogeneous-Graphs.md",
-    "02-Etat-de-l-art/Prediction-citations/ACL-2025-LeCNet-Citation-Network.md",
-    "02-Etat-de-l-art/Prediction-citations/Liu-2023-ML-LJP-Multi-Law-Judgment.md",
-    "02-Etat-de-l-art/Prediction-citations/Tang-2024-CaseLink-Inductive-Graph-Learning.md",
-    "02-Etat-de-l-art/Prediction-citations/Wendlinger-2025-Joint-Legal-Citation-Prediction.md",
-    "02-Etat-de-l-art/Agents-LLM/ScienceDirect-2025-LLMs-Legal-Reasoning.md",
-    "02-Etat-de-l-art/Agents-LLM/Zhang-2025-Prompt-Engineering-MultiDim-KG.md",
+    "01-Projet/presentations/Week-1-2026-04-13-Presentation-Superviseur.md",
+    "01-Projet/presentations/Week-1-2026-04-13-Presentation-Superviseur.tex",
+    "01-Projet/presentations",
+    "Pasted image 20260413131735.png",
+    "Pasted image 20260413131636.png",
+    "Pasted image 20260413131558.png",
+    "02-Etat-de-l-art/GraphRAG/Han-2025-RAG-With-Graphs-Survey.md",
+    "02-Etat-de-l-art/Construction-KG-LLM/Zhang-2024-EDC-Extract-Define-Canonicalize.md",
     "02-Etat-de-l-art/Agents-LLM/Survey-2025-Single-Multi-Agent-Legal.md",
-    "02-Etat-de-l-art/NLP-juridique/Martin-2020-CamemBERT.md",
-    "02-Etat-de-l-art/NLP-juridique/Ariai-2025-NLP-Legal-Domain-Survey.md",
-    "02-Etat-de-l-art/NLP-juridique/Karamitsos-2025-LegNER-Legal-NER.md",
-    "02-Etat-de-l-art/NLP-juridique/Leitner-2019-Fine-Grained-NER-Legal-German.md",
-    "02-Etat-de-l-art/Donnees-ouvertes-FR",
-    "etat_art_kg_juridique.xlsx",
+    "02-Etat-de-l-art/Agents-LLM/ScienceDirect-2025-LLMs-Legal-Reasoning.md",
+    "02-Etat-de-l-art/Agents-LLM/ArXiv-2026-LLM-Agents-Law-Taxonomy.md",
+    "05-Technique/methodologies",
+    "raw/web-clips",
+    "raw/datasets",
+    "raw/assets",
+    "raw/articles",
+    "raw",
+    "mdpi.com/2078-2489/15/11",
+    "mdpi.com/2078-2489/15",
     "Sans titre.canvas",
-    "Sans titre 4.base",
-    "Excalidraw",
-    "Sans titre 3.base",
     "Sans titre 2.canvas",
-    "Sans titre 2.base",
-    "Sans titre 1.base",
-    "Sans titre 1.canvas",
-    "Sans titre.base",
-    "09-Archives/attachments",
-    "09-Archives/pdfs"
+    "Sans titre 1.canvas"
   ]
 }

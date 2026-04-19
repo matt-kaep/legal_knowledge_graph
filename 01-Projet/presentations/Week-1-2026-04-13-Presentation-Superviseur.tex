@@ -1,0 +1,556 @@
+% !TEX program = pdflatex
+% Presentation superviseur -- Week 1 -- 2026-04-13
+% Knowledge Graph juridique francais
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, fit, backgrounds}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{footnote}{size=\tiny}
+
+% Couleurs custom
+\definecolor{accent}{RGB}{41, 92, 155}
+\definecolor{accentsoft}{RGB}{230, 238, 247}
+\definecolor{warn}{RGB}{200, 80, 40}
+
+% Boxes
+\newcommand{\keybox}[1]{%
+  \begin{center}
+  \colorbox{accentsoft}{\parbox{0.9\linewidth}{\centering #1}}
+  \end{center}}
+
+% Metadata
+\title[KG juridique FR]{Construction d'un Knowledge Graph juridique français}
+\subtitle{Point d'avancement --- Week 1}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{13 avril 2026}
+
+\begin{document}
+
+% ============================================================
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ============================================================
+\begin{frame}{Plan}
+  \tableofcontents
+\end{frame}
+
+% ============================================================
+\section{Rappel du besoin}
+
+\begin{frame}{Comment raisonne un juriste ? (1/2)}
+  \keybox{Pour gagner un argument, il faut \textbf{3 choses} : une \textbf{règle}, des \textbf{faits}, et une \textbf{démonstration} que la règle s'applique aux faits. La \textbf{jurisprudence} fait le pont.}
+
+  \vspace{0.3em}
+  \textbf{Exemple --- le voisin bruyant}
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \footnotesize
+    \begin{itemize}
+      \item \textit{Faits} : mon voisin fait du bruit tous les soirs à 23h
+      \item \textit{Règle} (art. 1240 C. civ.) : "toute faute causant un dommage oblige à réparer"
+      \item \textit{Problème} : est-ce que "bruit à 23h" = une faute ?
+      \item \textit{Jurisprudence} : Cass. 2018 --- les nuisances sonores répétées après 22h constituent un trouble anormal
+      \item $\Rightarrow$ \textit{Argument} : règle + JP + faits = conclusion
+    \end{itemize}
+
+    \column{0.45\textwidth}
+    \centering
+    \footnotesize\textbf{Analogie}
+
+    \vspace{0.3em}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{l l}
+      \toprule
+      \scriptsize\textbf{Science} & \scriptsize\textbf{Droit} \\
+      \midrule
+      \scriptsize Théorie            & \scriptsize Règle (article) \\
+      \scriptsize Expériences passées & \scriptsize Arrêts passés (JP) \\
+      \scriptsize Observation         & \scriptsize Faits de l'espèce \\
+      \scriptsize Prédiction validée  & \scriptsize Argument juridique \\
+      \bottomrule
+    \end{tabular}
+  \end{columns}
+
+  \vspace{0.4em}
+  \begin{exampleblock}{Important}
+    \small Un juriste qui plaide = un chercheur qui doit citer \textbf{tous les articles et toutes les expériences passées pertinentes} pour convaincre.
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Architecture du raisonnement \& outil cible (2/2)}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \textbf{Architecture réelle (un graphe)}
+    \vspace{0.2em}
+
+    \centering
+    \begin{tikzpicture}[scale=0.75, transform shape,
+        arg/.style={rectangle, rounded corners, draw=accent, fill=accentsoft, thick, minimum width=2cm, minimum height=0.7cm, font=\small},
+        art/.style={rectangle, draw=accent!80, thick, minimum width=1.6cm, minimum height=0.6cm, font=\scriptsize},
+        jp/.style={ellipse, draw=accent!80, thick, minimum width=1.6cm, minimum height=0.6cm, font=\scriptsize}]
+      \node[arg] (a) at (0,2.3) {Argument};
+      \node[art] (art1) at (-2.2,0.6) {Article};
+      \node[art] (art2) at (2.2,0.6) {Article};
+      \node[jp] (jp1) at (-2.2,-1.1) {Arrêt};
+      \node[jp] (jp2) at (2.2,-1.1) {Arrêt};
+      \draw[-{Stealth}, thick] (a) -- (art1);
+      \draw[-{Stealth}, thick] (a) -- (art2);
+      \draw[-{Stealth}, thick] (a) -- (jp1);
+      \draw[-{Stealth}, thick] (a) -- (jp2);
+      \draw[-{Stealth}, dashed] (jp1) -- (art1) node[midway, left, font=\tiny] {applique};
+      \draw[-{Stealth}, dashed] (jp2) -- (art2) node[midway, right, font=\tiny] {applique};
+      \draw[<->, dashed] (jp1) -- (jp2) node[midway, below, font=\tiny] {confirme/casse};
+    \end{tikzpicture}
+
+    \vspace{0.3em}
+    \footnotesize\textit{La JP ne fait pas que valider : elle interprète, qualifie les faits, et peut même créer la règle.}
+
+    \column{0.5\textwidth}
+    \textbf{Pourquoi c'est dur à automatiser}
+    \begin{itemize}\footnotesize
+      \item Un article seul ne suffit jamais
+      \item 10 arrêts disent oui, 3 disent non $\rightarrow$ tout connaître
+      \item Les arrêts se citent entre eux $\rightarrow$ un vrai réseau
+      \item Des heures de travail manuel pour un juriste
+    \end{itemize}
+
+    \vspace{0.3em}
+    \textbf{Outil cible}
+    \keybox{\small Pour un argument donné, retrouver \textbf{les fondements} pertinents et \textbf{la jurisprudence} applicable (y compris contraire).}
+
+    \textbf{Utilisateurs} : avocats, magistrats, juristes d'entreprise, particuliers\\
+    \textbf{Gain} : temps $\cdot$ exhaustivité $\cdot$ traçabilité
+  \end{columns}
+  \vspace{1em}                                                                                        
+  \footnotesize\textcolor{gray}{\textit{Vocabulaire : un \textbf{fondement} = un article de loi (ou un principe) $\cdot$ un \textbf{arrêt} = une décision de justice, composante de la jurisprudence.}}
+\end{frame}
+
+% ============================================================
+\section{Problématiques}
+
+\begin{frame}{Problématiques}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \textbf{Problématique métier}
+    \begin{itemize}\footnotesize
+      \item Recherche juridique = raisonnement \textbf{multi-saut} (article $\rightarrow$ arrêt $\rightarrow$ article cité $\rightarrow$ JP interprétative)
+      \item Le RAG vectoriel classique rate ces chaînes et ne restitue pas le raisonnement
+      \item {Traçabilité} - sources citables
+      \item {Transparence} - pourquoi cette remontée ?
+    \end{itemize}
+
+    \column{0.5\textwidth}
+    \textbf{Problématique technique}
+    \begin{itemize}\footnotesize
+      \item Construire un KG juridique FR depuis Judilibre
+      \item Garantir la qualité d'extraction LLM (Pas d'hallucinations)
+      \item \textbf{Maintenabilité} : ajouter de nouveaux arrêts / articles sans tout reconstruire 
+      \item \textbf{Temporalité} : evolution dans le temps des arrêts et articles
+    \end{itemize}
+  \end{columns}
+
+  \vspace{0.5em}
+  \begin{center}
+    \textbf{Question de recherche}
+  \end{center}
+  \keybox{Dans quelle mesure une architecture GraphRAG hybride peut-elle améliorer la recherche juridique française en termes de \textbf{pertinence des arrêts}, \textbf{performance} et \textbf{explicabilité} du raisonnement ?}
+\end{frame}
+
+% ============================================================
+\section{Données disponibles}
+
+\begin{frame}{Données disponibles --- sources et éléments extractibles}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \begin{block}{\small Articles de loi --- \textit{Légifrance}}
+      \centering
+
+      \vspace{0.4em}
+      \footnotesize\textbf{Éléments identifiés}
+      \begin{itemize}\scriptsize
+        \item \textbf{Code} (Civil, Pénal, Travail\ldots)
+        \item \textbf{Livre} / Titre / Chapitre / Section
+        \item \textbf{Article} (numéro, libellé)
+        \item \textbf{Contenu} (texte normatif)
+        \item \textbf{Versions} (entrée en vigueur, abrogation)
+      \end{itemize}
+    \end{block}
+
+    \column{0.48\textwidth}
+    \begin{block}{\small Arrêts / Jurisprudence --- \textit{Judilibre}}
+      \centering
+
+
+      \vspace{0.4em}
+      \footnotesize\textbf{Éléments identifiés}
+      \begin{itemize}\scriptsize
+        \item \textbf{Juridiction} (Cass., CE, CA\ldots) et formation
+        \item \textbf{Date} et numéro de pourvoi
+        \item \textbf{Articles cités} (fondements)
+        \item \textbf{Moyens / arguments} des parties
+        \item \textbf{Motifs} de la décision
+        \item \textbf{Dispositif} (la décision elle-même)
+      \end{itemize}
+    \end{block}
+  \end{columns}
+
+  \vspace{0.3em}
+  \keybox{\small Ces éléments structurés = \textbf{matière première} du KG juridique.}
+\end{frame}
+
+% ============================================================
+\section{État de l'art}
+
+\begin{frame}{État de l'art --- cartographie}
+  \centering
+  \begin{tikzpicture}[scale=0.9, transform shape,
+      center/.style={circle, draw=accent, fill=accentsoft, thick, minimum width=2.2cm, align=center, font=\small\bfseries},
+      branch/.style={rectangle, rounded corners, draw=accent!60, thick, minimum width=2.6cm, align=center, font=\footnotesize}]
+    \node[center] (c) at (0,0) {KG juridique\\FR};
+    \node[branch] (b1) at (-4.5,2) {KG juridiques\\{\tiny Belikov, D'Amato, LYNX}};
+    \node[branch] (b2) at (0,2.5) {GraphRAG\\{\tiny Edge, Zhang, Peng}};
+    \node[branch] (b3) at (4.5,2) {Construction KG + LLM\\{\tiny Bian 2025}};
+    \node[branch] (b4) at (-4.5,-2) {NLP juridique FR\\{\tiny JuriBERT, CamemBERT}};
+    \node[branch] (b5) at (0,-2.5) {Ontologies\\{\tiny ELI, AKN, LKIF, ECLI}};
+    \node[branch] (b6) at (4.5,-2) {Données FR\\{\tiny Judilibre, Légifrance}};
+    \foreach \x in {b1,b2,b3,b4,b5,b6} \draw[-, thick, accent!50] (c) -- (\x);
+  \end{tikzpicture}
+
+  \vspace{0.3em}
+  \footnotesize \textbf{$\sim$50 sources cataloguées}, fichage ciblé en cours --- balayage large avant positionnement.
+\end{frame}
+
+% ============================================================
+\section{GraphRAG --- concepts clés}
+
+\begin{frame}{GraphRAG --- les 3 types de Knowledge Graph}
+  \textit{D'après Zhang et al. 2025, Figure 2}
+
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \begin{block}{\small Indexation}
+    \footnotesize
+    DBpedia, YAGO, Wikidata\\[0.3em]
+    KG généralistes servant d'\textbf{index} / référence transversale\\
+    Larges, peu spécialisés\\
+    Construction manuelle, encyclopédique
+    \end{block}
+
+    \column{0.48\textwidth}
+    \begin{block}{\small Knowledge container}
+    \footnotesize
+    UMLS (médical), LYNX (droit EU)\\[0.3em]
+    KG experts portant la \textbf{connaissance métier} dense\\
+    Ontologie formelle\\
+    Construction coûteuse (experts humains)
+    \end{block}
+  \end{columns}
+
+  \vspace{0.6em}
+  \begin{columns}
+    \column{0.7\textwidth}
+    \begin{alertblock}{\small Hybrid --- corpus-based \textit{(notre choix)}}
+    \footnotesize
+    Microsoft GraphRAG, LightRAG, HippoRAG\\[0.3em]
+    KG \textbf{extrait par LLM} depuis un corpus de texte, éventuellement guidé par une ontologie légère\\
+    $\Rightarrow$ souplesse du LLM $+$ structure d'une ontologie métier
+    \end{alertblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{GraphRAG --- les 3 phases d'un pipeline}
+  \textit{D'après Zhang et al. 2025, Figure 3}
+
+  \vspace{0.5em}
+  \begin{enumerate}
+    \item \textbf{Knowledge Organization} (G-Indexing)
+    \begin{itemize}\footnotesize
+      \item chunking, extraction entités/relations, construction graphe, communautés
+    \end{itemize}
+
+    \item \textbf{Knowledge Retrieval} (G-Retrieval)
+    \begin{itemize}\footnotesize
+      \item matching requête $\rightarrow$ graphe
+      \item stratégies : similarité sémantique, raisonnement logique, GNN, LLM, multi-round, hybride
+    \end{itemize}
+
+    \item \textbf{Knowledge Integration} (G-Generation)
+    \begin{itemize}\footnotesize
+      \item injection dans le LLM : in-context, fine-tuning (node/path/subgraph), refinement
+    \end{itemize}
+  \end{enumerate}
+
+  \vspace{0.3em}
+  \begin{exampleblock}{Positionnement des papiers pivots}
+    \footnotesize
+    \textbf{Edge 2024} : pipeline complet (1+3) $\bullet$ \textbf{Zhang 2025} : taxonomie (1+2+3)\\
+    \textbf{Belikov-Raoult 2025} : phase 1 sur Cassation FR $\bullet$ \textbf{D'Amato 2025} : phase 1 + ontologie
+  \end{exampleblock}
+\end{frame}
+
+% ============================================================
+\section{Papiers lus en détail}
+
+\begin{frame}{Papiers lus --- Microsoft GraphRAG}
+  \begin{columns}
+    \column{0.75\textwidth}
+    \begin{block}{\small Edge et al. 2024 --- Microsoft GraphRAG}
+    \footnotesize
+    \textbf{Idée} : KG extrait par LLM + résumés de communautés Leiden $\rightarrow$ QFS map-reduce
+
+    \vspace{0.3em}
+    \textbf{Apports}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item Pipeline d'extraction complet (chunking $\rightarrow$ entités/relations $\rightarrow$ \textit{gleanings})
+      \item Hiérarchie de communautés (Leiden récursif) + résumés multi-niveaux
+      \item Inférence map-reduce pour sensemaking (QFS)
+      \item Évaluation LLM-as-judge (comprehensiveness, diversity, empowerment)
+    \end{itemize}
+    \textbf{Limites}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item Pas de métrique de factualité / traçabilité
+      \item Coût de construction élevé (multiples appels LLM)
+    \end{itemize}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Papiers lus --- Surveys GraphRAG}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.45\textwidth}
+    \begin{block}{\small Zhang et al. 2025 --- Survey GraphRAG for Customized LLMs}
+    \scriptsize
+    \textbf{Idée} : taxonomie unifiée du GraphRAG en 3 phases pour LLMs spécialisés.
+
+    \vspace{0.3em}
+    \textbf{Apports}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item \textbf{3 types de KG} : open-domain, domain-specific, hybride
+      \item \textbf{3 phases} : Knowledge Organization $\rightarrow$ Retrieval $\rightarrow$ Integration
+      \item Table comparative des stratégies de retrieval (similarité, logique, GNN, LLM, multi-round)
+      \item Cartographie des techniques d'intégration (in-context vs fine-tuning)
+    \end{itemize}
+    \textbf{Rôle} : \textbf{boussole} pour classer toutes les approches
+    \end{block}
+
+    \column{0.45\textwidth}
+    \begin{block}{\small Peng et al. 2024 --- GraphRAG Survey (ACM TOIS)}
+    \scriptsize
+    \textbf{Idée} : première survey systématique formalisant le workflow GraphRAG.
+
+    \vspace{0.3em}
+    \textbf{Apports}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item Formalisation du workflow \textbf{G-Indexing / G-Retrieval / G-Generation}
+      \item Panorama des applications (QA, sciences, industrie)
+      \item Recensement des benchmarks et des cas industriels
+      \item Couverture historique large
+    \end{itemize}
+    \textbf{Rôle} : ancrage académique --- complément historique du survey Zhang
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Papiers lus --- KG juridiques}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.45\textwidth}
+    \begin{block}{\small Belikov \& Raoult 2025 --- KG Cassation FR}
+    \scriptsize
+    \textbf{Idée} : KG construit à partir de \textbf{2820 pourvois pénaux} via Judilibre.
+
+    \vspace{0.3em}
+    \textbf{Apports}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item Ontologie pénale \textbf{sur-mesure} (LegalRuleML/LKIF jugés insuffisants)
+      \item Pattern \textit{"Person A → Crime B → Punishment C → texte/précédent"}
+      \item Comparaison \textbf{property graph vs RDF}
+      \item Précision 93\% / rappel 89\% (annoncés)
+    \end{itemize}
+    \textbf{Limites}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item Métriques peu documentées, pas de code/dataset publié
+      \item Limité au pénal --- pas de GraphRAG
+    \end{itemize}
+    \textbf{Pertinence} : \textbf{seul KG sur la Cassation FR} --- preuve de faisabilité
+    \end{block}
+
+    \column{0.45\textwidth}
+    \begin{block}{\small D'Amato et al. 2025 --- KG CEDH (violences femmes)}
+    \scriptsize
+    \textbf{Idée} : comparaison \textbf{bottom-up vs LLM} sur le même corpus (HUDOC, 65 jugements).
+
+    \vspace{0.3em}
+    \textbf{Apports}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item Méthodologie \textbf{CQ-driven} (13 Competency Questions)
+      \item Bottom-up : 10\,325 triples, ontologie riche, 0 hallucination
+      \item LLM (GPT-4o + Mixtral) : T-box seule, score CQ 61.5\%
+      \item Ressource \textbf{FAIR} (Zenodo, GitHub, SPARQL endpoint)
+    \end{itemize}
+    \textbf{Limites}
+    \begin{itemize}\setlength\itemsep{-0.1em}
+      \item Anglais uniquement, petit corpus
+      \item LLM ne peuple pas d'instances
+    \end{itemize}
+    \textbf{Pertinence} : méthodologie transposable --- modèle d'évaluation
+    \end{block}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Synthèse}
+
+\begin{frame}{Gaps identifiés}
+  \begin{enumerate}
+    \item Très peu de \textbf{KG juridiques FR} ouverts et réutilisables
+    \item GraphRAG peu évalué sur critères \textbf{juridiquement pertinents} (factualité, traçabilité, revirements)
+    \item Ontologies FR fragmentées (ELI, AKN, LKIF\ldots) --- pas unifiées JP + articles
+    \item Benchmarks LLMs en droit FR limités (peu de tâches multi-saut)
+    \item Peu de travaux sur la \textbf{temporalité} / versioning dans les KG juridiques
+  \end{enumerate}
+
+  \vspace{0.5em}
+  \keybox{Chaque gap = une porte d'entrée pour la contribution.}
+\end{frame}
+
+% ============================================================
+\section{Positionnement \& contribution}
+
+\begin{frame}{Positionnement \& contribution}
+  \keybox{Construire un KG juridique FR + GraphRAG évalué rigoureusement, avec benchmark des LLMs FR en droit.}
+
+  \vspace{0.3em}
+  \textbf{Axes de contribution}
+  \begin{enumerate}\footnotesize
+    \item \textbf{Benchmark LLMs open-source sur droit FR}
+    \begin{itemize}\scriptsize
+      \item Gemma 3, Kimi, MiniMax, Llama, Mistral, Qwen\ldots
+      \item Zero-shot / few-shot \textbf{et} fine-tuning (LoRA/QLoRA) $\rightarrow$ mesurer le \emph{delta}
+    \end{itemize}
+
+    \item \textbf{Ontologie juridique adaptée} (base ELI/AKN/LKIF + temporalité)
+
+    \item \textbf{Construction du KG} : pipeline d'extraction, architecture hybride 3 niveaux, mises à jour incrémentales
+
+    \item \textbf{Évaluation comparative des méthodes de retrieval}
+    \begin{itemize}\scriptsize
+      \item similarité / logique / GNN / LLM / multi-round / hybride
+    \end{itemize}
+
+    \item \textbf{Benchmark de pertinence vs systèmes existants}
+    \begin{itemize}\scriptsize
+      \item Baselines : RAG naïf, Doctrine.fr, Dalloz IA, LLM seul
+      \item Métriques : factualité, traçabilité, recall des fondements, gestion des revirements
+    \end{itemize}
+  \end{enumerate}
+
+  \vspace{0.3em}
+  \footnotesize\textit{Pipeline cohérent : chaque brique publiable indépendamment.}
+\end{frame}
+
+% ============================================================
+\section{Roadmap}
+
+\begin{frame}{Roadmap --- vue d'ensemble}
+  \centering
+  \begin{tikzpicture}[scale=0.95, transform shape,
+      phase/.style={rectangle, rounded corners, draw=accent, thick, minimum width=1.6cm, minimum height=0.7cm, align=center, font=\scriptsize},
+      current/.style={phase, fill=warn!30, draw=warn, very thick},
+      done/.style={phase, fill=accentsoft},
+      todo/.style={phase}]
+    \node[done] (p0) at (0,0) {P0\\État de l'art};
+    \node[current] (p1) at (2,0) {P1\\Ontologie\\données};
+    \node[todo] (p2) at (4,0) {P2\\Construction\\KG};
+    \node[todo] (p3) at (6,0) {P3\\Benchmark\\LLMs};
+    \node[todo] (p4) at (8,0) {P4\\Data\\science};
+    \node[todo] (p5) at (10,0) {P5\\GraphRAG\\\& retrieval};
+    \node[todo] (p6) at (12,0) {P6\\Rédaction};
+    \foreach \x/\y in {p0/p1, p1/p2, p2/p3, p3/p4, p4/p5, p5/p6} \draw[-{Stealth}, thick, accent] (\x) -- (\y);
+    \node[font=\tiny, warn] at (2, -0.8) {\textbf{ici}};
+  \end{tikzpicture}
+
+  \vspace{0.6em}
+  \scriptsize
+  \begin{tabular}{l l l}
+    \toprule
+    \textbf{Phase} & \textbf{Objet} & \textbf{Lien contribution} \\
+    \midrule
+    P0 & Cartographie, gaps & clôture \\
+    P1 & Ontologie + Judilibre/Légifrance & Axe 2 \\
+    P2 & Extraction LLM, hybride 3 niveaux & Axe 3 \\
+    P3 & Benchmark LLMs (zero-shot + fine-tuning) & Axe 1 \\
+    P4 & Relations, centralité, communautés & Axe 3 enrichi \\
+    P5 & Méthodes de retrieval + benchmark final & Axes 4 + 5 \\
+    P6 & Rédaction mémoire & --- \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.3em}
+  \footnotesize\textit{P1 et P3 peuvent avancer en parallèle.}
+\end{frame}
+
+\begin{frame}{Prochaines étapes --- 4 à 6 semaines}
+  \textbf{Court terme}
+  \begin{itemize}
+    \item Clôturer P0 : finir fiches GraphRAG + KG juridiques
+    \item Poursuivre le fichage GraphRAG (LightRAG, HippoRAG, KAG, StructRAG)
+    \item Décider \textbf{périmètre du KG} : JP seule ou JP + articles ?
+    \item Explorer Judilibre / Légifrance --- récupérer un échantillon
+    \item Choisir base ontologique (ELI + extension ? AKN ?)
+  \end{itemize}
+
+  \begin{alertblock}{Points d'arbitrage avec le superviseur}
+    \begin{itemize}
+      \item Périmètre du KG
+      \item Priorité entre les 5 axes de contribution
+      \item Accès au cluster GPU (nécessaire pour P3)
+    \end{itemize}
+  \end{alertblock}
+\end{frame}
+
+% ============================================================
+\section*{Conclusion}
+
+\begin{frame}{En résumé}
+  \begin{itemize}
+    \item \textbf{État de l'art quasi bouclé} --- cartographie 50 sources, papiers pivots fichés
+    \item \textbf{Position claire} --- pipeline cohérent en 5 axes de contribution
+    \item \textbf{Spécificité juridique assumée} --- traçabilité, temporalité, explicabilité
+    \item \textbf{Roadmap structurée} en 7 phases avec jalons superviseur
+  \end{itemize}
+
+  \vfill
+  \centering
+  \Large\textbf{Questions ?}
+\end{frame}
+
+% ============================================================
+\appendix
+\begin{frame}{Annexes --- disponibles en backup}
+  \begin{itemize}
+    \item Tableau complet des 50 sources
+    \item Schémas détaillés (pipeline Edge 2024, taxonomie Zhang 2025)
+    \item Exemples bruts Judilibre / Légifrance
+    \item Modèle temporel envisagé (bi-temporel : \textit{valid time} / \textit{transaction time})
+    \item Liens Obsidian / Git
+    \item Glossaire juridique
+  \end{itemize}
+\end{frame}
+
+\end{document}

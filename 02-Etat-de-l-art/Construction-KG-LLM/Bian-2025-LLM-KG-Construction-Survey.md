@@ -1,16 +1,18 @@
 ---
-tags: [article, construction-kg-llm]
-categorie: "Construction-KG-LLM"
+tags:
+  - article
+  - construction-kg-llm
+categorie: Construction-KG-LLM
 titre_complet: "LLM-empowered Knowledge Graph Construction: A Survey"
-auteurs: "Bian et al."
+auteurs: Bian et al.
 annee: 2025
-type: "Survey (arXiv)"
+type: Survey (arXiv)
 venue: ""
-url: "arxiv.org/abs/2510.20345"
+url: https://arxiv.org/pdf/2510.20345
 doi: ""
 pdf_local: ""
-status: "a-lire"
-pertinence: "haute"
+status: a-lire
+pertinence: haute
 created: 2026-04-09
 modified: 2026-04-09
 ---

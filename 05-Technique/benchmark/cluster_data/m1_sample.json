@@ -1,0 +1,142 @@
+[
+  {
+    "id": "M1-S-001",
+    "specialisation": "inconnu",
+    "question": "Effectivement, j'ai une question sur la répartition des parts dans une SAS : comment procéder pour bien encadrer les droits entre deux associés majoritaires, s'il vous plaît ?",
+    "gold_answer": "Effectivement, j'ai une question sur la répartition des parts dans une SAS : comment procéder pour bien encadrer les droits entre deux associés majoritaires, s'il vous plaît ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "effectivement",
+      "question",
+      "répartition",
+      "comment",
+      "procéder"
+    ]
+  },
+  {
+    "id": "M1-S-002",
+    "specialisation": "inconnu",
+    "question": "Bon, je me pose la question suivante : concrètement, comment on s’assure qu’un contrat avec un fournisseur pharma respecte bien toutes les obligations légales sans se noyer dans un bazar administratif ?",
+    "gold_answer": "Bon, je me pose la question suivante : concrètement, comment on s’assure qu’un contrat avec un fournisseur pharma respecte bien toutes les obligations légales sans se noyer dans un bazar administratif ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "question",
+      "suivante",
+      "concrètement",
+      "comment",
+      "s’assure"
+    ]
+  },
+  {
+    "id": "M1-S-003",
+    "specialisation": "inconnu",
+    "question": "Écoute, j'ai un souci avec le choix entre l’IS et l’IR pour une nouvelle structure, en fait, t’as une règle simple pour trancher rapidement selon la taille et l’activité ?",
+    "gold_answer": "Écoute, j'ai un souci avec le choix entre l’IS et l’IR pour une nouvelle structure, en fait, t’as une règle simple pour trancher rapidement selon la taille et l’activité ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "écoute",
+      "nouvelle",
+      "structure",
+      "simple",
+      "trancher"
+    ]
+  },
+  {
+    "id": "M1-S-004",
+    "specialisation": "inconnu",
+    "question": "Écoute, j'ai besoin de comprendre rapidement pour savoir comment on protège nos droits sur une idée qu'on a développée en interne, mais qui pourrait être utilisée par un partenaire. Ça marche comment, concrètement ?",
+    "gold_answer": "Écoute, j'ai besoin de comprendre rapidement pour savoir comment on protège nos droits sur une idée qu'on a développée en interne, mais qui pourrait être utilisée par un partenaire. Ça marche comment, concrètement ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "écoute",
+      "besoin",
+      "comprendre",
+      "rapidement",
+      "savoir"
+    ]
+  },
+  {
+    "id": "M1-S-005",
+    "specialisation": "inconnu",
+    "question": "J’hésite un peu, mais j’aimerais savoir, pour structurer une boîte en France, est-ce qu’il vaut mieux partir sur une SAS ou sur une SARL, niveau flexibilité et responsabilités ?",
+    "gold_answer": "J’hésite un peu, mais j’aimerais savoir, pour structurer une boîte en France, est-ce qu’il vaut mieux partir sur une SAS ou sur une SARL, niveau flexibilité et responsabilités ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "j’hésite",
+      "j’aimerais",
+      "savoir",
+      "structurer",
+      "france"
+    ]
+  },
+  {
+    "id": "M1-S-006",
+    "specialisation": "inconnu",
+    "question": "Alors, dis donc, tu peux m’expliquer comment je fais pour m’assurer que toutes nos déclarations financières sont bien en règle avec la nouvelle loi, là ? Parce que bon sang, c’est un vrai casse-tête, cette histoire !",
+    "gold_answer": "Alors, dis donc, tu peux m’expliquer comment je fais pour m’assurer que toutes nos déclarations financières sont bien en règle avec la nouvelle loi, là ? Parce que bon sang, c’est un vrai casse-tête, cette histoire !",
+    "gold_articles": [],
+    "gold_keywords": [
+      "alors",
+      "m’expliquer",
+      "comment",
+      "m’assurer",
+      "toutes"
+    ]
+  },
+  {
+    "id": "M1-S-007",
+    "specialisation": "inconnu",
+    "question": "Bon, concrètement, que dois-je faire pour structurer une entreprise en respectant les obligations en droit des assurances, s'il vous plaît ?",
+    "gold_answer": "Bon, concrètement, que dois-je faire pour structurer une entreprise en respectant les obligations en droit des assurances, s'il vous plaît ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "concrètement",
+      "dois-je",
+      "structurer",
+      "entreprise",
+      "respectant"
+    ]
+  },
+  {
+    "id": "M1-S-008",
+    "specialisation": "inconnu",
+    "question": "Bon sang, j'arrive pas à comprendre, dis donc, avec cette histoire de loi financière là, tu peux m'expliquer comment on sécurise un contrat sans se retrouver à payer des pénalités dans tous les sens ? Parce que franchement, ça me rend fou cette affaire !",
+    "gold_answer": "Bon sang, j'arrive pas à comprendre, dis donc, avec cette histoire de loi financière là, tu peux m'expliquer comment on sécurise un contrat sans se retrouver à payer des pénalités dans tous les sens ? Parce que franchement, ça me rend fou cette affaire !",
+    "gold_articles": [],
+    "gold_keywords": [
+      "j'arrive",
+      "comprendre",
+      "histoire",
+      "financière",
+      "m'expliquer"
+    ]
+  },
+  {
+    "id": "M1-S-009",
+    "specialisation": "inconnu",
+    "question": "Concrètement, dans ma situation, comment je fais pour vérifier que mes contrats commerciaux sont bien conformes aux dernières réglementations sans devoir tout refaire à zéro ?",
+    "gold_answer": "Concrètement, dans ma situation, comment je fais pour vérifier que mes contrats commerciaux sont bien conformes aux dernières réglementations sans devoir tout refaire à zéro ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "concrètement",
+      "situation",
+      "comment",
+      "vérifier",
+      "contrats"
+    ]
+  },
+  {
+    "id": "M1-S-010",
+    "specialisation": "inconnu",
+    "question": "Dis donc, tu peux m’aider pour un truc ? On a un salarié qui veut voir ses horaires changés, mais ça chamboulerait tout le planning de l’équipe... je fais comment pour gérer ça sans créer un bazar ?",
+    "gold_answer": "Dis donc, tu peux m’aider pour un truc ? On a un salarié qui veut voir ses horaires changés, mais ça chamboulerait tout le planning de l’équipe... je fais comment pour gérer ça sans créer un bazar ?",
+    "gold_articles": [],
+    "gold_keywords": [
+      "m’aider",
+      "salarié",
+      "horaires",
+      "changés",
+      "chamboulerait"
+    ]
+  }
+]

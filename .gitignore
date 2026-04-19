@@ -1,0 +1,79 @@
+# ═══════════════════════════════════════════════════════════════════════
+# Bases de données Judilibre (très gros fichiers parquet ~30 GB total)
+# À télécharger séparément, ne PAS commiter sur GitHub
+# ═══════════════════════════════════════════════════════════════════════
+05-Technique/benchmark/database-judilibre/
+05-Technique/benchmark/database-judilibre-enrichie/
+
+# ═══════════════════════════════════════════════════════════════════════
+# Python
+# ═══════════════════════════════════════════════════════════════════════
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtualenv
+.venv/
+venv/
+ENV/
+env/
+
+# ═══════════════════════════════════════════════════════════════════════
+# Jupyter
+# ═══════════════════════════════════════════════════════════════════════
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# ═══════════════════════════════════════════════════════════════════════
+# Résultats de benchmarks & logs (régénérables)
+# ═══════════════════════════════════════════════════════════════════════
+05-Technique/benchmark/results/
+05-Technique/benchmark/logs/
+*.pid
+*.log
+
+# ═══════════════════════════════════════════════════════════════════════
+# Secrets (API tokens, credentials, ...)
+# ═══════════════════════════════════════════════════════════════════════
+.env
+.env.local
+.env.*.local
+*.key
+hf_token*
+anthropic_token*
+
+# ═══════════════════════════════════════════════════════════════════════
+# macOS / IDE
+# ═══════════════════════════════════════════════════════════════════════
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ═══════════════════════════════════════════════════════════════════════
+# Obsidian — on versionne tout sauf les caches
+# ═══════════════════════════════════════════════════════════════════════
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.trash/
