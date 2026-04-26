@@ -1,0 +1,699 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Procedure penale (consolide)",
+    "source_path": "data/cnb-crfpa/2025/procedures.pdf (partie Procedure penale, pages 5-6)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Procedure penale (diffusion Cap'Barreau)",
+      "Meilleure copie IEJ Strasbourg 2025 - procedure_penale_6 (note 14,5/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - procedure_penale_22 (note 18/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - procedure_penale_36 (note 16/20)"
+    ],
+    "generated_by": "Claude Opus 4.7 (1M context) - consolidation run agent",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-04",
+      "duree_heures": 2,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "I_geolocalisation": 5,
+        "II_gardes_a_vue": 4,
+        "III_interrogatoires_premiere_comparution": 4,
+        "IV_possibilite_vincent_nullites": 4,
+        "V_detention_provisoire_vincent": 3
+      },
+      "note_repartition": "La grille officielle ponderise la question V a 4 points alors que le sujet la ponderise a 3 points ; total grille = 21 pts ramenes a 20. On suit la grille pour les ponderations internes."
+    }
+  },
+  "questions": [
+    {
+      "id": "CNB-PP-2025-Q1",
+      "branche": "penal",
+      "specialisation": "Procedure penale - mesures d'investigation : geolocalisation en enquete preliminaire",
+      "question": "Baptiste, Frederic et Vincent sont soupconnes de trafic de stupefiants et de meurtres en bande organisee. Les policiers ont installe une balise GPS sur un vehicule vole qu'ils utilisent, sur autorisation du procureur de la Republique, le 4 fevrier 2025, et ont surveille leurs deplacements jusqu'a la veille de leur interpellation le 2 mars 2025. Appreciez la regularite de la mesure de geolocalisation.",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Identifier le champ d'application de la geolocalisation : l'infraction (trafic de stupefiants, meurtre en bande organisee) entre bien dans le champ de l'article 230-32 CPP (infraction punie d'au moins 3 ans d'emprisonnement)",
+            "linked_article": "code_de_procedure_penale:230-32",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il convient avant tout d'observer que l'infraction commise entre bien dans le champ d'application de l'article 230-32 du code de procedure penale"
+          },
+          {
+            "text": "Autorite competente : au stade de l'enquete (en flagrance ou en preliminaire), le procureur de la Republique ordonne la geolocalisation",
+            "linked_article": "code_de_procedure_penale:230-32",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Au stade de l'enquete, en flagrance ou en preliminaire, il appartient au procureur de la Republique d'ordonner la geolocalisation"
+          },
+          {
+            "text": "Duree legale de la geolocalisation : 15 jours consecutifs maximum sur autorisation du procureur (art. 230-33 CPP) ; au-dela, renouvellement pour 1 mois par le JLD sur requete du procureur",
+            "linked_article": "code_de_procedure_penale:230-33",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "la duree est limitee a quinze jours consecutifs maximum (art. 230-33 CPP). A l'issue de ce delai, il appartient au JLD sur requete du procureur de la Republique d'en ordonner le renouvellement pour une duree maximale d'un mois"
+          },
+          {
+            "text": "Application aux faits : la geolocalisation a dure 27 jours (4 fev. au 2 mars 2025), ce qui depasse le plafond de 15 jours sans renouvellement par le JLD ; la mesure est irreguliere",
+            "linked_article": "code_de_procedure_penale:230-33",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la geolocalisation ordonnee par le procureur de la Republique semble avoir dure pendant 27 jours, ce qui depasse la duree legale fixee par l'article 230-33 du code de procedure penale. La geolocalisation est donc irreguliere"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Qualite a agir en nullite de la geolocalisation : la chambre criminelle exclut la qualite a agir pour le detenteur/utilisateur d'un vehicule vole et faussement immatricule (Crim. 14 oct. 2014 ; Crim. 27 mars 2018, n 17-85.603)",
+            "linked_jp": "Cass. crim., 27 mars 2018, n 17-85.603",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la chambre criminelle a ecarte la possibilite d'invoquer une atteinte a la vie privee, s'agissant d'un vehicule vole et faussement immatricule (Crim. 14 oct. 2014 ; v. encore Crim. 27 mars 2018 n 17-85603)",
+            "uncertainty_note": "ECLI et numero exact non verifies dans les sources fournies"
+          },
+          {
+            "text": "Evolution recente : meme pour un vehicule simplement vole (non faussement immatricule), le detenteur/utilisateur n'a pas qualite pour invoquer la nullite (Cass. crim. 28 mai 2024, n 23-84.957)",
+            "linked_jp": "Cass. crim., 28 mai 2024, n 23-84.957",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "avant d'exclure egalement les situations dans lesquelles le vehicule est seulement vole et non faussement immatricule (Crim. 28 mai 2024, n 23-84.957)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Conclusion pratique sur la geolocalisation : le vehicule etant vole, aucun des trois protagonistes n'est recevable a invoquer la nullite (l'analyse de qualite a agir peut etre renvoyee au point IV)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "le vehicule ayant ete vole, aucun des protagonistes n'est recevable a invoquer la nullite"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Possibilite d'installer la balise dans un lieu prive avec autorisation ecrite et motivee du procureur (art. 230-34 CPP) - point releve par la copie 6",
+            "linked_article": "code_de_procedure_penale:230-34",
+            "sources": ["copie_iej"],
+            "why": "Copie 6 cite l'art. 230-34 pour la penetration dans un lieu prive - enrichissement non evoque par la grille"
+          },
+          {
+            "text": "Articulation avec la criminalite organisee : l'art. 706-73 CPP permet de justifier l'enquete preliminaire derogatoire (procedure derogatoire applicable aux trafic de stupefiants en bande organisee)",
+            "linked_article": "code_de_procedure_penale:706-73",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Copies 6 et 36 invoquent 706-73 pour qualifier le regime applicable - absent de la grille mais pertinent en matiere de delinquance organisee"
+          },
+          {
+            "text": "Duree etendue de l'enquete preliminaire a 2 ans (art. 75-3 CPP) en matiere de criminalite organisee - cadre temporel de l'enquete",
+            "linked_article": "code_de_procedure_penale:75-3",
+            "sources": ["copie_iej"],
+            "why": "Copie 22 mobilise l'art. 75-3 CPP pour situer la duree legale de l'enquete preliminaire - element de cadrage absent de la grille"
+          },
+          {
+            "text": "Distinction flagrance (art. 53 et s. CPP) vs enquete preliminaire (art. 75 et s. CPP) : en l'espece, enquete preliminaire car aucune infraction 'actuelle' au moment de la mise en place",
+            "linked_article": "code_de_procedure_penale:53",
+            "sources": ["copie_iej"],
+            "why": "Les trois copies (6, 22, 36) commencent par qualifier le cadre d'enquete - etape methodologique appreciee meme si non prevue explicitement par la grille"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_penale:230-32",
+          "code_de_procedure_penale:230-33"
+        ],
+        "optionnels": [
+          "code_de_procedure_penale:230-34",
+          "code_de_procedure_penale:706-73",
+          "code_de_procedure_penale:75-3",
+          "code_de_procedure_penale:53"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 28 mai 2024, n 23-84.957",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret pivot : meme pour un vehicule vole non faussement immatricule, le detenteur/utilisateur n'a pas qualite pour invoquer la nullite de la geolocalisation",
+          "uncertainty_note": "ECLI non verifie ; numero de pourvoi issu de la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 27 mars 2018, n 17-85.603",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Pose le principe que le detenteur d'un vehicule vole et faussement immatricule n'a pas qualite a invoquer la nullite de la geolocalisation",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 14 oct. 2014",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Premiere decision ecartant l'atteinte a la vie privee pour un vehicule vole et faussement immatricule",
+          "uncertainty_note": "Numero de pourvoi non precise par la grille ; ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 7 juin 2016 (vehicule vole - qualite a agir)",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Citee par la copie 6 pour la jurisprudence sur le vehicule vole et la qualite a agir",
+          "uncertainty_note": "Numero de pourvoi non cite par le candidat ; absent de la grille - verification necessaire"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre l'analyse de regularite de la mesure (nullite substantielle fondee sur la duree - art. 230-33) et l'analyse de la qualite a agir (point IV). La grille permet d'attribuer les points au I ou au IV selon l'emplacement du developpement par le candidat."
+      },
+      "source_extract": "les policiers installent sur autorisation du procureur de la Republique une balise sur ledit vehicule le 4 fevrier 2025 et surveillent leurs deplacements jusqu'a la veille de leur interpellation... Il vous est demande d'apprecier la regularite de la mesure de geolocalisation (5 points)",
+      "consolidation_notes": "Question la plus ponderee (5 pts). Grille axee sur deux temps : irregularite pour duree excessive + qualite a agir niee pour vehicule vole. Les trois copies couvrent bien le core (230-32, 230-33, duree 27 j depasse 15 j). La copie 6 et la 22 apportent 230-34 et 75-3 pour le cadrage. Toutes les copies citent Crim. 28 mai 2024 et/ou 27 mars 2018. La grille ne semble pas penaliser l'absence de distinction flagrance/preliminaire mais les copies y consacrent du temps."
+    },
+    {
+      "id": "CNB-PP-2025-Q2",
+      "branche": "penal",
+      "specialisation": "Procedure penale - garde a vue : regularite du placement et avis au procureur",
+      "question": "Les trois suspects ont ete interpelles le 2 mars 2025 a 9h et places en garde a vue. Les droits leur ont ete notifies immediatement. Le procureur de la Republique n'a ete informe des gardes a vue qu'a 10h30. Appreciez la regularite des differentes gardes a vue.",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "La garde a vue s'execute sous le controle du procureur de la Republique (art. 63 CPP) ; l'information immediate du procureur est une formalite substantielle",
+            "linked_article": "code_de_procedure_penale:63",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la garde a vue s'execute sous le controle du procureur de la Republique (art. 63 CPP)"
+          },
+          {
+            "text": "Un retard injustifie dans l'avis au procureur fait necessairement grief a la personne placee en garde a vue (Cass. crim., 10 mai 2001, n 01-81.441)",
+            "linked_jp": "Cass. crim., 10 mai 2001, n 01-81.441",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Tout retard dans l'avis delivre qui ne serait justifie par des circonstances insurmontables fait necessairement grief a la personne placee en garde a vue (Cass. crim., 10 mai 2001, n 01-81.441)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Un delai de 45 minutes sans circonstance insurmontable est juge excessif (Cass. crim., 24 mai 2016, n 16-80.564)",
+            "linked_jp": "Cass. crim., 24 mai 2016, n 16-80.564",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la Cour a deja pu indiquer qu'en l'absence de telles circonstances, un delai de 45 minutes pour informer le procureur etait excessif (Crim. 24 mai 2016, n 16-80.564)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Application aux faits : un delai de 1h30 (placement a 9h, avis a 10h30) sans circonstance insurmontable est excessif - les gardes a vue sont irregulieres",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, aucune circonstance ne semble faire obstacle a l'information immediate du procureur, des l'interpellation, a minima des le debut de la garde a vue... L'information du magistrat est tardive et la garde a vue est donc irreguliere"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Verifications prealables validees par les copies : qualite d'OPJ des enqueteurs, notification des droits et des faits reproches (art. 63-1 CPP), enregistrement des auditions en matiere criminelle",
+            "linked_article": "code_de_procedure_penale:63-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "S'agissant des differentes gardes a vue, les droits et informations semblent avoir ete notifies aux interesses de facon regulierement. Sous reserve que les policiers aient bien la qualite d'OPJ, et que le formulaire ait ete remis au cours de la garde a vue, le placement semble regulier sur ce point. Par ailleurs, puisque les faits soupconnes sont, pour partie, de nature criminelle, il convient de verifier que les auditions ont bien ete enregistrees"
+          },
+          {
+            "text": "Conditions du placement en garde a vue (art. 62-2 CPP) : raisons plausibles de soupconner, unique moyen de parvenir a un des objectifs legaux - elles sont remplies en l'espece",
+            "linked_article": "code_de_procedure_penale:62-2",
+            "sources": ["copie_iej"],
+            "why": "Copies 6, 22 et 36 verifient systematiquement les conditions de l'art. 62-2 - absent de la grille en tant que tel mais structure naturelle de l'analyse"
+          },
+          {
+            "text": "Information du procureur : elle peut etre delivree par tout moyen (pas de formalisme particulier)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "cette information peut etre delivree par tout moyen"
+          },
+          {
+            "text": "Grief manifeste : la mesure fait grief aux trois personnes placees en garde a vue, qui peuvent invoquer la nullite sous reserve des conditions de delai de l'instruction",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il ne fait aucun doute que la mesure fait grief aux trois personnes placees en garde a vue, ceux-ci peuvent invoquer la nullite de la garde a vue, sous reserve de respecter les conditions de delai prevues au cours de l'instruction"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Duree de la GAV en matiere de criminalite organisee etendue a 96h (art. 706-88 CPP) - regime derogatoire applicable au trafic de stupefiants",
+            "linked_article": "code_de_procedure_penale:706-88",
+            "sources": ["llm_intrinsic"],
+            "why": "Bien que non evoque explicitement par la grille pour ce point, le regime derogatoire conditionne la duree maximale ; enrichissement KG utile",
+            "uncertainty_note": "Non attendu par la grille mais connaissance praticien coherente avec le cas"
+          },
+          {
+            "text": "Pour la nullite pour retard dans l'avis au procureur, le grief doit se deduire du principe lui-meme (grief presume) - lecture doctrinale coherente avec Crim. 10 mai 2001",
+            "linked_article": "code_de_procedure_penale:171",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Copie 36 qualifie la nullite comme a grief presume - utile pour la question IV sur la possibilite de soulever"
+          },
+          {
+            "text": "Articulation avec la circonstance insurmontable : exemples jurisprudentiels admis (ex. tres nombreuses personnes interpellees simultanement) - element absent du dossier en l'espece",
+            "sources": ["llm_intrinsic"],
+            "why": "Enrichissement contextuel sur la notion de circonstances insurmontables, non explicite par la grille"
+          },
+          {
+            "text": "Jurisprudence sur la notification tardive : Crim. 4 nov. 2010 sur l'importance de la notification immediate",
+            "linked_jp": "Cass. crim., 4 nov. 2010",
+            "sources": ["copie_iej"],
+            "why": "Copie 22 cite un arret du 4 novembre 2010 sur la notification tardive - absent de la grille",
+            "uncertainty_note": "Numero de pourvoi non cite par le candidat ; verification necessaire"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_penale:63"
+        ],
+        "optionnels": [
+          "code_de_procedure_penale:62-2",
+          "code_de_procedure_penale:63-1",
+          "code_de_procedure_penale:706-88"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 10 mai 2001, n 01-81.441",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret de principe : le retard injustifie dans l'avis au procureur fait necessairement grief",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 24 mai 2016, n 16-80.564",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Un delai de 45 min sans circonstance insurmontable est deja excessif - a fortiori 1h30",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 4 nov. 2010",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Citee par copies 6 et 22 sur les formalites substantielles de la GAV",
+          "uncertainty_note": "Numero de pourvoi non cite par les candidats ; absent de la grille - verification necessaire avant usage"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre 'notification des droits a la personne' (art. 63-1, ici reguliere et immediate) avec 'avis au procureur' (art. 63, ici irregulier car tardif de 1h30). Les deux obligations sont distinctes et seule la seconde est violee en l'espece."
+      },
+      "source_extract": "les policiers... les placent tous en garde a vue. Les policiers notifient regulierement et immediatement leurs droits aux interesses, les informent des faits qui leur sont reproches... et ils informent, a 10h30, le procureur de la Republique de ces gardes a vue... Il vous est demande d'apprecier... la regularite des differentes gardes a vue (4 points)",
+      "consolidation_notes": "Question (4 pts). Grille tres focalisee sur l'avis tardif au procureur avec deux JP cles (10 mai 2001 + 24 mai 2016). Toutes les copies identifient bien le probleme et citent au moins une des deux JP. La copie 22 et la 36 citent les deux. Point methodologique : la grille renvoie la question de la qualite a agir sur la nullite au point IV."
+    },
+    {
+      "id": "CNB-PP-2025-Q3",
+      "branche": "penal",
+      "specialisation": "Procedure penale - interrogatoire de premiere comparution : enregistrement audiovisuel obligatoire en matiere criminelle",
+      "question": "A la suite de leur interrogatoire de premiere comparution le 3 mars 2025, le juge d'instruction a mis en examen les trois suspects y compris pour les faits criminels, alors que l'enregistrement n'avait pas fonctionne lors de l'interrogatoire. Appreciez la regularite des interrogatoires de premiere comparution.",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "L'interrogatoire de premiere comparution doit respecter les conditions de l'article 116 CPP",
+            "linked_article": "code_de_procedure_penale:116",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'interrogatoire de premiere comparution doit repondre aux conditions posees par l'article 116 du code de procedure penale"
+          },
+          {
+            "text": "En matiere criminelle, les interrogatoires doivent obligatoirement faire l'objet d'un enregistrement audiovisuel (art. 116-1 CPP), que les mis en examen fassent ou non des declarations",
+            "linked_article": "code_de_procedure_penale:116-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "en matiere criminelle (les qualifications retenues nous l'indiquent), les interrogatoires doivent necessairement faire l'objet d'un enregistrement audiovisuel (art. 116-1 du CPP) que les mis en examen fassent ou non des declarations"
+          },
+          {
+            "text": "Application : sauf mention au proces-verbal d'une impossibilite technique (non constatee ici), l'IPC est irregulier",
+            "linked_article": "code_de_procedure_penale:116-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "A moins que l'impossibilite ait ete mentionnee au proces-verbal, ce qui ne semble pas etre le cas, la procedure est donc irreguliere"
+          },
+          {
+            "text": "Portee de l'irregularite : le defaut d'enregistrement audiovisuel, lorsque la personne est mise en examen pour des faits criminels, s'etend a l'acte dans son integralite (y compris la mise en examen pour les faits delictuels connexes - stupefiants, association de malfaiteurs) - Cass. crim., 11 avr. 2018, n 17-86.711",
+            "linked_jp": "Cass. crim., 11 avr. 2018, n 17-86.711",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "L'irregularite d'un IPC pour defaut d'enregistrement audiovisuel, a l'issue duquel la personne est mise en examen, porte sur l'integralite de l'acte et non pas uniquement sur la mise en examen pour des faits criminels ; elle s'etend donc aux faits de nature delictuelle, en l'espece les infractions a la legislation sur les stupefiants et l'association de malfaiteurs (Crim. 11 avr. 2018, n 17-86.711)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Qualite a agir differenciee : Baptiste et Frederic sont concernes par l'irregularite (ils ont fait des declarations) ; Vincent a garde le silence et ne peut utilement l'invoquer",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Puisqu'ils sont concernes par l'irregularite, Baptiste et Frederic ont qualite pour soulever cette irregularite, en revanche, Vincent ne semble pas pouvoir l'invoquer utilement"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Cadre general des droits garantis par l'article 116 CPP : notification des faits, qualification, delai pour preparer la defense, droit de se taire, assistance par avocat, eventuelle audition immediate ou convocation dans un delai determine",
+            "linked_article": "code_de_procedure_penale:116",
+            "sources": ["copie_iej"],
+            "why": "Copies 22 et 6 developpent les conditions de l'art. 116 - structure methodologique attendue"
+          },
+          {
+            "text": "Preuve du defaut d'enregistrement : il suffit qu'il soit constate au proces-verbal - le juge d'instruction l'a constate a la fin de l'interrogatoire en l'espece",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "le juge a constate a la fin de l'interrogatoire que l'enregistrement n'avait pas fonctionne"
+          },
+          {
+            "text": "Conditions de recevabilite de la requete en nullite (articles 173 et 173-1 CPP) : necessite d'un grief et d'un interet",
+            "linked_article": "code_de_procedure_penale:173",
+            "sources": ["copie_iej"],
+            "why": "Copies 6 et 22 anticipent ici les conditions de recevabilite - traitees completement au point IV"
+          }
+        ],
+        "expert": [
+          {
+            "text": "L'impossibilite technique comme cause exoneratoire doit etre mentionnee au PV : Cass. crim., 14 nov. 2016 / Cass. crim., 3 mars 2010 sur la necessite d'acter l'incident technique",
+            "linked_jp": "Cass. crim., 3 mars 2010",
+            "sources": ["copie_iej"],
+            "why": "Copies 6 et 22 citent un arret (date variable) sur la necessite d'acter techniquement l'incident",
+            "uncertainty_note": "Date et numero non precisement identifiables dans les copies - references multiples mentionnees (3 mars 2010, 4 nov. 2010, 14 nov. 2016)"
+          },
+          {
+            "text": "Discussion du caractere substantiel de la nullite : le defaut d'enregistrement constitue une nullite substantielle car il atteint les droits fondamentaux de la personne mise en examen - le grief n'a pas a etre demontre",
+            "linked_article": "code_de_procedure_penale:171",
+            "sources": ["copie_iej"],
+            "why": "Copies 22 et 36 classent la nullite comme substantielle - qualification technique absente de la grille mais pertinente pour le point IV"
+          },
+          {
+            "text": "Nullite d'ordre prive vs d'ordre public : la nullite pour defaut d'enregistrement est d'ordre prive (elle ne tient pas a la competence ni a la bonne administration de la justice) - methode de Cass. crim., 7 sept. 2021",
+            "linked_jp": "Cass. crim., 7 sept. 2021",
+            "sources": ["copie_iej"],
+            "why": "Copies 36 et 6 citent un arret du 7 septembre 2021 sur la methodologie des nullites d'ordre prive - absent de la grille mais utile a la question IV",
+            "uncertainty_note": "Numero de pourvoi non precise par les candidats ; arret a verifier"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_penale:116",
+          "code_de_procedure_penale:116-1"
+        ],
+        "optionnels": [
+          "code_de_procedure_penale:173",
+          "code_de_procedure_penale:173-1",
+          "code_de_procedure_penale:171"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 11 avr. 2018, n 17-86.711",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot : l'irregularite pour defaut d'enregistrement audiovisuel s'etend a l'integralite de l'IPC, y compris les faits delictuels connexes",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 3 mars 2010 (impossibilite technique a constater au PV)",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Citee par copies 6 et 22 sur l'exigence de mention au PV de l'incident technique",
+          "uncertainty_note": "Numero de pourvoi non cite, date variable entre les copies - reference fragile"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas restreindre l'irregularite aux seuls faits criminels : la grille insiste sur son extension aux faits delictuels connexes. Ne pas oublier la qualite a agir differenciee : Vincent a garde le silence donc n'a pas d'interet propre."
+      },
+      "source_extract": "A la suite de leur interrogatoire de premiere comparution le 3 mars 2025... le juge d'instruction decide de tous les mettre en examen, y compris pour les faits de nature criminelle concernant Baptiste et Frederic alors meme que le juge a constate a la fin de l'interrogatoire que l'enregistrement n'avait pas fonctionne... Il vous est demande d'apprecier... la regularite des interrogatoires de premiere comparution (4 points)",
+      "consolidation_notes": "Question (4 pts) axee sur l'art. 116-1 CPP et l'extension aux faits connexes (Crim. 11 avr. 2018). Les trois copies identifient bien l'irregularite. La copie 22 couvre le mieux le point d'extension aux delits. La qualite a agir differenciee (Vincent au silence) est bien reperee dans toutes les copies."
+    },
+    {
+      "id": "CNB-PP-2025-Q4",
+      "branche": "penal",
+      "specialisation": "Procedure penale - qualite a agir et delai pour soulever les nullites (art. 173 et 173-1 CPP)",
+      "question": "Vincent, qui a garde le silence pendant sa garde a vue et son IPC, peut-il encore soulever la nullite de la mesure de geolocalisation, de sa garde a vue et de son interrogatoire de premiere comparution au 4 septembre 2025, jour de l'epreuve ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualite a agir sur la geolocalisation : Vincent n'a pas qualite, le vehicule etant vole (renvoi a Crim. 28 mai 2024, n 23-84.957 - cf. point I)",
+            "linked_jp": "Cass. crim., 28 mai 2024, n 23-84.957",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Celui-ci est en effet sans qualite pour soulever la nullite de la mesure de geolocalisation"
+          },
+          {
+            "text": "Qualite a agir sur l'IPC : Vincent a garde le silence, l'irregularite de l'enregistrement ne lui fait pas grief personnel, il ne peut l'invoquer utilement",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Celui-ci est en effet sans qualite pour soulever la nullite... de l'interrogatoire de premiere comparution"
+          },
+          {
+            "text": "Qualite a agir sur la garde a vue : Vincent a bien qualite pour contester la garde a vue le concernant (information tardive du procureur)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "il a bien qualite a agir pour contester la garde a vue le concernant, en raison de l'information tardive du procureur de la Republique"
+          },
+          {
+            "text": "Consequence pratique : Vincent ayant garde le silence pendant la GAV, l'annulation de celle-ci n'entrainerait pas l'irregularite de la saisine du juge d'instruction - nullite sans effet pratique",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "On observe toutefois qu'au cours de cette garde a vue, Vincent a garde le silence, de telle sorte que si elle devait etre annulee, cette nullite n'aurait pas de consequence, puisqu'elle n'entraine pas l'irregularite de la saisine du juge d'instruction"
+          },
+          {
+            "text": "Delai pour soulever la nullite d'un acte dans l'information : 6 mois a compter de l'acte (art. 173-1 CPP) ; l'IPC du 3 mars 2025 est atteint par le delai depuis le 3 septembre 2025",
+            "linked_article": "code_de_procedure_penale:173-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "l'article 173-1 impose de soulever la nullite de cet acte dans un delai de six mois, soit jusqu'au 3 septembre 2025"
+          },
+          {
+            "text": "Conclusion : au 4 septembre 2025, il n'est plus possible de soulever la nullite de l'IPC, ni des actes realises avant celui-ci (geolocalisation et GAV - effet d'entrainement/purge)",
+            "linked_article": "code_de_procedure_penale:173-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "au jour de l'epreuve (4 septembre), il n'est plus possible de soulever la nullite de l'interrogatoire, pas plus que des actes realises avant celui-ci (geolocalisation et garde a vue)"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Procedure pour soulever la nullite : requete en annulation adressee a la chambre de l'instruction (art. 170 et 173 CPP)",
+            "linked_article": "code_de_procedure_penale:173",
+            "sources": ["copie_iej"],
+            "why": "Copies 6 et 22 decrivent la voie procedurale - element methodologique attendu meme si non explicite par la grille"
+          },
+          {
+            "text": "Exigence d'un interet a agir : doctrine et art. 802 CPP - le requerant doit avoir interet et qualite et justifier d'un grief (sauf nullites d'ordre public)",
+            "linked_article": "code_de_procedure_penale:802",
+            "sources": ["copie_iej"],
+            "why": "Copies 6 et 36 citent l'art. 802 pour l'exigence de grief - structure classique du raisonnement nullites"
+          },
+          {
+            "text": "Effet d'entrainement entre actes : l'article 174 CPP prevoit que la chambre de l'instruction determine les actes dependants de l'acte annule qui sont egalement annules",
+            "linked_article": "code_de_procedure_penale:174",
+            "sources": ["copie_iej"],
+            "why": "Copie 22 mentionne l'art. 174 pour la chaine des nullites - utile meme si la grille se concentre sur l'effet du delai"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Methodologie pour les nullites d'ordre prive : necessite de demontrer interet, qualite et grief (Cass. crim., 7 sept. 2021) - distinction avec les nullites d'ordre public",
+            "linked_jp": "Cass. crim., 7 sept. 2021",
+            "sources": ["copie_iej"],
+            "why": "Copies 36 et 6 appliquent cette methodologie - enrichissement jurisprudentiel absent de la grille",
+            "uncertainty_note": "Numero de pourvoi non precise par les candidats - verification necessaire"
+          },
+          {
+            "text": "Grief presume pour certaines formalites substantielles (ex. retard dans l'avis au procureur - Crim. 10 mai 2001) vs grief a demontrer",
+            "linked_jp": "Cass. crim., 10 mai 2001, n 01-81.441",
+            "sources": ["copie_iej"],
+            "why": "Distinction importante pour le diagnostic de recevabilite - apportee par la copie 36"
+          },
+          {
+            "text": "Articulation art. 173-1 (delai 6 mois mis en examen/temoin assiste) et art. 175 CPP (purge des nullites lors de l'avis de fin d'information)",
+            "linked_article": "code_de_procedure_penale:175",
+            "sources": ["llm_intrinsic"],
+            "why": "Enrichissement KG sur la purge des nullites - non aborde par la grille mais coherent avec l'art. 173-1",
+            "uncertainty_note": "Ne pas presenter comme attendu par la grille"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_penale:173-1"
+        ],
+        "optionnels": [
+          "code_de_procedure_penale:173",
+          "code_de_procedure_penale:170",
+          "code_de_procedure_penale:174",
+          "code_de_procedure_penale:802",
+          "code_de_procedure_penale:175"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 28 mai 2024, n 23-84.957",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Fonde l'absence de qualite a agir de Vincent sur la geolocalisation (vehicule vole)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 7 sept. 2021 (methode nullites d'ordre prive)",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Citee par les copies 6 et 36 pour la methodologie de recevabilite des nullites d'ordre prive",
+          "uncertainty_note": "Numero de pourvoi non cite par les candidats - a verifier"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas omettre que le delai de 6 mois de l'art. 173-1 court a compter de l'acte (ici IPC du 3 mars 2025), pas a compter de la mise en examen ni d'un autre evenement. Ne pas negliger que l'expiration du delai sur l'IPC entraine la purge des actes anterieurs (geolocalisation, GAV) - point central du bareme."
+      },
+      "source_extract": "Il vous est demande... d'apprecier... la possibilite qu'aurait Vincent de soulever la nullite de ces differents actes de procedure (4 points)",
+      "consolidation_notes": "Question (4 pts) a trois etages : qualite a agir / grief utile / delai. Toutes les copies maitrisent la logique du delai de 6 mois (art. 173-1) et son effet sur les actes anterieurs. La copie 22 est la plus explicite sur la date limite (3 septembre 2025) et le constat qu'au 4 septembre il est trop tard. Les copies 6 et 36 enrichissent par des JP methodologiques (7 sept. 2021) non presentes dans la grille."
+    },
+    {
+      "id": "CNB-PP-2025-Q5",
+      "branche": "penal",
+      "specialisation": "Procedure penale - detention provisoire : assistance obligatoire d'un avocat devant le JLD et voie d'appel (art. 145 et 186 CPP)",
+      "question": "Le 3 mars 2025, le JLD a ordonne le placement en detention provisoire de Vincent, qui n'etait pas assiste par un avocat lors de cette audience. Vincent peut-il contester cette detention ? Dans quel delai et par quelle voie ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Cadre : le procureur peut saisir le juge d'instruction de requisitions aux fins de placement en detention provisoire ; le placement est decide apres debat contradictoire devant le JLD",
+            "linked_article": "code_de_procedure_penale:137",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "il convient de rappeler que le procureur de la Republique peut saisir le juge d'instruction de requisitions aux fins de placement en detention provisoire. Le placement en detention est alors decide, le cas echeant, a l'issue d'un debat contradictoire devant le juge des libertes et de la detention"
+          },
+          {
+            "text": "L'assistance par un avocat lors de l'audience devant le JLD est obligatoire (art. 145, al. 5 CPP) : le juge doit aviser la personne qu'elle sera defendue par un avocat de son choix ou un avocat commis d'office",
+            "linked_article": "code_de_procedure_penale:145",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Selon l'article 145 du code de procedure penale, l'assistance par un avocat lors de l'audience devant le JLD est obligatoire, l'alinea 5 de ce texte prevoyant meme que 'si cette personne n'est pas deja assistee d'un avocat, le juge l'avise qu'elle sera defendue lors du debat par un avocat de son choix ou, si elle ne choisit pas d'avocat, par un avocat commis d'office'"
+          },
+          {
+            "text": "Application : Vincent n'etant pas assiste d'un avocat, l'ordonnance de placement en detention est entachee d'irregularite",
+            "linked_article": "code_de_procedure_penale:145",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "il convenait donc d'interjeter appel de cette decision et de solliciter l'annulation de l'ordonnance prescrivant le placement en detention provisoire"
+          },
+          {
+            "text": "Voie de contestation : appel devant la chambre de l'instruction dans un delai de 10 jours a compter de la notification de la decision (art. 186 CPP)",
+            "linked_article": "code_de_procedure_penale:186",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "cet appel devait etre interjete dans un delai de 10 jours a compter de la notification de la decision (art. 186 du CPP), de telle sorte qu'il n'est plus possible de le contester"
+          },
+          {
+            "text": "Conclusion : la decision de placement en detention etait du 3 mars 2025 ; le delai de 10 jours est depuis longtemps expire - il n'est plus possible de contester la detention",
+            "linked_article": "code_de_procedure_penale:186",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "de telle sorte qu'il n'est plus possible de le contester"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Articulation avec la nullite de l'IPC : l'annulation de l'IPC aurait entraine l'annulation de la mise en examen et, partant, la remise en liberte - mais le delai de 6 mois de l'art. 173-1 est expire",
+            "linked_article": "code_de_procedure_penale:173-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'irregularite de l'interrogatoire de premiere comparution aurait pu affecter le placement en detention provisoire, puisque seule une personne mise en examen peut faire l'objet d'une mesure de contrainte ; or, si l'IPC est annule, la mise en examen l'est egalement et la personne doit alors etre remise en liberte"
+          },
+          {
+            "text": "Cadre legal du placement en detention provisoire : conditions de fond (art. 144 CPP) - existence d'une des finalites legales (preuves, pression temoins, concertation, ordre public, etc.)",
+            "linked_article": "code_de_procedure_penale:144",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Les copies abordent partiellement les conditions de fond - la grille ne les detaille pas car l'angle est procedural (absence d'avocat)",
+            "uncertainty_note": "La grille ne traite pas les conditions de fond de l'art. 144"
+          },
+          {
+            "text": "Peines encourues minimales pour le placement en detention : art. 143-1 CPP (delit puni d'au moins 3 ans d'emprisonnement ou matiere criminelle)",
+            "linked_article": "code_de_procedure_penale:143-1",
+            "sources": ["llm_intrinsic"],
+            "why": "Condition preliminaire classique du placement, remplie ici (meurtre + trafic en bande organisee)",
+            "uncertainty_note": "Non exigee par la grille"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Voie alternative : la demande de mise en liberte (art. 148 CPP) peut etre formee a tout moment de la detention - non paralysee par l'expiration du delai d'appel",
+            "linked_article": "code_de_procedure_penale:148",
+            "sources": ["copie_iej"],
+            "why": "Copie 22 envisage cette voie - enrichissement pratique important absent de la grille"
+          },
+          {
+            "text": "Modalites formelles de l'appel : declaration au greffe (art. 502 et 503 CPP) ; possibilite de declaration aupres du chef d'etablissement penitentiaire si detention",
+            "linked_article": "code_de_procedure_penale:502",
+            "sources": ["copie_iej"],
+            "why": "Copies 6 et 22 detaillent les modalites materielles de l'appel - enrichissement procedural"
+          },
+          {
+            "text": "Motivation obligatoire de l'ordonnance de placement en detention provisoire (art. 137-3 CPP) et debat contradictoire prealable (art. 145 CPP)",
+            "linked_article": "code_de_procedure_penale:137-3",
+            "sources": ["llm_intrinsic"],
+            "why": "Regime detaille du placement, non exige par la grille mais coherent",
+            "uncertainty_note": "Non attendu par la grille"
+          },
+          {
+            "text": "Droit au delai pour preparer sa defense (art. 145 CPP) : la personne et son avocat peuvent demander un delai pour preparer la defense, l'audience etant alors reportee sous conditions de detention",
+            "linked_article": "code_de_procedure_penale:145",
+            "sources": ["copie_iej"],
+            "why": "Copie 36 evoque ce droit - nuance procedurale"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_penale:145",
+          "code_de_procedure_penale:186"
+        ],
+        "optionnels": [
+          "code_de_procedure_penale:137",
+          "code_de_procedure_penale:144",
+          "code_de_procedure_penale:148",
+          "code_de_procedure_penale:502",
+          "code_de_procedure_penale:503",
+          "code_de_procedure_penale:143-1",
+          "code_de_procedure_penale:137-3"
+        ]
+      },
+      "jp_attendues": [],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre l'appel contre l'ordonnance de placement (art. 186 CPP - delai 10 jours) avec la demande de mise en liberte (art. 148 CPP - ouverte en permanence). Ne pas proposer un pourvoi en cassation direct : c'est un appel devant la chambre de l'instruction. Ne pas ignorer le probleme du delai (la decision est du 3 mars 2025, l'epreuve du 4 septembre 2025 : delai largement expire)."
+      },
+      "source_extract": "Compte tenu du role preponderant joue par Vincent... le procureur de la Republique requiert un placement en detention provisoire, le 3 mars 2025. Le juge d'instruction saisit le juge des libertes et de la detention a cette fin. Le meme jour, le JLD ordonne le placement en detention provisoire de Vincent, qui n'est cependant pas assiste par un avocat lors de cette audience. Il vous est demande... de contester sa detention (3 points - grille : 4 points)",
+      "consolidation_notes": "Question (3 a 4 pts selon sujet/grille) purement procedurale : obligation d'avocat + delai d'appel expire. Les copies ciblent toutes l'art. 145 (avocat obligatoire) et l'art. 186 (delai 10 jours). La copie 22 enrichit par les modalites materielles d'appel (502, 503). La grille ne cite aucune JP pour cette question, ce qui est notable - l'argumentation repose sur le texte de l'art. 145 al. 5."
+    }
+  ]
+}

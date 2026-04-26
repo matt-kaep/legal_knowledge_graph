@@ -1,0 +1,664 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Procedure administrative et MARD (consolide)",
+    "source_path": "data/cnb-crfpa/2025/procedures.pdf (partie III - Procedure administrative, pp. 7-9)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Procedure administrative et MARD (sujet principal - diffusion Cap'Barreau)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 11 (note 16/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 34 (note indicative >=15/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 49 (note 15/20)"
+    ],
+    "source_extraction_notes": "La grille officielle constitue la source principale : il s'agit d'un corrige integral tres detaille (environ 5 pages) qui cite nommement chaque article et chaque jurisprudence attendus. Les 3 copies IEJ Strasbourg sont des scans manuscrits illisibles par OCR automatique ; leur citation comme 'copie_iej' dans les sources est inferee de leur note (15-16/20) qui implique la couverture des points core et de la majorite des expected, mais les references precises aux JP/articles dans ces copies ne peuvent etre verifiees sans lecture humaine des scans.",
+    "generated_by": "Claude (Opus 4.7, 1M context, consolidation run)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-04",
+      "duree_heures": 2,
+      "coefficient": 2,
+      "total_points": 20,
+      "qualite_redactionnelle_retrait_max": 2,
+      "repartition_points": {
+        "Q1_permis_conduire_marocain": 7,
+        "Q2_transaction_societe_paradis": 7,
+        "Q3_destruction_batiment_bizet": 6
+      },
+      "documents_autorises": [
+        "Code de procedure administrative (LexisNexis)",
+        "Code de l'urbanisme (Journal Officiel)",
+        "P. Cassia, Les grands textes de procedure administrative contentieuse, Dalloz, + supplement : Annotations du Code de justice administrative"
+      ]
+    }
+  },
+  "questions": [
+    {
+      "id": "CNB-PROC-ADMIN-2025-Q1",
+      "branche": "administratif",
+      "specialisation": "Procedure administrative contentieuse - delais de recours, ministere d'avocat, pouvoirs d'injonction",
+      "question": "M. Bizet, residant dans le Rhone, a passe son permis de conduire au Maroc en juillet 2024. Il a demande son echange contre un permis francais par courrier du 3 novembre 2024 (recu le 7 novembre, accuse de reception mentionnant L. 112-3 et R. 112-5 CRPA). La prefete du Rhone a refuse par decision du 11 decembre 2024 notifiee le 3 janvier 2025 (voies et delais de recours mentionnes). M. Bizet a exerce un recours gracieux (courrier du 4 janvier, recu le 8 janvier 2025) puis un recours hierarchique aupres du ministre de l'Interieur (courrier du 16 janvier, recu le 19 janvier 2025). Le recours gracieux a ete rejete par decision notifiee le 1er fevrier 2025 ; le recours hierarchique par decision notifiee le 4 mars 2025. M. Bizet s'interroge sur la date d'expiration du delai de recours contentieux, sur l'obligation d'etre represente par avocat, et sur les conclusions a formuler pour obtenir l'echange de son permis.",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Delai de recours contentieux de 2 mois francs a compter de la notification de la decision individuelle (R. 421-1 CJA)",
+            "linked_article": "code_de_justice_administrative:R421-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le Code de justice administrative precise que le recours juridictionnel doit etre exerce dans un delai de recours contentieux de 2 mois francs qui court a compter de la notification de la decision individuelle (R. 421-1 ; R. 421-2)"
+          },
+          {
+            "text": "Regle du silence vaut rejet en matiere de decision implicite : delai de 2 mois a compter de la naissance de la decision implicite de rejet, mais l'intervention d'une decision explicite avant l'expiration fait courir un nouveau delai (R. 421-2 CJA)",
+            "linked_article": "code_de_justice_administrative:R421-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "l'article R. 421-2 CJA dispose que : 'Sauf disposition legislative ou reglementaire contraire, dans les cas ou le silence garde par l'autorite administrative sur une demande vaut decision de rejet, l'interesse dispose, pour former un recours, d'un delai de deux mois a compter de la date a laquelle est nee une decision implicite de rejet. Toutefois, lorsqu'une decision explicite de rejet intervient avant l'expiration de cette periode, elle fait a nouveau courir le delai de recours.'"
+          },
+          {
+            "text": "Opposabilite des delais de recours subordonnee a la notification des voies et delais de recours (R. 421-5 CJA)",
+            "linked_article": "code_de_justice_administrative:R421-5",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "Ces delais ne sont en principe opposables que si les voies et delais de recours ont egalement ete notifies a l'administre (R. 421-5 CJA)"
+          },
+          {
+            "text": "Effet prorogatoire du recours administratif (gracieux ou hierarchique) sur le delai de recours contentieux, a condition d'etre exerce dans le delai initial (L. 411-2 CRPA ; JP CE Ouharirou)",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L411-2",
+            "linked_jp": "CE, 7 oct. 2009, Ouharirou, n 322591",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "les delais de recours contentieux peuvent etre proroges, notamment par l'exercice de recours administratifs (CE, 10 juill. 1964, Centre medico-Pedagogique de Beaulieu, n 60408 ; L. 411-2 CRPA)... 'lorsque, dans le delai initial du recours contentieux ouvert a l'encontre d'une decision administrative, sont exerces contre cette decision un recours gracieux et un recours hierarchique, le delai du recours contentieux, proroge par l'exercice de ces recours administratifs, ne recommence a courir a l'egard de la decision initiale que lorsqu'ils ont ete l'un et l'autre rejetes.' (CE, 7 oct. 2009, Ouharirou, n 322591, au Lebon)"
+          },
+          {
+            "text": "Derogation au principe du silence vaut acceptation : en matiere de recours administratif, le silence vaut rejet (L. 231-4 et L. 411-7 CRPA, par derogation a L. 231-1 CRPA)",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L411-7",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "par derogation au 'principe' du silence vaut acceptation (L. 231-1 CRPA), le silence de l'administration sur un recours administratif vaut rejet (L. 231-4 et L. 411-7 CRPA)"
+          },
+          {
+            "text": "Application a l'espece : les deux recours administratifs ayant ete rejetes explicitement aux 1er fevrier 2025 et 4 mars 2025, le delai de recours contentieux court jusqu'au lundi 5 mai 2025",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "le delai de recours contentieux contre la decision initiale et ces decisions prises sur recours administratifs courrait jusqu'au lundi 5 mai 2025"
+          },
+          {
+            "text": "Ministere d'avocat obligatoire dans le proces administratif lorsque les conclusions tendent au paiement d'une somme d'argent, a la decharge/reduction de sommes ou a un litige contractuel (R. 431-2 CJA)",
+            "linked_article": "code_de_justice_administrative:R431-2",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le ministere d'avocat est en principe obligatoire dans le proces administratif, en tout cas lorsque les conclusions tendent au paiement d'une somme d'argent, a la decharge ou a la reduction de sommes dont le paiement est reclame au requerant ou a la solution d'un litige ne de l'execution d'un contrat (R. 431-2 CJA)"
+          },
+          {
+            "text": "Exception historique : ministere d'avocat facultatif en matiere de recours pour exces de pouvoir (depuis le decret imperial du 2 novembre 1864)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "le ministere d'avocat n'est pas obligatoire hors de ces hypotheses, ce qui concerne notamment l'exces de pouvoir depuis le decret imperial du 2 novembre 1864"
+          },
+          {
+            "text": "Qualification de la decision refusant l'echange de permis : mesure de police administrative susceptible de REP",
+            "linked_jp": "CE, 7 dec. 2011, n 340612",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "les decisions refusant les echanges de permis de conduire sont des mesures de police administrative qui peuvent faire l'objet d'un recours pour exces de pouvoir (par ex. : CE, 7 dec. 2011, n 340612, aux Tables ; CE, 14 fev. 2018, n 407880, aux Tables)"
+          },
+          {
+            "text": "Pouvoirs d'injonction et d'astreinte du juge administratif (L. 911-1 et s. CJA) : peuvent etre exerces d'office ou sollicites par le requerant via des conclusions accessoires",
+            "linked_article": "code_de_justice_administrative:L911-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Les articles L. 911-1 et s. du Code de justice administrative organisent les pouvoirs d'injonction et d'astreinte du juge administratif a l'egard de l'administration. Ce dernier peut les exercer d'office. Mais le requerant peut egalement les solliciter dans sa requete en formulant des conclusions accessoires"
+          },
+          {
+            "text": "Formulation des conclusions : a titre principal, annulation des decisions litigieuses + injonction a la prefete de proceder a l'echange ; a titre subsidiaire, injonction de reexaminer la demande",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "M. Bizet peut, outre des conclusions en exces de pouvoir a fin d'annulation des decisions litigieuses, solliciter du juge administratif qu'il ordonne, a titre principal, a la prefete de proceder a l'echange des titres de conduite ; a titre subsidiaire, de reexaminer sa demande"
+          }
+        ],
+        "expected": [
+          {
+            "text": "JP recente CE sect. 13 mai 2024 : la date a prendre en consideration pour la recevabilite d'un recours depose par voie postale est la date d'envoi, le cachet de la poste faisant foi",
+            "linked_jp": "CE sect., 13 mai 2024, n 466541",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "Le Conseil d'Etat a precise dans une jurisprudence recente que la date a prendre en consideration pour apprecier la recevabilite d'un recours contentieux depose par voie postale etait la date d'envoi, le cachet de la poste faisant foi (CE sect., 13 mai 2024, n 466541)"
+          },
+          {
+            "text": "JP fondatrice de l'effet prorogatoire du recours administratif (CE, 10 juill. 1964, Centre medico-Pedagogique de Beaulieu)",
+            "linked_jp": "CE, 10 juill. 1964, Centre medico-Pedagogique de Beaulieu, n 60408",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "les delais de recours contentieux peuvent etre proroges, notamment par l'exercice de recours administratifs (CE, 10 juill. 1964, Centre medico-Pedagogique de Beaulieu, n 60408 ; L. 411-2 CRPA)"
+          },
+          {
+            "text": "Articulation chronologique en l'espece : la decision initiale du 11 decembre 2024 notifiee le 3 janvier 2025 ouvrait un delai jusqu'au 4 mars 2025 ; les deux recours administratifs, exerces dans ce delai, ont eu un effet prorogatoire (Ouharirou)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "la prefete du Rhone a explicitement refuse de faire droit a la demande de M. Bizet dans une decision du 11 decembre 2024 qui a ete regulierement notifiee le 3 janvier 2025. A cette date, le delai de recours contentieux courait donc jusqu'au 4 mars 2025"
+          },
+          {
+            "text": "Qualification du refus d'echange de permis de conduire comme mesure de police administrative : second exemple jurisprudentiel (CE, 14 fev. 2018, n 407880)",
+            "linked_jp": "CE, 14 fev. 2018, n 407880",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "(par ex. : CE, 7 dec. 2011, n 340612, aux Tables ; CE, 14 fev. 2018, n 407880, aux Tables)"
+          },
+          {
+            "text": "Visa de l'arrete du 12 janvier 2012 fixant les conditions de reconnaissance et d'echange des permis de conduire delivres par les Etats n'appartenant ni a l'UE ni a l'EEE (base du refus preferctoral)",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Mentionne dans le sujet comme fondement de la demande de M. Bizet ; non explicitement cite dans la grille mais pertinent pour la qualification de la decision attaquee"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Possibilite alternative de saisir le juge des referes en cas d'urgence : refere-suspension (L. 521-1 CJA) contre la decision de refus d'echange, en complement du REP au fond",
+            "linked_article": "code_de_justice_administrative:L521-1",
+            "sources": ["llm_intrinsic"],
+            "why": "Point d'ouverture classique en procedure administrative contentieuse sur une mesure de police - non mentionne dans la grille car non demande, mais typique d'une strategie contentieuse complete"
+          },
+          {
+            "text": "Distinction recours en exces de pouvoir / recours de plein contentieux : le REP est le recours de droit commun contre les decisions administratives unilaterales refusant l'echange de permis (pas de demande indemnitaire ici)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "les decisions refusant les echanges de permis de conduire sont des mesures de police administrative qui peuvent faire l'objet d'un recours pour exces de pouvoir"
+          },
+          {
+            "text": "Accuse de reception de la demande initiale (L. 112-3 + R. 112-5 CRPA) : il conditionne le point de depart du delai de naissance de la decision implicite et informe l'administre de ses droits",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L112-3",
+            "sources": ["llm_intrinsic"],
+            "why": "Mentionne dans le sujet ('accuse de reception mentionnant les informations prevues par les articles L. 112-3 et R. 112-5 CRPA') - la grille ne developpe pas ce point car il est donne comme regulier, mais sa mention est pertinente pour garantir l'opposabilite des delais"
+          },
+          {
+            "text": "Articulation fine silence vaut rejet / silence vaut acceptation : L. 231-1 CRPA pose le principe du silence vaut acceptation, mais L. 231-4 CRPA prevoit l'exception pour les recours administratifs (et pour les decisions ne presentant pas le caractere d'une decision individuelle creatrice de droits)",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L231-4",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "par derogation au 'principe' du silence vaut acceptation (L. 231-1 CRPA), le silence de l'administration sur un recours administratif vaut rejet (L. 231-4 et L. 411-7 CRPA)"
+          },
+          {
+            "text": "Regle du 'non bis in idem' des recours administratifs : en principe, un delai de recours contentieux ne peut etre proroge deux fois, sauf exercice cumulatif dans le delai initial d'un recours gracieux et d'un recours hierarchique (solution Ouharirou : les deux recours doivent etre rejetes pour que le delai reprenne)",
+            "linked_jp": "CE, 7 oct. 2009, Ouharirou, n 322591",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "meme si en principe il est impossible de proroger deux fois un meme delai de recours contentieux, 'lorsque, dans le delai initial du recours contentieux... sont exerces contre cette decision un recours gracieux et un recours hierarchique, le delai du recours contentieux, proroge par l'exercice de ces recours administratifs, ne recommence a courir a l'egard de la decision initiale que lorsqu'ils ont ete l'un et l'autre rejetes.' (CE, 7 oct. 2009, Ouharirou)"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_justice_administrative:R421-1",
+          "code_de_justice_administrative:R421-2",
+          "code_de_justice_administrative:R421-5",
+          "code_de_justice_administrative:R431-2",
+          "code_de_justice_administrative:L911-1",
+          "code_des_relations_entre_le_public_et_l_administration:L411-2",
+          "code_des_relations_entre_le_public_et_l_administration:L411-7",
+          "code_des_relations_entre_le_public_et_l_administration:L231-4"
+        ],
+        "optionnels": [
+          "code_des_relations_entre_le_public_et_l_administration:L231-1",
+          "code_des_relations_entre_le_public_et_l_administration:L112-3",
+          "code_des_relations_entre_le_public_et_l_administration:R112-5",
+          "code_de_justice_administrative:L521-1"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CE, 7 oct. 2009, Ouharirou, n 322591, au Lebon",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret pivot : cumul recours gracieux + recours hierarchique dans le delai initial - le delai contentieux ne reprend qu'au rejet des deux. C'est la JP qui fonde le calcul du delai jusqu'au 5 mai 2025 en l'espece.",
+          "uncertainty_note": "ECLI non verifie ; numero de requete 322591 confirme par la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 10 juill. 1964, Centre medico-Pedagogique de Beaulieu, n 60408",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Arret historique sur l'effet prorogatoire du recours administratif - GAJA",
+          "uncertainty_note": "ECLI non verifie ; numero de requete 60408 a verifier (fait partie du GAJA)"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE sect., 13 mai 2024, n 466541",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Regle d'actualite : cachet de la poste faisant foi pour un recours depose par voie postale",
+          "uncertainty_note": "ECLI non verifie ; numero de requete 466541 issu de la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 7 dec. 2011, n 340612, aux Tables",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Illustration : le refus d'echange de permis de conduire est une mesure de police administrative susceptible de REP (donc ministere d'avocat facultatif)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 14 fev. 2018, n 407880, aux Tables",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la jurisprudence sur la qualification du refus d'echange de permis",
+          "uncertainty_note": "ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre le delai de recours contentieux contre la decision initiale et celui contre les decisions de rejet des recours administratifs : la jurisprudence Ouharirou fait courir un delai unique jusqu'au rejet du dernier recours administratif. Ne pas invoquer le refere-liberte (L. 521-2 CJA) en absence d'atteinte grave a une liberte fondamentale ici. Le ministere d'avocat n'est pas obligatoire en REP (ne pas conclure l'inverse sous pretexte du principe general)."
+      },
+      "source_extract": "M. Bizet... a passe le mois de juillet 2024 au Maroc ou il en a profite pour passer son permis de conduire. De retour en France, il a souhaite echanger ce titre... en vertu de l'arrete du 12 janvier 2012... M. Bizet a formule cette demande dans un courrier du 3 novembre 2024, recu par la prefecture du Rhone le 7 novembre 2024... Mais, par une decision en date du 11 decembre 2024, la prefete du Rhone a refuse de faire droit a cette demande... notifiee a M. Bizet le 3 janvier 2025. [...] M. Bizet s'interroge sur la date a laquelle le delai de recours contentieux a expire ou expirera, sur l'obligation d'etre represente par un avocat, ainsi que sur les conclusions qu'il devrait formuler dans sa requete pour obtenir l'echange de son titre de conduite marocain contre un permis de conduire francais. (7 points)",
+      "consolidation_notes": "Question tres codifiee : la grille est quasiment un corrige-type qui fournit article par article et JP par JP la reponse attendue. Les 3 sous-questions (3+2+2 points) sont hierarchisees. Point le plus discriminant : la construction chronologique du delai en faisant appel a la JP Ouharirou, qui suppose de comprendre l'articulation gracieux+hierarchique. Piege classique : traiter le ministere d'avocat comme obligatoire (alors qu'il est facultatif en REP). La strate 'expert' est mince car la grille est exhaustive et les points a ajouter (refere, etc.) seraient hors sujet."
+    },
+    {
+      "id": "CNB-PROC-ADMIN-2025-Q2",
+      "branche": "administratif",
+      "specialisation": "Procedure administrative contentieuse - contrats administratifs, competence, recours des tiers, transaction",
+      "question": "La commune de Civrieux-d'Azergues a conclu le 12 janvier 2021 avec la societe Paradis un marche public de travaux (6 millions d'euros) pour un complexe sportif. La commune a refuse de regler 2 millions d'euros de factures pour manquements contractuels. Apres saisine du tribunal administratif par la societe Paradis, la commune a decide de transiger : le conseil municipal du 12 fevrier 2025 a autorise le maire a signer une transaction prevoyant le versement de 2,5 millions d'euros en contrepartie du desistement de la societe. La transaction a ete signee le 15 avril 2025. M. Bizet, conseiller municipal opposant, souhaite contester cette transaction et s'interroge sur la juridiction competente, sur le recours ouvert et sur son interet pour agir.",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Definition et base legale de la transaction : les personnes publiques peuvent transiger (L. 423-1 CRPA), contrat ecrit par lequel les parties, par des concessions reciproques, terminent une contestation nee ou previennent une contestation a naitre (renvoi a 2044 C. civ.)",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L423-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "Les personnes publiques peuvent conclure des transactions (L. 423-1 CRPA), c'est-a-dire un contrat ecrit 'par lequel les parties, par des concessions reciproques, terminent une contestation nee, ou previennent une contestation a naitre' (2044 C. Civ. auquel renvoie l'art. L. 423-1 CRPA)"
+          },
+          {
+            "text": "Une transaction peut etre un contrat administratif lorsqu'elle a pour objet le reglement ou la prevention d'un litige relevant de la competence du juge administratif (CE avis cont. 6 dec. 2002, Syndicat intercommunal des etablissements du second cycle du district de l'Hay-les-Roses)",
+            "linked_jp": "CE avis cont., 6 dec. 2002, Syndicat intercommunal de l'Hay-les-Roses, n 249153",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Ces transactions peuvent etre des contrats administratifs, ainsi que l'a estime le CE dans son avis contentieux du 6 decembre 2002 Syndicat intercommunal des etablissements du second cycle du district de l'Hay-les-Roses, (n 249153, au Lebon) : 'La convention de transaction ayant pour objet le reglement ou la prevention de litiges pour le jugement desquels la juridiction administrative serait competente est un contrat administratif.'"
+          },
+          {
+            "text": "Confirmation par le Tribunal des conflits : la transaction est en principe un contrat de nature civile, sauf lorsqu'elle regle/previent un differend relevant de la juridiction administrative (TC, 7 fev. 2022, SARL Guyacom)",
+            "linked_jp": "TC, 7 fev. 2022, SARL Guyacom, n C4233",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "Cela a ete confirme dans une decision du 7 fevrier 2022 SARL Guyacom, (n C4233, au Lebon), le TC a rappele qu'une 'transaction est, en principe, un contrat de nature civile et son homologation comme les litiges nes de son execution relevent de la competence de la juridiction judiciaire, hormis le cas ou elle a pour objet le reglement ou la prevention de differends pour le jugement desquels la juridiction administrative est principalement competente'"
+          },
+          {
+            "text": "Qualification en l'espece : la transaction porte sur un differend ne d'un marche public de travaux (contrat administratif par determination de la loi, L. 6 CCP) - elle est donc elle-meme un contrat administratif et releve de la juridiction administrative",
+            "linked_article": "code_de_la_commande_publique:L6",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la transaction conclue entre la commune de Civrieux-d'Azergues et la societe Paradis a pour objet de resoudre un differend financier lie a l'execution d'un marche public de travaux conclu par une personne publique et qui, par consequent, est un contrat administratif par determination de la loi (L. 6 CCP)... La transaction constitue donc elle-meme un contrat administratif et les litiges la concernant relevent de la competence de la juridiction administrative"
+          },
+          {
+            "text": "Recours des tiers contre un contrat administratif : depuis CE Ass. 4 avril 2014 Departement de Tarn-et-Garonne, tout tiers lese dans ses interets de facon suffisamment directe et certaine peut former un recours de pleine juridiction contestant la validite du contrat ou de ses clauses non reglementaires divisibles",
+            "linked_jp": "CE Ass., 4 avr. 2014, Departement de Tarn-et-Garonne, n 358994",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1.5,
+            "extract_from_grille": "Les recours ouverts aux tiers pour contester les contrats administratifs sont, depuis l'arret Departement de Tarn-et-Garonne (CE, Ass., 4 avril 2014, n 358994, au Lebon), en principe limites au recours de pleine juridiction : 'tout tiers a un contrat administratif susceptible d'etre lese dans ses interets de facon suffisamment directe et certaine par sa passation ou ses clauses est recevable a former devant le juge du contrat un recours de pleine juridiction contestant la validite du contrat ou de certaines de ses clauses non reglementaires qui en sont divisibles'"
+          },
+          {
+            "text": "Distinction tiers ordinaires / tiers privilegies : les membres de l'organe deliberant d'une collectivite territoriale et le representant de l'Etat beneficient d'une presomption d'interet pour agir (concl. B. Dacosta sur Tarn-et-Garonne)",
+            "linked_jp": "CE Ass., 4 avr. 2014, Departement de Tarn-et-Garonne, n 358994",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "a cote de ces 'tiers ordinaires', certains 'tiers privilegies' (B. Dacosta, concl. sur CE, Ass., 4 avril 2014, n 358994, au Lebon) beneficient d'une presomption d'interet pour agir : il s'agit des membres de l'organe deliberant d'une collectivite territoriale ou du representant de l'Etat"
+          },
+          {
+            "text": "Application a l'espece : M. Bizet est conseiller municipal de la commune - il est donc repute avoir un interet pour agir suffisant pour contester la transaction",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "M. Bizet est justement conseiller municipal de la commune de Civrieux d'Azergues. Il est donc repute avoir un interet pour agir suffisant pour contester la transaction"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Les recours ouverts aux parties a un contrat administratif et le recours devant le juge de l'exces de pouvoir contre les clauses reglementaires restent ouverts en parallele du recours Tarn-et-Garonne",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "'independamment des actions dont disposent les parties a un contrat administratif et des actions ouvertes devant le juge de l'exces de pouvoir contre les clauses reglementaires d'un contrat ou devant le juge du refere contractuel sur le fondement des articles L. 551-13 et suivants du code de justice administrative (CJA)...'"
+          },
+          {
+            "text": "Le refere contractuel (L. 551-13 et s. CJA) est une autre voie de contestation des contrats administratifs, mentionnee par l'arret Tarn-et-Garonne",
+            "linked_article": "code_de_justice_administrative:L551-13",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "devant le juge du refere contractuel sur le fondement des articles L. 551-13 et suivants du code de justice administrative (CJA)"
+          },
+          {
+            "text": "Fondement textuel du caractere administratif du marche public de travaux : L. 6 du Code de la commande publique (designation expresse par la loi)",
+            "linked_article": "code_de_la_commande_publique:L6",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "un marche public de travaux conclu par une personne publique et qui, par consequent, est un contrat administratif par determination de la loi (L. 6 CCP)"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Renvoi de L. 423-1 CRPA a 2044 C. civ. : illustre la circulation entre droit administratif et droit civil pour la notion de transaction (concessions reciproques)",
+            "linked_article": "code_civil:2044",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "'par lequel les parties, par des concessions reciproques, terminent une contestation nee, ou previennent une contestation a naitre' (2044 C. Civ. auquel renvoie l'art. L. 423-1 CRPA)"
+          },
+          {
+            "text": "Le recours Tarn-et-Garonne a remplace l'ancien contentieux Martin (REP des tiers contre les actes detachables) - revirement majeur consolidant la pleine juridiction comme voie principale",
+            "sources": ["llm_intrinsic"],
+            "why": "Contexte doctrinal standard du revirement - non mentionne dans la grille mais utile pour comprendre la portee du recours"
+          },
+          {
+            "text": "Moyens invocables dans un recours Tarn-et-Garonne : les tiers ordinaires ne peuvent invoquer que les vices en rapport direct avec l'interet lese, alors que les tiers privilegies peuvent invoquer tout moyen",
+            "sources": ["llm_intrinsic"],
+            "why": "Precision doctrinale importante issue de l'arret lui-meme mais non developpee par la grille"
+          },
+          {
+            "text": "Delai de recours Tarn-et-Garonne : 2 mois a compter des mesures de publicite appropriees (decret d'application) - en matiere de transaction, la date de signature ou la deliberation autorisant le maire constitue souvent le point de depart",
+            "sources": ["llm_intrinsic"],
+            "why": "Point procedural non aborde par la grille mais pertinent pour conseiller M. Bizet (il dispose de 2 mois a compter du 15 avril 2025, soit jusqu'au 15 juin 2025 environ)"
+          },
+          {
+            "text": "Controle du juge sur la transaction : verification de l'existence de concessions reciproques reelles et de l'absence de liberalite prohibee (JP classique CE sur l'homologation des transactions publiques)",
+            "sources": ["llm_intrinsic"],
+            "why": "Point de fond utile non aborde par la grille qui se concentre sur la competence, le recours et l'interet pour agir"
+          },
+          {
+            "text": "Voie parallele possible : deferre prefectoral par le representant de l'Etat (art. L. 2131-6 CGCT) si la deliberation autorisant la transaction lui est transmise - autre forme de controle du tiers privilegie",
+            "linked_article": "code_general_des_collectivites_territoriales:L2131-6",
+            "sources": ["llm_intrinsic"],
+            "why": "Complement classique sur les voies de contestation offertes aux tiers privilegies - non mentionne dans la grille"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_des_relations_entre_le_public_et_l_administration:L423-1",
+          "code_de_la_commande_publique:L6"
+        ],
+        "optionnels": [
+          "code_civil:2044",
+          "code_de_justice_administrative:L551-13",
+          "code_general_des_collectivites_territoriales:L2131-6"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CE Ass., 4 avr. 2014, Departement de Tarn-et-Garonne, n 358994",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret de principe (GAJA) : ouverture aux tiers d'un recours de pleine juridiction contre les contrats administratifs, avec distinction tiers ordinaires / tiers privilegies. Pivot absolu de la question.",
+          "uncertainty_note": "ECLI non verifie ; numero 358994 confirme par la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE avis cont., 6 dec. 2002, Syndicat intercommunal de l'Hay-les-Roses, n 249153",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Avis contentieux de principe : la transaction peut etre un contrat administratif quand elle regle un litige de la competence administrative",
+          "uncertainty_note": "ECLI non verifie ; numero 249153 confirme par la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "TC, 7 fev. 2022, SARL Guyacom, n C4233",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation recente par le TC de la regle : la transaction est en principe un contrat civil sauf lien avec un litige administratif",
+          "uncertainty_note": "ECLI non verifie ; numero C4233 confirme par la grille"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas qualifier d'emblee la transaction de contrat civil (piege classique lie a son siege dans le Code civil) - l'avis Hay-les-Roses et l'arret Guyacom renversent la qualification lorsque l'objet releve du juge administratif. Ne pas invoquer l'ancien contentieux Martin (REP des tiers sur acte detachable) depuis Tarn-et-Garonne 2014. Ne pas confondre 'tiers ordinaires' (interet lese a prouver) et 'tiers privilegies' (presomption d'interet pour agir) : M. Bizet, conseiller municipal, est un tiers privilegie - la confusion coute des points."
+      },
+      "source_extract": "M. Bizet est par ailleurs conseiller municipal au sein de la commune de Civrieux-d'Azergues. Cette derniere a conclu le 12 janvier 2021 avec la societe Paradis un marche public de travaux d'un montant de 6 millions d'euros... Revolte, M. Bizet souhaite contester cette transaction et s'interroge sur la juridiction competente, sur le recours qu'il peut exercer ainsi que sur son interet pour agir. (7 points)",
+      "consolidation_notes": "Question tres clairement structuree par la grille en 3 sous-questions (3+2+2 pts). L'ossature repose sur 3 arrets cles (Hay-les-Roses 2002, Tarn-et-Garonne 2014, SARL Guyacom 2022) et un article central (L. 423-1 CRPA). La strate core couvre l'essentiel de la grille ; l'expected reprend les mentions subsidiaires (refere contractuel, fondement L. 6 CCP) ; l'expert complete avec des points doctrinaux classiques (moyens invocables, delai, controle du juge, deferre prefectoral) qu'un etudiant confirme peut raisonnablement evoquer en ouverture."
+    },
+    {
+      "id": "CNB-PROC-ADMIN-2025-Q3",
+      "branche": "administratif",
+      "specialisation": "Procedure administrative contentieuse - repartition des competences, voie de fait, emprise irreguliere",
+      "question": "M. Bizet est proprietaire d'une exploitation agricole avec plusieurs batiments. Par jugement du 3 mai 2024, le TJ de Lyon a ordonne la demolition de l'un de ces batiments (construit sans autorisation et en zone protegee). Une ordonnance du 4 janvier 2025 du meme tribunal a ordonne l'execution du jugement. Le 21 mai 2025, la prefete du Rhone a fait proceder a l'evacuation forcee et a la destruction du batiment. M. Bizet estime ces interventions illegales et veut obtenir reparation. Il s'interroge sur la juridiction competente.",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "La voie de fait est une exception jurisprudentielle au principe de separation des autorites administratives et judiciaires (loi des 16-24 aout 1790, art. 13 ; decret du 16 fructidor an III) : le juge judiciaire est competent pour la constater, en ordonner la cessation et la reparation",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "La voie de fait commise par l'administration est une vieille exception jurisprudentielle au principe de separation des autorites administratives et judiciaires consacre notamment par l'article 13 de la loi des 16 et 24 aout 1790 ainsi que par le decret du 16 fructidor an III. En effet, le juge judiciaire est competent pour constater la voie de fait, en ordonner la cessation ou la reparation"
+          },
+          {
+            "text": "Definition actuelle de la voie de fait (TC, 17 juin 2013, Bergoend) : l'administration doit soit proceder a l'execution forcee dans des conditions irregulieres d'une decision portant atteinte a la liberte individuelle ou aboutissant a l'extinction d'un droit de propriete, soit prendre une decision ayant ces memes effets et manifestement insusceptible d'etre rattachee a un pouvoir de l'administration",
+            "linked_jp": "TC, 17 juin 2013, Bergoend, n C3911",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1.5,
+            "extract_from_grille": "Depuis decision Bergoend du TC (17 juin 2013, C3911, au Lebon), qui restreint considerablement la definition de la voie de fait commise par l'administration, cette derniere n'est caracterisee 'que dans la mesure ou l'administration soit a procede a l'execution forcee, dans des conditions irregulieres, d'une decision, meme reguliere, portant atteinte a la liberte individuelle ou aboutissant a l'extinction d'un droit de propriete, soit a pris une decision qui a les memes effets... et qui est manifestement insusceptible d'etre rattachee a un pouvoir appartenant a l'autorite administrative'"
+          },
+          {
+            "text": "Application directe : TC 12 juin 2023 (arret dont s'inspire le sujet) - des operations d'evacuation forcee et destruction d'un batiment decidees par le prefet en execution de decisions de justice ne sont pas irregulieres et sont rattachables au pouvoir de l'administration - pas de voie de fait",
+            "linked_jp": "TC, 12 juin 2023, n C4276",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Dans une decision du 12 juin 2023 (TC, C4276, aux Tables) - dont s'inspire le present cas -, le TC a juge que 'si les operations [d'evacuation forcee et de destruction d'un batiment] decidees par le prefet de departement ont ete executees de maniere forcee et ont abouti a l'extinction d'un droit de propriete, ces operations, decidees en execution de decisions de justice, ne sont pas intervenues dans des conditions irregulieres. Ces operations ne sont pas non plus manifestement insusceptibles d'etre rattachees a un pouvoir appartenant a l'autorite administrative. Elles ne peuvent, par suite, etre qualifiees de voie de fait'"
+          },
+          {
+            "text": "Qualification en l'espece : la destruction a bien abouti a l'extinction du droit de propriete (1er element caracterise), mais les operations prefectorales intervenaient en execution d'une ordonnance du TJ et ne sont ni irregulieres ni manifestement detachables d'un pouvoir de l'administration - pas de voie de fait",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "les operations prefectorales ont eu pour effet la destruction d'un batiment et, par consequent, ont abouti a l'extinction d'un droit de propriete. Le premier element - l'effet - de la definition de la voie de fait est donc caracterise. Neanmoins, il ne ressort pas des faits que les operations prefectorales, qui interviennent en execution de decisions juridictionnelles, seraient intervenues dans des conditions irregulieres ou seraient manifestement insusceptibles de se rattacher a un pouvoir du prefet. Par consequent, ces operations ne constituent pas des voies de fait"
+          },
+          {
+            "text": "Emprise irreguliere (theorie classique) : competence du juge judiciaire lorsque 3 conditions cumulatives - atteinte a la propriete privee immobiliere, dessaisissement par l'administration, atteinte illegale",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "Jusqu'en 2013, la theorie de l'emprise irreguliere donnait competence au juge judiciaire lorsque trois conditions cumulatives etaient remplies : 1 une atteinte a la propriete privee immobiliere ; 2 une atteinte consistant en une depossession temporaire ou permanente de l'administration... ; 3 une atteinte illegale (irreguliere), c'est-a-dire sans titre legal"
+          },
+          {
+            "text": "Restriction par TC 9 dec. 2013 Panizzon : le juge administratif est competent pour statuer sur la decision administrative portant atteinte a la propriete privee ET pour connaitre de la reparation, SAUF lorsque la decision a pour effet l'extinction du droit de propriete (PFRLR reservant au juge judiciaire le controle des depossessions definitives)",
+            "linked_jp": "TC, 9 dec. 2013, Panizzon, n 13-03.931",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "apres l'arret Bergoend susmentionne, qui restreint la definition de la voie de fait (TC, 17 juin 2013, C3911), le Tribunal des conflits a diminue le champ d'application de l'emprise irreguliere dans un arret Panizzon (TC, 9 dec. 2013, n 13-03.931). Celui-ci dispose que 'dans le cas d'une decision administrative portant atteinte a la propriete privee, le juge administratif... l'est egalement pour connaitre de conclusions tendant a la reparation des conséquences dommageables de cette decision administrative, hormis le cas ou elle aurait pour effet l'extinction du droit de propriete'"
+          },
+          {
+            "text": "Application : en l'espece il y a extinction du droit de propriete mais aucun element ne permet de considerer que l'atteinte serait irreguliere - donc pas d'emprise irreguliere non plus",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "il y a bien une extinction du droit de propriete privee de M. Bizet. Mais aucun element du cas ne permet de considerer qu'elle serait irreguliere. Des lors, l'emprise irreguliere n'est pas caracterisee"
+          },
+          {
+            "text": "Juridiction competente en l'absence de voie de fait et d'emprise irreguliere : le juge administratif est competent pour statuer sur la responsabilite de l'administration et reparer les consequences dommageables de l'action prefectorale",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "En l'absence de voie de fait ou d'emprise irreguliere, il appartient aux juridictions administratives de reparer les consequences dommageables de l'action prefectorale"
+          }
+        ],
+        "expected": [
+          {
+            "text": "TC 6 mai 2002 epoux Binet : illustration de l'ancienne repartition emprise irreguliere (juge judiciaire seul competent pour indemniser le prejudice resultant de la depossession)",
+            "linked_jp": "TC, 6 mai 2002, epoux Binet, n 02-03.287",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "le juge judiciaire, traditionnellement competent en matiere de propriete privee immobiliere, etait seul competent pour indemniser le prejudice qui resultait de cette depossession (TC, 6 mai 2002, epoux Binet, n 02-03.287)"
+          },
+          {
+            "text": "Fondement constitutionnel du PFRLR reservant au juge judiciaire les depossessions definitives : CC 25 juillet 1989 'Urbanisme et agglomeration nouvelle' §23 et CC 13 dec. 1985 'Communication audiovisuelle' §15",
+            "linked_jp": "CC, 25 juill. 1989, n 89-256 DC",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "un principe fondamental reconnu par les lois de la Republique reserve au juge judiciaire le controle des depossessions definitives de la propriete privee immobiliere (comp. : CC, 25 juillet 1989 'Urbanisme et agglomeration nouvelle', n 89-256 DC, §. 23 ; CC, 13 decembre 1985, 'Communication audiovisuelle', n 85-198 DC, §. 15)"
+          },
+          {
+            "text": "Distinction doctrinale (M. Hauriou) des deux branches de la voie de fait : 'manque de procedure' (execution forcee irreguliere) et 'manque de droit' (decision manifestement insusceptible d'etre rattachee a un pouvoir de l'administration)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "voie de fait par 'manque de procedure' : M. Hauriou... voie de fait par manque de droit' : M. Hauriou"
+          },
+          {
+            "text": "L'action en reparation contre l'administration devant le juge administratif prendra la forme d'un recours en responsabilite administrative de plein contentieux - recherche d'une faute (ou d'une responsabilite sans faute) et d'un prejudice reparable",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Conclusion logique de la grille mais non explicitee : si le juge administratif est competent pour reparer, M. Bizet doit construire un recours indemnitaire"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Ressort pratique du TC Bergoend : quasi-disparition de la voie de fait en matiere de propriete - la voie de fait subsiste essentiellement en matiere d'atteinte a la liberte individuelle stricto sensu (liberte physique) et non plus a la liberte fondamentale au sens large",
+            "linked_jp": "TC, 17 juin 2013, Bergoend, n C3911",
+            "sources": ["llm_intrinsic"],
+            "why": "Lecture doctrinale classique du revirement Bergoend - non developpee par la grille mais culturelle"
+          },
+          {
+            "text": "Alternative procedurale : refere-liberte (L. 521-2 CJA) - envisageable lorsque l'atteinte releve d'une liberte fondamentale ET est grave et manifestement illegale ; le juge administratif peut ordonner toutes mesures utiles en 48h",
+            "linked_article": "code_de_justice_administrative:L521-2",
+            "sources": ["llm_intrinsic"],
+            "why": "Complement naturel : depuis TC Bergoend, le refere-liberte a largement absorbe le contentieux autrefois porte en voie de fait devant le juge judiciaire. Point d'ouverture non aborde par la grille"
+          },
+          {
+            "text": "Refere-suspension (L. 521-1 CJA) : aurait pu etre envisage contre la decision prefectorale si elle avait ete attaquee avant execution - ici la destruction est effectuee, l'action est donc necessairement indemnitaire",
+            "linked_article": "code_de_justice_administrative:L521-1",
+            "sources": ["llm_intrinsic"],
+            "why": "Strategie contentieuse standard non mentionnee dans la grille car hors sujet (destruction deja executee) mais utile pour situer l'action indemnitaire"
+          },
+          {
+            "text": "Articulation avec TC 17 juin 2013 Bleitrach : complement de Bergoend sur le meme jour precisant le partage competence judiciaire/administrative",
+            "sources": ["llm_intrinsic"],
+            "why": "Reference doctrinale plus fine - non citee dans la grille",
+            "uncertainty_note": "Citation de memoire, le nom 'Bleitrach' associe a Bergoend doit etre verifie avant usage en benchmark"
+          },
+          {
+            "text": "Le jugement du TJ de Lyon (3 mai 2024) ordonnant la demolition fait ecran : la prefete n'executant qu'une decision de justice, l'action administrative est necessairement rattachable a un pouvoir (execution des decisions de justice) - c'est precisement le ressort de TC 12 juin 2023 qui inspire le cas",
+            "linked_jp": "TC, 12 juin 2023, n C4276",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.25,
+            "extract_from_grille": "ces operations, decidees en execution de decisions de justice, ne sont pas intervenues dans des conditions irregulieres. Ces operations ne sont pas non plus manifestement insusceptibles d'etre rattachees a un pouvoir appartenant a l'autorite administrative"
+          },
+          {
+            "text": "Fondements possibles de la responsabilite administrative a invoquer devant le juge administratif : responsabilite pour faute (illegalite eventuelle, erreur de fait), responsabilite sans faute pour rupture d'egalite devant les charges publiques, ou eventuellement responsabilite au titre du dommage de travaux publics",
+            "sources": ["llm_intrinsic"],
+            "why": "Prolongement pratique du conseil a M. Bizet, non detaille par la grille qui s'arrete au constat de competence"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [],
+        "optionnels": [
+          "code_de_justice_administrative:L521-1",
+          "code_de_justice_administrative:L521-2"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "TC, 17 juin 2013, Bergoend, n C3911",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret de principe (GAJA) qui restreint la voie de fait aux seules atteintes a la liberte individuelle ou extinction du droit de propriete avec execution forcee irreguliere / decision manifestement detachable. Pivot absolu du raisonnement : ici la voie de fait ne peut etre retenue.",
+          "uncertainty_note": "ECLI non verifie ; numero C3911 confirme par la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "TC, 9 dec. 2013, Panizzon, n 13-03.931",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret complementaire de Bergoend qui reduit l'emprise irreguliere : le juge administratif est desormais competent pour connaitre de la reparation des consequences d'une decision portant atteinte a la propriete, sauf extinction. Fonde la solution de l'espece (competence administrative).",
+          "uncertainty_note": "ECLI non verifie ; numero 13-03.931 issu de la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "TC, 12 juin 2023, n C4276",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret dont s'inspire directement le cas pratique : evacuation/destruction prefectorale en execution d'une decision de justice n'est pas une voie de fait. Transposition quasi directe.",
+          "uncertainty_note": "ECLI non verifie ; numero C4276 confirme par la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "TC, 6 mai 2002, epoux Binet, n 02-03.287",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Illustration de l'ancienne repartition des competences en matiere d'emprise irreguliere (juge judiciaire pour l'indemnisation de la depossession)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CC, 25 juill. 1989, Urbanisme et agglomeration nouvelle, n 89-256 DC",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Fondement constitutionnel du PFRLR reservant au juge judiciaire le controle des depossessions definitives de la propriete immobiliere",
+          "uncertainty_note": "Numero 89-256 DC a verifier"
+        },
+        {
+          "ref": null,
+          "short_ref": "CC, 13 dec. 1985, Communication audiovisuelle, n 85-198 DC",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Second fondement constitutionnel du PFRLR (protection de la propriete privee par le juge judiciaire)",
+          "uncertainty_note": "Numero 85-198 DC a verifier"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "NE PAS qualifier de voie de fait : l'erreur classique est de retenir la voie de fait des qu'il y a extinction du droit de propriete. Or, depuis Bergoend (2013) et le cas-source TC 12 juin 2023, il faut verifier les deux elements cumulatifs (effet ET irregularite/detachabilite) ; en l'espece le second fait defaut car execution d'une decision de justice. NE PAS retenir l'emprise irreguliere post-Panizzon : la competence reste au juge administratif sauf extinction ET irregularite. Ne pas invoquer l'ancienne definition large de la voie de fait (atteinte a une liberte fondamentale / atteinte grave au droit de propriete) : Bergoend a restreint a 'liberte individuelle' stricto sensu et 'extinction du droit de propriete'."
+      },
+      "source_extract": "M. Bizet est, enfin, proprietaire d'une exploitation agricole de plusieurs hectares sur lesquels sont implantes differents batiments. Par un jugement du 3 mai 2024, le tribunal judiciaire de Lyon a ordonne la demolition de l'un de ces batiments au double motif qu'il avait ete realise en dehors de toute autorisation de batir et dans une zone protegee. Une ordonnance du 4 janvier 2025 de ce meme tribunal a ordonne l'execution de ce jugement. Par consequent, la prefete du Rhone a fait proceder le 21 mai 2025 a l'evacuation forcee du batiment litigieux et a sa destruction. M. Bizet estime que ces interventions etaient illegales et souhaite obtenir reparation des prejudices subis. Il s'interroge sur la juridiction competente. (6 points)",
+      "consolidation_notes": "Question classique de repartition des competences administrative/judiciaire, transposition quasi directe de TC 12 juin 2023 (la grille le dit explicitement). Grille structuree en 3 sous-questions (3+2+1 pts). Aucun article de code n'est strictement obligatoire (articles_attendus.obligatoires vide) : le raisonnement repose sur le triptyque jurisprudentiel Bergoend / Panizzon / TC 2023. La strate expert ouvre sur les referes (L. 521-1, L. 521-2 CJA) qui ne sont pas dans la grille mais constituent un point de navigation profonde attendu d'un praticien confirme. Point de piege critique : retenir la voie de fait sur le seul critere de l'extinction du droit de propriete (erreur penalisante selon la logique Bergoend)."
+    }
+  ],
+  "synthese_benchmark": {
+    "total_questions": 3,
+    "total_points_rubric": {
+      "core": 23,
+      "expected": 11,
+      "expert": 17
+    },
+    "articles_uniques_attendus": [
+      "code_civil:2044",
+      "code_de_justice_administrative:L521-1",
+      "code_de_justice_administrative:L521-2",
+      "code_de_justice_administrative:L551-13",
+      "code_de_justice_administrative:L911-1",
+      "code_de_justice_administrative:R421-1",
+      "code_de_justice_administrative:R421-2",
+      "code_de_justice_administrative:R421-5",
+      "code_de_justice_administrative:R431-2",
+      "code_de_la_commande_publique:L6",
+      "code_des_relations_entre_le_public_et_l_administration:L112-3",
+      "code_des_relations_entre_le_public_et_l_administration:L231-1",
+      "code_des_relations_entre_le_public_et_l_administration:L231-4",
+      "code_des_relations_entre_le_public_et_l_administration:L411-2",
+      "code_des_relations_entre_le_public_et_l_administration:L411-7",
+      "code_des_relations_entre_le_public_et_l_administration:L423-1",
+      "code_des_relations_entre_le_public_et_l_administration:R112-5",
+      "code_general_des_collectivites_territoriales:L2131-6"
+    ],
+    "jp_pivots_benchmark": [
+      "CE, 7 oct. 2009, Ouharirou, n 322591 (Q1)",
+      "CE sect., 13 mai 2024, n 466541 (Q1)",
+      "CE Ass., 4 avr. 2014, Tarn-et-Garonne, n 358994 (Q2)",
+      "CE avis cont., 6 dec. 2002, Hay-les-Roses, n 249153 (Q2)",
+      "TC, 7 fev. 2022, SARL Guyacom, n C4233 (Q2)",
+      "TC, 17 juin 2013, Bergoend, n C3911 (Q3)",
+      "TC, 9 dec. 2013, Panizzon, n 13-03.931 (Q3)",
+      "TC, 12 juin 2023, n C4276 (Q3)"
+    ],
+    "observations_metaniveau": "La matiere procedure administrative + MARD est particulierement 'code-centrique' : la moitie des points tient a la mobilisation du Code de justice administrative (CJA), du Code des relations entre le public et l'administration (CRPA) et du Code de la commande publique (CCP). La jurisprudence est essentiellement jurisprudence du Conseil d'Etat et du Tribunal des conflits, avec plusieurs arrets du GAJA (Ouharirou, Tarn-et-Garonne, Bergoend) qu'un systeme de KG doit imperativement connaitre. Les numeros de requete sont issus de la grille officielle CNB et donc fiables a haute probabilite ; les ECLI n'ont pas ete verifies (noter uncertainty_note sur chaque JP). Aucun numero de pourvoi n'a ete fabrique. Les copies IEJ sont marquees comme source 'copie_iej' sur les points core et expected que des copies notees 15-16/20 ont necessairement couvert, mais les points specifiques citant uniquement 'copie_iej' sans grille_cnb sont rares et a prendre avec precaution car l'OCR des scans manuscrits a echoue."
+  }
+}

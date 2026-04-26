@@ -1,0 +1,244 @@
+{
+  "_meta": {
+    "created": "2026-04-24",
+    "annotator": "Claude (lecture intégrale des arrêts)",
+    "n_arrets": 20,
+    "convention": "pair_key = <code_slug>:<article_normalized>. Seuls les articles de CODES officiels sont inclus (lois/décrets/conventions exclus pour comparaison avec regex).",
+    "notes": "Pour 'article L743-6 à L743-8' → émettre L743-6, L743-7, L743-8. Pour 'articles X et suivants' → émettre X uniquement."
+  },
+  "annotations": {
+    "5fca63a63a15d34bf112659e": {
+      "jur": "CC",
+      "notes": "Court arrêt crim 2019, 1 seul article cité 2x",
+      "gt": ["code_de_procedure_penale:567-1-1"]
+    },
+    "613723e3cd5801467740f763": {
+      "jur": "CC",
+      "notes": "Arrêt soc 2002, 'nouveau Code de procédure civile' normalisé vers CPC",
+      "gt": [
+        "code_civil:1134",
+        "code_de_procedure_civile:4",
+        "code_de_procedure_civile:455"
+      ]
+    },
+    "6137213bcd580146773f2155": {
+      "jur": "CC",
+      "notes": "Soc 1990, 5 articles dont 1134 cité 3x",
+      "gt": [
+        "code_civil:1134",
+        "code_civil:1315",
+        "code_civil:2221",
+        "code_du_travail:L122-6",
+        "code_du_travail:L143-14"
+      ]
+    },
+    "6079d3709ba5988459c592fd": {
+      "jur": "CC",
+      "notes": "Com 1979 ALL CAPS SANS ACCENTS, article avec suffixe latin+lettre (1649 QUINQUIES B)",
+      "gt": ["code_general_des_impots:1649quinquiesB"]
+    },
+    "668cd247bbc9a118c6c63f67": {
+      "jur": "CA",
+      "notes": "CA sécu-fiva 2024, listing 'et suivants' + 450",
+      "gt": [
+        "code_de_procedure_civile:700",
+        "code_de_procedure_civile:394",
+        "code_de_procedure_civile:450"
+      ]
+    },
+    "66ebc047b777bc8e4ad63615": {
+      "jur": "CA",
+      "notes": "CA Chambre 4-7 2024, 'alinéa 1er' + L.1224-1 cité 2x",
+      "gt": [
+        "code_de_procedure_civile:700",
+        "code_de_procedure_civile:659",
+        "code_de_procedure_civile:473",
+        "code_de_procedure_civile:634",
+        "code_du_travail:L1224-1"
+      ]
+    },
+    "65166c7d788aac83189e9cdc": {
+      "jur": "CA",
+      "notes": "CA Pôle 4 2023 - listing CPCE très long + alinéa ordinal",
+      "gt": [
+        "code_de_procedure_civile:656",
+        "code_de_procedure_civile:658",
+        "code_de_procedure_civile:450",
+        "code_de_procedure_civile:805",
+        "code_de_procedure_civile:907",
+        "code_de_procedure_civile:700",
+        "code_de_procedure_civile:472",
+        "code_de_procedure_civile:954",
+        "code_des_procedures_civiles_d_execution:L412-1",
+        "code_des_procedures_civiles_d_execution:R411-1",
+        "code_des_procedures_civiles_d_execution:R412-1",
+        "code_des_procedures_civiles_d_execution:L433-1",
+        "code_des_procedures_civiles_d_execution:L433-2",
+        "code_des_procedures_civiles_d_execution:R432-2",
+        "code_des_procedures_civiles_d_execution:R433-1",
+        "code_des_procedures_civiles_d_execution:R433-7",
+        "code_des_procedures_civiles_d_execution:R441-1",
+        "code_des_procedures_civiles_d_execution:R442-1",
+        "code_des_procedures_civiles_d_execution:R451-1",
+        "code_des_procedures_civiles_d_execution:R451-4",
+        "code_civil:1103",
+        "code_civil:1728",
+        "code_civil:1240"
+      ]
+    },
+    "6735111fa16106af685e6fa3": {
+      "jur": "TJ",
+      "notes": "TJ JLD 2024 CESEDA - listing long L.743-6 à L.743-8 + anaphore implicite",
+      "gt": [
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L742-1",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-4",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-6",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-7",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-8",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-20",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-24",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L741-1",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-9",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L742-5",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L742-4",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L631-3",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-1",
+        "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-3",
+        "code_de_l_organisation_judiciaire:R213-12-2"
+      ]
+    },
+    "664f896c67b6231d697d4635": {
+      "jur": "TJ",
+      "notes": "TJ JCP 2024 - beaucoup de codes + 'article 9 du code procédure civile' (typo manquant 'de')",
+      "gt": [
+        "code_de_procedure_civile:700",
+        "code_de_procedure_civile:472",
+        "code_de_procedure_civile:9",
+        "code_de_procedure_civile:696",
+        "code_de_procedure_civile:514",
+        "code_civil:1103",
+        "code_civil:1124",
+        "code_civil:1227",
+        "code_civil:1229",
+        "code_civil:1224",
+        "code_civil:1228",
+        "code_civil:1353",
+        "code_de_la_construction_et_de_l_habitation:L442-6",
+        "code_de_la_construction_et_de_l_habitation:L442-3-5",
+        "code_de_la_construction_et_de_l_habitation:L441-9"
+      ]
+    },
+    "66e9c542a94e1874b4def810": {
+      "jur": "TJ",
+      "notes": "TJ Jex 2024 - R 211-1 (écrit avec espaces), R12121 (écrit sans tiret !)",
+      "gt": [
+        "code_des_procedures_civiles_d_execution:R211-1",
+        "code_des_procedures_civiles_d_execution:L211-2",
+        "code_des_procedures_civiles_d_execution:L211-3",
+        "code_des_procedures_civiles_d_execution:L211-4",
+        "code_des_procedures_civiles_d_execution:R211-5",
+        "code_des_procedures_civiles_d_execution:R211-11",
+        "code_des_procedures_civiles_d_execution:L111-8",
+        "code_des_procedures_civiles_d_execution:R121-21",
+        "code_de_procedure_civile:696",
+        "code_de_procedure_civile:700"
+      ]
+    },
+    "613726bacd58014677427f07": {
+      "jur": "CC",
+      "notes": "CC Civ 2 2008, très court, 1 seul article",
+      "gt": ["code_de_procedure_civile:1026"]
+    },
+    "6645a21e98cdd00008064fee": {
+      "jur": "CC",
+      "notes": "CC Civ 2 2024 rejet non spécialement motivé, 1014 al.1er + 700",
+      "gt": [
+        "code_de_procedure_civile:1014",
+        "code_de_procedure_civile:700"
+      ]
+    },
+    "6719e4485857dd64cbdaa2a4": {
+      "jur": "CC",
+      "notes": "CC Civ 2 2024 rejet non spécialement motivé, idem 1014+700",
+      "gt": [
+        "code_de_procedure_civile:1014",
+        "code_de_procedure_civile:700"
+      ]
+    },
+    "61372092cd580146773ebc0f": {
+      "jur": "CC",
+      "notes": "CC Civ 1 ~1982 ALL CAPS SANS ACCENTS, 'nouveau code de procedure civile' + art 1356 alinéa 3 code civil",
+      "gt": [
+        "code_de_procedure_civile:144",
+        "code_de_procedure_civile:16",
+        "code_civil:1356"
+      ]
+    },
+    "61372845cd5801467743048d": {
+      "jur": "CC",
+      "notes": "CC Soc 2012, L.122-3-8 devenu L.1243-4, 1134/1315, L.1221-1, L.1243-8, 700 CPC",
+      "gt": [
+        "code_civil:1134",
+        "code_civil:1315",
+        "code_de_procedure_civile:700",
+        "code_du_travail:L1221-1",
+        "code_du_travail:L1243-4",
+        "code_du_travail:L1243-8",
+        "code_du_travail:L122-3-8"
+      ]
+    },
+    "65bb47721712fc000885e8fc": {
+      "jur": "CA",
+      "notes": "CA Metz Soc 2024 ordonnance de jonction, 1 seul article 367 CPC",
+      "gt": ["code_de_procedure_civile:367"]
+    },
+    "644a1288656d26d0f8b57e8b": {
+      "jur": "CA",
+      "notes": "CA Metz RA 2023 soins psy, CSP multiples + 122/581 CPC + anaphore 'du même code'",
+      "gt": [
+        "code_de_la_sante_publique:R3211-42",
+        "code_de_la_sante_publique:R3211-43",
+        "code_de_la_sante_publique:R3211-23",
+        "code_de_la_sante_publique:L6143-7",
+        "code_de_la_sante_publique:D6143-33",
+        "code_de_procedure_civile:122",
+        "code_de_procedure_civile:581"
+      ]
+    },
+    "6253cac9bd3db21cbdd8c0fd": {
+      "jur": "CA",
+      "notes": "CA Poitiers 2008, Nouveau CPC 450 + 700/699 CPC",
+      "gt": [
+        "code_de_procedure_civile:450",
+        "code_de_procedure_civile:699",
+        "code_de_procedure_civile:700"
+      ]
+    },
+    "6712af5ff81231daf1b9b3ef": {
+      "jur": "TJ",
+      "notes": "TJ Chartres 2024 adoption simple, 'articles 360 et suivants code civil' → 360 + art 28 CPC",
+      "gt": [
+        "code_civil:360",
+        "code_de_procedure_civile:28"
+      ]
+    },
+    "67817d596d34da2cbdcdbe86": {
+      "jur": "TJ",
+      "notes": "TJ Draguignan 2025 SAFER, code rural cité de multiples façons (avec/sans espace, abbr 'CR') + 696/700 CPC",
+      "gt": [
+        "code_rural_et_de_la_peche_maritime:L141-1",
+        "code_rural_et_de_la_peche_maritime:R141-1",
+        "code_rural_et_de_la_peche_maritime:R141-11",
+        "code_rural_et_de_la_peche_maritime:R142-4",
+        "code_rural_et_de_la_peche_maritime:L143-14",
+        "code_rural_et_de_la_peche_maritime:L143-3",
+        "code_rural_et_de_la_peche_maritime:L143-2",
+        "code_rural_et_de_la_peche_maritime:L1",
+        "code_rural_et_de_la_peche_maritime:L331-2",
+        "code_de_procedure_civile:455",
+        "code_de_procedure_civile:696",
+        "code_de_procedure_civile:700"
+      ]
+    }
+  }
+}

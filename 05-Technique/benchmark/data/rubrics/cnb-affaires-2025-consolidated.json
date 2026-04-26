@@ -1,0 +1,811 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit des affaires (consolide)",
+    "source_path": "data/cnb-crfpa/2025/cas-pratiques.pdf (pages 6-9)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 Droit des affaires (diffusion Cap'Barreau)",
+      "Meilleure copie IEJ Strasbourg 2025 - droit_des_affaires_20.pdf (note 14,5/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - droit_des_affaires_24.pdf (note 14,5/20)"
+    ],
+    "generated_by": "Claude (Opus 4.7 1M context, consolidation run)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-03",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_creation_Tech_and_Co": 2,
+        "Q2_agrement_cession_SAS": 5,
+        "Q3_societe_JEANNE_procedure_collective": 8,
+        "Q4_societe_JOUTE_bail_commercial": 5
+      }
+    }
+  },
+  "questions": [
+    {
+      "id": "CNB-AFFAIRES-2025-Q1",
+      "branche": "affaires",
+      "specialisation": "Droit des societes - formation de la societe / pourparlers",
+      "question": "Tania et Victor decident de creer Tech & Co (SAS, IA generative, Lyon) avec Maria, un fonds d'investissement et Louis. Au fil des discussions, ils s'accordent sur la denomination, la forme sociale, le siege, l'objet social et la future presidente. La societe est finalement immatriculee entre Victor, Tania, Maria et le fonds, mais sans Louis, ecarte du projet juste avant la signature des statuts. Louis menace de demander reparation en justice. Quels sont les risques des associes ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualifier la phase : choisir entre projet de societe (simples pourparlers) et promesse de societe (accord sur les elements essentiels du contrat de societe)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Deux qualifications peuvent etre envisagees : le projet de societe ou la promesse de societe"
+          },
+          {
+            "text": "Identifier les elements essentiels du contrat de societe (art. 1832 C. civ.) : associes, apports, participation aux benefices et pertes, affectio societatis ; auxquels s'ajoutent en pratique objet social, capital social, forme sociale",
+            "linked_article": "code_civil:1832",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "les elements essentiels du contrat de societe, qui sont non seulement les associes, les apports, la participation aux benefices et pertes et l'affectio societatis (C. civ., art. 1832), mais aussi l'objet social, le capital social, la forme sociale"
+          },
+          {
+            "text": "Regime du projet de societe : rupture par principe libre, fautive seulement si brutale et sans signe avant-coureur ; reparation limitee (ni perte de chance de conclure le contrat de societe ni gains manques - dividendes, valorisation)",
+            "linked_article": "code_civil:1112",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La rupture de ces pourparlers est par principe libre ; elle peut neanmoins se reveler fautive si elle intervient brutalement et sans signe avant-coureur... cette reparation ne pourra comprendre celle de la perte de chance de conclure le contrat de societe ni les gains manques (dividendes, valorisation des actions)"
+          },
+          {
+            "text": "Application : il manque des elements essentiels (capital social, apports respectifs, repartition des benefices et droits de vote) - donc simple projet de societe, pas de promesse ; rupture libre sauf preuve d'une rupture brutale - reparation limitee aux frais engages",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "il manque manifestement des elements essentiels, en particulier le capital social, les apports respectifs des associes... Des lors, il est difficile de conclure a une veritable promesse de societe ; nous sommes face a un simple projet de societe"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Regime de la promesse de societe : contrat de promesse forme, responsabilite contractuelle ou execution par equivalent, reparation elargie pouvant couvrir les gains manques",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Un veritable contrat de promesse est alors forme, et permet d'obtenir sur le fondement de la responsabilite contractuelle ou de l'execution par equivalent une reparation bien plus importante, qui peut couvrir les gains manques"
+          },
+          {
+            "text": "Fondement delictuel de la rupture abusive des pourparlers (art. 1240 C. civ.) : faute, dommage et lien de causalite",
+            "linked_article": "code_civil:1240",
+            "sources": ["copie_iej"],
+            "why": "La copie 20 (14,5/20) fonde la reparation sur l'art. 1240 C. civ. - compatible avec la grille qui parle de rupture fautive",
+            "uncertainty_note": "La grille n'explicite pas le visa de l'article 1240 mais parle de 'droit commun des contrats' (art. 1112 C. civ.)"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Responsabilite personnelle des associes envers le tiers evince pour faute detachable / d'une particuliere gravite incompatible avec leurs fonctions (reference jurisprudentielle Cass. com. 2024)",
+            "linked_article": "code_civil:1240",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 invoque cette construction (faute detachable des associes avant l'immatriculation art. 1842 C. civ.)",
+            "uncertainty_note": "Reference 'Com. 2024' citee par la copie 24 sans numero de pourvoi - absent de la grille ; a verifier"
+          },
+          {
+            "text": "La societe ne peut engager sa responsabilite avant son immatriculation (art. 1842 C. civ. - acquisition de la personnalite morale a l'immatriculation)",
+            "linked_article": "code_civil:1842",
+            "sources": ["copie_iej"],
+            "why": "Apporte par la copie 24 - absent de la grille mais juridiquement exact et structurant"
+          },
+          {
+            "text": "L'action ut singuli de l'art. 1843-5 C. civ. n'est pas ouverte a Louis : il n'est pas associe de la societe",
+            "linked_article": "code_civil:1843-5",
+            "sources": ["copie_iej"],
+            "why": "La copie 20 ecarte a juste titre l'action ut singuli - raisonnement par exclusion non present dans la grille"
+          },
+          {
+            "text": "Articulation avec l'art. 1104 C. civ. (bonne foi dans la negociation) comme principe d'ordre public",
+            "linked_article": "code_civil:1104",
+            "sources": ["llm_intrinsic"],
+            "why": "Point classique de droit des contrats applicable aux pourparlers - non explicite dans grille ni copies mais canonique",
+            "uncertainty_note": "Point derive du raisonnement intrinseque LLM, non triangule par grille ou copies"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1832",
+          "code_civil:1112"
+        ],
+        "optionnels": [
+          "code_civil:1240",
+          "code_civil:1842",
+          "code_civil:1843-5",
+          "code_civil:1104"
+        ]
+      },
+      "jp_attendues": [],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas qualifier precipitamment de promesse de societe : la grille souligne que l'absence d'accord sur capital social, apports et repartition des benefices fait tomber la qualification."
+      },
+      "source_extract": "Travaillant ensemble depuis cinq ans dans le secteur de l'intelligence artificielle, Tania et Victor decident de creer leur propre societe... la societe est creee et elle est immatriculee entre Victor, Tania, Maria et le fonds, mais sans Louis, ecarte du projet juste avant la signature des statuts. Ce dernier, furieux, indique aux autres qu'il ne compte pas en rester la et menace de demander reparation en justice. Les associes vous consultent pour savoir ce qu'ils risquent. (2 points)",
+      "consolidation_notes": "Question courte (2 pts). La grille se concentre sur la distinction projet/promesse de societe et le regime de la reparation. La copie 20 traite sobrement avec l'art. 1240. La copie 24 apporte l'angle faute detachable / art. 1842 qui est pertinent mais n'est pas dans la grille. Pas de JP exigee par la grille."
+    },
+    {
+      "id": "CNB-AFFAIRES-2025-Q2",
+      "branche": "affaires",
+      "specialisation": "Droit des societes - SAS, clause d'agrement statutaire, cession d'actions, transfert de propriete",
+      "question": "Un an apres la creation de la SAS Tech & Co, Victor cede 150 actions a son petit-fils Jules (double formation droit/commerce). La cession est conclue, le prix est paye et Victor notifie la cession a la SAS. Un mois plus tard, Jules n'est pas convoque a l'assemblee generale annuelle : la Presidente considere qu'il n'est pas associe faute de respect de la procedure d'agrement prevue a l'article 7 des statuts (agrement preable pour toute cession sauf aux ascendants/descendants du cedant). Victor estime qu'en tant que petit-fils, Jules est dispense. Quelle est la situation juridique ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Regime des clauses d'agrement dans une SAS : possibilite de prevoir une clause statutaire d'agrement pour les cessions d'actions (art. L. 227-14 C. com.)",
+            "linked_article": "code_de_commerce:L227-14",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il est possible de prevoir des clauses d'agrement dans les statuts d'une SAS, imposant a un associe qui souhaite ceder ses titres d'obtenir au prealable l'accord de la societe sur la personne du cessionnaire, dans les conditions prevues par la clause (C. com., art. L. 227-14)"
+          },
+          {
+            "text": "Sanction de la violation d'une clause d'agrement statutaire dans la SAS : la cession est nulle (art. L. 227-15 C. com.)",
+            "linked_article": "code_de_commerce:L227-15",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La loi prevoit qu'en cas de violation d'une telle clause d'agrement statutaire, la cession est nulle (C. com., art. L. 227-15)"
+          },
+          {
+            "text": "Interpretation de la clause statutaire selon le droit commun (commune intention des parties) ; sans autre precision, 'descendants' inclut petits-enfants - Jules descendant de Victor donc transmission libre",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "c'est une question d'interpretation des statuts, qui obeit au regime du droit commun : si la clause est ambigue, le juge doit l'interpreter en recherchant notamment sur ce point la commune intention des parties. Sans autre precision, on peut penser que cette exclusion de l'agrement vaut pour tous les descendants, c'est-a-dire non seulement les enfants mais aussi les petits-enfants"
+          },
+          {
+            "text": "Transfert de propriete des actions de SAS (valeurs mobilieres) : art. L. 228-1 C. com. renvoie a l'art. L. 211-17 CMF - transfert par inscription au compte-titres de l'acquereur ou au registre des titres nominatifs",
+            "linked_article": "code_de_commerce:L228-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "l'article L. 228-1 du Code de commerce dispose que pour les cessions de valeurs mobilieres... le transfert de propriete s'effectue dans les conditions prevues a l'article L. 211-17 du Code monetaire et financier"
+          },
+          {
+            "text": "Consequence : tant que la cession n'est pas inscrite, la qualite d'actionnaire (droit de vote, dividendes) n'est pas acquise ; si la societe refuse l'inscription alors que la cession est reguliere, elle engage sa responsabilite (Cass. com., 18 sept. 2024, n 23-10.455)",
+            "linked_article": "code_monetaire_et_financier:L211-17",
+            "linked_jp": "Cass. com., 18 sept. 2024, n 23-10.455",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "le cessionnaire d'actions d'une SAS n'en devient pas proprietaire au jour de la cession mais a compter de l'inscription des actions au compte individuel de l'acquereur... Si la societe dument notifiee de la cession ne procede pas a son inscription, elle est susceptible d'engager sa responsabilite (Cass. com., 18 sept. 2024, n 23-10455)"
+          },
+          {
+            "text": "Remede : Jules et Victor peuvent assigner la societe pour injonction d'inscription, demander la designation d'un mandataire ad hoc et engager la responsabilite de la societe pour le prejudice du retard",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Jules et Victor pourront l'assigner pour qu'il lui soit fait injonction de proceder a cette inscription, voire pour demander la designation d'un mandataire ad hoc charge de le faire a sa place, et engager la responsabilite de la societe pour le prejudice resultant du retard de cette inscription"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Grande liberte statutaire de la SAS (art. L. 227-9 C. com.) - les statuts determinent les decisions prises collectivement",
+            "linked_article": "code_de_commerce:L227-9",
+            "sources": ["copie_iej"],
+            "why": "La copie 20 invoque l'art. L. 227-9 comme fondement de la liberte statutaire - pertinent, non explicite dans la grille"
+          },
+          {
+            "text": "Principe de libre cessibilite des actions (art. L. 228-23 C. com.) - point de depart du raisonnement",
+            "linked_article": "code_de_commerce:L228-23",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 pose le principe de libre cessibilite comme prealable - absent de la grille"
+          },
+          {
+            "text": "NB grille : un candidat adoptant la position inverse (agrement requis, nullite art. L. 227-15) peut obtenir la moitie des points s'il argumente suffisamment",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Le candidat qui adopterait une position contraire, des lors qu'elle est suffisamment argumentee, et qui conclut a la nullite de la cession en application de l'article L. 227-15, pourra se voir attribuer jusqu'a la moitie des points alloues a cette question (soit 1 point sur 2)"
+          },
+          {
+            "text": "Droit de participer aux decisions collectives, ordre public (art. 1844 C. civ.) - si le cessionnaire est associe, la deliberation prise sans le convoquer est susceptible de nullite (art. 1844-10 C. civ.)",
+            "linked_article": "code_civil:1844",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 invoque l'art. 1844 C. civ. comme fondement du droit de vote ; la grille retient plutot l'angle 'transfert de propriete non realise'"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Nullite de la deliberation sociale pour non-convocation : art. 1844-10 C. civ., si la nullite est susceptible d'avoir une incidence sur le resultat du processus de decision (Cass. com., 11 oct. 2024)",
+            "linked_article": "code_civil:1844-10",
+            "linked_jp": "Cass. com., 11 oct. 2024",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 cite cet arret pour caracteriser la nullite si incidence sur le resultat du vote",
+            "uncertainty_note": "Numero de pourvoi non cite par le candidat - verification necessaire"
+          },
+          {
+            "text": "Caractere d'ordre public du droit de participer aux decisions collectives (Cass. com., 9 fev. 1999)",
+            "linked_jp": "Cass. com., 9 fev. 1999",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 cite cet arret de principe - absent de la grille",
+            "uncertainty_note": "Reference probablement a Cass. com., 9 fev. 1999, n 96-17.661 (arret Chateau d'Yquem) - a confirmer"
+          },
+          {
+            "text": "Raisonnement alternatif de la grille (position contraire admise) : si la clause est interpretee comme imposant l'agrement pour les cessions aux petits-enfants, la cession est nulle sur le fondement de l'art. L. 227-15 et la societe peut opposer cette nullite pour justifier le refus d'inscription et echapper a sa responsabilite",
+            "linked_article": "code_de_commerce:L227-15",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Les candidats qui auraient conclu a l'applicabilite de la clause statutaire d'agrement doivent tenir le meme raisonnement, mais avec une conclusion differente : la societe pourrait opposer la nullite de la cession sur le fondement de l'article L. 227-15 du Code de commerce pour justifier son refus d'inscription"
+          },
+          {
+            "text": "Precision procedurale : inscription au compte-titres OU inscription au benefice de l'acquereur via technologie des registres distribues (art. L. 211-3 CMF)",
+            "linked_article": "code_monetaire_et_financier:L211-3",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Le transfert de propriete de titres financiers resulte de l'inscription de ces titres au compte-titres de l'acquereur ou de l'inscription de ces titres au benefice de l'acquereur au moyen d'une technologie des registres distribues mentionnee a l'article L. 211-3"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_commerce:L227-14",
+          "code_de_commerce:L227-15",
+          "code_de_commerce:L228-1",
+          "code_monetaire_et_financier:L211-17"
+        ],
+        "optionnels": [
+          "code_de_commerce:L227-9",
+          "code_de_commerce:L228-23",
+          "code_civil:1844",
+          "code_civil:1844-10",
+          "code_monetaire_et_financier:L211-3"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 18 sept. 2024, n 23-10.455",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret recent fondant la responsabilite de la societe qui refuse l'inscription d'une cession reguliere sur son registre",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 11 oct. 2024",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cite par la copie 24 pour la nullite de la deliberation sociale si incidence sur le resultat du vote",
+          "uncertainty_note": "Numero de pourvoi non cite - absent de la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 9 fev. 1999 (arret Chateau d'Yquem)",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Arret de principe sur le caractere d'ordre public du droit de participer aux decisions collectives",
+          "uncertainty_note": "Reference probable a Cass. com. 9 fev. 1999 n 96-17.661 (Chateau d'Yquem) - absent de la grille"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas oublier l'etape du transfert de propriete par inscription (art. L. 228-1 C. com. / L. 211-17 CMF) meme si la cession est jugee valable - c'est 3 pts sur 5."
+      },
+      "source_extract": "Un an apres la creation de Tech & Co, Victor souhaite mettre le pied a l'etrier a son petit-fils, Jules... en lui transmettant 150 de ses actions. La cession est conclue et le prix convenu paye par Jules. Immediatement, Victor notifie la cession a la SAS... un mois plus tard, Jules ne soit pas convoque a l'assemblee generale annuelle... Tania vous consulte pour avoir votre opinion sur cette situation. (5 points)",
+      "consolidation_notes": "Question articulee en deux temps (validite de la cession 2 pts + inscription et qualite d'actionnaire 3 pts). Les deux copies traitent les deux aspects mais avec des nuances : copie 20 traite droit/copie 24 insiste sur le droit de participer aux decisions collectives (art. 1844 et 1844-10). La grille privilegie l'angle 'transfert de propriete non realise tant que pas d'inscription' (arret 18 sept. 2024 central). La copie 24 invoque Cass. com. 9 fev. 1999 et 11 oct. 2024 - apport pertinent mais absent de la grille."
+    },
+    {
+      "id": "CNB-AFFAIRES-2025-Q3",
+      "branche": "affaires",
+      "specialisation": "Droit des entreprises en difficulte - liquidation judiciaire, bail commercial, contrats en cours, declaration de creances",
+      "question": "La SAS JEANNE (pret-a-porter bon marche, centre-ville d'Auxerre) est placee en liquidation judiciaire le 2 juin 2025 (Me David liquidateur). (A) La SCI REAL ESTATE, bailleresse depuis 2016, invoque deux motifs de resiliation du bail : defaut d'exploitation (contractuellement sanctionne art. 10-11) et impaye du dernier trimestre (3 juin - 31 aout 2025, prelevement rejete 'compte cloture'). (B) La banque a cloture le compte bancaire de la societe au motif de la liquidation. (C) M. Jean, president, doit remettre au liquidateur la liste des creanciers mais hesite a y faire figurer la dette de 10 000 euros envers CHICANE (jugement TJ du 28 mars 2025 frappe d'appel) qu'il conteste. Resiliation du bail ? Cloture du compte ? Omission de la dette contestee ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "A.1. Defaut d'exploitation : l'obligation d'exploiter n'est pas legale ; sa sanction contractuelle par resiliation est neutralisee en procedure collective par l'art. L. 622-14 dernier alinea (nonobstant toute clause contraire, le defaut d'exploitation pendant la periode d'observation n'entraine pas resiliation), applicable en LJ par renvoi de l'art. L. 641-12, 3 C. com.",
+            "linked_article": "code_de_commerce:L622-14",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Nonobstant toute clause contraire, le defaut d'exploitation pendant la periode d'observation dans un ou plusieurs immeubles loues par l'entreprise n'entraine pas resiliation du bail (article L. 622-14, dernier alinea du Code de commerce, rendu applicable a la liquidation judiciaire par l'article L. 641-12, 3)"
+          },
+          {
+            "text": "A.1. Jurisprudence : l'obligation d'exploiter est une condition d'application du statut des baux commerciaux mais l'inexecution n'entraine pas resiliation sans clause imposant l'exploitation effective et continue (Cass. 3e civ., 10 juin 2009, n 07-18.618 ; Cass. 3e civ., 16 oct. 2012, n 11-25.234)",
+            "linked_jp": "Cass. civ. 3e, 10 juin 2009, n 07-18.618",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "l'obligation d'exploiter est une condition d'application du statut des baux commerciaux dont l'inexecution ne peut entrainer la resiliation du bail en l'absence d'une clause imposant l'exploitation effective et continue du fonds dans les lieux loues (Cass. 3e civ., 10 juin 2009, n 07-18.618 ; Cass. 3e civ., 16 octobre 2012, n 11-25.234)"
+          },
+          {
+            "text": "A.2. Impayes de loyers posterieurs au jugement d'ouverture : le bailleur peut demander la resiliation judiciaire ou faire constater la resiliation de plein droit pour defaut de paiement des loyers afferents a une occupation posterieure au jugement de LJ (art. L. 641-12, 3 C. com.)",
+            "linked_article": "code_de_commerce:L641-12",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le bailleur peut egalement demander la resiliation judiciaire ou faire constater la resiliation de plein droit du bail pour defaut de paiement des loyers et charges afferents a une occupation posterieure au jugement de liquidation judiciaire (article L. 641-12, 3)"
+          },
+          {
+            "text": "A.2. Delai de repit de 3 mois : si le paiement intervient avant l'expiration de ce delai, il n'y a pas lieu a resiliation (art. L. 622-14 al. 3-5 applicable en LJ) ; prolongation jurisprudentielle : le preneur peut payer jusqu'au jour ou le juge statue (Cass. com., 12 juin 2024, n 22-24.177)",
+            "linked_article": "code_de_commerce:L622-14",
+            "linked_jp": "Cass. com., 12 juin 2024, n 22-24.177",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "si le paiement des sommes dues intervient avant l'expiration de ce delai [trois mois a compter du jugement d'ouverture], il n'y a pas lieu a resiliation... le preneur peut payer les loyers posterieurs au jugement d'ouverture jusqu'au jour ou le juge statue sur sa demande en resiliation (Cass. com., 12 juin 2024, n 22-24.177)"
+          },
+          {
+            "text": "B. Principe de continuation des contrats en cours : aucune indivisibilite, resiliation ou resolution d'un contrat en cours ne peut resulter du seul fait de l'ouverture ou du prononce d'une liquidation judiciaire (art. L. 641-11-1 C. com.)",
+            "linked_article": "code_de_commerce:L641-11-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Nonobstant toute disposition legale ou toute clause contractuelle, aucune indivisibilite, resiliation ou resolution d'un contrat en cours ne peut resulter du seul fait de l'ouverture ou du prononce d'une liquidation judiciaire"
+          },
+          {
+            "text": "B. Revirement majeur : le compte courant non cloture avant le jugement d'ouverture est un contrat en cours ; la LJ n'entraine pas la cloture du compte du debiteur (Cass. ass. plen., 11 sept. 2024, n 23-12.695 - revirement Cass. com., 13 dec. 2016, n 14-16.037)",
+            "linked_jp": "Cass. ass. plen., 11 sept. 2024, n 23-12.695",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La Cour de cassation a recemment procede a un revirement de jurisprudence et affirme que le compte courant non cloture avant le jugement d'ouverture constituait un contrat en cours... l'ouverture ou le prononce d'une liquidation judiciaire n'avait pas pour effet d'entrainer la cloture du compte courant du debiteur (Cass. ass. plen., 11 sept. 2024, n 23-12.695)"
+          },
+          {
+            "text": "B. Application : la cloture du compte JEANNE par la banque viole l'art. L. 641-11-1 ; responsabilite civile de la banque engageable, liquidateur peut reclamer la reouverture",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la cloture du compte bancaire du fait de l'ouverture d'une liquidation judiciaire viole l'article L. 641-11-1 du Code de commerce : elle est illegale. Le liquidateur peut donc engager la responsabilite civile de la banque et reclamer la reouverture du compte"
+          },
+          {
+            "text": "C. Obligation pour le debiteur de remettre au liquidateur la liste des creanciers et du montant des dettes (art. L. 622-6 C. com., applicable en LJ par renvoi de l'art. L. 641-1) ; obligation d'informer des instances en cours",
+            "linked_article": "code_de_commerce:L622-6",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "le debiteur remet au liquidateur judiciaire la liste de ses creanciers, du montant de ses dettes et des principaux contrats en cours et il l'informe des instances en cours auxquelles il est partie (article L 622-6 du Code de commerce, applicable a la liquidation judiciaire en application de l'article L. 641-1)"
+          },
+          {
+            "text": "C. Le debiteur ne peut pas choisir d'ecarter une creance au motif qu'il la conteste (Cass. com., 3 juill. 2024, n 23-15.715) ; la mention sur la liste ne vaut pas reconnaissance du bien-fonde, qui peut etre contestee ulterieurement",
+            "linked_jp": "Cass. com., 3 juill. 2024, n 23-15.715",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La jurisprudence decide que le debiteur ne peut pas choisir de ne pas faire figurer un creancier sur la liste des creanciers au motif qu'il ne peut lui etre impose de declarer pour le compte d'un creancier une creance dont il conteste l'existence (Cass. com., 3 juill. 2024, n 23-15.715)"
+          }
+        ],
+        "expected": [
+          {
+            "text": "A. Contrat en cours = contrat non resilie et non integralement execute ; le cocontractant doit remplir ses obligations malgre le defaut d'execution d'engagements anterieurs au jugement d'ouverture (art. L. 622-13 et L. 641-11-1 C. com.)",
+            "linked_article": "code_de_commerce:L622-13",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "un regime derogatoire de continuation des contrats en cours est mis en place (articles L. 622-13 s. et articles L. 641-11-1 s. du Code de commerce). Un contrat en cours est un contrat non resilie et non integralement execute"
+          },
+          {
+            "text": "A.2. Application : si le bailleur agit a compter du 3 septembre 2025, le delai de 3 mois (jugement d'ouverture 2 juin 2025) est respecte ; mais le liquidateur peut payer avant que le juge ne statue, neutralisant la resiliation",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "le jugement d'ouverture de la liquidation judiciaire a ete rendu le 2 juin 2025... Si le bailleur agit a compter du 3 septembre 2025, le delai de 3 mois est respecte... Le liquidateur judiciaire pourrait donc souhaiter payer le bailleur avant que le juge ne statue"
+          },
+          {
+            "text": "B. La liquidation judiciaire n'entraine pas la disparition de la personnalite morale : la societe ne prend fin qu'a la cloture de la LJ pour insuffisance d'actif (art. 1844-7, 7 C. civ.)",
+            "linked_article": "code_civil:1844-7",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "En application de l'article 1844-7, 7 du Code civil, la societe prend fin par l'effet d'un jugement ordonnant la cloture de la liquidation judiciaire pour insuffisance d'actif. Le jugement d'ouverture de la liquidation judiciaire ne fait donc pas disparaitre la personnalite morale"
+          },
+          {
+            "text": "B. Le banquier doit arreter un solde provisoire au jour du jugement d'ouverture mais cela ne revient pas a cloturer le compte, ce qui constituerait une resiliation du contrat bancaire intuitu personae soumis au regime de continuation",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "le banquier doit arreter un solde provisoire au jour du jugement d'ouverture d'une procedure collective, cela ne revient pas a cloturer le compte bancaire, ce qui constituerait sinon une resiliation du contrat liant la banque a son client"
+          },
+          {
+            "text": "C. Sanctions de la liste incomplete : abstention volontaire de cooperer pouvant justifier une faillite personnelle (art. L. 653-5, 5 C. com.) ; le creancier beneficie d'un relevé de forclusion (art. L. 622-26 al. 1 C. com.)",
+            "linked_article": "code_de_commerce:L653-5",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le fait de fournir une liste incomplete pourrait etre considere comme une abstention volontaire de cooperer avec les organes de la procedure... justifier le prononce d'une faillite personnelle (article L. 653-5, 5). En outre, l'omission du debiteur lors de l'etablissement de la liste est un cas de releve de forclusion (article L. 622-26, al. 1)"
+          },
+          {
+            "text": "C. Lorsque le debiteur porte une creance a la connaissance du liquidateur, il est presume avoir agi pour le compte du creancier tant que celui-ci n'a pas adresse sa declaration (art. L. 622-24 al. 3 C. com.)",
+            "linked_article": "code_de_commerce:L622-24",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "lorsque le debiteur a porte une creance a la connaissance du liquidateur, il est presume avoir agi pour le compte du creancier tant que celui-ci n'a pas adresse sa declaration de creance (article L. 622-24, al. 3)"
+          },
+          {
+            "text": "NB grille : candidat ne citant pas l'arret du 3 juill. 2024 et adoptant position contraire peut obtenir la moitie des points si argumentation suffisante (1 point sur 2)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Le candidat qui ne citerait pas l'arret du 3 juillet 2024 et adopterait une position contraire, des lors qu'elle est suffisamment argumentee, pourra se voir attribuer jusqu'a la moitie des points alloues a cette question (soit 1 point sur 2)"
+          }
+        ],
+        "expert": [
+          {
+            "text": "B. Jurisprudence renversee : Cass. com., 13 dec. 2016, n 14-16.037 (solution anterieure : compte courant cloture par LJ, solde exigible de la caution)",
+            "linked_jp": "Cass. com., 13 dec. 2016, n 14-16.037",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "La jurisprudence decidait que le compte courant d'une societe etant cloture par l'effet de sa liquidation judiciaire, le solde de ce compte etait immediatement exigible de la caution (Cass. com., 13 dec. 2016, n 14-16.037)"
+          },
+          {
+            "text": "B. Le regime de continuation des contrats en cours s'applique a tout contrat, y compris intuitu personae comme un contrat bancaire",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "le regime de continuation des contrats en cours s'applique en principe a tout contrat, y compris un contrat reposant sur un intuitus personae tel qu'un contrat bancaire"
+          },
+          {
+            "text": "A. Cession du droit au bail : le liquidateur peut ceder le bail commercial pour payer le passif, sous autorisation du juge-commissaire",
+            "sources": ["copie_iej"],
+            "why": "La copie 20 evoque la cession du bail commercial par le liquidateur - angle pratique absent de la grille"
+          },
+          {
+            "text": "C. Jurisprudence anterieure sur l'engagement de la responsabilite du debiteur en cas d'omission (CA Angers, 10 mai 2005 - cite par la copie 24)",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 cite un arret de CA Angers - reference non confirmee par la grille",
+            "uncertainty_note": "Arret de CA cite par le candidat sans reference precise - probablement decoratif"
+          },
+          {
+            "text": "Principe d'exigibilite des creances en LJ (art. L. 643-1 C. com.) - a nuancer avec la continuation des contrats en cours",
+            "linked_article": "code_de_commerce:L643-1",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 articule art. L. 643-1 avec le revirement Cass. ass. plen. 11 sept. 2024 - articulation pertinente"
+          },
+          {
+            "text": "Exigence procedurale : la resiliation du bail pour defaut de paiement est demandee devant le juge-commissaire (art. R. 622-13 C. com.)",
+            "linked_article": "code_de_commerce:R622-13",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 cite l'art. R. 622-13 sur le juge-commissaire"
+          },
+          {
+            "text": "A.1. Regime derogatoire restreignant la resiliation pour impayes du bail commercial : art. L. 622-14 al. 3-5 C. com.",
+            "linked_article": "code_de_commerce:L622-14",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "Des dispositions particulieres restreignent neanmoins les conditions de resiliation du bail commercial (article L. 622-14, alineas 3 a 5, applicable a la liquidation judiciaire par renvoi de l'article L. 641-12, 3)"
+          },
+          {
+            "text": "A.1. La clause resolutoire contractuelle pour defaut d'exploitation (art. 11 du bail) est neutralisee par l'art. L. 622-14 al. in fine 'nonobstant toute clause contraire'",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "Ainsi, le defaut d'exploitation ne peut exceptionnellement pas etre sanctionne par la resiliation du bail commercial, compte tenu de la liquidation judiciaire en cours"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_commerce:L622-14",
+          "code_de_commerce:L641-12",
+          "code_de_commerce:L641-11-1",
+          "code_de_commerce:L622-6",
+          "code_de_commerce:L622-13"
+        ],
+        "optionnels": [
+          "code_de_commerce:L641-1",
+          "code_de_commerce:L622-24",
+          "code_de_commerce:L622-26",
+          "code_de_commerce:L653-5",
+          "code_de_commerce:L643-1",
+          "code_de_commerce:R622-13",
+          "code_civil:1844-7"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. ass. plen., 11 sept. 2024, n 23-12.695",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Revirement majeur : le compte courant non cloture avant LJ est un contrat en cours - la cloture par la banque est illegale",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 12 juin 2024, n 22-24.177",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Prolongation du delai de repit : le preneur peut payer les loyers jusqu'au jour ou le juge statue",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 3 juill. 2024, n 23-15.715",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Interdit au debiteur d'ecarter une creance contestee de la liste des creanciers",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 10 juin 2009, n 07-18.618",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Obligation d'exploiter = condition d'application du statut mais non cause autonome de resiliation sans clause",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 16 oct. 2012, n 11-25.234",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la solution Cass. 3e civ. 10 juin 2009 sur l'obligation d'exploiter",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 13 dec. 2016, n 14-16.037",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Solution anterieure revirée par Cass. ass. plen. 11 sept. 2024 - utile pour la contextualisation historique",
+          "uncertainty_note": "ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas traiter la cloture du compte sous l'angle 'exigibilite' seule (piege de l'ancienne JP 2016). Le revirement 11 sept. 2024 est imperatif. Pour la declaration de creance, ne pas omettre la dette contestee."
+      },
+      "source_extract": "L'activite de la societe JEANNE, societe par actions simplifiee presidee par Monsieur Jean, rencontre de serieuses difficultes... une procedure de liquidation judiciaire. Maitre David a ete nomme liquidateur judiciaire... La societe REAL ESTATE... reproche a la societe JEANNE d'avoir cesse son activite... n'a pas paye le loyer pour le dernier trimestre... la banque a decide de cloturer le compte... Monsieur Jean est bien embarrasse par un jugement du 28 mars 2025... condamne la societe JEANNE a payer 10 000 euros a CHICANE... Monsieur Jean peut-il se permettre de ne pas indiquer la dette au liquidateur judiciaire ? (6 + 2 = 8 points)",
+      "consolidation_notes": "Question lourde (8 pts) structurée en 3 volets. La grille est d'une grande densité : 4 arrets de 2024 cles (11 sept. 2024 ass. plen., 12 juin 2024, 3 juill. 2024) + 2 arrets anciens (10 juin 2009, 13 dec. 2016). La copie 20 traite les 3 volets mais ne cite pas les references exactes (mentionne vaguement 'Com. 12 juin 2024'). La copie 24 traite correctement A et B avec bon niveau d'articulation (art. L. 643-1 / L. 641-11-1, juge-commissaire R. 622-13). Ni l'une ni l'autre ne cite explicitement l'arret Cass. com. 3 juill. 2024 (n 23-15.715) sur la dette contestee - lacune importante pour le volet C."
+    },
+    {
+      "id": "CNB-AFFAIRES-2025-Q4",
+      "branche": "affaires",
+      "specialisation": "Droit commercial - bail commercial, clause resolutoire, exception d'inexecution, restitution des lieux",
+      "question": "Le 5 mai 2021, la SAS JOUTE a loue a la SAS RADE des locaux commerciaux (badminton/tennis) avec clause resolutoire en cas de manquement du preneur a ses obligations financieres. Tempete novembre 2024 : degats sur la toiture, infiltrations, 2 courts sur 6 indisponibles ; travaux fevrier-mars 2025. RADE suspend le loyer a partir de decembre 2024 puis ne paie que la moitie a compter de mars 2025, invoquant des infiltrations persistantes. Juillet 2025 : commandement de payer (art. L. 145-1 C. com.) avec mise en jeu de la clause resolutoire ; RADE assigne en opposition puis quitte les lieux, locaux fortement degrades. JOUTE peut-elle reclamer les loyers impayes + une indemnite de remise en etat ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "A. Regime de la clause resolutoire : ne peut sanctionner qu'un manquement expressement prevu par la clause ; interpretation stricte (art. 1225 C. civ. ; Cass. 3e civ., 8 juin 2023, n 21-19.099 et 22-11.885)",
+            "linked_article": "code_civil:1225",
+            "linked_jp": "Cass. civ. 3e, 8 juin 2023, n 21-19.099",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "ladite clause ne peut sanctionner qu'un manquement expressement prevu par la clause (voir dernierement : Cass. 3eme civ., 8 juin 2023, n 21-19.099 et 22-11.885. Voir egalement en ce sens : l'article 1225 du Code civil). La Cour de cassation invite les juges du fond a adopter une interpretation stricte de la clause"
+          },
+          {
+            "text": "A. Application : la clause vise expressement le manquement aux obligations financieres - JOUTE est en droit de se prevaloir de la clause resolutoire",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la clause resolutoire dont se prevaut la bailleresse vise explicitement le manquement du preneur a ses obligations financieres. La societe JOUTE etait donc en droit de se prevaloir de la clause resolutoire"
+          },
+          {
+            "text": "A. Exception d'inexecution (art. 1219 C. civ.) invoquee par RADE : en bail commercial, le preneur ne peut l'invoquer que s'il se trouve dans l'impossibilite totale de jouir des locaux loues - le seul manquement a l'obligation de delivrance, meme essentielle, ne suffit pas",
+            "linked_article": "code_civil:1219",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la locataire argue d'une exception d'inexecution pour un manquement du bailleur a son obligation de delivrance (article 1219 du Code civil). Il est de jurisprudence constante que le preneur d'un bail commercial ne peut invoquer le jeu de l'exception d'inexecution que s'il se trouve dans l'impossibilite totale de jouir des locaux loues"
+          },
+          {
+            "text": "A. Jurisprudence recente confirmant l'exigence d'impossibilite totale : Cass. 3e civ., 6 juill. 2023, n 22-15.923 (cassation pour manque de base legale) ; Cass. 3e civ., 27 juin 2024, n 23-10.340",
+            "linked_jp": "Cass. civ. 3e, 6 juill. 2023, n 22-15.923",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le principe a ete rappele dans des arrets recents, dont les faits etaient similaires a ceux de la presente consultation (Cass. 3eme civ., 6 juillet 2023, n 22-15.923... Voir encore : Cass. 3eme civ. 27 juin 2024, n 23-10.340)"
+          },
+          {
+            "text": "A. Application : seule une partie de l'activite de RADE a ete perturbee et pour une courte periode - exception d'inexecution non fondee ; JOUTE peut mettre en oeuvre la clause resolutoire et reclamer la totalite des loyers",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "il semblerait que seule une partie de l'activite de la locataire ait ete perturbee et pour une periode relativement courte. Aussi, on peut supposer que son exception d'inexecution n'est pas fondee et que la bailleresse est en droit non seulement de mettre en oeuvre la clause resolutoire, mais egalement de reclamer le paiement de la totalite des loyers"
+          },
+          {
+            "text": "B. Indemnite de remise en etat : le locataire qui restitue dans un etat non conforme a ses obligations (loi ou contrat) commet un manquement contractuel et doit reparer le prejudice EVENTUELLEMENT subi (art. 1732, 1147, 1149 C. civ. anciens)",
+            "linked_article": "code_civil:1732",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le locataire qui restitue les locaux dans un etat non conforme a ses obligations decoulant de la loi ou du contrat commet un manquement contractuel et doit reparer le prejudice eventuellement subi de ce chef par le bailleur"
+          },
+          {
+            "text": "B. Jurisprudence clarificatrice : trois arrets du 27 juin 2024 (n 22-10.298, n 22-21.272, n 22-24.502) - le bailleur doit prouver un prejudice effectif et non se limiter a la preuve de la degradation ; l'indemnisation n'est pas subordonnee a l'execution des reparations ou a l'engagement effectif des depenses",
+            "linked_jp": "Cass. civ. 3e, 27 juin 2024, n 22-10.298",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La troisieme Chambre civile semble avoir clarifie sa position dans trois arrets recents du 27 juin 2024 (Cass. 3eme civ., 27 juin 2024, n 22-10.298 ; Cass. 3eme civ., 27 juin 2024, n 22-21.272 ; Cass. 3eme civ., 27 juin 2024, n 22-24.502)... Ce prejudice peut comprendre le cout de la remise en etat des locaux, sans que son indemnisation ne soit subordonnee a l'execution des reparations ou a l'engagement effectif de depenses"
+          }
+        ],
+        "expected": [
+          {
+            "text": "A. Commandement de payer delivre sur le fondement de l'art. L. 145-41 C. com. ; delai d'un mois ; acte extrajudiciaire d'huissier ; clause resolutoire produit effet apres commandement infructueux",
+            "linked_article": "code_de_commerce:L145-41",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 expose precisement le regime de l'art. L. 145-41 C. com. avec delai d'un mois et mention des manquements - la grille reste plus concise sur ce point"
+          },
+          {
+            "text": "A. Necessite de preciser la clause : mentionner le delai d'un mois (Cass. 3e civ., 11 dec. 2013) et preciser les manquements contestes (Cass. 3e civ., 21 dec. 2017)",
+            "linked_jp": "Cass. civ. 3e, 11 dec. 2013",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 cite ces deux arrets pour les exigences de forme du commandement",
+            "uncertainty_note": "Numeros de pourvoi non cites par le candidat - JP probablement exacte mais a verifier"
+          },
+          {
+            "text": "B. Obligation du bailleur de delivrer et d'entretenir la chose en etat (art. 1719 C. civ.) ; applicable au bail commercial sous reserve du statut",
+            "linked_article": "code_civil:1719",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 invoque l'art. 1719 C. civ. - fondement classique de l'obligation de delivrance et d'entretien"
+          },
+          {
+            "text": "B. Etat des lieux d'entree du bailleur (art. L. 145-40-1 C. com.) ; liste des travaux ne pouvant etre imputes au locataire (art. R. 145-35 C. com.) : vetuste, grosses reparations art. 606 C. civ.",
+            "linked_article": "code_de_commerce:L145-40-1",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 structure finement la question de l'imputabilite des travaux - au-dela de la grille",
+            "uncertainty_note": "Article L. 145-40-1 C. com. confirme mais decisif selon la grille"
+          },
+          {
+            "text": "B. Distinction grosses reparations (art. 606 C. civ.) - gros murs et voutes - incombant au bailleur / reparations locatives incombant au preneur",
+            "linked_article": "code_civil:606",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 mobilise art. 606 C. civ. - point de technique classique non demandé par la grille mais juridiquement pertinent"
+          },
+          {
+            "text": "B. Position jurisprudentielle anterieure ayant hesite : prejudice necessaire / preuve d'un prejudice exigee - clarification 2024",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Par le passe, la jurisprudence a hesite sur la reponse a apporter a cette problematique. Apres avoir retenu la premiere option, a savoir un prejudice necessaire causé par le manquement du locataire des arrets posterieurs exigeaient la necessaire preuve d'un prejudice par le bailleur"
+          }
+        ],
+        "expert": [
+          {
+            "text": "A. Autres arrets confirmant l'exigence d'impossibilite totale de jouir pour l'exception d'inexecution en bail commercial",
+            "linked_jp": "Cass. civ. 3e, 27 juin 2024, n 23-10.340",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Voir encore : Cass. 3eme civ. 27 juin 2024, n 23-10.340"
+          },
+          {
+            "text": "A. Charge de la preuve : il appartient au locataire de demontrer que les infiltrations rendent les locaux impropres a l'usage auquel ils etaient destines",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Il appartient au locataire de demontrer que les infiltrations rendent les locaux impropres a l'usage auquel ils etaient destines"
+          },
+          {
+            "text": "A. Fondement invoque par le commandement : art. L. 145-1 C. com. (statut des baux commerciaux) - mais la base correcte pour le commandement visant la clause resolutoire est l'art. L. 145-41 C. com.",
+            "linked_article": "code_de_commerce:L145-1",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "La copie 24 releve que le commandement a ete delivre sur L. 145-1 C. com. et non L. 145-41 - subtilite procedurale",
+            "uncertainty_note": "Distinction visa/fondement : point soulevé par copie 24 mais la grille ne sanctionne pas ce choix"
+          },
+          {
+            "text": "A. Caractere d'ordre public de la duree du bail commercial (art. L. 145-15 C. com. ; art. L. 145-14 C. com. sur l'indemnite d'eviction)",
+            "linked_article": "code_de_commerce:L145-15",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 evoque le caractere d'ordre public - contexte utile",
+            "uncertainty_note": "Copie 24 mentionne 'L. 145-14' comme ordre public : il s'agit plutot de l'art. L. 145-15. A confirmer."
+          },
+          {
+            "text": "B. Rappel : obligation de delivrance n'implique pas necessairement assurer la commercialite en l'absence de clause (Cass. 3e civ., 15 dec. 2021)",
+            "linked_jp": "Cass. civ. 3e, 15 dec. 2021",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 cite cet arret - non present dans la grille mais pertinent",
+            "uncertainty_note": "Numero de pourvoi non cite ; reference a verifier"
+          },
+          {
+            "text": "B. Bailleur tenu de realiser les travaux necessaires a l'usage de la chose louee (Cass. 3e civ., 2012) - articulation avec la clause du bail",
+            "linked_jp": "Cass. civ. 3e, 2012",
+            "sources": ["copie_iej"],
+            "why": "La copie 24 cite un arret de 2012 sans numero - reference imprecise",
+            "uncertainty_note": "Numero de pourvoi et date exacte non donnes par le candidat - reference difficilement verifiable"
+          },
+          {
+            "text": "B. Formulation du standard jurisprudentiel : prejudice effectif doit etre prouve par le bailleur ; la seule degradation ne suffit pas mais l'indemnisation n'est pas subordonnee a la realisation des travaux",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "le bailleur doit prouver l'existence d'un prejudice effectif, et ne pas se limiter a la preuve de la degradation des locaux par son locataire. En revanche, il n'a pas a justifier de l'engagement effectif des depenses et de l'execution des reparations"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1225",
+          "code_civil:1219",
+          "code_civil:1732"
+        ],
+        "optionnels": [
+          "code_de_commerce:L145-41",
+          "code_de_commerce:L145-1",
+          "code_de_commerce:L145-40-1",
+          "code_de_commerce:L145-15",
+          "code_civil:1719",
+          "code_civil:606",
+          "code_civil:1147",
+          "code_civil:1149"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 8 juin 2023, n 21-19.099",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Interpretation stricte de la clause resolutoire - ne sanctionne qu'un manquement expressement prevu",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 8 juin 2023, n 22-11.885",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Complete le principe de l'interpretation stricte de la clause resolutoire",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 6 juill. 2023, n 22-15.923",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Cassation pour manque de base legale : l'exception d'inexecution en bail commercial suppose impossibilite totale de jouir",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 27 juin 2024, n 23-10.340",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la solution sur l'exception d'inexecution en bail commercial",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 27 juin 2024, n 22-10.298",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Trilogie de la 3e civ. clarifiant le regime de l'indemnite de remise en etat - prejudice effectif doit etre prouve",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 27 juin 2024, n 22-21.272",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "2e arret de la trilogie 27 juin 2024 sur le prejudice du bailleur pour degradation des lieux",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 27 juin 2024, n 22-24.502",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "3e arret de la trilogie 27 juin 2024 - indemnisation non subordonnee a l'execution des reparations",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 11 dec. 2013",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cite par la copie 24 pour la mention du delai d'un mois dans le commandement",
+          "uncertainty_note": "Numero de pourvoi non cite par le candidat - absent de la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 21 dec. 2017",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cite par la copie 24 pour l'exigence d'un acte extrajudiciaire pour le commandement",
+          "uncertainty_note": "Numero de pourvoi non cite par le candidat - absent de la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 15 dec. 2021",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cite par la copie 24 sur l'obligation du bailleur n'incluant pas l'assurance de la commercialite sans clause",
+          "uncertainty_note": "Numero de pourvoi non cite - reference a verifier"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre clause resolutoire de bail commercial (art. L. 145-41 C. com., interpretation stricte) et resolution de droit commun (art. 1224-1225 C. civ.). L'exception d'inexecution est admise de facon tres restrictive en bail commercial : seule l'impossibilite totale de jouir la justifie."
+      },
+      "source_extract": "Le 5 mai 2021, la societe JOUTE a loue a la societe RADE des locaux commerciaux, dans lesquels sont exercees des activites de badminton et de tennis. Est inseree dans le contrat de bail une clause resolutoire... Au mois de novembre 2024, une importante tempete occasionnait des degats sur la toiture... Deux courts de badminton sur six etaient momentanement indisponibles... Au mois de juin 2025, la societe JOUTE mettait en demeure la societe RADE de payer les loyers dus... En juillet 2025, sur le fondement de l'article L. 145-1 du Code de commerce, la bailleresse faisait delivrer un commandement de payer... la societe RADE quittait neanmoins les lieux... Est-elle en droit de reclamer le paiement des loyers impayes depuis le mois de decembre 2024 et de mettre en oeuvre la clause resolutoire ? Est-elle en droit d'obtenir de la societe RADE le paiement d'une indemnite en compensation des travaux de remise en etat des locaux ? (5 points)",
+      "consolidation_notes": "Question a deux volets (3 pts clause resolutoire + exception d'inexecution ; 2 pts indemnite). La grille repose sur 4 arrets 2023-2024 tres precis : 8 juin 2023 (clause resolutoire), 6 juill. 2023 + 27 juin 2024 n 23-10.340 (exception d'inexecution), trilogie 27 juin 2024 (n 22-10.298, 22-21.272, 22-24.502 sur l'indemnite). La copie 20 traite tres sommairement le volet indemnite sans JP. La copie 24 traite avec rigueur le commandement et l'art. L. 145-41 C. com. mais aborde le volet B sous l'angle de l'etat des lieux (art. L. 145-40-1, R. 145-35, 606 C. civ.) sans citer la trilogie 27 juin 2024 - angle different de la grille, qui peut etre penalisant."
+    }
+  ]
+}

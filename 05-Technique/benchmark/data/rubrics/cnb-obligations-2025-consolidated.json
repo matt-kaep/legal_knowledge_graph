@@ -1,0 +1,686 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit des obligations (consolide)",
+    "source_path": "data/cnb-crfpa/2025/droit-obligations.pdf",
+    "validation_sources": [
+      "Grille officielle CNB 2025 (Commission nationale - diffusion Cap'Barreau / IEJ)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 13 (note 15/20)"
+    ],
+    "generated_by": "Claude (general-purpose subagent, consolidation run)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-02",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_acquisition_propriete": 10,
+        "Q2_litige_architecte": 4,
+        "Q3_clause_reclamation": 6
+      }
+    }
+  },
+  "questions": [
+    {
+      "id": "CNB-OBLIG-2025-Q1",
+      "branche": "civil",
+      "specialisation": "Droit des contrats - vices du consentement et responsabilite precontractuelle",
+      "question": "Mme des Pres a acquis en decembre 2024 une propriete en Bretagne pour y creer une maison d'hotes. Trois mois apres l'ouverture, elle decouvre qu'un festival de black metal bruyant se tient chaque annee sur le terrain voisin du 14 juillet au 15 aout depuis 10 ans, provoquant la fuite des clients. Le representant du vendeur (son frere, installe localement depuis 20 ans) et le vendeur lui-meme n'ont rien dit sur ce festival. Quelles sont les differentes options pour remettre en cause la vente ou obtenir une compensation financiere ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Identifier les vices du consentement (art. 1130 C. civ.) comme fondement le plus adapte a la remise en cause de la vente, entrainant une nullite relative (art. 1131 C. civ.)",
+            "linked_article": "code_civil:1130",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "les vices du consentement prevus a l'article 1130 du code civil apparaissent comme etant le fondement le plus adapte. Ils constituent une cause de nullite relative du contrat (art. 1131 C. civ.)"
+          },
+          {
+            "text": "Examiner les conditions cumulatives de l'erreur : caractere determinant (art. 1130), excusable (art. 1132), portant sur les qualites essentielles de la prestation (art. 1132-1133)",
+            "linked_article": "code_civil:1132",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 3,
+            "extract_from_grille": "Afin que l'erreur emporte nullite du contrat, elle doit remplir plusieurs conditions cumulatives : elle doit etre determinante (art. 1130), elle doit etre excusable (art. 1132), elle doit porter sur les qualites essentielles de la prestation due (art. 1132 C. civ.)"
+          },
+          {
+            "text": "Distinction entre qualites essentielles de la prestation (art. 1133) et erreur sur un simple motif (art. 1135) - l'erreur sur le motif n'est cause de nullite que si les parties en ont fait expressement un element determinant",
+            "linked_article": "code_civil:1135",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "d'apres l'article 1135, l'erreur sur un simple motif, etranger aux qualites essentielles de la prestation due ou du cocontractant, n'est pas une cause de nullite, a moins que les parties n'en aient fait expressement un element determinant de leur consentement"
+          },
+          {
+            "text": "Caracteriser le dol comme cause de nullite (art. 1131 et 1137) : reticence dolosive = dissimulation intentionnelle d'une information determinante",
+            "linked_article": "code_civil:1137",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 3,
+            "extract_from_grille": "L'element materiel, qui suppose des manoeuvres, un mensonge ou la dissimulation d'une information determinante (art. 1137 C. civ.)"
+          },
+          {
+            "text": "Le dol peut emaner du representant du contractant (art. 1138 C. civ.) - en l'espece, Bernard Lavilette mandataire du vendeur",
+            "linked_article": "code_civil:1138",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Le dol peut emaner du contractant (art. 1137 C. civ.) mais aussi du representant, du gerant d'affaires, du prepose ou du porte-fort du contractant, ou encore d'un tiers de connivence (art. 1138 C. civ.)"
+          },
+          {
+            "text": "Les trois conditions cumulatives du dol : element materiel (manoeuvres/mensonge/dissimulation), element intentionnel, caractere determinant",
+            "linked_article": "code_civil:1137",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Le dol est caracterise lorsqu'il remplit les conditions cumulatives suivantes : L'element materiel... L'element intentionnel... Le caractere determinant"
+          },
+          {
+            "text": "L'erreur resultant d'un dol est toujours excusable et peut porter sur la valeur ou sur un simple motif (art. 1139 C. civ.)",
+            "linked_article": "code_civil:1139",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "en vertu de l'article 1139 C. civ., l'erreur qui resulte d'un dol est toujours excusable ; elle est une cause de nullite alors meme qu'elle porterait sur la valeur de la prestation ou sur un simple motif du contrat"
+          },
+          {
+            "text": "Responsabilite delictuelle sur le fondement de l'article 1240 C. civ. - la victime d'un dol peut cumuler nullite + dommages et interets ou choisir l'un des deux",
+            "linked_article": "code_civil:1240",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 3,
+            "extract_from_grille": "Le dol est a la fois cause de nullite du contrat (art. 1131 C. civ.) et, le cas echeant, de responsabilite de son auteur (art. 1240 C. civ.). Ces deux sanctions peuvent se cumuler ou faire l'objet d'un choix alternatif de la part de la victime"
+          },
+          {
+            "text": "Manquement au devoir precontractuel d'information (art. 1112-1 C. civ.) comme fondement alternatif de responsabilite delictuelle - conditions : information determinante, lien direct et necessaire avec le contenu du contrat, ignorance legitime du creancier",
+            "linked_article": "code_civil:1112-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "une demande en reparation pourrait egalement etre fondee sur l'article 1112-1 du Code civil... celui qui connait une information dont l'importance est determinante pour le consentement de l'autre doit l'en informer des lors que, legitimement, cette derniere ignore cette information ou fait confiance a son cocontractant"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Le delai de prescription de 5 ans pour l'action en nullite court a compter de la decouverte du vice (art. 1144 C. civ.) - non prescrite en l'espece car vente de 2024",
+            "linked_article": "code_civil:1144",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la vente est intervenue en 2024, donc aucune question de prescription n'est soulevee (le delai de 5 ans court a compter de la decouverte du vice : art. 1144 C. civ.)"
+          },
+          {
+            "text": "Ecarter la violence comme vice du consentement faute d'element de fait pour la soutenir",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La violence peut etre exclue d'emblee car aucun element ne permet de la soutenir"
+          },
+          {
+            "text": "Quantum de la reparation en cas de dol sans demande de nullite : limite a la perte de chance d'avoir pu contracter a des conditions plus avantageuses (arret Parsys, Cass. com. 10 juill. 2012)",
+            "linked_jp": "Cass. com., 10 juill. 2012, n 11-21.954",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "si la victime fait le choix de ne pas demander l'annulation du contrat, son prejudice reparable correspond uniquement a la perte d'une chance d'avoir pu contracter a des conditions plus avantageuses (Aff. dite Parsys, Cass. com. 10 juill. 2012, n 11-21.954)"
+          },
+          {
+            "text": "Responsabilite du mandant du fait du dol de son mandataire : necessite de prouver une faute personnelle du mandant (Cass. ch. mixte, 21 oct. 2021)",
+            "linked_jp": "Cass. ch. mixte, 21 oct. 2021, n 19-18.470",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "les manoeuvres dolosives du mandataire, dans l'exercice de son mandat, n'engagent la responsabilite du mandant que s'il a personnellement commis une faute, qu'il incombe a la victime d'etablir (Cass. ch. mixte, 21 oct. 2021, n 19-18470)"
+          },
+          {
+            "text": "Jurisprudence rentabilite : l'erreur sur la rentabilite est en principe une erreur sur la valeur (art. 1136) insusceptible d'annulation, sauf si la rentabilite a integre le champ contractuel",
+            "linked_article": "code_civil:1136",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'erreur sur la rentabilite est en principe consideree comme une erreur sur la valeur insusceptible d'entrainer l'annulation du contrat (art. 1136 C. civ.)"
+          },
+          {
+            "text": "Qualites essentielles peuvent inclure l'environnement normal du bien (quietude des lieux) - a apprecier eu egard a la nature du bien (maison en bord de mer / maison d'hotes)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "les qualites essentielles ne sont pas uniquement celles qui sont intrinsequement liees au bien mais aussi celles qui ont trait a son environnement normal"
+          },
+          {
+            "text": "Caractere excusable de l'erreur discute : un festival officiel, public depuis 10 ans, dont l'information est facilement accessible, pourrait rendre l'erreur inexcusable (l'acheteur doit etre curieux)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "un element pourrait faire douter du caractere excusable de l'erreur... un festival officiel, qui se tient de longue date (10 ans)... On rappellera que l'acheteur doit etre curieux"
+          },
+          {
+            "text": "Prejudice reparable en cas de manquement au devoir d'information : perte de chance de ne pas contracter ou de contracter a des conditions plus avantageuses (Cass. com. 15 mars 2017)",
+            "linked_jp": "Cass. com., 15 mars 2017, n 15-16.406",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le prejudice resultant du manquement a une obligation precontractuelle d'information est constitue par la perte de chance de ne pas contracter ou de contracter a des conditions plus avantageuses (Cass. com, 15 mars 2017, n 15-16.406)"
+          },
+          {
+            "text": "Charge de la preuve (art. 1112-1 al. 4) : celui qui se pretend creancier de l'information doit prouver qu'elle lui etait due, a charge pour l'autre de prouver qu'il l'a fournie",
+            "linked_article": "code_civil:1112-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'alinea 4 prevoit que la partie qui se pretend creanciere d'une information doit prouver qu'elle lui etait due, a charge pour l'autre de prouver qu'elle l'a fournie"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Jurisprudence franchise et comptes previsionnels : erreur sur la rentabilite admise lorsque le franchiseur fournit des comptes previsionnels exageremment optimistes (Cass. com. 4 oct. 2011, 12 juin 2012, 10 juin 2020)",
+            "linked_jp": "Cass. com., 4 oct. 2011, n 10-20.956",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Cass. com., 4 oct. 2011, n 10-20.956 ; Cass. com., 12 juin 2012, n 11-19.047 ; Cass. com., 10 juin 2020, n 18-21.536"
+          },
+          {
+            "text": "Motif erige en condition du contrat par stipulation expresse devient une qualite essentielle (Cass. com. 11 avr. 2012) ; en l'absence de stipulation expresse, l'erreur sur le motif est indifferente (Cass. civ. 3e, 24 avr. 2003)",
+            "linked_jp": "Cass. com., 11 avr. 2012, n 11-15.429",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la jurisprudence considere traditionnellement que lorsque le motif a ete erige en condition du contrat par une stipulation expresse, il a integre le champ contractuel et est devenu une qualite essentielle (Cass. Com. 11 avr. 2012, n 11-15.429)"
+          },
+          {
+            "text": "Evolution recente : les parties peuvent convenir expressement ou tacitement que l'eligibilite a un dispositif de defiscalisation est une qualite substantielle du bien (Cass. com. 22 juin 2022), mais l'art. 1135 al. 1 exige une stipulation expresse",
+            "linked_jp": "Cass. com., 22 juin 2022, n 20-11.846",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "les parties peuvent convenir, expressement ou tacitement, que le fait que le bien, objet d'une vente, remplisse les conditions d'eligibilite a un dispositif de defiscalisation constitue une qualite substantielle de ce bien (Cass. com. 22 juin 2022, n 20-11.846)"
+          },
+          {
+            "text": "Dol par reticence : le silence peut etre constitutif d'un dol en cas de dissimulation intentionnelle (Cass. com. 9 janv. 2017)",
+            "linked_jp": "Cass. com., 9 janv. 2017",
+            "sources": ["copie_iej"],
+            "why": "La copie 13 cite cet arret pour caracteriser la reticence dolosive - la grille ne le mentionne pas explicitement mais l'art. 1137 al. 2 depuis la reforme 2016 codifie la reticence dolosive",
+            "uncertainty_note": "Numero de pourvoi non verifiable dans les sources fournies"
+          },
+          {
+            "text": "Arret recent sur l'autonomie de la condition d'importance determinante dans le devoir d'information (Cass. com. 14 mai 2025)",
+            "linked_jp": "Cass. com., 14 mai 2025",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'importance determinante pour le consentement de l'autre partie doit s'analyser comme une condition autonome, a la fois distincte de la condition de lien direct et necessaire avec le contenu du contrat et cumulative a celle-ci (Cass. com. 14 mai 2025, n 27-17.948, PB)",
+            "uncertainty_note": "Numero de pourvoi cite dans la grille (n 27-17.948) apparait typographiquement douteux (annee de depot n'existe pas sous cette forme) - a verifier"
+          },
+          {
+            "text": "Dol du representant admis avant la reforme de 2016 (Cass. com. 13 juin 1995)",
+            "linked_jp": "Cass. com., 13 juin 1995, n 93-17.409",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La possibilite de retenir le dol lorsque la tromperie emane du representant avait d'ailleurs deja ete admise avant la reforme (Cass. com., 13 juin 1995, n 93-17409, Bull. civ. IV, n 175)"
+          },
+          {
+            "text": "Absence de restitutions a traiter : la question porte uniquement sur la possibilite de remettre en cause la vente, non sur les consequences de l'annulation",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "il n'etait pas attendu des candidats qu'ils traitent la question des restitutions en cas d'annulation de la vente"
+          },
+          {
+            "text": "Cass. com. 18 dec. 2019 n 17-22.544 : confirmation de la solution Parsys sur le quantum reduit a la perte de chance",
+            "linked_jp": "Cass. com., 18 dec. 2019, n 17-22.544",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "v. egal., par ex., Cass. com. 18 dec. 2019, n 17-22.544"
+          },
+          {
+            "text": "Responsabilite contractuelle du mandant fondee sur l'art. 1998 C. civ. pour l'inexecution des engagements du mandataire dans les limites du mandat",
+            "linked_article": "code_civil:1998",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Si le mandant est, en vertu de l'article 1998 du code civil, contractuellement responsable des dommages subis du fait de l'inexecution des engagements contractes par son mandataire"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1128",
+          "code_civil:1130",
+          "code_civil:1131",
+          "code_civil:1132",
+          "code_civil:1133",
+          "code_civil:1135",
+          "code_civil:1137",
+          "code_civil:1138",
+          "code_civil:1139",
+          "code_civil:1112-1",
+          "code_civil:1240"
+        ],
+        "optionnels": [
+          "code_civil:1136",
+          "code_civil:1144",
+          "code_civil:1178",
+          "code_civil:1998"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. ch. mixte, 21 oct. 2021, n 19-18.470",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret de principe sur le cumul nullite/dommages et interets en cas de dol + conditions d'engagement de la responsabilite du mandant du fait du dol du mandataire",
+          "uncertainty_note": "ECLI non verifie dans les sources consultees"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 10 juill. 2012, n 11-21.954 (arret Parsys)",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Limite du quantum de reparation en cas de dol sans nullite a la seule perte de chance d'avoir contracte a des conditions plus avantageuses",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 15 mars 2017, n 15-16.406",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Prejudice reparable en cas de manquement au devoir d'information : perte de chance de ne pas contracter ou de contracter a des conditions plus avantageuses",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 22 juin 2022, n 20-11.846",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Les parties peuvent convenir que les conditions d'eligibilite a un dispositif constituent une qualite substantielle du bien",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 4 oct. 2011, n 10-20.956",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Erreur sur la rentabilite admise lorsque comptes previsionnels exageremment optimistes",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 12 juin 2012, n 11-19.047",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la jurisprudence sur l'erreur sur la rentabilite",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 10 juin 2020, n 18-21.536",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation recente de la jurisprudence franchise",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 11 avr. 2012, n 11-15.429",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Motif erige en condition par stipulation expresse devient une qualite essentielle",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 24 avr. 2003, n 01-17.458",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "En l'absence de stipulation expresse, l'erreur sur le motif est indifferente",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 13 juin 1995, n 93-17.409, Bull. civ. IV n 175",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Dol du representant admis avant la reforme 2016",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 18 dec. 2019, n 17-22.544",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la solution Parsys",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 14 mai 2025, n non certifie",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Autonomie de la condition d'importance determinante dans l'art. 1112-1",
+          "uncertainty_note": "Le numero de pourvoi mentionne dans la grille (n 27-17.948) semble contenir une coquille (annee 27 impossible). A verifier avant usage dans le benchmark."
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 9 janv. 2017",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cite par la copie 13 pour illustrer la reticence dolosive par silence",
+          "uncertainty_note": "Absent de la grille. Numero de pourvoi non identifie par le candidat."
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": ["code_civil:1116", "code_civil:1382", "code_civil:1383"],
+        "not_to_cite_jp": [],
+        "notes": "Art. 1116 et 1382/1383 sont les anciens textes pre-reforme 2016, a ne pas citer comme fondement positif. Contrat conclu en 2024 donc droit nouveau applicable."
+      },
+      "source_extract": "Arlette des Pres... trouve une annonce ainsi redigee : Vente propriete de charme en bord de mer. Zone touristique. Proche tous commerces. Ideal maison d'hotes... C'est le frere du proprietaire, Bernard Lavilette, qui lui fait visiter le bien... la vente est conclue en decembre 2024... Un festival de black metal s'installe sur le terrain jouxtant l'etablissement... il se tient annuellement dans la commune, depuis dix ans, du 14 juillet au 15 aout... Madame des Pres vous consulte pour savoir si elle pourrait remettre en cause la vente. Elle se demande cependant si elle ne ferait pas mieux de se contenter de demander une compensation financiere au vendeur... Renseignez-la sur les differentes options envisageables pour acceder a ses demandes. (10 points)",
+      "consolidation_notes": "La grille est tres dense (10 points/30 pts totaux, soit la moitie de l'epreuve). Points core tres bien couverts par la copie 13. Ecarts notes : (1) la copie 13 cite Cass. com. 9/01/2017 sur la reticence dolosive, absent de la grille ; (2) la copie 13 n'aborde pas explicitement l'arret Parsys (Cass. com. 10 juill. 2012) sur le quantum reduit a la perte de chance, qui est pourtant un point important de la grille (2,5 points) ; (3) la copie 13 n'evoque pas Cass. ch. mixte 21 oct. 2021 sur la faute personnelle du mandant - lacune importante ; (4) la grille cite Cass. com. 14 mai 2025 avec un numero de pourvoi apparemment errone (n 27-17.948)."
+    },
+    {
+      "id": "CNB-OBLIG-2025-Q2",
+      "branche": "civil",
+      "specialisation": "Droit des contrats - sanctions de l'inexecution / responsabilite contractuelle",
+      "question": "Mme des Pres constate que l'etage ajoute par son architecte est 10 cm trop bas par rapport a ce qui avait ete convenu, ce qui rend les chambres peu attrayantes pour ses clients. Elle souhaite recuperer ces 10 cm ou a defaut obtenir une compensation financiere. Quelles actions peut-elle exercer contre l'architecte ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualifier la situation d'inexecution contractuelle et identifier les options de l'art. 1217 C. civ. : suspendre l'execution, reduction du prix, resolution, reparation - cumulables et cumulables avec dommages et interets",
+            "linked_article": "code_civil:1217",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Les articles 1217 et suivants du Code civil prevoient l'hypothese d'une inexecution du contrat. La partie creanciere a alors plusieurs possibilites... L'article 1217 precise la possibilite de cumuler ces sanctions et d'y ajouter des dommages et interets"
+          },
+          {
+            "text": "Examiner l'execution forcee en nature (art. 1221 C. civ.) et son exception : impossibilite ou disproportion manifeste entre le cout pour le debiteur de bonne foi et l'interet pour le creancier",
+            "linked_article": "code_civil:1221",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Relativement a l'execution forcee en nature, l'article 1221 du Code civil vient en limiter la portee dans l'hypothese ou, soit elle est impossible, soit il existe une disproportion manifeste entre son cout pour le debiteur de bonne foi et son interet pour le creancier"
+          },
+          {
+            "text": "Responsabilite contractuelle (art. 1231 et s.) : conditions = inexecution + dommage + lien de causalite ; obligation de resultat de l'architecte simplifie la preuve de la faute",
+            "linked_article": "code_civil:1231-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "La responsabilite contractuelle, telle que prevue aux articles 1231 et suivants du Code civil, prend la forme de dommages et interets. Elle suppose, outre l'existence d'un contrat, une inexecution, un dommage et un lien de causalite. En cas d'obligation de resultat, la seule defaillance du contractant est suffisante"
+          },
+          {
+            "text": "Le controle de la disproportion manifeste s'applique aussi aux dommages et interets couvrant le cout de l'execution en nature (Cass. 3e civ. 6 juill. 2023)",
+            "linked_jp": "Cass. civ. 3e, 6 juill. 2023, n 22-10.884",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "la Cour de cassation a precise que le controle de la disproportion manifeste s'appliquait egalement aux dommages-interets couvrant le cout de l'execution en nature (Cass. Civ. 3e, 6 juil. 2023, n 22-10.884)"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Reparation limitee au dommage previsible (art. 1231-3 C. civ.)",
+            "linked_article": "code_civil:1231-3",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "seul le dommage previsible peut en principe etre repare (art. 1231-3 C. civ.)"
+          },
+          {
+            "text": "Dispense de mise en demeure quand l'inexecution est definitive (art. 1231 C. civ.)",
+            "linked_article": "code_civil:1231",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la mise en demeure n'est pas exigee lorsque l'inexecution est definitive (art. 1231 C. civ.)"
+          },
+          {
+            "text": "Le dommage inclut perte pour le creancier et gain dont il a ete prive (art. 1231-2 C. civ.) - en l'espece perte de chance d'obtenir davantage de reservations",
+            "linked_article": "code_civil:1231-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le dommage... peut s'agir de la perte pour le creancier ou du gain dont il a ete prive (1231-2 C. civ.)"
+          },
+          {
+            "text": "Quand l'execution en nature ou son equivalent indemnitaire est rejetee pour disproportion, les dommages et interets sont alloues souverainement par le juge au regard des seules consequences dommageables des non-conformites, dans le respect du principe de reparation sans perte ni profit",
+            "linked_jp": "Cass. civ. 3e, 6 juill. 2023, n 22-10.884",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "les dommages-interets alloues sont souverainement apprecies au regard des seules consequences dommageables des non-conformites retenues, dans le respect du principe de la reparation sans perte ni profit"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Jurisprudence anterieure sur le rejet de l'execution en nature pour disproportion (par ex. Cass. 3e civ. 13 juill. 2022, n 21-16.408)",
+            "linked_jp": "Cass. civ. 3e, 13 juill. 2022, n 21-16.408",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la jurisprudence a plusieurs fois rejete la demande d'execution en nature eu egard a la disproportion manifeste de la demande entre le cout pour le debiteur et l'interet pour le creancier (par ex., Cass. Civ. 3e, 13 juil. 2022, n 21-16.408)"
+          },
+          {
+            "text": "Mise en demeure par sommation ou tout acte d'interpellation suffisante (art. 1344) ; dispense lorsqu'elle est vaine (Cass. 3e civ. 15 janv. 2024)",
+            "linked_article": "code_civil:1344",
+            "linked_jp": "Cass. civ. 3e, 15 janv. 2024",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 13 mais pas present dans la grille de notation"
+          },
+          {
+            "text": "Mission de direction des travaux par l'architecte impliquant execution conforme aux previsions meme sans obligation specifique de mesurage de surface (Cass. 3e civ. 7 nov. 2024)",
+            "linked_jp": "Cass. civ. 3e, 7 nov. 2024",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 13 pour justifier l'obligation de l'architecte - absent de la grille",
+            "uncertainty_note": "Numero de pourvoi non cite par le candidat ; arret difficile a authentifier sans reference complete"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1217",
+          "code_civil:1221",
+          "code_civil:1231",
+          "code_civil:1231-1"
+        ],
+        "optionnels": [
+          "code_civil:1231-2",
+          "code_civil:1231-3",
+          "code_civil:1344"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 6 juill. 2023, n 22-10.884",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Pivot : le controle de la disproportion s'etend aux dommages-interets couvrant le cout de l'execution en nature, avec definition du standard de reparation",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 13 juill. 2022, n 21-16.408",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Exemple de rejet de l'execution en nature pour disproportion manifeste",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 7 nov. 2024",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Portee de la mission de direction des travaux de l'architecte",
+          "uncertainty_note": "Cite par la copie 13 sans numero ; verification necessaire"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 3e, 15 janv. 2024",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Dispense de mise en demeure quand vaine",
+          "uncertainty_note": "Cite par la copie 13 sans numero de pourvoi"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": ["code_civil:1147", "code_civil:1184"],
+        "not_to_cite_jp": [],
+        "notes": "Eviter les anciens articles pre-reforme 2016 (1147, 1184 ancien)"
+      },
+      "source_extract": "Arlette des Pres rencontre en parallele des difficultes liees aux travaux effectues sur son bien. Elle s'est en effet apercue que l'etage ajoute, bien que conforme au permis de construire, etait 10 cm trop bas par rapport a ce qui avait ete convenu avec l'architecte... Bien decidee a recuperer ces 10 cm, ou a tout le moins obtenir une compensation financiere, Arlette des Pres vous consulte pour savoir ce qu'elle peut faire. (4 points)",
+      "consolidation_notes": "Question moyennement ponderee (4 pts). Grille tres centree sur deux arrets cles : 13 juill. 2022 et 6 juill. 2023 sur la disproportion. La copie 13 apporte deux JP supplementaires (15 janv. 2024 sur la mise en demeure, 7 nov. 2024 sur l'architecte) absentes de la grille - utiles pour un benchmark mais non confirmees comme attendues. La grille ne mentionne pas l'art. 1344 sur la mise en demeure (apporte par la copie)."
+    },
+    {
+      "id": "CNB-OBLIG-2025-Q3",
+      "branche": "civil",
+      "specialisation": "Droit des contrats - conditions generales, clause abusive / limitative de prescription",
+      "question": "Mme des Pres est en conflit avec la societe de pressing (contrat conclu le 15 avril 2025 pour l'activite professionnelle de sa maison d'hotes). Une fois l'action engagee, elle decouvre au verso du bon de commande une clause 'Reclamations' imposant des delais tres courts (8 jours pour les reclamations de nettoyage, 1 an pour un dommage au linge). Quelle est la portee de cette clause ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Ecarter l'application du droit de la consommation : le contrat est conclu dans le cadre de l'activite professionnelle de Mme des Pres (exploitante de maison d'hotes)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "le droit de la consommation n'a pas a etre evoque ici ; de fait, il ne profite qu'au consommateur ou, parfois, au non-professionnel. Or, il est bien precise qu'Arlette des Pres conclut ce contrat dans le cadre de son activite professionnelle"
+          },
+          {
+            "text": "Opposabilite des conditions generales (art. 1119 al. 1 C. civ.) : deux conditions cumulatives - mise a connaissance et acceptation ; charge de la preuve sur celui qui les invoque",
+            "linked_article": "code_civil:1119",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Les conditions generales invoquees par une partie n'ont effet a l'egard de l'autre que si elles ont ete portees a la connaissance de celle-ci et si elle les a acceptees. La preuve de leur acceptation repose sur celui qui les invoque"
+          },
+          {
+            "text": "Regime des clauses abusives / art. 1170 C. civ. : clause reputee non ecrite si elle prive de sa substance l'obligation essentielle du debiteur",
+            "linked_article": "code_civil:1170",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "On pourrait aussi se demander si une telle clause ne pourrait pas etre contraire a l'article 1170 du Code civil, qui repute non-ecrite toute clause privant de sa substance l'obligation essentielle du debiteur"
+          },
+          {
+            "text": "Liberte d'amenagement conventionnel de la prescription (art. 2254 al. 1 C. civ.) : duree modulable dans une fourchette [1 an ; 10 ans]",
+            "linked_article": "code_civil:2254",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "L'article 2254, al. 1er du Code civil pose le principe de la liberte d'amenagement de la prescription... La duree de la prescription peut etre abregee ou allongee par accord des parties. Cependant... Elle ne peut toutefois etre reduite a moins d'un an ni etendue a plus de dix ans"
+          },
+          {
+            "text": "Jurisprudence recente : la prescription ne peut etre reduite conventionnellement a moins d'un an a compter du jour ou le titulaire du droit a connu ou aurait du connaitre les faits lui permettant de l'exercer (Cass. 1re civ. 13 mars 2024)",
+            "linked_jp": "Cass. civ. 1re, 13 mars 2024, n 22-12.345",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "la prescription d'une action ne peut etre reduite conventionnellement a moins d'un an a compter du jour ou le titulaire du droit a connu ou aurait du connaitre les faits lui permettant de l'exercer (Cass. civ. 1re, 13 mars 2024, n 22-12.345)"
+          },
+          {
+            "text": "Application : la clause de 8 jours est manifestement illicite au regard de l'art. 2254 et de la JP precitee ; la clause d'un an pour le dommage au linge est egalement critiquable si son point de depart (date de depot) est anterieur a la connaissance des faits",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "la clause de reclamation fait obstacle a toute action en reclamation formulee plus de 8 jours apres la recuperation du linge... Elle apparait illicite en ce qu'elle reduit le delai de prescription de maniere excessive eu egard a l'article 2254 du Code civil"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Force obligatoire du contrat (art. 1103 C. civ.) - si CGV acceptees, la clause s'impose aux parties en principe",
+            "linked_article": "code_civil:1103",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la clause de reclamation s'applique entre les parties en vertu du principe de force obligatoire (art. 1103 C. civ.)"
+          },
+          {
+            "text": "Application du droit commun de la prescription (art. 2224 C. civ.) : 5 ans a compter du jour ou le titulaire a connu ou aurait du connaitre les faits",
+            "linked_article": "code_civil:2224",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En application de cet article et de l'article 2224 du Code civil, qui dispose que les actions personnelles ou mobilieres se prescrivent pas cinq ans"
+          },
+          {
+            "text": "L'amenagement de l'art. 2254 n'inclut pas le point de depart de la prescription (Cass.)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La Cour de cassation a precise a cet egard que la possibilite d'amenagement n'inclut pas le point de depart de la prescription"
+          },
+          {
+            "text": "En pratique la signature du bon de commande suffit a caracteriser l'acceptation des CGV figurant au verso (Cass.)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il est cependant generalement admis par la jurisprudence que les conditions generales ont ete regulierement acceptees par l'acceptation des conditions particulieres qui y renvoyaient... La signature du bon de commande par Mme Des Pres devrait suffire a rapporter cette preuve"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Ne pas invoquer l'art. 1171 C. civ. (clauses abusives dans contrats d'adhesion) : la jurisprudence exclut l'application du droit commun des clauses abusives dans l'hypothese d'un contrat conclu dans le cadre d'une activite professionnelle, meme entre professionnels",
+            "linked_article": "code_civil:1171",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Les candidats... qui evoqueraient l'article 1171 ne pourront obtenir aucun point a ce titre, le contrat etant conclu dans le cadre de l'exploitation de la maison d'hotes et la jurisprudence excluant l'application du droit commun dans cette hypothese"
+          },
+          {
+            "text": "Effet de la clause reputee non ecrite : suppression totale ou partielle de la clause avec maintien du contrat (art. 1184 C. civ.)",
+            "linked_article": "code_civil:1184",
+            "sources": ["copie_iej"],
+            "why": "La copie 13 invoque l'art. 1184 pour expliquer le maintien du contrat - la grille n'en parle pas explicitement"
+          },
+          {
+            "text": "Mode de preuve de la connaissance des CGV : fait juridique, preuve par tous moyens (art. 1358 C. civ.)",
+            "linked_article": "code_civil:1358",
+            "sources": ["copie_iej"],
+            "why": "La copie 13 evoque le renversement de la charge de la preuve - absent de la grille mais pertinent"
+          },
+          {
+            "text": "Clause limitative de responsabilite vs clause limitative de prescription : bien distinguer les deux regimes (art. 1231-3 n'autorise pas de s'exonerer sans limite)",
+            "linked_article": "code_civil:1231-3",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "La copie 13 qualifie la clause de 'limitative de responsabilite' ce qui est imprecis. La grille privilegie l'angle 'amenagement de prescription'. Point de culture juridique a distinguer."
+          },
+          {
+            "text": "L'alinea 1 de l'article 1170 s'applique au-dela des contrats d'adhesion : la copie 13 precise a juste titre que l'art. 1170 n'est pas limite aux contrats d'adhesion (contrairement a l'art. 1171)",
+            "linked_article": "code_civil:1170",
+            "sources": ["copie_iej"],
+            "why": "Distinction pertinente apportee par la copie mais absente de la grille"
+          },
+          {
+            "text": "Bareme correcteur : l'evocation exclusive de l'art. 1170 ne vaut qu'un point sur cette question (NB grille) - il faut evoquer l'art. 2254 pour obtenir le plein bareme",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Les candidats qui n'evoqueraient que l'article 1170 du Code civil ne pourront etre credites que d'un point sur cette question"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1119",
+          "code_civil:1170",
+          "code_civil:2254",
+          "code_civil:2224"
+        ],
+        "optionnels": [
+          "code_civil:1103",
+          "code_civil:1184",
+          "code_civil:1358"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 1re, 13 mars 2024, n 22-12.345",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot sur l'amenagement conventionnel de la prescription : la reduction a moins d'un an a compter de la connaissance des faits est illicite",
+          "uncertainty_note": "Numero de pourvoi dans la grille (22-12.345) semble etre un numero 'factice' / non verifiable publiquement. Mentionner la reference courte suffit, eviter de citer un ECLI non certifie."
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 8 fev. 2023",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cite par la copie 13 sur l'acceptation des CGV - portee limitee aux points connus du destinataire",
+          "uncertainty_note": "Numero de pourvoi non cite ; arret absent de la grille"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": ["code_civil:1171", "code_de_la_consommation:L212-1"],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas fonder l'argumentation sur l'article 1171 C. civ. (selon la NB explicite de la grille : 0 point attribue) car le contrat est professionnel et la jurisprudence exclut l'application du droit commun des clauses abusives dans cette hypothese. Ecarter aussi le droit de la consommation."
+      },
+      "source_extract": "Madame des Pres se retrouve en conflit avec la societe avec laquelle elle avait conclu, le 15 avril 2025, un contrat d'une duree d'un an renouvelable par tacite reconduction pour un service de pressing du linge de maison, dans le cadre de son activite d'exploitante de maison d'hotes... Une fois l'action judiciaire engagee, elle realise cependant qu'elle n'avait pas vu une clause perdue au beau milieu des conditions generales figurant au verso du bon de commande... Eclairez-la sur la portee de cette clause. (6 points)",
+      "consolidation_notes": "Question a piege (6 pts) : la grille exclut explicitement l'art. 1171 C. civ. et le droit de la consommation - piege typique. La copie 13 evite le piege de l'art. 1171 en motivant via l'art. 1170. Ecart notable : la copie 13 ne cite PAS l'art. 2254 ni la Cass. 1re civ. 13 mars 2024 sur l'amenagement de la prescription - qui est pourtant le coeur de la grille pour cette question. La copie 13 traite la clause sous l'angle 'clause limitative de responsabilite' (art. 1231-3 + 1170) alors que la grille la traite sous l'angle 'amenagement de la prescription' (art. 2254) et subsidiairement 1170. La copie a donc rate une partie importante du bareme malgre sa bonne note globale."
+    }
+  ]
+}

@@ -1,0 +1,817 @@
+{
+  "V0 baseline": {
+    "totals": {
+      "tp": 60,
+      "fp": 1,
+      "fn": 61
+    },
+    "per_arret": [
+      {
+        "id": "5fca63a63a15d34bf112659e",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "613723e3cd5801467740f763",
+        "jur": "CC",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6137213bcd580146773f2155",
+        "jur": "CC",
+        "n_gt": 5,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 2,
+        "missed": [
+          "code_civil:1315",
+          "code_civil:2221"
+        ],
+        "extra": []
+      },
+      {
+        "id": "6079d3709ba5988459c592fd",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_general_des_impots:1649quinquiesB"
+        ],
+        "extra": []
+      },
+      {
+        "id": "668cd247bbc9a118c6c63f67",
+        "jur": "CA",
+        "n_gt": 3,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_de_procedure_civile:394"
+        ],
+        "extra": []
+      },
+      {
+        "id": "66ebc047b777bc8e4ad63615",
+        "jur": "CA",
+        "n_gt": 5,
+        "n_pred": 4,
+        "tp": 4,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_de_procedure_civile:473"
+        ],
+        "extra": []
+      },
+      {
+        "id": "65166c7d788aac83189e9cdc",
+        "jur": "CA",
+        "n_gt": 23,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 20,
+        "missed": [
+          "code_civil:1103",
+          "code_civil:1240",
+          "code_civil:1728",
+          "code_de_procedure_civile:472",
+          "code_de_procedure_civile:656",
+          "code_de_procedure_civile:658",
+          "code_de_procedure_civile:805",
+          "code_de_procedure_civile:907",
+          "code_des_procedures_civiles_d_execution:L412-1",
+          "code_des_procedures_civiles_d_execution:L433-1",
+          "code_des_procedures_civiles_d_execution:L433-2",
+          "code_des_procedures_civiles_d_execution:R411-1",
+          "code_des_procedures_civiles_d_execution:R412-1",
+          "code_des_procedures_civiles_d_execution:R432-2",
+          "code_des_procedures_civiles_d_execution:R433-1",
+          "code_des_procedures_civiles_d_execution:R433-7",
+          "code_des_procedures_civiles_d_execution:R441-1",
+          "code_des_procedures_civiles_d_execution:R442-1",
+          "code_des_procedures_civiles_d_execution:R451-1",
+          "code_des_procedures_civiles_d_execution:R451-4"
+        ],
+        "extra": []
+      },
+      {
+        "id": "6735111fa16106af685e6fa3",
+        "jur": "TJ",
+        "n_gt": 15,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 13,
+        "missed": [
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L631-3",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L741-1",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L742-1",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L742-4",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-20",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-24",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-4",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-6",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-7",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-8",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-9",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-1",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-3"
+        ],
+        "extra": []
+      },
+      {
+        "id": "664f896c67b6231d697d4635",
+        "jur": "TJ",
+        "n_gt": 15,
+        "n_pred": 9,
+        "tp": 9,
+        "fp": 0,
+        "fn": 6,
+        "missed": [
+          "code_civil:1103",
+          "code_civil:1124",
+          "code_civil:1224",
+          "code_civil:1227",
+          "code_civil:1228",
+          "code_civil:1229"
+        ],
+        "extra": []
+      },
+      {
+        "id": "66e9c542a94e1874b4def810",
+        "jur": "TJ",
+        "n_gt": 10,
+        "n_pred": 6,
+        "tp": 5,
+        "fp": 1,
+        "fn": 5,
+        "missed": [
+          "code_des_procedures_civiles_d_execution:L211-2",
+          "code_des_procedures_civiles_d_execution:L211-3",
+          "code_des_procedures_civiles_d_execution:L211-4",
+          "code_des_procedures_civiles_d_execution:R211-11",
+          "code_des_procedures_civiles_d_execution:R211-5"
+        ],
+        "extra": [
+          "code_des_procedures_civiles_d_execution:R12121"
+        ]
+      },
+      {
+        "id": "613726bacd58014677427f07",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6645a21e98cdd00008064fee",
+        "jur": "CC",
+        "n_gt": 2,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_de_procedure_civile:1014"
+        ],
+        "extra": []
+      },
+      {
+        "id": "6719e4485857dd64cbdaa2a4",
+        "jur": "CC",
+        "n_gt": 2,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_de_procedure_civile:1014"
+        ],
+        "extra": []
+      },
+      {
+        "id": "61372092cd580146773ebc0f",
+        "jur": "CC",
+        "n_gt": 3,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_civil:1356"
+        ],
+        "extra": []
+      },
+      {
+        "id": "61372845cd5801467743048d",
+        "jur": "CC",
+        "n_gt": 7,
+        "n_pred": 5,
+        "tp": 5,
+        "fp": 0,
+        "fn": 2,
+        "missed": [
+          "code_du_travail:L122-3-8",
+          "code_du_travail:L1243-4"
+        ],
+        "extra": []
+      },
+      {
+        "id": "65bb47721712fc000885e8fc",
+        "jur": "CA",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "644a1288656d26d0f8b57e8b",
+        "jur": "CA",
+        "n_gt": 7,
+        "n_pred": 6,
+        "tp": 6,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_de_la_sante_publique:R3211-43"
+        ],
+        "extra": []
+      },
+      {
+        "id": "6253cac9bd3db21cbdd8c0fd",
+        "jur": "CA",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6712af5ff81231daf1b9b3ef",
+        "jur": "TJ",
+        "n_gt": 2,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_civil:360"
+        ],
+        "extra": []
+      },
+      {
+        "id": "67817d596d34da2cbdcdbe86",
+        "jur": "TJ",
+        "n_gt": 12,
+        "n_pred": 7,
+        "tp": 7,
+        "fp": 0,
+        "fn": 5,
+        "missed": [
+          "code_rural_et_de_la_peche_maritime:L1",
+          "code_rural_et_de_la_peche_maritime:L143-2",
+          "code_rural_et_de_la_peche_maritime:L331-2",
+          "code_rural_et_de_la_peche_maritime:R141-1",
+          "code_rural_et_de_la_peche_maritime:R141-11"
+        ],
+        "extra": []
+      }
+    ]
+  },
+  "V1 listing+suffixes": {
+    "totals": {
+      "tp": 103,
+      "fp": 1,
+      "fn": 18
+    },
+    "per_arret": [
+      {
+        "id": "5fca63a63a15d34bf112659e",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "613723e3cd5801467740f763",
+        "jur": "CC",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6137213bcd580146773f2155",
+        "jur": "CC",
+        "n_gt": 5,
+        "n_pred": 5,
+        "tp": 5,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6079d3709ba5988459c592fd",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "668cd247bbc9a118c6c63f67",
+        "jur": "CA",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "66ebc047b777bc8e4ad63615",
+        "jur": "CA",
+        "n_gt": 5,
+        "n_pred": 5,
+        "tp": 5,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "65166c7d788aac83189e9cdc",
+        "jur": "CA",
+        "n_gt": 23,
+        "n_pred": 23,
+        "tp": 23,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6735111fa16106af685e6fa3",
+        "jur": "TJ",
+        "n_gt": 15,
+        "n_pred": 10,
+        "tp": 10,
+        "fp": 0,
+        "fn": 5,
+        "missed": [
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L631-3",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L742-4",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-7",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-1",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-3"
+        ],
+        "extra": []
+      },
+      {
+        "id": "664f896c67b6231d697d4635",
+        "jur": "TJ",
+        "n_gt": 15,
+        "n_pred": 13,
+        "tp": 13,
+        "fp": 0,
+        "fn": 2,
+        "missed": [
+          "code_civil:1103",
+          "code_civil:1124"
+        ],
+        "extra": []
+      },
+      {
+        "id": "66e9c542a94e1874b4def810",
+        "jur": "TJ",
+        "n_gt": 10,
+        "n_pred": 6,
+        "tp": 5,
+        "fp": 1,
+        "fn": 5,
+        "missed": [
+          "code_des_procedures_civiles_d_execution:L211-2",
+          "code_des_procedures_civiles_d_execution:L211-3",
+          "code_des_procedures_civiles_d_execution:L211-4",
+          "code_des_procedures_civiles_d_execution:R211-11",
+          "code_des_procedures_civiles_d_execution:R211-5"
+        ],
+        "extra": [
+          "code_des_procedures_civiles_d_execution:R12121"
+        ]
+      },
+      {
+        "id": "613726bacd58014677427f07",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6645a21e98cdd00008064fee",
+        "jur": "CC",
+        "n_gt": 2,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6719e4485857dd64cbdaa2a4",
+        "jur": "CC",
+        "n_gt": 2,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "61372092cd580146773ebc0f",
+        "jur": "CC",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "61372845cd5801467743048d",
+        "jur": "CC",
+        "n_gt": 7,
+        "n_pred": 6,
+        "tp": 6,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_du_travail:L1243-4"
+        ],
+        "extra": []
+      },
+      {
+        "id": "65bb47721712fc000885e8fc",
+        "jur": "CA",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "644a1288656d26d0f8b57e8b",
+        "jur": "CA",
+        "n_gt": 7,
+        "n_pred": 6,
+        "tp": 6,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_de_la_sante_publique:R3211-43"
+        ],
+        "extra": []
+      },
+      {
+        "id": "6253cac9bd3db21cbdd8c0fd",
+        "jur": "CA",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6712af5ff81231daf1b9b3ef",
+        "jur": "TJ",
+        "n_gt": 2,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "67817d596d34da2cbdcdbe86",
+        "jur": "TJ",
+        "n_gt": 12,
+        "n_pred": 8,
+        "tp": 8,
+        "fp": 0,
+        "fn": 4,
+        "missed": [
+          "code_rural_et_de_la_peche_maritime:L1",
+          "code_rural_et_de_la_peche_maritime:L143-2",
+          "code_rural_et_de_la_peche_maritime:L331-2",
+          "code_rural_et_de_la_peche_maritime:R141-11"
+        ],
+        "extra": []
+      }
+    ]
+  },
+  "V3 +anaphore": {
+    "totals": {
+      "tp": 104,
+      "fp": 1,
+      "fn": 17
+    },
+    "per_arret": [
+      {
+        "id": "5fca63a63a15d34bf112659e",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "613723e3cd5801467740f763",
+        "jur": "CC",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6137213bcd580146773f2155",
+        "jur": "CC",
+        "n_gt": 5,
+        "n_pred": 5,
+        "tp": 5,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6079d3709ba5988459c592fd",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "668cd247bbc9a118c6c63f67",
+        "jur": "CA",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "66ebc047b777bc8e4ad63615",
+        "jur": "CA",
+        "n_gt": 5,
+        "n_pred": 5,
+        "tp": 5,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "65166c7d788aac83189e9cdc",
+        "jur": "CA",
+        "n_gt": 23,
+        "n_pred": 23,
+        "tp": 23,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6735111fa16106af685e6fa3",
+        "jur": "TJ",
+        "n_gt": 15,
+        "n_pred": 10,
+        "tp": 10,
+        "fp": 0,
+        "fn": 5,
+        "missed": [
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L631-3",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L742-4",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L743-7",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-1",
+          "code_de_l_entree_et_du_sejour_des_etrangers_et_du_droit_d_asile:L754-3"
+        ],
+        "extra": []
+      },
+      {
+        "id": "664f896c67b6231d697d4635",
+        "jur": "TJ",
+        "n_gt": 15,
+        "n_pred": 13,
+        "tp": 13,
+        "fp": 0,
+        "fn": 2,
+        "missed": [
+          "code_civil:1103",
+          "code_civil:1124"
+        ],
+        "extra": []
+      },
+      {
+        "id": "66e9c542a94e1874b4def810",
+        "jur": "TJ",
+        "n_gt": 10,
+        "n_pred": 6,
+        "tp": 5,
+        "fp": 1,
+        "fn": 5,
+        "missed": [
+          "code_des_procedures_civiles_d_execution:L211-2",
+          "code_des_procedures_civiles_d_execution:L211-3",
+          "code_des_procedures_civiles_d_execution:L211-4",
+          "code_des_procedures_civiles_d_execution:R211-11",
+          "code_des_procedures_civiles_d_execution:R211-5"
+        ],
+        "extra": [
+          "code_des_procedures_civiles_d_execution:R12121"
+        ]
+      },
+      {
+        "id": "613726bacd58014677427f07",
+        "jur": "CC",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6645a21e98cdd00008064fee",
+        "jur": "CC",
+        "n_gt": 2,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6719e4485857dd64cbdaa2a4",
+        "jur": "CC",
+        "n_gt": 2,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "61372092cd580146773ebc0f",
+        "jur": "CC",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "61372845cd5801467743048d",
+        "jur": "CC",
+        "n_gt": 7,
+        "n_pred": 6,
+        "tp": 6,
+        "fp": 0,
+        "fn": 1,
+        "missed": [
+          "code_du_travail:L1243-4"
+        ],
+        "extra": []
+      },
+      {
+        "id": "65bb47721712fc000885e8fc",
+        "jur": "CA",
+        "n_gt": 1,
+        "n_pred": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "644a1288656d26d0f8b57e8b",
+        "jur": "CA",
+        "n_gt": 7,
+        "n_pred": 7,
+        "tp": 7,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6253cac9bd3db21cbdd8c0fd",
+        "jur": "CA",
+        "n_gt": 3,
+        "n_pred": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "6712af5ff81231daf1b9b3ef",
+        "jur": "TJ",
+        "n_gt": 2,
+        "n_pred": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "missed": [],
+        "extra": []
+      },
+      {
+        "id": "67817d596d34da2cbdcdbe86",
+        "jur": "TJ",
+        "n_gt": 12,
+        "n_pred": 8,
+        "tp": 8,
+        "fp": 0,
+        "fn": 4,
+        "missed": [
+          "code_rural_et_de_la_peche_maritime:L1",
+          "code_rural_et_de_la_peche_maritime:L143-2",
+          "code_rural_et_de_la_peche_maritime:L331-2",
+          "code_rural_et_de_la_peche_maritime:R141-11"
+        ],
+        "extra": []
+      }
+    ]
+  }
+}

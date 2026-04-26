@@ -1,0 +1,672 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit penal (consolide)",
+    "source_path": "data/cnb-crfpa/2025/cas-pratiques.pdf (section Droit penal, pp. 13-15)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Droit penal - sujet principal (Commission nationale, 3 sept. 2025) / Cap'Barreau",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 37 (note 15/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 42 (note 15,5/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 43 (note 16/20, 'Tres bien')"
+    ],
+    "generated_by": "Claude (consolidation run, Opus 4.7 1M)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-03",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_responsabilite_penale_Romuald": 10,
+        "Q2_responsabilite_penale_Thierry": 7,
+        "Q3_responsabilite_penale_Invest_SA": 3
+      },
+      "documents_autorises": ["Code penal (Dalloz, LexisNexis)", "Code de procedure penale (Dalloz, LexisNexis)", "Code de commerce (Dalloz, LexisNexis)"]
+    }
+  },
+  "questions": [
+    {
+      "id": "CNB-PENAL-2025-Q1",
+      "branche": "penal",
+      "specialisation": "Droit penal - infractions sexuelles (viol conjugal) + causes d'irresponsabilite (trouble mental, intoxication volontaire)",
+      "question": "Romuald, atteint de la maladie de Parkinson depuis debut 2024, suit un traitement medicamenteux qui provoque chez lui des pulsions sexuelles incontrolables. Une nuit de 2024, alors que sa femme Josette dort (elle lui avait demande une pause dans leurs relations sexuelles), il pratique sur elle un cunnilingus. Expertises: le traitement est bien a l'origine des pulsions addictives, et aux doses consommees Romuald n'etait pas en mesure de controler ses actes. Quelles qualifications penales peuvent etre retenues a l'encontre de Romuald et quelles sont les causes d'irresponsabilite envisageables ?",
+      "perspective": "neutre",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualifier le viol sur le fondement de l'article 222-23 C. pen. : acte de penetration sexuelle 'de quelque nature qu'il soit' ou acte bucco-genital (extension loi du 21 avril 2021). Le cunnilingus pratique en 2024 entre bien dans l'incrimination depuis la loi de 2021.",
+            "linked_article": "code_penal:222-23",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le viol est incrimine a l'article 222-23 et suppose d'etablir un acte de penetration sexuelle sur autrui... depuis la loi du 21 avril 2021, le viol s'etend egalement aux actes bucco-genitaux"
+          },
+          {
+            "text": "Caracteriser le defaut de consentement par la surprise (art. 222-23) : le fait de profiter du sommeil de la victime, sans meme l'emploi de manoeuvres, peut caracteriser la surprise (Crim. 9 janv. 2019, n 18-82.829 pour l'agression sexuelle)",
+            "linked_article": "code_penal:222-23",
+            "linked_jp": "Cass. crim., 9 janv. 2019, n 18-82.829",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La jurisprudence considere en outre que le fait de profiter du sommeil de la victime sans meme l'emploi de manoeuvres peut caracteriser une surprise en matiere d'agression sexuelle (v. Crim. 9 janv. 2019, n 18-82.829)"
+          },
+          {
+            "text": "Ecarter l'obstacle du lien conjugal : l'article 222-22 alinea 2 C. pen. (loi du 4 avril 2006) dispose expressement que l'existence de relations conjugales n'est pas un obstacle a la caracterisation d'un viol. Ici, Josette avait au surplus clairement exprime son refus.",
+            "linked_article": "code_penal:222-22",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "selon l'article 222-22, alinea 2 (introduit par une loi du 4 avril 2006), l'existence de relation conjugales n'est pas un obstacle a la caracterisation d'un viol"
+          },
+          {
+            "text": "Caracteriser l'element intentionnel (art. 121-3 C. pen.) : conscience de l'absence de consentement. Ici Josette avait demande une pause la veille; Romuald a agi pendant son sommeil et retire 'doucement' la culotte pour ne pas la reveiller, ce qui temoigne de la conscience du refus.",
+            "linked_article": "code_penal:121-3",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'intention suppose la volonte de commettre l'acte sexuel en ayant conscience de l'absence de consentement de la victime"
+          },
+          {
+            "text": "Retenir la circonstance aggravante du lien conjugal : art. 222-24, 11 C. pen. punit le viol de 20 ans de reclusion criminelle lorsqu'il est commis par le conjoint, concubin ou partenaire PACS de la victime",
+            "linked_article": "code_penal:222-24",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Selon l'article 222-24, 11, du code penal, le viol est puni de vingt ans de reclusion criminelle lorsqu'il est commis par le conjoint ou le concubin de la victime ou le partenaire lie a la victime par un pacte civil de solidarite"
+          },
+          {
+            "text": "Envisager l'irresponsabilite penale pour trouble mental (art. 122-1 al. 1 C. pen.) : 3 conditions cumulatives - trouble psychique ou neuropsychique, abolition du discernement ou du controle des actes, au moment des faits. Notion interpretee souplement (peut inclure les troubles d'origine medicamenteuse : Crim. 14 avril 2021, n 20-80.135).",
+            "linked_article": "code_penal:122-1",
+            "linked_jp": "Cass. crim., 14 avril 2021, n 20-80.135",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "l'irresponsabilite penale pour trouble mental suppose trois conditions : l'existence d'un trouble psychique ou neuropsychique, ayant aboli le discernement et ce, au moment de la commission des faits... peut s'etendre a d'autres troubles y compris d'origine toxique et/ou medicamenteuse (Crim. 14 avril 2021, n 20-80.135)"
+          },
+          {
+            "text": "Analyser l'exclusion de l'irresponsabilite par faute anterieure : art. 122-1-1 C. pen. (loi du 24 janvier 2022) exclut l'irresponsabilite si le trouble resulte d'une consommation volontaire de substance psychoactive dans un temps voisin de l'action ET dans le dessein de commettre l'infraction. Ici dessein absent : le traitement est pris pour soigner Parkinson, pas pour agresser.",
+            "linked_article": "code_penal:122-1-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Depuis une loi du 24 janvier 2022, un article 122-1-1 vient exclure l'irresponsabilite penale pour trouble mental lorsque le trouble resulte d'une intoxication volontaire fautive... dans le dessein de commettre l'infraction"
+          },
+          {
+            "text": "Identifier le delit special de l'article 222-26-2 C. pen. (loi 24 janvier 2022) : 7 ans d'emprisonnement et 100 000 euros d'amende pour l'auteur d'un viol declare penalement irresponsable si trouble resulte d'une consommation volontaire ILLICITE ou MANIFESTEMENT EXCESSIVE de substance psychoactive, avec connaissance du risque de mise en danger. En l'espece: non illicite (prescription medicale) et non excessive (traitement respecte) -> delit ecarte.",
+            "linked_article": "code_penal:222-26-2",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'article 226-22-2 punit de 7 ans d'emprisonnement et 100 000 euros d'amende, l'auteur d'un viol declare irresponsable penalement en raison d'un trouble mental si ce trouble resulte d'une consommation volontaire, illicite ou manifestement excessive, d'une substance psychoactive",
+            "uncertainty_note": "La grille mentionne 'article 226-22-2' mais il s'agit manifestement d'une coquille pour '222-26-2' (article reellement introduit par la loi du 24 janv. 2022, situe dans le titre II sur les atteintes aux personnes). Les trois copies IEJ (37, 42, 43) visent toutes 222-26-2."
+          }
+        ],
+        "expected": [
+          {
+            "text": "Definir precisement la surprise comme distincte de l'etonnement : emploi d'un stratageme ou de manoeuvres pour tromper la lucidite de la victime (Crim. 25 avril 2001, n 00-85.467 ; Crim. 23 janv. 2019, n 18-82.833 ; Crim. 4 sept. 2019, n 18-85.919)",
+            "linked_jp": "Cass. crim., 25 avril 2001, n 00-85.467",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La surprise ne s'entend pas d'un etonnement de la victime (v. Crim. 25 avril 2001, n 00-85.467), mais plutot de l'emploi d'un stratageme ou de manoeuvres pour tromper la lucidite de la victime (v. Crim. 23 janv. 2019, n 18-82.833 ; 4 sept. 2019, n 18-85919)"
+          },
+          {
+            "text": "Mentionner la jurisprudence anterieure a la loi de 2006 admettant le viol entre epoux (Crim. 5 sept. 1990, n 90-83.786 ; Crim. 11 juin 1992, n 91-86.346)",
+            "linked_jp": "Cass. crim., 5 sept. 1990, n 90-83.786",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "ce qu'avait deja reconnu la jurisprudence auparavant (v. Crim. 5 sept. 1990, n 90-83.786 ; 11 juin 1992, n 91-86.346)"
+          },
+          {
+            "text": "Preciser la contrainte physique ou morale (art. 222-22-1 C. pen.)",
+            "linked_article": "code_penal:222-22-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "l'article 222-22-1 venant preciser que la contrainte peut etre physique ou morale"
+          },
+          {
+            "text": "Qualifier la notion de 'substances psychoactives' (art. 122-1-1 et 222-26-2) de maniere large : inclut stupefiants, alcool et medicaments affectant les fonctions cognitives",
+            "linked_article": "code_penal:122-1-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la notion de substances psychoactives est suffisamment large pour inclure, outre les produits stupefiants, l'alcool ainsi que les medicaments des lors qu'ils sont de nature a affecter les fonctions cognitives"
+          },
+          {
+            "text": "Distinguer l'abolition (art. 122-1 al. 1 : irresponsabilite) de l'alteration (art. 122-1 al. 2 : reduction de peine d'un tiers sauf decision specialement motivee)",
+            "linked_article": "code_penal:122-1",
+            "sources": ["copie_iej"],
+            "why": "Les copies 37 et 43 articulent clairement les deux alineas de 122-1 ; la grille traite principalement l'abolition mais la distinction est attendue pour le bareme integral"
+          },
+          {
+            "text": "Mentionner l'appreciation souveraine par les juges du fond de l'existence et de la portee du trouble, sur la base des rapports d'expertise",
+            "sources": ["copie_iej"],
+            "why": "Les trois copies insistent sur le role des experts et l'appreciation souveraine, pertinent mais non valorise explicitement par la grille"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Discuter l'ambiguite des rapports d'expertise : 'pas en mesure de controler ses actes' peut signifier simple alteration (122-1 al. 2) plutot qu'abolition (122-1 al. 1), avec consequences sur la repression",
+            "linked_article": "code_penal:122-1",
+            "sources": ["copie_iej"],
+            "why": "Tres bien developpe par la copie 37 qui discute finement l'ambiguite terminologique des rapports - niveau d'analyse expert, absent de la grille qui conclut plus directement a l'abolition"
+          },
+          {
+            "text": "Ecarter la qualification d'agression sexuelle autre que le viol (art. 222-22 et 222-27 C. pen.) : la qualification de viol englobe l'acte bucco-genital depuis 2021, rendant la qualification d'agression sexuelle subsidiaire sans objet",
+            "linked_article": "code_penal:222-22",
+            "sources": ["copie_iej"],
+            "grille_weight": 0,
+            "why": "La copie 37 et la copie 43 ecartent explicitement l'agression sexuelle comme qualification alternative - demontre la rigueur du raisonnement en concours de qualifications"
+          },
+          {
+            "text": "Ecarter le delit de violences involontaires a l'egard de Josette : principe ne bis in idem - le meme fait ne peut constituer l'element constitutif de violences ET l'aggravation du viol (Crim. 6 janv. 1999, n 98-80.730)",
+            "linked_article": "code_penal:222-19",
+            "linked_jp": "Cass. crim., 6 janv. 1999, n 98-80.730",
+            "sources": ["copie_iej"],
+            "why": "Argument sophistique developpe par la copie 37 sur le non-cumul entre l'ITT absorbee par le viol et une eventuelle incrimination de violences - niveau expert",
+            "uncertainty_note": "Numero de pourvoi issu de la copie IEJ, non verifie dans les sources officielles"
+          },
+          {
+            "text": "Ecarter le delit d'administration de substances nuisibles (art. 222-15 C. pen.) a l'encontre de Romuald : il n'a pas administre de substance a un tiers mais l'a lui-meme consommee",
+            "linked_article": "code_penal:222-15",
+            "sources": ["copie_iej"],
+            "why": "La copie 37 ecarte explicitement cette qualification - raisonnement par exclusion pertinent"
+          },
+          {
+            "text": "Ecarter l'empoisonnement (art. 221-5 C. pen.) : rien n'indique que le medicament soit de nature mortifere",
+            "linked_article": "code_penal:221-5",
+            "sources": ["copie_iej"],
+            "why": "Exclusion rigoureuse effectuee par la copie 37"
+          },
+          {
+            "text": "Envisager la qualification de harcelement sexuel (art. 222-33 I C. pen.) pour les avances sexuelles quotidiennes repetees preexistantes au viol, avec concours reel d'infractions (art. 132-2 C. pen.)",
+            "linked_article": "code_penal:222-33",
+            "sources": ["copie_iej"],
+            "why": "La copie 42 developpe cette qualification prealable au viol avec analyse du concours reel (132-2, 132-3, 132-4) - niveau expert non attendu par la grille",
+            "uncertainty_note": "Qualification de harcelement non retenue par la grille officielle ; a utiliser comme point bonus plutot que comme point attendu"
+          },
+          {
+            "text": "Envisager et ecarter l'etat de necessite (art. 122-7 C. pen.) : le traitement serait le seul moyen de soigner Parkinson, mais l'interet sauvegarde (integrite physique de Romuald) n'est pas forcement superieur a celui auquel il est porte atteinte (integrite sexuelle d'autrui). Reference CA Papeete 27 juin 2002 sur la consommation de cannabis antalgique.",
+            "linked_article": "code_penal:122-7",
+            "linked_jp": "CA Papeete, 27 juin 2002",
+            "sources": ["copie_iej"],
+            "why": "Developpement original de la copie 43 qui justifie l'excellence de la note (16/20) ; absent de la grille",
+            "uncertainty_note": "Arret CA Papeete 27 juin 2002 cite sans numero ; exemple doctrinal plus qu'arret de reference"
+          },
+          {
+            "text": "Ecarter la contrainte (art. 122-2 C. pen.) comme cause d'irresponsabilite : la contrainte morale doit etre exterieure et ne peut resulter de l'impulsivite ou des pulsions du prevenu (Crim. 11 avril 1908 ; Crim. 11 juin 1926)",
+            "linked_article": "code_penal:122-2",
+            "sources": ["copie_iej"],
+            "why": "La copie 42 ecarte methodiquement la contrainte avant de retenir l'abolition du discernement"
+          },
+          {
+            "text": "En cas d'alteration (non abolition) : reduction de peine d'un tiers (art. 122-1 al. 2) sauf decision specialement motivee de la juridiction. Pour un crime puni de la reclusion criminelle a perpetuite, reduction specifique prevue.",
+            "linked_article": "code_penal:122-1",
+            "sources": ["copie_iej"],
+            "why": "La copie 37 detaille finement les consequences de l'alteration sur le quantum"
+          },
+          {
+            "text": "Reference historique aux arrets anciens admettant le viol sur femme endormie (Crim. 25 juin 1857)",
+            "linked_jp": "Cass. crim., 25 juin 1857",
+            "sources": ["copie_iej"],
+            "why": "Les copies 37 et 43 mobilisent cet arret historique pour renforcer l'analyse de la surprise"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_penal:222-23",
+          "code_penal:222-22",
+          "code_penal:222-24",
+          "code_penal:121-3",
+          "code_penal:122-1",
+          "code_penal:122-1-1",
+          "code_penal:222-26-2"
+        ],
+        "optionnels": [
+          "code_penal:222-22-1",
+          "code_penal:222-27",
+          "code_penal:222-33",
+          "code_penal:122-2",
+          "code_penal:122-7",
+          "code_penal:222-15",
+          "code_penal:221-5",
+          "code_penal:132-2",
+          "code_penal:132-3",
+          "code_penal:132-4"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 9 janv. 2019, n 18-82.829",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Surprise caracterisee par le fait de profiter du sommeil de la victime, meme sans manoeuvres (agression sexuelle)",
+          "uncertainty_note": "ECLI non verifie dans les sources consultees"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 23 janv. 2019, n 18-82.833",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Surprise = emploi d'un stratageme ou de manoeuvres pour tromper la lucidite de la victime",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 4 sept. 2019, n 18-85.919",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la definition de la surprise par manoeuvres",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 25 avril 2001, n 00-85.467",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "La surprise ne s'entend pas d'un simple etonnement de la victime - delimite negativement la notion",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 5 sept. 1990, n 90-83.786",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Reconnaissance jurisprudentielle du viol entre epoux avant la loi de 2006",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 11 juin 1992, n 91-86.346",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Confirmation de la jurisprudence sur le viol conjugal avant loi de 2006",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 14 avril 2021, n 20-80.135",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Le trouble psychique/neuropsychique peut inclure les troubles d'origine toxique et/ou medicamenteuse - cle pour la qualification du trouble de Romuald",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 25 juin 1857",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Arret historique admettant le viol sur femme endormie - cite par les copies 37 et 43",
+          "uncertainty_note": "Arret tres ancien, pas de numero de pourvoi moderne ; reference doctrinale"
+        },
+        {
+          "ref": null,
+          "short_ref": "CA Papeete, 27 juin 2002",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Etat de necessite pour consommation de cannabis antalgique par prevenu paraplegique - cite par copie 43 par analogie",
+          "uncertainty_note": "Arret de cour d'appel sans numero verifiable ; reference doctrinale indirecte"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 6 janv. 1999, n 98-80.730",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Principe ne bis in idem : impossibilite de cumuler element constitutif de violences et aggravation de viol - cite par copie 37",
+          "uncertainty_note": "Numero de pourvoi issu de la copie IEJ, non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "ATTENTION : la grille officielle mentionne 'article 226-22-2' qui est une coquille - la bonne reference est 'article 222-26-2' (delit introduit par la loi du 24 janv. 2022, situe dans le titre II sur les atteintes aux personnes). Les trois copies IEJ visent bien 222-26-2. Par ailleurs, la grille mentionne au detour 'l'article 222-26-2 du code penal' dans sa conclusion (p. 4), confirmant la coquille initiale."
+      },
+      "source_extract": "Romuald et Josette... Romuald suit un traitement quotidien... Romuald se montre toujours plus entreprenant sexuellement... Josette lui demande de faire une pause... Mais, le soir meme, alors que sa femme est endormie a cote de lui, il est pris d'un desir sexuel incontrolable et il baisse doucement la culotte de son epouse et commence a lui pratiquer un cunnilingus... Une expertise sur la composition et les effets du traitement suivi par Romuald est ordonnee. Elle confirme le lien entre la molecule a la base du traitement et les developpements d'addictions notamment au jeu ou au sexe au point d'engendrer des pulsions addictives incontrolables... une expertise medicale et psychiatrique de Romuald est faite et etablit, qu'au regard des doses consommees pour son traitement, il n'etait pas en mesure de controler ses pulsions sexuelles lors de leur survenance. (10 points)",
+      "consolidation_notes": "Question centrale (10 pts, 50% de l'epreuve). Grille bien articulee en 2 temps: (A) caracterisation du viol aggrave (5 pts), (B) irresponsabilite pour trouble mental + delit special (5 pts). Les trois copies IEJ abordent le viol, l'article 122-1 et l'article 122-1-1 ; seule la copie 43 (16/20) ajoute l'etat de necessite (122-7) et la mise en danger (223-1, ecartee) - developpement qui explique la note. La copie 42 ajoute le harcelement sexuel (222-33) non attendu par la grille mais pertinent. ECART MAJEUR A NOTER : la grille contient une coquille typographique en citant '226-22-2' la ou le bon article est '222-26-2' (toutes les copies corrigent implicitement). Cette coquille est signalee dans le champ pieges.notes."
+    },
+    {
+      "id": "CNB-PENAL-2025-Q2",
+      "branche": "penal",
+      "specialisation": "Droit penal - infractions non intentionnelles (blessures involontaires, faute qualifiee, causalite indirecte)",
+      "question": "Thierry, dirigeant du laboratoire 'Medica SA' fabricant le medicament prescrit a Romuald, a ete informe des effets indesirables du medicament des fin 2023 mais n'a alerte les medecins et patients qu'en septembre 2024. Consequence : Romuald agresse sexuellement Josette, qui subit une ITT de 6 mois du fait d'un syndrome depressif. Thierry peut-il etre poursuivi penalement ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualifier les blessures involontaires (art. 222-19 C. pen.) : ITT de plus de 3 mois punie de 2 ans d'emprisonnement et 30 000 euros d'amende ; ITT de 6 mois etablie chez Josette",
+            "linked_article": "code_penal:222-19",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Les blessures involontaires ayant entraine une ITT de plus de trois mois sont incriminees a l'article 222-19 du code penal"
+          },
+          {
+            "text": "Verifier le resultat dommageable : atteinte corporelle (viol subi) doublee d'une atteinte psychique (syndrome depressif justifiant ITT). Discussion sur l'admission des atteintes purement psychologiques par l'imprudence : admise en l'espece du fait du cumul atteinte physique + psychique",
+            "linked_article": "code_penal:222-19",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "on peut s'interroger sur l'application de la qualification de blessures par imprudence a l'egard d'une atteinte purement psychologique... la caracterisation des blessures pourrait se defendre, car si l'ampleur de l'ITT est liee a un syndrome depressif, celui-ci resulte d'une agression sexuelle et donc d'une atteinte corporelle"
+          },
+          {
+            "text": "Caracteriser la certitude du lien causal : sans les effets indesirables non signales, l'agression n'aurait pas eu lieu (theorie de l'equivalence des conditions) ; le defaut d'information est bien un antecedent necessaire du dommage",
+            "linked_article": "code_penal:121-3",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la certitude du lien causal peut etre etablie sans difficulte. En application de l'equivalence des conditions... La fourniture du medicament, sans mise en garde, est donc bien un antecedent necessaire du dommage"
+          },
+          {
+            "text": "Determiner le caractere direct ou indirect de la causalite (art. 121-3 al. 4 C. pen.) : l'auteur indirect est celui qui 'a cree ou contribue a creer la situation qui a permis la realisation du dommage' ou 'n'a pas pris les mesures permettant de l'eviter'. Criteres jurisprudentiels: proximite spatio-temporelle + caractere determinant (Crim. 25 sept. 2001, n 01-80.100 ; Crim. 22 nov. 2022, n 21-84.575)",
+            "linked_article": "code_penal:121-3",
+            "linked_jp": "Cass. crim., 25 sept. 2001, n 01-80.100",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "selon l'article 121-3, al.4, l'auteur indirect du dommage... la jurisprudence s'appuie sur deux criteres : celui tire de la proximite spatio-temporelle entre la faute et le dommage et celui tire du caractere determinant de la faute (Crim. 25 sept. 2001, n 01-80.100 ; 22 nov. 2022, n 21-84.575)"
+          },
+          {
+            "text": "Conclure a la causalite INDIRECTE (solution principale de la grille, Option 1) : la fourniture du medicament est anterieure a l'agression et les dirigeants d'entreprise sont majoritairement qualifies d'auteurs indirects. Consequence : necessite d'une faute qualifiee (art. 121-3 al. 4)",
+            "linked_article": "code_penal:121-3",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Au regard du critere tire de la proximite spatio-temporelle, Thierry apparait davantage comme un auteur indirect... la jurisprudence qualifie tres majoritairement les dirigeants d'entreprise d'auteur indirect"
+          },
+          {
+            "text": "Caracteriser la faute caracterisee (art. 121-3 al. 4 C. pen.) : exposition d'autrui a un risque d'une particuliere gravite que l'auteur ne pouvait ignorer. Thierry etait informe des etudes sur les effets indesirables et a tarde plusieurs mois a alerter -> faute caracterisee retenue",
+            "linked_article": "code_penal:121-3",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la faute caracterisee est celle qui exposait autrui a un risque d'une particuliere gravite que l'auteur ne pouvait ignorer... Thierry a reconnu devant les enqueteurs qu'il etait informe des etudes ayant alerte sur les effets indesirables... Il serait donc possible de retenir une faute caracterisee"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Alternative admise par la grille (Option 2) : causalite DIRECTE en privilegiant le critere du parametre determinant (notamment a l'appui de Crim. 22 nov. 2022, n 21-84.575), permettant de retenir une simple faute d'imprudence (art. 121-3 al. 3, appreciation in abstracto circonstanciee)",
+            "linked_article": "code_penal:121-3",
+            "linked_jp": "Cass. crim., 22 nov. 2022, n 21-84.575",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il pourrait etre admis que les candidats argumentent en faveur de la causalite directe en privilegiant le critere tire du parametre determinant, notamment a l'appui de l'arret du 22 novembre 2022... Si le raisonnement est soutenu et de qualite, la totalite des points peut etre accordee",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Evoquer la faute deliberee (art. 121-3 al. 4) : violation manifestement deliberee d'une obligation particuliere de prudence ou de securite prevue par la loi ou le reglement. Obligations reglementaires du code de la sante publique pesant sur les fabricants de medicaments (NB grille).",
+            "linked_article": "code_penal:121-3",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "Une obligation particuliere pese bien sur les fabricants de medicaments, prevue par les dispositions reglementaires du code de la sante publique. Si les etudiants raisonnent egalement sur ce fondement, les points prevus sont accordes"
+          },
+          {
+            "text": "Distinguer theorie de l'equivalence des conditions et theorie de la causalite adequate pour apprecier la certitude du lien causal",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "deux theories. D'une part, la theorie de l'equivalence des conditions... D'autre part, la theorie de la causalite adequate"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Envisager et ecarter le delit de mise en danger deliberee d'autrui (art. 223-1 C. pen.) : l'exposition au risque doit etre un risque immediat de mort ou de blessures graves avec mutilation/infirmite permanente, ce qui n'est pas caracterise ici (risque d'agression sexuelle)",
+            "linked_article": "code_penal:223-1",
+            "sources": ["copie_iej"],
+            "why": "La copie 43 ecarte explicitement cette qualification - raisonnement structurant non demande par la grille"
+          },
+          {
+            "text": "Envisager et ecarter l'administration de substances nuisibles (art. 222-15 C. pen.) a l'encontre de Thierry : pas d'administration directe par Thierry, pas d'intention (delit intentionnel selon Crim. 23 mars 2022)",
+            "linked_article": "code_penal:222-15",
+            "sources": ["copie_iej"],
+            "why": "La copie 42 ecarte 222-15 faute d'intention et d'administration directe ; la copie 43 la retient au contraire - divergence entre copies montrant l'interet de l'articulation"
+          },
+          {
+            "text": "Preciser le regime du repenti actif : fait d'avoir finalement alerte les medecins en sept. 2024 ne supprime pas la responsabilite (jurisprudence constante)",
+            "sources": ["copie_iej"],
+            "why": "Point apporte par la copie 42 dans une note de bas de page - fin mais non valorise explicitement"
+          },
+          {
+            "text": "Mentionner la loi du 10 juillet 2000 (loi Fauchon) ayant introduit la distinction causalite directe/indirecte pour les auteurs personnes physiques",
+            "linked_article": "code_penal:121-3",
+            "sources": ["copie_iej"],
+            "why": "La copie 37 replace la distinction dans son contexte legislatif - pertinent pour une analyse complete"
+          },
+          {
+            "text": "En cas de pluralite de victimes : l'auteur peut etre poursuivi pour chacune mais ne pourra etre condamne qu'a une peine dans la limite du maximum legal le plus eleve (Crim. 26 oct. 2010)",
+            "linked_article": "code_penal:132-3",
+            "sources": ["copie_iej"],
+            "why": "La copie 42 envisage la pluralite de victimes potentielles (tous les patients du laboratoire) - ouverture pertinente"
+          },
+          {
+            "text": "Definir precisement la faute caracterisee par illustrations jurisprudentielles : manquement a des obligations professionnelles essentielles ou negligences successives temoignant d'une imperitie prolongee (Crim. 17 dec. 2019)",
+            "linked_article": "code_penal:121-3",
+            "sources": ["copie_iej"],
+            "why": "La copie 42 et la copie 43 illustrent la faute caracterisee avec des references jurisprudentielles",
+            "uncertainty_note": "Numero de pourvoi non fourni"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_penal:222-19",
+          "code_penal:121-3"
+        ],
+        "optionnels": [
+          "code_penal:223-1",
+          "code_penal:222-15",
+          "code_penal:132-2",
+          "code_penal:132-3"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 25 sept. 2001, n 01-80.100",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot sur les criteres de distinction causalite directe/indirecte (proximite spatio-temporelle + caractere determinant)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 22 nov. 2022, n 21-84.575",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret recent privilegiant le critere du caractere determinant, permettant eventuellement de retenir la causalite directe",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 26 oct. 2010",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Pluralite de victimes en infractions non intentionnelles : une seule peine de meme nature dans la limite du maximum legal",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 42"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 17 dec. 2019",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Illustration de la faute caracterisee (information connue, absence de reaction) - citee par copie 42",
+          "uncertainty_note": "Numero de pourvoi non cite"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 11 dec. 1957",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Lien de causalite certain meme indirectement (cite par copie 43)",
+          "uncertainty_note": "Reference ancienne sans numero, a verifier"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "La grille accepte les DEUX options: causalite directe + faute simple OU causalite indirecte + faute qualifiee. Le NB explicite: 'Si le raisonnement est soutenu et de qualite, la totalite des points peut etre accordee' dans les deux hypotheses."
+      },
+      "source_extract": "Entendu par les enqueteurs sur commission rogatoire, Thierry, dirigeant du laboratoire Medica SA, fabricant du medicament, reconnait qu'il a bien ete informe des effets indesirables de son medicament a la fin de l'annee 2023. Apres plusieurs mois de discussions en interne au sein de la societe, il a finalement decide, en septembre 2024, d'alerter les medecins prescripteurs ainsi que les patients a l'aide d'une nouvelle notice. Quant a Josette, elle s'est separee de Romuald depuis cet evenement et souffre d'un syndrome depressif pour lequel un medecin legiste a etabli une ITT de 6 mois... la responsabilite penale... a l'egard... du dirigeant, Thierry (7 points).",
+      "consolidation_notes": "Question moyennement ponderee (7 pts). Grille structuree en 3 sous-questions: resultat (1 pt), causalite (4 pts), faute (2 pts). Points d'analyse importants: (1) la grille propose 2 options equivalentes (causalite directe+faute simple vs causalite indirecte+faute qualifiee) avec bareme integral possible dans les deux cas; (2) discussion originale sur l'ITT psychique admise par extension via l'atteinte physique prealable; (3) les copies ajoutent des exclusions pertinentes (223-1 mise en danger ecartee par copie 43, 222-15 traite differemment par copies 42 et 43). La grille ne cite pas explicitement la loi Fauchon du 10 juillet 2000 mais suppose sa connaissance."
+    },
+    {
+      "id": "CNB-PENAL-2025-Q3",
+      "branche": "penal",
+      "specialisation": "Droit penal - responsabilite penale des personnes morales + transmission par fusion-absorption",
+      "question": "Le laboratoire 'Medica SA' (SA) dont Thierry est dirigeant a fait l'objet debut 2025 d'une fusion-absorption par la societe 'Invest SA' (holding). Les faits de blessures involontaires ont ete commis avant la fusion. La responsabilite penale de 'Invest SA' peut-elle etre engagee du fait des agissements de 'Medica SA' ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Imputer l'infraction a Medica SA sur le fondement de l'art. 121-2 C. pen. : l'infraction doit avoir ete commise par un organe ou representant, pour le compte de la personne morale. Thierry (dirigeant) est bien l'organe ; l'infraction (defaut d'information sur les effets indesirables) est commise dans le cadre des activites de l'entreprise",
+            "linked_article": "code_penal:121-2",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La responsabilite penale des personnes morales est prevue a l'article 121-2 du CP et s'applique a l'ensemble des personnes morales de droit privé des lors qu'une infraction a ete commise par l'un de ses organes ou representants, pour le compte de la personne morale"
+          },
+          {
+            "text": "Rappeler le principe de responsabilite personnelle (art. 121-1 C. pen.) qui faisait historiquement obstacle au transfert de responsabilite en cas de fusion-absorption",
+            "linked_article": "code_penal:121-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Apres avoir longtemps refuse un tel transfert de responsabilite en cas de fusion-absorption au nom du principe de responsabilite du fait personnel (art. 121-1 CP)"
+          },
+          {
+            "text": "Exposer le revirement de la Chambre criminelle du 25 novembre 2020 : en raison de la continuite economique entre la personne morale absorbee et l'absorbante, la societe absorbante peut etre condamnee penalement pour les faits commis par l'absorbee avant la fusion",
+            "linked_jp": "Cass. crim., 25 nov. 2020, n 18-86.955",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la Chambre criminelle a opere un revirement de jurisprudence dans un important arret du 25 novembre 2020 en raison de la continuite economique entre la personne morale absorbee et celle absorbante",
+            "uncertainty_note": "Le numero de pourvoi (18-86.955) figure dans la copie 37 mais n'est pas explicitement dans la grille ; non verifie"
+          },
+          {
+            "text": "Appliquer la limite temporelle du revirement : il ne s'applique qu'aux fusions-absorptions POSTERIEURES au 25 novembre 2020 (sauf fraude). En l'espece, fusion debut 2025 donc bien posterieure -> transfert possible",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Ce revirement ne s'applique qu'aux fusions-absorptions posterieures au 25 novembre 2020, sauf fraude... la fusion-absorption entre les societes Medica SA et Invest SA a eu lieu en debut d'annee 2025, elle est donc bien posterieure"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Mentionner l'extension du revirement aux SARL (et autres formes sociales) : Crim. 22 mai 2024, confirmant l'application generale de la solution de 2020 initialement posee pour SA/SAS",
+            "linked_jp": "Cass. crim., 22 mai 2024",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "si ce revirement (et la possible transmission de responsabilite) n'a ete initialement opere par la Chambre criminelle que pour les SA et SAS, elle a depuis clairement etendu cette solution aux SARL (v. Crim. 22 mai 2024)",
+            "uncertainty_note": "Numero de pourvoi non fourni par la grille"
+          },
+          {
+            "text": "Preciser la notion d''organe ou representant' : organe = dirigeant au sens large ; representant = cadres ou salaries titulaires d'une delegation de pouvoirs pouvant engager la societe envers les tiers",
+            "linked_article": "code_penal:121-2",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "La notion d'organe renvoie a celle de dirigeant et la notion de representant renvoie plus largement aux cadres ou aux salaries titulaires d'une delegation de pouvoir pouvant engager la societe a l'egard des tiers"
+          },
+          {
+            "text": "Preciser la notion de 'pour le compte' : il ne s'agit pas de verifier que la personne morale a tire un avantage de l'infraction, mais seulement que l'infraction a ete commise dans le cadre ou en lien avec les activites de l'entreprise",
+            "linked_article": "code_penal:121-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Il ne s'agit pas pour autant de se demander si la personne morale a tire un avantage ou un benefice de l'infraction, mais plus simplement de verifier que l'infraction a ete commise dans le cadre ou en lien avec les activites de l'entreprise"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Mentionner l'arret Crim. 13 avril 2022 comme confirmation intermediaire du revirement de 2020",
+            "linked_jp": "Cass. crim., 13 avril 2022",
+            "sources": ["copie_iej"],
+            "why": "Les copies 42 et 43 citent cet arret comme illustration de la stabilisation du revirement",
+            "uncertainty_note": "Numero de pourvoi non fourni par les copies"
+          },
+          {
+            "text": "Rappeler la jurisprudence anterieure au revirement (Crim. 20 juin 2000, n 99-86.742) pour situer la rupture dans le temps",
+            "linked_jp": "Cass. crim., 20 juin 2000, n 99-86.742",
+            "sources": ["copie_iej"],
+            "why": "La copie 37 replace le revirement dans son contexte historique",
+            "uncertainty_note": "Numero de pourvoi issu de la copie IEJ, non verifie"
+          },
+          {
+            "text": "Justifier le revirement par la conformite au droit de l'Union europeenne (fusion des SA) et a l'article 6 Conv. EDH (droit au proces equitable / continuite de la responsabilite)",
+            "sources": ["copie_iej"],
+            "why": "La copie 37 explique le fondement conventionnel du revirement - niveau d'analyse expert"
+          },
+          {
+            "text": "Preciser les peines encourues par la personne morale (art. 131-37 et s. C. pen.) : amende au quintuple de celle encourue par la personne physique (art. 131-38), plus peines specifiques",
+            "linked_article": "code_penal:131-37",
+            "sources": ["copie_iej"],
+            "why": "La copie 37 detaille les consequences repressives"
+          },
+          {
+            "text": "Articuler le cumul de responsabilites : la responsabilite de la personne morale ne s'oppose pas a celle de la personne physique (art. 121-2 al. 3 C. pen.)",
+            "linked_article": "code_penal:121-2",
+            "sources": ["copie_iej"],
+            "why": "Point de cumul traite par la copie 37"
+          },
+          {
+            "text": "Envisager l'hypothese de fraude a la loi : possibilite d'appliquer retroactivement la jurisprudence aux operations anterieures au 25 nov. 2020 en cas de montage frauduleux visant a echapper aux poursuites (non applicable ici)",
+            "sources": ["copie_iej"],
+            "why": "La copie 37 mentionne l'exception de fraude a la loi developpee dans la jurisprudence post-2020"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_penal:121-1",
+          "code_penal:121-2"
+        ],
+        "optionnels": [
+          "code_penal:131-37",
+          "code_penal:131-38"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 25 nov. 2020, n 18-86.955",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret pivot de revirement : en cas de fusion-absorption posterieure au 25 nov. 2020, la societe absorbante peut etre condamnee penalement pour les faits de l'absorbee",
+          "uncertainty_note": "Numero de pourvoi figurant dans la copie 37 (18-86.955), non explicitement dans la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 22 mai 2024",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Extension du revirement aux SARL (au-dela des SA/SAS initialement vises)",
+          "uncertainty_note": "Numero de pourvoi non fourni par la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 13 avril 2022",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Confirmation intermediaire du revirement de 2020 - citee par copies 42 et 43",
+          "uncertainty_note": "Numero de pourvoi non fourni"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. crim., 20 juin 2000, n 99-86.742",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Jurisprudence anterieure au revirement, affirmant l'extinction de l'action publique en cas de fusion-absorption (desormais renversee pour les fusions post-2020)",
+          "uncertainty_note": "Numero de pourvoi issu de la copie 37, non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Piege temporel : bien verifier que la fusion-absorption est POSTERIEURE au 25 nov. 2020 (sinon seule la fraude permet l'application retroactive du revirement). En l'espece fusion debut 2025 donc pas de difficulte. Ne pas confondre transmission de responsabilite penale (post-revirement) et responsabilite personnelle de Thierry (qui reste poursuivi en tant que personne physique)."
+      },
+      "source_extract": "Il s'interroge egalement sur la responsabilite des societes dirigees par Thierry, la societe Medica SA ayant fait l'objet d'une fusion-absorption avec la societe Invest SA, holding des differentes societes de Thierry. Cette operation a ete realisee au debut de l'annee 2025, en raison des pertes economiques de la societe Medica SA liees a la mediatisation de l'affaire en fin d'annee 2024. (3 points)",
+      "consolidation_notes": "Question peu ponderee (3 pts) mais avec un angle precis: application du revirement Crim. 25 nov. 2020 sur la transmission de responsabilite penale en cas de fusion-absorption. Toutes les copies IEJ maitrisent ce revirement avec un bon niveau. La grille cite aussi l'extension aux SARL par Crim. 22 mai 2024 (bien que la question concerne des SA/holding). La copie 37 apporte le plus de details (fondement conventionnel, peines, cumul de responsabilites). ECART: la grille ne fournit pas le numero du pourvoi de 2020 ; la copie 37 cite '18-86.955' qui semble correspondre a l'arret reel mais n'est pas certifie."
+    }
+  ]
+}

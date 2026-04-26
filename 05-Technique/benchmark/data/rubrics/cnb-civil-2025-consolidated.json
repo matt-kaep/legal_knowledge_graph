@@ -1,0 +1,944 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit civil (consolide)",
+    "source_path": "data/cnb-crfpa/2025/cas-pratiques.pdf (pages Droit civil)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Droit civil (Commission nationale, diffusion Cap'Barreau)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 8 (note 15/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 17 (note 13/20)"
+    ],
+    "generated_by": "Claude (general-purpose subagent, consolidation run)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-03",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_raphael_linda_regimes_matrimoniaux": 10,
+        "Q2_octave_vincent_mandat": 6,
+        "Q3_octave_bernard_vices_caches": 4
+      },
+      "penalite_redaction_max": 2
+    }
+  },
+  "questions": [
+    {
+      "id": "CNB-CIVIL-2025-Q1",
+      "branche": "civil",
+      "specialisation": "Regimes matrimoniaux - communaute legale, gestion des droits sociaux, effets du divorce",
+      "question": "Raphael et Linda, maries en 2010 sans contrat de mariage, ont tous deux acquis des droits sociaux pendant le mariage : Raphael 300 parts d'une SARL (dont il a seul la qualite d'associe) en 2017, Linda 2500 actions progressivement acquises dans une societe d'expertise comptable. Raphael quitte le domicile conjugal en juin 2021. Linda cede 500 actions en 2020 (prix depense en bijoux et voyage en Inde), 200 actions en octobre 2022, 1800 actions en fevrier 2023. L'ordonnance d'orientation est rendue en octobre 2022. Raphael cede 100 parts a son associe debut 2024. Chacun pouvait-il disposer de ces droits sociaux ? Raphael peut-il remettre en cause les cessions de Linda et peut-il lui imposer le partage en nature des parts de la SARL ?",
+      "perspective": "neutre",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualification prealable : regime legal de la communaute reduite aux acquets (art. 1400 et s. C. civ.), faute de contrat de mariage ; les droits sociaux acquis a titre onereux pendant le mariage sont des acquets (art. 1401 C. civ.)",
+            "linked_article": "code_civil:1401",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le sujet mentionnait explicitement que les droits sociaux acquis par le mari sont des droits sociaux non negociables (SARL)... cette qualification merite d'etre faite a titre liminaire, pour ensuite derouler la suite du raisonnement"
+          },
+          {
+            "text": "Distinction entre droits sociaux negociables (actions) et non negociables (parts de SARL) : seules les cessions de droits non negociables requierent le concours des deux epoux pendant le mariage (art. 1424 C. civ.)",
+            "linked_article": "code_civil:1424",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Les actions detenues par Linda etant des droits sociaux negociables (art 1424 C. civil), elle avait le pouvoir d'en disposer seule pendant le mariage, des lors que la cession en question etait exempte de fraude... Les parts de la SARL detenues par Raphael sont des droits sociaux non negociables. En application de l'article 1424 du Code civil, il ne pouvait ceder ces parts sans le concours de son epouse durant le mariage"
+          },
+          {
+            "text": "Distinction titre / finance : seule la valeur patrimoniale des parts non negociables entre en communaute, la qualite d'associe reste propre a l'epoux associe (Cass. 1re civ., 4 juillet 2012, n 11-13.384, publie au Bulletin)",
+            "linked_jp": "Cass. 1re civ., 4 juill. 2012, n 11-13.384",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Selon la Cour de cassation (Cass. 1er civ., 4 juillet 2012 n 11-13.384, publie au Bulletin), ces parts ne sont entrees en communaute que pour leur valeur patrimoniale. Par cet arret, la Cour de cassation reaffirme la distinction entre le titre et la finance"
+          },
+          {
+            "text": "Cession par Linda de 500 actions en 2020 (pendant le mariage) : absence de fraude, pouvoir de disposer seul des droits sociaux negociables (art. 1421 et 1424 C. civ.) ; le solde du prix non depense reste a l'actif de communaute, les depenses de bijoux modestes et voyage pour la famille ne caracterisent pas une fraude",
+            "linked_article": "code_civil:1421",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "elle n'a pas fraude, puisqu'elle s'est limitee a s'offrir un ou deux cadeaux (bijoux) et a fait profiter les enfants du couple d'un voyage agreable. Au surplus, le solde des fonds disponibles est demeure sur son compte bancaire et n'a pas ete dissimule. Le solde disponible sur ce prix de cession sera porte a l'actif de communaute"
+          },
+          {
+            "text": "Cessation de cohabitation fait presumer la cessation de collaboration (jurisprudence constante : Cass. 1re civ., 17 dec. 2008, n 07-21.837 ; Cass. 1re civ., 14 mars 2012, n 11-13.954 ; Cass. 1re civ., 12 mai 2010, n 08-70.724)",
+            "linked_jp": "Cass. 1re civ., 17 dec. 2008, n 07-21.837",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "Selon la Cour de cassation la cessation de cohabitation fait presumer la cessation de la collaboration (Cass. Civ 1ere, 17 decembre 2008, n 07-21.837 ; et 14 mars 2012, n 11-13.954). La cessation de cohabitation s'apprecie au regard de la separation effective des epoux (Cass. Civ 1ere, 12 mai 2010, n 08-70.724)"
+          },
+          {
+            "text": "Report des effets du divorce au jour de la cessation de cohabitation / collaboration : fondement double art. 262-1 C. civ. (dernier alinea) et art. 1442 al. 2 C. civ. - permet a Raphael de faire retroagir les effets patrimoniaux a juin 2021",
+            "linked_article": "code_civil:262-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 3,
+            "extract_from_grille": "En application des dispositions de l'article 262-1, et aussi 1442 al 2 du Code civil, Raphael peut solliciter que la date des effets du divorce dans les rapports personnels des epoux en ce qui concerne leurs biens retroagisse a celle de son depart, soit juin 2021"
+          },
+          {
+            "text": "Depuis la reforme du divorce (loi du 23 mars 2019, entree en vigueur au 1er janvier 2021) : la date des effets patrimoniaux du divorce est la date de la demande (principe), et non plus la date de l'ONC ; un report reste possible par exception",
+            "linked_article": "code_civil:262-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "Depuis la reforme du divorce faite par la loi du 23 mars 2019 (entree en vigueur sur ce point le 1er janvier 2021), la date des effets patrimoniaux du divorce entre epoux est la date de la demande (principe), alors que, precedemment, il s'agissait de la date de l'ONC"
+          },
+          {
+            "text": "Effet de la dissolution : basculement de la communaute vers l'indivision post-communautaire ; les biens communs deviennent indivis et les regles de l'indivision (notamment unanimite) s'appliquent aux cessions posterieures",
+            "linked_article": "code_civil:1442",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Ceci a pour consequence de mettre un terme a la communaute de biens et de placer les epoux en indivision post-communautaire. Des lors, les actions sont devenues des biens indivis que Linda ne pouvait plus ceder sans le concours de Raphael. La cession est donc inopposable a Raphael (Cass. Civ 1ere, 23 octobre 2013, n 12-17.896)"
+          },
+          {
+            "text": "Cessions de Linda en octobre 2022 et fevrier 2023 : si le report est accorde, ces actes sont posterieurs a la dissolution donc soumis au droit de l'indivision - sanction : inopposabilite a Raphael",
+            "linked_jp": "Cass. 1re civ., 23 oct. 2013, n 12-17.896",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "les regles de l'indivision s'appliquent, en particulier l'exigence d'unanimite. Des lors, la sanction du depassement de pouvoir sera l'inopposabilite de l'acte a Raphael et l'on portera donc la valeur des actions a l'actif a partager"
+          },
+          {
+            "text": "Action en nullite de l'art. 1427 C. civ. : permet a l'epoux dont le concours etait requis de demander la nullite de l'acte passe en violation ; delai de 2 ans a partir de la connaissance de l'acte, jamais au-dela de 2 ans apres la liquidation de la communaute",
+            "linked_article": "code_civil:1427",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "L'article 1427 du Code civil permet a Raphael qui vient d'avoir connaissance de l'acte de cession d'actions consentie par Linda en octobre 2022, d'agir pour voir prononcer la nullite de cet acte. Il peut agir pendant les deux annees a partir du jour ou il a eu connaissance de l'acte et pas au-dela de deux annees apres la liquidation de la communaute"
+          },
+          {
+            "text": "Cession des 100 parts de SARL par Raphael debut 2024 : posterieure a la date d'effet du divorce ; l'indisponibilite de l'art. 1424 ne subsiste pas apres la dissolution, donc cession opposable a Linda",
+            "linked_article": "code_civil:1424",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'indisponibilite pendant le mariage qui affectait ces parts non negociables detenues par le mari, seul associe, ne subsiste pas posterieurement a la date d'effet du divorce dans les rapports patrimoniaux des epoux ; La cession de 100 parts intervenue debut 2024, soit posterieurement a l'ordonnance d'orientation, est donc opposable a Linda"
+          },
+          {
+            "text": "Impossibilite du partage en nature des 1800 parts de SARL a Linda : seule la valeur est entree en communaute, Raphael ne peut imposer l'attribution de 900 parts a Linda ; les parts restent entre ses mains et la valeur partagee",
+            "linked_jp": "Cass. 1re civ., 4 juill. 2012, n 11-13.384",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "L'impossibilite d'imposer le partage en nature de ces 1800 parts a Linda, seule la valeur de ces parts sociales etant entree en communaute. Elles demeureront entre les mains de Raphael qui ne pourra imposer l'attribution de 900 d'entre elles a Linda dans le partage"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Dissolution de la communaute par le divorce (art. 1441 C. civ.) et necessite de proceder a la liquidation (art. 1467 C. civ.)",
+            "linked_article": "code_civil:1441",
+            "sources": ["copie_iej"],
+            "why": "Mentionne par les copies 8 et 17 ; la grille l'evoque indirectement. Etape de rappel du regime"
+          },
+          {
+            "text": "Presomption de communaute des biens acquis pendant le mariage (art. 1402 C. civ.) ; les fonds deposes sur le compte bancaire d'un epoux sont presumes etre des acquets (Cass. 1re civ., 9 juill. 2008)",
+            "linked_article": "code_civil:1402",
+            "linked_jp": "Cass. 1re civ., 9 juill. 2008",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Cite par la copie 17 pour traiter les biens acquis par le produit de la vente des actions. Grille n'insiste pas mais c'est la base du raisonnement sur l'actif de communaute.",
+            "uncertainty_note": "Numero de pourvoi non cite par le candidat ; reference generique a la jurisprudence sur l'art. 1402"
+          },
+          {
+            "text": "Regle de la libre disposition des acquets (art. 1421 C. civ.) : chaque epoux peut administrer seul les biens communs, sous reserve de la fraude et des exceptions de l'art. 1424",
+            "linked_article": "code_civil:1421",
+            "sources": ["copie_iej"],
+            "why": "Cite par les copies 8 et 17 comme fondement du pouvoir de disposer. Grille l'implique en rappelant que Linda avait le pouvoir d'en disposer seule."
+          },
+          {
+            "text": "Le conjoint associe peut transmettre son titre sans recueillir le consentement de l'autre ; a la dissolution, la qualite d'associe ne tombe pas dans l'indivision post-communautaire (Cass. 1re civ., 12 juin 2014, n 13-16.309)",
+            "linked_jp": "Cass. 1re civ., 12 juin 2014, n 13-16.309",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 8. Precision pertinente sur le sort de la qualite d'associe au moment du partage.",
+            "uncertainty_note": "Reference a verifier - la copie cite '12 juin 2014, 13-16.309' mais numero non authentifie dans les sources fournies"
+          },
+          {
+            "text": "La qualite d'associe est propre mais reconnue aussi au conjoint qui a notifie a la societe son intention d'etre personnellement associe (art. 1832-2 C. civ., mecanisme de la revendication)",
+            "linked_article": "code_civil:1832-2",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 pour discuter la position de Linda vis-a-vis de la SARL de Raphael. Non repris par la grille mais juridiquement pertinent."
+          },
+          {
+            "text": "Administration et disposition libres des biens propres (art. 1428 C. civ.)",
+            "linked_article": "code_civil:1428",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 8 pour distinguer biens propres et communs"
+          },
+          {
+            "text": "Si la communaute cesse a la date de la demande (pas de report demande ou refus), le jeu de l'art. 1427 perdure jusqu'a l'assignation ; les actes posterieurs relevent alors de l'indivision",
+            "linked_article": "code_civil:1427",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Si la communaute cesse a la date de la demande (pas de demande de report ou refus par le juge du report demande), alors le jeu de l'article 1427 du Code civil perdure jusqu'a cette date (assignation)"
+          },
+          {
+            "text": "Pour la cession d'octobre 2022, l'ordonnance est rendue le meme mois, donc l'assignation est necessairement anterieure : l'acte est forcement posterieur a la date de la demande et donc soumis au droit de l'indivision (inopposabilite, non nullite de 1427)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aussi, pour la cession de 200 actions effectuee par Linda en octobre 2022, l'on se trouve donc apres la date de la demande (puisque l'ordonnance est rendue durant ce meme mois d'octobre 2022, une assignation a forcement ete signifiee avant) et a fortiori apres la date du depart de Raphael (juin 2021)"
+          },
+          {
+            "text": "Les depenses constituant des acquets ayant servi a un interet personnel (voyage d'agrement, bijoux) peuvent donner lieu a recompense au profit de la communaute",
+            "linked_article": "code_civil:220",
+            "linked_jp": "CA Paris, 11 oct. 1989",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 (Paris, 11 oct. 1989 sur depenses loisirs). Grille n'en parle pas mais point de nuance pertinent",
+            "uncertainty_note": "Reference CA Paris 11 oct. 1989 non verifiee"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Distinction des fondements juridiques selon la date de l'acte : avant la dissolution, regime des regimes matrimoniaux (art. 1424/1427) ; apres, regime de l'indivision (art. 815 et s. - unanimite)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "cette date est importante car elle determine le moment ou la communaute des biens entre epoux cesse et ou l'on bascule vers une indivision post-communautaire (fondement juridique different : passage du droit des regimes matrimoniaux au droit de l'indivision)"
+          },
+          {
+            "text": "Les actions acquises pendant le mariage entrent dans la communaute, de meme que les parts sociales des lors qu'elles interviennent avant la dissolution (Cass. 1re civ., 9 juill. 2014 ; Cass. 1re civ., 17 janv. 2024)",
+            "linked_jp": "Cass. 1re civ., 9 juill. 2014",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17. Complement a la distinction actions/parts. Absent de la grille",
+            "uncertainty_note": "Numeros de pourvoi non cites par le candidat, references a authentifier"
+          },
+          {
+            "text": "Distinction titre/finance sous jurisprudence constante depuis Cass. 1re civ., 8 dec. 1987, n 86-12.426",
+            "linked_jp": "Cass. 1re civ., 8 dec. 1987, n 86-12.426",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 8 comme fondement historique de la distinction titre/finance. Non repris par la grille qui prefere l'arret de 2012.",
+            "uncertainty_note": "Reference citee par la copie, a verifier"
+          },
+          {
+            "text": "Parts de SARL = droits sociaux non negociables soumis a cogestion (Cass. 1re civ., 9 nov. 2011) ; necessite de l'accord des deux epoux sur le principe et les modalites de la cession (Cass. 3e civ., 8 janv. 1992)",
+            "linked_jp": "Cass. 1re civ., 9 nov. 2011",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17. Precision sur l'exigence d'accord sur principe ET modalites, absent de la grille",
+            "uncertainty_note": "Numeros de pourvoi non cites par la copie, references a verifier"
+          },
+          {
+            "text": "Jurisprudence anterieure sur le mandataire exercant au-dela des pouvoirs : le mandant n'est pas tenu d'executer les actes faits au-dela du pouvoir (Cass. com., 26 mars 2008, n 04-11.554)",
+            "linked_jp": "Cass. com., 26 mars 2008, n 04-11.554",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La jurisprudence constante considere quant a elle que 'le mandant n'est pas tenu d'executer les actes faits par son mandataire au-dela du pouvoir qui lui a ete donne' (Cass. com., 26 mars 2008, n 04-11.554)",
+            "note": "Deplace par erreur - a ignorer ici, point propre a Q2"
+          },
+          {
+            "text": "Droits sociaux acquis avant le mariage ou par succession/donation sont propres (art. 1405 C. civ.) - qualification a operer selon la chronologie",
+            "linked_article": "code_civil:1405",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 8 pour discuter le statut des actions de Linda acquises progressivement. Grille n'en parle pas explicitement."
+          },
+          {
+            "text": "Action en fraude (droit commun) : l'epoux qui a dispose seul des deniers communs doit informer lors de la liquidation de l'affectation des sommes s'il entend demontrer l'interet commun (Cass. 1re civ., 14 fevr. 2006)",
+            "linked_jp": "Cass. 1re civ., 14 fevr. 2006",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17. Complete le raisonnement sur la fraude aux actes de 2020. Absent de la grille",
+            "uncertainty_note": "Numero de pourvoi non cite"
+          },
+          {
+            "text": "Acte passe seul par un epoux doit etre exempt de fraude (Cass. 1re civ., 27 mai 2010 pour les droits negociables)",
+            "linked_jp": "Cass. 1re civ., 27 mai 2010",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 sur la cession des actions par Linda. Absent de la grille",
+            "uncertainty_note": "Numero de pourvoi non cite"
+          },
+          {
+            "text": "Articulation pratique : si Linda renonce tacitement a la revendication (art. 1832-2), Raphael conserve la qualite d'associe et doit reverser la moitie de la valeur monetaire des parts (solution de la copie 17)",
+            "linked_article": "code_civil:1832-2",
+            "sources": ["copie_iej"],
+            "why": "Construction juridique originale de la copie 17, absente de la grille"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1400",
+          "code_civil:1401",
+          "code_civil:1421",
+          "code_civil:1424",
+          "code_civil:1427",
+          "code_civil:1441",
+          "code_civil:1442",
+          "code_civil:262-1"
+        ],
+        "optionnels": [
+          "code_civil:1402",
+          "code_civil:1405",
+          "code_civil:1428",
+          "code_civil:1467",
+          "code_civil:1832-2",
+          "code_civil:220"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 4 juill. 2012, n 11-13.384, publie au Bulletin",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret de principe sur la distinction titre/finance : pour les parts non negociables, seule la valeur patrimoniale entre en communaute, empechant le partage en nature impose",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 17 dec. 2008, n 07-21.837",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Principe : cessation de cohabitation fait presumer la cessation de collaboration - fonde la demande de report",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 14 mars 2012, n 11-13.954",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation du principe cessation cohabitation = cessation collaboration",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 12 mai 2010, n 08-70.724",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Precise que la cessation de cohabitation s'apprecie au regard de la separation effective des epoux",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 23 oct. 2013, n 12-17.896",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Sanction de l'inopposabilite a l'epoux de l'acte de disposition consenti seul en indivision post-communautaire",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 12 juin 2014, n 13-16.309",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["copie_iej"],
+          "why": "A la dissolution, la qualite d'associe ne tombe pas dans l'indivision post-communautaire",
+          "uncertainty_note": "Numero de pourvoi reporte de la copie 8 ; a authentifier"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 8 dec. 1987, n 86-12.426",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Fondement historique de la distinction titre/finance",
+          "uncertainty_note": "Reference citee par la copie 8, a authentifier"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 9 juill. 2014",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Actions acquises pendant le mariage = communes",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 17 janv. 2024",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Parts sociales communes si acquises avant dissolution",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 9 nov. 2011",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Parts de SARL = droits sociaux non negociables soumis a cogestion",
+          "uncertainty_note": "Numero de pourvoi non cite"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 3e civ., 8 janv. 1992",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Necessite d'accord sur principe ET modalites de la cession",
+          "uncertainty_note": "Numero de pourvoi non cite"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 27 mai 2010",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cession libre des actions sauf fraude de l'epoux",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 14 fevr. 2006",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Obligation d'information lors de la liquidation sur l'affectation des deniers communs",
+          "uncertainty_note": "Numero de pourvoi non cite"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 9 juill. 2008",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Fonds sur compte = presomption d'acquet",
+          "uncertainty_note": "Numero de pourvoi non cite"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": ["code_civil:1382", "code_civil:1383"],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre la nullite de 1427 (acte pendant l'union) avec l'inopposabilite du droit de l'indivision (acte apres dissolution) - la distinction est expressement soulignee par la grille"
+      },
+      "source_extract": "I. Raphael et Linda se sont maries en 2010. Ils n'ont pas fait preceder leur union d'un contrat de mariage. En 2017, Raphael... achete les 300 parts que detenait son oncle dans la SARL. Il a seul la qualite d'associe. Linda est associee dans une societe d'expertise comptable... Elle possede 2500 actions... Pour disposer d'argent sans avoir a en demander, elle cede en 2020 a l'un de ses associes 500 actions... Furieux, il [Raphael] quitte le domicile conjugal en juin 2021. En octobre 2022... Linda cede alors 200 actions. Lasse de cette situation conjugale definitivement compromise, Linda decide de divorcer et engage la procedure. L'ordonnance d'orientation est prononcee en octobre 2022... En fevrier 2023, l'un des associes de Linda lui propose de lui racheter les 1800 actions... Debut 2024, Raphael... cede 100 parts a son associe... Linda vous consulte et vous demande si chacun pouvait disposer des droits sociaux dans les conditions dans lesquelles ils ont ete cedes... si Raphael pourrait lui imposer le partage des parts de la SARL... si Raphael pourrait remettre en cause les cessions qu'elle a effectuees. (10 points)",
+      "consolidation_notes": "Question la plus lourde (10 pts / 20). La grille structure 4 sous-questions explicites (cession 500 actions 2020 = 2pts ; cessions 200+1800 actions 2022-2023 = 2pts ; cession 100 parts Raphael 2024 = 2pts ; moyens d'action = 4pts). Complement CNB post-examen important sur la qualification prealable et l'articulation art. 1427/indivision selon le scenario de report. Les deux copies couvrent bien le coeur (distinction titre/finance, art. 1424, report des effets) mais avec des nuances : copie 8 suit tres precisement la trame de la grille (dont Cass. 4 juill. 2012) ; copie 17 insiste sur la cogestion et l'art. 1832-2 mais occulte partiellement le mecanisme de report art. 262-1/1442. Aucune des copies ne cite Cass. 23 oct. 2013 mentionne dans la grille."
+    },
+    {
+      "id": "CNB-CIVIL-2025-Q2",
+      "branche": "civil",
+      "specialisation": "Mandat - depassement de pouvoir, mandat apparent, remuneration du mandataire",
+      "question": "Octave a confie a son ami Vincent (non-professionnel de l'immobilier) le mandat de vendre un appartement sur la Cote d'Azur pour un prix minimum de 200 000 euros. Vincent accepte une offre de 170 000 euros vu les difficultes du marche. Octave, tres mecontent, conteste etre lie par l'acte et veut contester la remuneration de 10 000 euros prevue a la convention. Octave peut-il remettre en cause la vente et le paiement de la commission ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Definition du mandat (art. 1984 C. civ.) : acte par lequel une personne donne a une autre le pouvoir d'agir pour elle et en son nom ; contrat forme par l'acceptation du mandataire",
+            "linked_article": "code_civil:1984",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aux termes de l'article 1984 du code civil : Le mandat ou procuration est un acte par lequel une personne donne a une autre le pouvoir de faire quelque chose pour le mandant et en son nom. Le contrat ne se forme que par l'acceptation du mandataire"
+          },
+          {
+            "text": "Limites du pouvoir du mandataire (art. 1989 C. civ.) : le mandataire ne peut rien faire au-dela de ce qui est porte dans son mandat",
+            "linked_article": "code_civil:1989",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Selon l'article 1989 du code civil, le mandataire ne peut rien faire au-dela de ce qui est porte dans son mandat"
+          },
+          {
+            "text": "Principe des effets du mandat (art. 1998 C. civ.) : le mandant est tenu d'executer les engagements dans les limites du pouvoir donne ; il n'est pas tenu au-dela sauf ratification expresse ou tacite",
+            "linked_article": "code_civil:1998",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aux termes de l'article 1998 : Le mandant est tenu d'executer les engagements contractes par le mandataire, conformement au pouvoir qui lui a ete donne. Il n'est tenu de ce qui a pu etre fait au-dela, qu'autant qu'il l'a ratifie expressement ou tacitement"
+          },
+          {
+            "text": "Jurisprudence : le mandant n'est pas tenu d'executer les actes faits par son mandataire au-dela du pouvoir donne (Cass. com., 26 mars 2008, n 04-11.554)",
+            "linked_jp": "Cass. com., 26 mars 2008, n 04-11.554",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La jurisprudence constante considere... 'le mandant n'est pas tenu d'executer les actes faits par son mandataire au-dela du pouvoir qui lui a ete donne' (Cass. com., 26 mars 2008, n 04-11.554)"
+          },
+          {
+            "text": "Le mandataire qui signe une promesse differant des conditions du mandat excede ses pouvoirs et engage sa responsabilite (Cass. 1re civ., 2 dec. 1992, n 91-10.594)",
+            "linked_jp": "Cass. 1re civ., 2 dec. 1992, n 91-10.594",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la Cour de cassation a pu juger que le mandataire excede ses pouvoirs et engage sa responsabilite s'il signe une promesse de vente qui differe des conditions de vente enoncees dans le mandat qui lui a ete donne (Cass. 1re civ., 2 decembre 1992, n 91-10.594)"
+          },
+          {
+            "text": "Inopposabilite de l'acte accompli sans pouvoir au represente (art. 1156 C. civ.) ; exception du mandat apparent si le tiers a legitimement cru en la realite des pouvoirs, notamment en raison du comportement du represente",
+            "linked_article": "code_civil:1156",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Article 1156 du code civil dispose quant a lui que : L'acte accompli par un representant sans pouvoir ou au-dela de ses pouvoirs est inopposable au represente, sauf si le tiers contractant a legitimement cru en la realite des pouvoirs du representant, notamment en raison du comportement ou des declarations du represente"
+          },
+          {
+            "text": "Mandat apparent - deux conditions (Cass. ass. plen., 13 dec. 1962, n 57-11.569) : (1) bonne foi du tiers (presumee), (2) circonstances autorisant a ne pas verifier l'etendue des pouvoirs (faisceau d'indices)",
+            "linked_jp": "Cass. ass. plen., 13 dec. 1962, n 57-11.569",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Precisement deux conditions doivent etre reunies, il faut d'une part que le tiers soit de bonne foi, il doit avoir ete trompe par l'apparence... le tiers doit demontrer que les circonstances l'autorisaient a ne pas verifier l'etendue exacte des pouvoirs du mandataire apparent (jurisprudence constante depuis Cass. ass. plen., 13 dec. 1962, n 57-11.569)"
+          },
+          {
+            "text": "Principe de gratuite du mandat (art. 1986 C. civ.) - le mandat est gratuit sauf convention contraire ; jurisprudence : presume gratuit quand confie a un non-professionnel (Cass. 1re civ., 10 fev. 1981, Bull. civ. I, n 50)",
+            "linked_article": "code_civil:1986",
+            "linked_jp": "Cass. 1re civ., 10 fev. 1981, Bull. civ. I, n 50",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Article 1986 du code civil : Le mandat est gratuit s'il n'y a convention contraire. De plus, la jurisprudence considere que le mandat est presume gratuit lorsqu'il est confie a une personne qui n'exerce pas cette activite a titre professionnel (Cass. civ. 1re, 10 fevrier 1981, Bull. civ. I, n 50)"
+          },
+          {
+            "text": "Obligation de paiement du salaire (art. 1999 C. civ.) : le mandant doit rembourser avances et frais et payer les salaires promis ; principe de fidelite sauf faute du mandataire",
+            "linked_article": "code_civil:1999",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'article 1999 du code civil : Le mandant doit rembourser au mandataire les avances et frais que celui-ci a fait pour l'execution du mandat, et lui payer ses salaires lorsqu'il en a ete promis..."
+          },
+          {
+            "text": "Responsabilite du mandataire (art. 1992 C. civ.) : repond du dol et des fautes de gestion ; responsabilite moindre si mandat gratuit",
+            "linked_article": "code_civil:1992",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aux termes de l'article 1992 : Le mandataire repond non seulement du dol, mais encore des fautes qu'il commet dans sa gestion. Neanmoins, la responsabilite relative aux fautes est appliquee moins rigoureusement a celui dont le mandat est gratuit qu'a celui qui recoit un salaire"
+          },
+          {
+            "text": "Pouvoir du juge de diminuer la remuneration inadequate ou engagee par la faute du mandataire (Cass. 1re civ., 14 janv. 2016, n 14-26.474)",
+            "linked_jp": "Cass. 1re civ., 14 janv. 2016, n 14-26.474",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Selon la Cour de cassation, dans le cas ou la remuneration du mandataire ne correspond pas au service rendu, le juge a le pouvoir de diminuer celle-ci et si le mandataire a, de surcroit, manque a son devoir d'efficacite, il doit voir sa responsabilite engagee (CCass. 1ere civ., 14 janvier 2016, 14-26474)"
+          },
+          {
+            "text": "Application : Vincent a depasse son pouvoir en acceptant 170 000 euros au lieu du prix minimum de 200 000 euros - en principe Octave n'est pas tenu, mais il faut examiner le mandat apparent vis-a-vis du tiers acquereur ; la remuneration peut etre reduite voire supprimee du fait de la faute",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "Vincent a accepte une offre de 170 000 euros, alors qu'Octave avait fixe un prix minimum de 200 000 euros. Ce depassement des instructions constitue une faute de la part du mandataire... le juge pourrait ainsi decider de diminuer sa remuneration"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Indices d'appreciation du mandat apparent : importance de l'acte, qualite du tiers et du mandataire, relations anterieures, nature (administration/disposition), valeur - le mandat apparent est plus facilement admis pour les actes de faible valeur",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Ces circonstances tiennent a la fois a l'importance de l'acte, a la qualite du tiers et du mandataire ainsi qu'aux relations qu'ils entretiennent. Ainsi, le mandat apparent est plus facilement admis pour les actes d'administration que pour les actes de disposition, pour les actes portant sur des choses de faible valeur"
+          },
+          {
+            "text": "En l'espece : Vincent n'est pas professionnel, ce qui implique une plus grande mefiance du tiers ; prix pas derisoire ; question ouverte laissee a l'appreciation du juge",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le fait que le mandataire ne soit pas un professionnel implique de la part du tiers une plus grande mefiance dans les pouvoirs de son cocontractant. Quant au prix, il n'apparait pas derisoire au point qu'il puisse faire douter l'acquereur"
+          },
+          {
+            "text": "Les juges du fond apprecient souverainement le montant du a la remuneration du mandataire, en fonction des diligences et de l'utilite du service",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En cas de contestation sur le montant de la remuneration, les juges du fond apprecient souverainement le montant du au mandataire, en fonction des diligences accomplies et de l'utilite du service rendu"
+          },
+          {
+            "text": "Reduction de la commission pour faute du mandataire : appreciation souveraine des juges (Cass. 1re civ., 31 mars 1971, Bull. civ. I, n 114)",
+            "linked_jp": "Cass. 1re civ., 31 mars 1971, Bull. civ. I, n 114",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Par ailleurs, la faute du mandataire peut conduire a diminuer le montant de la remuneration convenue (Cass. Civ. 1re, 31 mars 1971, Bull. civ. I, n 114 : La reconnaissance du droit a remuneration et la constatation d'une faute peut entrainer la reduction du montant d'une commission, reduction dont la proportion est appreciee souverainement par les juges du fond)"
+          },
+          {
+            "text": "Effet de la ratification : si Octave ratifie expressement ou tacitement l'acte depasse, il devient lie (art. 1156 al. 3 / 1998 al. 2)",
+            "linked_article": "code_civil:1156",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'inopposabilite comme la nullite de l'acte ne peuvent plus etre invoquees des lors que le represente l'a ratifie"
+          },
+          {
+            "text": "Cumul possible : si faute du mandataire, Octave peut obtenir des dommages et interets en plus de la reduction de remuneration",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Si sa faute est retenue et que sa responsabilite est engagee, il pourra par ailleurs devoir au mandat des dommages et interets"
+          },
+          {
+            "text": "Nullite invocable par le tiers de bonne foi qui ignorait le depassement (art. 1156 al. 2 C. civ.)",
+            "linked_article": "code_civil:1156",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Lorsqu'il ignorait que l'acte etait accompli par un representant sans pouvoir ou au-dela de ses pouvoirs, le tiers contractant peut en invoquer la nullite"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Mandat specifique / special (art. 1987 C. civ.) : le mandat limite a une affaire determinee - qualification utile pour Vincent charge uniquement de la vente d'un bien",
+            "linked_article": "code_civil:1987",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 comme qualification prealable du mandat. Grille ne l'evoque pas mais pertinent pour la structuration",
+            "note": null
+          },
+          {
+            "text": "Jurisprudence mandat apparent : Cass. 1re civ., 30 mars 1965 - confirmation anterieure de la theorie",
+            "linked_jp": "Cass. 1re civ., 30 mars 1965",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 8 comme reference complementaire au arret de 1962",
+            "uncertainty_note": "Numero de pourvoi non cite, reference a authentifier"
+          },
+          {
+            "text": "Revision judiciaire de la remuneration du mandataire professionnel : le mandataire peut saisir le juge pour reviser, reduire ou supprimer sa remuneration sous appreciation souveraine des juges (Cass. 1re civ., 18 janv. 1989 ; Cass. 1re civ., 16 mai 2006)",
+            "linked_jp": "Cass. 1re civ., 18 janv. 1989",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 sur la revision. Complement a l'arret de 2016 de la grille",
+            "uncertainty_note": "Numeros de pourvoi non cites par la copie, references a authentifier"
+          },
+          {
+            "text": "Distinction mandat general / special pour l'etendue des pouvoirs (art. 1987, 1988 C. civ.)",
+            "linked_article": "code_civil:1988",
+            "sources": ["llm_intrinsic"],
+            "why": "Point de culture juridique utile mais non developpe dans la grille ni les copies"
+          },
+          {
+            "text": "Distinction acte de disposition (vente d'immeuble) / acte d'administration : la gravite de l'acte eleve le seuil de vigilance exige du tiers (correlat direct avec l'application du mandat apparent)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Ainsi, le mandat apparent est plus facilement admis pour les actes d'administration que pour les actes de disposition... La gravite de l'acte necessitant de prendre plus de precautions"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1984",
+          "code_civil:1986",
+          "code_civil:1989",
+          "code_civil:1992",
+          "code_civil:1998",
+          "code_civil:1999",
+          "code_civil:1156"
+        ],
+        "optionnels": [
+          "code_civil:1987",
+          "code_civil:1988"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. ass. plen., 13 dec. 1962, n 57-11.569",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret de principe sur le mandat apparent - jurisprudence constante, fondement de la theorie ; peut permettre au tiers d'engager Octave malgre le depassement",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 26 mars 2008, n 04-11.554",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Principe : le mandant n'est pas tenu des actes faits au-dela du pouvoir - fonde la position d'Octave",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 2 dec. 1992, n 91-10.594",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Engagement de la responsabilite du mandataire qui signe une promesse differant des conditions du mandat",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 10 fev. 1981, Bull. civ. I, n 50",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Presomption de gratuite du mandat confie a un non-professionnel - contredite ici par la convention ecrite",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 14 janv. 2016, n 14-26.474",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Pouvoir du juge de diminuer la remuneration inadequate + engager la responsabilite du mandataire en cas de manquement au devoir d'efficacite",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 31 mars 1971, Bull. civ. I, n 114",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Appreciation souveraine des juges du fond sur la reduction de commission pour faute",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 30 mars 1965",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Confirmation anterieure de la theorie du mandat apparent",
+          "uncertainty_note": "Reference citee par la copie 8, numero de pourvoi non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 18 janv. 1989",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Revision judiciaire de la remuneration",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 16 mai 2006",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Revision judiciaire de la remuneration - confirmation recente",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Attention : l'exercice requiert de distinguer nettement la question de l'opposabilite au tiers (mandat apparent) de la question de la responsabilite/remuneration du mandataire envers le mandant - deux axes distincts dans la grille (3pts+3pts)"
+      },
+      "source_extract": "II. Ne pouvant guere se deplacer en raison d'une activite professionnelle debordante, Octave a demande a son ami Vincent de proceder a la negociation et a la vente d'un appartement pour le prix minimum de 200.000 euros sur la Cote d'Azur. Vincent, qui n'est pas un professionnel de l'immobilier, a neanmoins accepte une offre pour un montant de 170.000 euros au regard des difficultes affectant le marche de l'immobilier. Octave est tres mecontent, il considere ne pas etre lie par cet engagement, alors meme que l'acquereur potentiel se montre tres impatient et entend acquerir le bien au plus vite. Furieux face a cette situation, Octave estime que si la vente devait se confirmer il contesterait la remuneration excessive, selon lui, demandee par Vincent dans la convention (10.000 euros). Octave vous consulte et vous demande s'il peut remettre en cause la vente et le paiement de la commission de 10.000 euros. (6 points)",
+      "consolidation_notes": "Question a deux volets (3pts+3pts). La grille est tres dense sur l'articulation art. 1998/1156/mandat apparent. Les deux copies couvrent le coeur (art. 1984, 1998, 1986, 1999, 1992, mandat apparent). Copie 8 cite des arrets anciens supplementaires (Cass. 1re civ. 30 mars 1965). Copie 17 apporte une reflexion plus fine sur la qualification du mandat (art. 1987, mandat special) et sur la revision judiciaire (Cass. 1re civ. 18 janv. 1989 ; 16 mai 2006). Aucune copie ne traite explicitement l'art. 1989 et l'art. 1992 comme la grille, mais les deux arrivent a la bonne conclusion. L'arret de 2016 (14-26.474) est cite par les copies ET la grille - triangulation solide."
+    },
+    {
+      "id": "CNB-CIVIL-2025-Q3",
+      "branche": "civil",
+      "specialisation": "Droit special de la vente - garantie des vices caches, delai biennal, action recursoire",
+      "question": "Octave a achete le 7 juillet 2023 un vehicule d'occasion a Bernard pour 25 000 euros. Trois jours plus tard, il constate des dysfonctionnements mecaniques qu'il fait reparer pour 5 000 euros. Bernard avait lui-meme achete le vehicule neuf au constructeur AB le 10 fevrier 2020. Octave a saisi en refere le 10 avril 2025 pour obtenir des factures - demande rejetee le 10 juin 2025. Il souhaite conserver le vehicule mais ne pas payer plus de 15 000 euros. Quelle action peut-il intenter contre Bernard ? Bernard peut-il se retourner contre le constructeur AB ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Fondement de la garantie des vices caches (art. 1641 C. civ.) : le vendeur est tenu a garantie des vices caches rendant la chose impropre a son usage, meme s'il ne les connaissait pas (art. 1643 C. civ.)",
+            "linked_article": "code_civil:1641",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La premiere question porte sur la mise en oeuvre de la garantie des vices caches en matiere de vente"
+          },
+          {
+            "text": "Option de l'acheteur (art. 1644 C. civ.) : action redhibitoire (rendre la chose et se faire restituer le prix) OU action estimatoire (garder la chose et se faire rendre une partie du prix) - ici Octave veut conserver donc action estimatoire (reduction de prix)",
+            "linked_article": "code_civil:1644",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il s'agira en particulier de tenir compte, des propositions visant a atteindre cette sorte de 'juste prix' (pour Octave), de maniere directe par une mise en oeuvre de l'article 1644 in fine du Code civil (choix de se faire rendre une partie du prix)"
+          },
+          {
+            "text": "Delai biennal de l'art. 1648 C. civ. : deux ans a compter de la decouverte du vice - qualifie de delai de prescription (Cass. ch. mixte, 21 juill. 2023, n 21-15.809 ; adde Cass. 3e civ., 15 fev. 2024, n 22-20.065), donc susceptible de suspension ou interruption",
+            "linked_article": "code_civil:1648",
+            "linked_jp": "Cass. ch. mixte, 21 juill. 2023, n 21-15.809",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "La premiere difficulte concerne le delai de prescription biennal de l'article 1648 en matiere de garantie des vices caches. Une chambre mixte a juge que ce delai constitue un delai de prescription (Cass. Mixte 21 juillet 2023, n 21-15.809 ; adde Cass. civ. 3e, 15 fev. 2024, n 22-20.065). Il est donc susceptible d'etre suspendu ou interrompu"
+          },
+          {
+            "text": "Application : vice decouvert le 10 juillet 2023 donc delai expirait en principe le 10 juillet 2025, mais l'assignation en refere du 10 avril 2025 a interrompu la prescription - delai non expire",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Donc ici : le vice cache a ete decouvert le 10 juillet 2023, le delai devrait expirer le 10 juillet 2025. Mais Octave a saisi par assignation en refere le President du TJ... Cette demarche interrompt le delai de prescription"
+          },
+          {
+            "text": "Application de la reduction de prix (art. 1644 in fine) : Octave, qui entend conserver le vehicule et l'estime paye trop cher, doit agir sur le fondement du droit special de la vente (vices caches) et non du droit commun (dans le cadre de l'epreuve de droit civil)",
+            "linked_article": "code_civil:1644",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Les candidats devraient logiquement s'interroger sur la reduction du prix et developper cette perspective sur le fondement du droit special de la vente (et non pas sur le droit commun, car on se trouve bien ici dans le cadre de l'epreuve de droit civil). En effet, l'enonce precise qu'Octave (acheteur) entend malgre tout conserver le vehicule automobile"
+          },
+          {
+            "text": "Action recursoire du vendeur intermediaire contre le vendeur initial (art. 1648 C. civ.) : point de depart = date de l'assignation et non la decouverte du vice, dans la limite du delai butoir de 20 ans de l'art. 2232 C. civ. (Cass. ch. mixte, 21 juill. 2023)",
+            "linked_article": "code_civil:2232",
+            "linked_jp": "Cass. ch. mixte, 21 juill. 2023",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "il s'agit de s'interroger sur le delai de prescription de l'action recursoire dont dispose le vendeur intermediaire sur le fondement de 1648 du Code civil. Le point de depart de l'action recursoire est l'assignation et non la decouverte du vice, sans pouvoir depasser le delai butoir de 20 ans (2232 C. civ.) a compter du jour de la naissance du droit (la vente conclue par le vendeur intermediaire). Cass. Mixte, 21 juillet 2023"
+          },
+          {
+            "text": "Application : au jour de l'assignation d'Octave contre Bernard (avril 2025), le delai butoir de 20 ans a compter de la vente initiale AB-Bernard (10 fev. 2020) n'est pas expire - l'action recursoire contre AB est donc possible",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Ici au jour de l'assignation, le delai butoir de 20 ans a compter de la vente n'est pas expire. L'action contre le vendeur initial AB devrait donc etre possible"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Conditions cumulatives de la garantie (art. 1641) : vice inherent a la chose, vice redhibitoire (rendant la chose impropre a son usage), vice cache (non apparent, art. 1642), vice anterieur a la vente (avant le transfert des risques)",
+            "linked_article": "code_civil:1642",
+            "sources": ["copie_iej"],
+            "why": "Developpe par la copie 8 ; la grille presuppose les conditions remplies sans insister"
+          },
+          {
+            "text": "Application des principes poses par les arrets de chambre mixte du 21 juillet 2023 (n 20-10.763 ; n 20-19.936 ; n 21-17.789) - trilogie d'arrets refondant le regime",
+            "linked_jp": "Cass. ch. mixte, 21 juill. 2023, n 20-10.763",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il s'agit pour l'essentiel de mettre en oeuvre les principes poses par les arrets de chambre mixte du 21 juillet 2023 (n 20-10.763 ; n 20-19.936 ; n 21-17.789)",
+            "uncertainty_note": "Trilogie de la chambre mixte 2023 - numeros issus de la grille"
+          },
+          {
+            "text": "Action recursoire : delai de 2 ans a compter de la connaissance du vice (art. 1648, selon Cass. ch. mixte 21 juill. 2023, n 21-17.789) - et non depuis son apparition",
+            "linked_jp": "Cass. ch. mixte, 21 juill. 2023, n 21-17.789",
+            "sources": ["copie_iej"],
+            "why": "Precision apportee par la copie 8 sur le point de depart de l'action recursoire. Grille evoque directement le point de depart = assignation"
+          },
+          {
+            "text": "Acceptation de la livraison couvre le defaut de conformite (Cass. com., 1er mars 2005) - permet de distinguer l'action en delivrance conforme (forclose) de la garantie des vices caches (applicable ici)",
+            "linked_article": "code_civil:1603",
+            "linked_jp": "Cass. com., 1er mars 2005",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 pour ecarter l'action en delivrance non conforme - permet de cibler la garantie des vices caches",
+            "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+          },
+          {
+            "text": "Action en dommages et interets complementaires (art. 1645 C. civ.) : suppose de prouver que le vendeur connaissait le vice - preuve delicate en l'espece pour Octave",
+            "linked_article": "code_civil:1645",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'article 1645 du Code civil pourrait aboutir a un resultat concretement identique, en sollicitant en outre des dommages et interets. Cette deuxieme hypothese, suppose tout de meme de prouver une connaissance du vice par le vendeur. Au regard de l'enonce, une telle preuve parait delicate a rapporter"
+          },
+          {
+            "text": "Restitution des frais occasionnes par la vente (art. 1646 C. civ.) : le vendeur doit rembourser les frais de la vente si de bonne foi",
+            "linked_article": "code_civil:1646",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "en tenant eventuellement compte des frais occasionnes par la vente (C. Civ., art. 1646)"
+          },
+          {
+            "text": "Fondement procedural du refere probatoire (art. 145 CPC) comme cause d'interruption de la prescription - NB: non attendu des etudiants car hors programme droit civil",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "NB : il n'est pas attendu ici que l'etudiant mentionne expressement l'article 145 du CPC, pour eviter toute confusion avec la procedure civile, d'autant que ce texte a ete reforme durant l'ete 2025 par le decret dit 'Magicobus 2'. La reference ici faite a cette disposition concerne les correcteurs"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Obligation de delivrance conforme (art. 1603 C. civ.) - ecartee ici car acceptation de la livraison (Cass. 1re civ., 5 nov. 1996)",
+            "linked_article": "code_civil:1603",
+            "linked_jp": "Cass. 1re civ., 5 nov. 1996",
+            "sources": ["copie_iej"],
+            "why": "Construction de la copie 17 pour distinguer l'action en delivrance (ecartee) de la garantie des vices caches (applicable). Grille ne developpe pas",
+            "uncertainty_note": "Numero de pourvoi non cite par la copie"
+          },
+          {
+            "text": "Obligation de garantie globale (art. 1625 C. civ.) - possession paisible et absence de defauts caches",
+            "linked_article": "code_civil:1625",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 comme cadrage general. Non dans la grille mais contextuel"
+          },
+          {
+            "text": "Cass. com., 29 juin 2022 - confirmation pre-2023 sur le point de depart de l'action recursoire",
+            "linked_jp": "Cass. com., 29 juin 2022",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 17 en complement des arrets de 2023. Absent de la grille",
+            "uncertainty_note": "Numero de pourvoi non cite par la copie, a authentifier"
+          },
+          {
+            "text": "Cass. 3e civ., 15 fev. 2024, n 22-20.065 : confirme que le delai biennal est un delai de prescription (adde aux arrets de chambre mixte 2023)",
+            "linked_jp": "Cass. 3e civ., 15 fev. 2024, n 22-20.065",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "adde Cass. civ. 3e, 15 fev. 2024, n 22-20.065",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Distinction entre delai de prescription (2 ans, susceptible de suspension/interruption) et delai butoir (20 ans, art. 2232 - non susceptible d'amenagement) - double plafond temporel",
+            "linked_article": "code_civil:2232",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le delai de deux est un delai de prescription, tandis que le delai de 20 ans est un delai butoir (Ch. mixte, 21 juill. 2023, 20-10.763)"
+          },
+          {
+            "text": "Bernard peut agir contre AB uniquement si le vice existait deja au moment de la premiere vente (preuve a sa charge) - ratio temporel",
+            "sources": ["copie_iej"],
+            "why": "Developpement de la copie 8 sur la condition d'anteriorite du vice a la vente initiale"
+          },
+          {
+            "text": "Bernard, n'etant plus proprietaire de la voiture, ne peut avoir connaissance du vice avant sa propre assignation - point de depart de son delai = son assignation (10 avril 2025)",
+            "sources": ["copie_iej"],
+            "why": "Raisonnement developpe par la copie 8 conforme a la solution de la grille"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1641",
+          "code_civil:1644",
+          "code_civil:1648",
+          "code_civil:2232"
+        ],
+        "optionnels": [
+          "code_civil:1603",
+          "code_civil:1625",
+          "code_civil:1642",
+          "code_civil:1643",
+          "code_civil:1645",
+          "code_civil:1646"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. ch. mixte, 21 juill. 2023, n 21-15.809",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret pivot : le delai biennal de 1648 est un delai de prescription susceptible d'interruption - sauve l'action d'Octave",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. ch. mixte, 21 juill. 2023, n 20-10.763",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Distinction delai de prescription / delai butoir",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. ch. mixte, 21 juill. 2023, n 20-19.936",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Trilogie de la chambre mixte sur la garantie des vices caches",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. ch. mixte, 21 juill. 2023, n 21-17.789",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Point de depart du delai de l'action recursoire = connaissance du vice / assignation",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 3e civ., 15 fev. 2024, n 22-20.065",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la nature de prescription du delai biennal",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. 1re civ., 5 nov. 1996",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Non-conformite de la vente d'un vehicule automobile - ecarter l'action en delivrance non conforme",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 1er mars 2005",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Acceptation de la livraison couvre la non-conformite - oriente vers la garantie des vices caches",
+          "uncertainty_note": "Numero de pourvoi non cite"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 29 juin 2022",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Confirmation pre-2023 sur le point de depart de l'action recursoire",
+          "uncertainty_note": "Numero de pourvoi non cite par la copie 17"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": ["code_de_procedure_civile:145"],
+        "not_to_cite_jp": [],
+        "notes": "NB explicite de la grille : ne pas citer l'article 145 CPC (epreuve de droit civil, pas de procedure civile ; texte reforme par Magicobus 2 ete 2025). Ecarter aussi le droit commun des contrats au profit du droit special de la vente."
+      },
+      "source_extract": "III. Les ennuis s'accumulent pour Octave. En effet, il a achete le 7 juillet 2023 un vehicule automobile d'occasion a Bernard, l'une de ses connaissances, pour un prix de 25.000 euros. A peine trois jours plus tard, Octave constatait avec deception des dysfonctionnements mecaniques. Il a fait proceder a des reparations pour un prix total de 5.000 euros. Le vehicule automobile avait precedemment ete achete neuf par Bernard au constructeur automobile AB, le 10 fevrier 2020. Afin de savoir si Bernard avait deja fait effectuer des reparations sur le vehicule avant la vente, Octave avait saisi par assignation en refere, le 10 avril 2025, le president du tribunal judiciaire du lieu de domicile de Bernard... Le 10 juin 2025, la demande a ete rejetee. Octave vous consulte puisqu'il souhaite desormais agir contre Bernard car les dysfonctionnements perdurent. Il entend conserver le vehicule, mais il est convaincu qu'il n'aurait pas du verser plus de 15.000 euros pour une telle vente. [...] Octave vous consulte egalement sur la question de savoir si Bernard peut lui-meme se retourner contre le constructeur AB. (4 points)",
+      "consolidation_notes": "Question a 4 pts (2+2) centree sur la chambre mixte du 21 juillet 2023 - jurisprudence majeure 2023 massivement attendue. Les deux copies la citent. Copie 8 developpe la chronologie avec rigueur (decouverte 10 juill. 2023 + assignation 10 avril 2025 = interruption). Copie 17 qualifie explicitement l'art. 1644 (reduction de prix = 15 000 = 25 000 - 10 000 euros) - interpretation juste. Ecarts : la copie 17 cite des arrets supplementaires (5 nov. 1996, 1er mars 2005, Com. 29 juin 2022) absents de la grille ; la copie 8 developpe plus les conditions de 1641 (vice inherent, redhibitoire, cache, anterieur) que ce que la grille exige. NB important de la grille : ne pas mentionner l'article 145 CPC - piege procedural a eviter."
+    }
+  ]
+}

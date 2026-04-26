@@ -1,0 +1,870 @@
+{
+  "version": "v1-2026-04-20",
+  "variant": "α — non typé",
+  "note": "PREVIEW de 10 questions choisies parmi les 1 532. Textes tronqués à 500 car. Fichier complet : benchmark-rapp-v1.json (35.5 Mo).",
+  "source": "database-judilibre-enrichie/Cour de cassation",
+  "filters": {
+    "min_parsable_rapp": 3,
+    "publication_filter": null,
+    "chamber_filter": null
+  },
+  "stats": {
+    "total": 553075,
+    "with_any_rapp": 63695,
+    "with_enough_parsable": 1532,
+    "rapp_total_seen": 116196,
+    "rapp_parsable_seen": 18901,
+    "rapp_with_href_id": 3706,
+    "questions_total": 1532,
+    "by_chamber": {
+      "Crim.": 370,
+      "Ass. plén.": 26,
+      "Civ. 1re": 236,
+      "Soc.": 375,
+      "Civ. 3e": 181,
+      "Com.": 39,
+      "Civ. 2e": 291,
+      "Autre": 4,
+      "Ch. mixte": 10
+    },
+    "resolution": {
+      "matched": 4671,
+      "unmatched": 78,
+      "href": 1083,
+      "matched_and_href": 1083
+    }
+  },
+  "questions_sample": [
+    {
+      "id": "rapp-Q00001",
+      "decision": {
+        "id": "6079a8459ba5988459c4c4a3",
+        "ecli": null,
+        "pourvoi": "88-81.623",
+        "pourvois_all": [
+          "88-81.623"
+        ],
+        "chamber_raw": "Chambre criminelle",
+        "chamber": "Crim.",
+        "decision_date": "1989-01-31",
+        "solution": "Rejet",
+        "publication": [
+          "Publié au Bulletin"
+        ],
+        "particularInterest": false,
+        "summary": "Il résulte de l'article L. 412-18 du Code du travail que le licenciement d'un délégué syndical ne peut intervenir qu'après autorisation de l'inspecteur du Travail ou de l'autorité qui en tient lieu. En conséquence, se rend coupable du délit d'entrave à l'exercice du droit syndical l'employeur qui - après avoir adressé des propositions de reclassement à une déléguée syndicale déclarée médicalement apte, sous certaines conditions, à reprendre son emploi à l'issue de congés de maladie - constate la rupture du contrat de travail intervenue, selon lui, du fait de la salariée, pour avoir refusé ces propositions en raison de leur non-conformité à l'avis médical. L'initiative ainsi prise par l'employeur, nonobstant la proposition d'un nouvel aménagement d'emploi effectuée ultérieurement et demeurée sans effet, constitue par elle-même un licenciement revêtant un caractère irrégulier, dès lors qu'en l'absence de cause insurmontable rendant impossible l'exécution du contrat de travail, il n'a pas été autorisé conformément aux dispositions de l'article L. 412-18 susvisé (1).",
+        "codes": [
+          "code_de_procedure_penale",
+          "code_du_travail"
+        ],
+        "code_article_pairs": [
+          "code_du_travail:L412-18"
+        ],
+        "text": "REJET du pourvoi formé par :\n\n- X... Bernard, \n\ncontre l'arrêt de la cour d'appel de Besançon, chambre des appels correctionnels, en date du 23 février 1988, qui, pour entrave à l'exercice du droit syndical, l'a condamné à 5 000 francs d'amende avec sursis et qui s'est prononcé sur les réparations civiles. \n\nLA COUR, \n\nVu les mémoires produits en demande et en défense ; \n\nSur le moyen unique de cassation, pris de la violation des articles L. 412-18 du Code du travail et 593 du Code de procédure ... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "79-90358",
+            "pourvoi_raw": "79-90.358",
+            "chamber_hint": "Chambre criminelle",
+            "raw_title": "Chambre criminelle, 1979-11-20 pourvoi n° 79-90.358 (rejet), diffusé Juridial - CNIJ",
+            "resolved": {
+              "id": "61372504cd5801467741a42f",
+              "ecli": null,
+              "decision_date": "1979-11-20",
+              "chamber": "Chambre criminelle",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "79-94666",
+            "pourvoi_raw": "79-94.666",
+            "chamber_hint": "Chambre criminelle",
+            "raw_title": "Chambre criminelle, 1981-02-03 pourvoi n° 79-94.666",
+            "resolved": null
+          },
+          {
+            "pourvoi": "80-93052",
+            "pourvoi_raw": "80-93.052",
+            "chamber_hint": "Chambre criminelle",
+            "raw_title": "Chambre criminelle, 1981-04-28 pourvoi n° 80-93.052",
+            "resolved": null
+          }
+        ],
+        "n_parsable": 3,
+        "n_total_brut": 5
+      }
+    },
+    {
+      "id": "rapp-Q00151",
+      "decision": {
+        "id": "6079b9ad9ba5988459c56f85",
+        "ecli": "ECLI:FR:CCASS:2010:SO00063",
+        "pourvoi": "08-42.716",
+        "pourvois_all": [
+          "08-42.716"
+        ],
+        "chamber_raw": "Chambre sociale",
+        "chamber": "Soc.",
+        "decision_date": "2010-01-13",
+        "solution": "Rejet",
+        "publication": [
+          "Publié au Bulletin"
+        ],
+        "particularInterest": false,
+        "summary": "Doit être rejeté le pourvoi formé contre un arrêt ayant fait bénéficier des dispositions de la convention collective nationale des services de l'automobile assimilant le temps de pause à du temps de travail effectif et prévoyant sa rémunération comme tel lorsque le salarié doit rester pendant ce temps à la disposition du client même si le passage de ce dernier reste improbable, l'employé travaillant seul, la nuit, dans une station-service dont l'organisation du travail ne lui permet pas de prendre ses temps de pause mais l'oblige à rester à la disposition de l'employeur pour recevoir les clients, de sorte qu'il ne peut vaquer librement à des occupations personnelles",
+        "codes": [
+          "code_de_procedure_civile",
+          "code_du_travail"
+        ],
+        "code_article_pairs": [
+          "code_de_procedure_civile:700",
+          "code_du_travail:L2251-1"
+        ],
+        "text": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : \n\n\n\nAttendu que M. X... a été engagé à compter du 1er juillet 2000 par la société Marquilly, à laquelle a succédé en 2002 la société Argedis, en qualité d'employé de station-service de nuit ; qu'il s'occupait seul de l'encaissement des carburants et des produits de la boutique, de l'entretien et de la surveillance de la station de 22 heures à 6 heures du matin ; que les relations des parties étaient soumises à la convention collect... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "95-40226",
+            "pourvoi_raw": "95-40.226",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 13 janvier 1998, pourvoi n° 95-40.226, Bull. 1998, V, n° 11 (1), (cassation partielle)",
+            "resolved": {
+              "id": "6079b18c9ba5988459c52809",
+              "ecli": null,
+              "decision_date": "1998-01-13",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "03-44313",
+            "pourvoi_raw": "03-44.313",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 10 mai 2005, pourvoi n° 03-44.313, Bull. 2005, V, n° 153 (cassation partielle)",
+            "resolved": {
+              "id": "6079b1cd9ba5988459c53b94",
+              "ecli": null,
+              "decision_date": "2005-05-10",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "07-41833",
+            "pourvoi_raw": "07-41.833",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 17 juin 2009, pourvoi n° 07-41.833, Bull. 2009, V, n° 156 (cassation partielle)",
+            "resolved": {
+              "id": "6079b6cb9ba5988459c56e41",
+              "ecli": "ECLI:FR:CCASS:2009:SO01391",
+              "decision_date": "2009-06-17",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          }
+        ],
+        "n_parsable": 3,
+        "n_total_brut": 3
+      }
+    },
+    {
+      "id": "rapp-Q00301",
+      "decision": {
+        "id": "607964cf9ba5988459c49860",
+        "ecli": "ECLI:FR:CCASS:2011:C100556",
+        "pourvoi": "10-16.482",
+        "pourvois_all": [
+          "10-16.482"
+        ],
+        "chamber_raw": "Première chambre civile",
+        "chamber": "Civ. 1re",
+        "decision_date": "2011-06-01",
+        "solution": "Cassation",
+        "publication": [
+          "Publié au Bulletin"
+        ],
+        "particularInterest": false,
+        "summary": "Il incombe au juge français, pour les droits indisponibles, de mettre en oeuvre la règle de conflit de lois et de rechercher le droit désigné par cette règle en application de l'article 3 du code civil.\nPar suite, viole ce texte la cour d'appel qui accueille, sur le fondement du droit français, la demande en nullité d'un mariage contracté entre un Français et une Togolaise pour défaut d'intention matrimoniale de l'épouse alors que les conditions de fond du mariage étant régies par la loi nationale de chacun des époux, la loi togolaise était applicable pour apprécier le consentement de l'épouse",
+        "codes": [
+          "code_civil",
+          "code_de_procedure_civile"
+        ],
+        "code_article_pairs": [
+          "code_civil:3",
+          "code_de_procedure_civile:700"
+        ],
+        "text": "LA COUR DE CASSATION, PREMIÈRE CHAMBRE CIVILE, a rendu l'arrêt suivant : \n\n\n\nSur le moyen unique :\n\nVu l'article 3 du code civil ;\n\nAttendu que, selon ce texte, il incombe au juge français, pour les droits indisponibles, de mettre en oeuvre la règle de conflit de lois et de rechercher le droit désigné par cette règle ;\n\nAttendu que M. X..., de nationalité française et Mme Y..., de nationalité togolaise, vivant depuis deux ans en concubinage, se sont mariés en France le 26 mai 2000 et ont eu un e... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "06-20208",
+            "pourvoi_raw": "06-20.208",
+            "chamber_hint": "1re Civ",
+            "raw_title": "1re Civ., 19 septembre 2007, pourvoi n° 06-20.208, Bull. 2007, I, n° 281 (cassation)",
+            "resolved": {
+              "id": "607947f89ba5988459c4288c",
+              "ecli": "ECLI:FR:CCASS:2007:C100958",
+              "decision_date": "2007-09-19",
+              "chamber": "Première chambre civile",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "08-10387",
+            "pourvoi_raw": "08-10.387",
+            "chamber_hint": "1re Civ",
+            "raw_title": "1re Civ., 11 février 2009, pourvoi n° 08-10.387, Bull. 2009, I, n° 27 (cassation)",
+            "resolved": {
+              "id": "60795fe59ba5988459c4966f",
+              "ecli": "ECLI:FR:CCASS:2009:C100127",
+              "decision_date": "2009-02-11",
+              "chamber": "Première chambre civile",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "09-71992",
+            "pourvoi_raw": "09-71.992",
+            "chamber_hint": "1re Civ",
+            "raw_title": "1re Civ., 1er juin 2011, pourvoi n° 09-71.992, Bull. 2011, I, n° 100 (cassation)",
+            "resolved": {
+              "id": "607964ca9ba5988459c4985e",
+              "ecli": "ECLI:FR:CCASS:2011:C100557",
+              "decision_date": "2011-06-01",
+              "chamber": "Première chambre civile",
+              "solution": "Cassation"
+            }
+          }
+        ],
+        "n_parsable": 3,
+        "n_total_brut": 3
+      }
+    },
+    {
+      "id": "rapp-Q00501",
+      "decision": {
+        "id": "6079c2e59ba5988459c57376",
+        "ecli": "ECLI:FR:CCASS:2013:SO01588",
+        "pourvoi": "12-20.157",
+        "pourvois_all": [
+          "12-20.157"
+        ],
+        "chamber_raw": "Chambre sociale",
+        "chamber": "Soc.",
+        "decision_date": "2013-09-25",
+        "solution": "Cassation",
+        "publication": [
+          "Publié au Bulletin"
+        ],
+        "particularInterest": false,
+        "summary": "La déclaration de la maladie et le contentieux auquel elle a donné lieu ne privent pas le salarié admis au bénéfice de l'allocation de cessation anticipée des travailleurs de l'amiante (ACAATA) du droit de demander à la juridiction prud'homale la réparation des conséquences du trouble psychologique, compris dans le préjudice d'anxiété, subi avant la déclaration de la maladie",
+        "codes": [
+          "code_civil",
+          "code_de_la_securite_sociale",
+          "code_de_procedure_civile"
+        ],
+        "code_article_pairs": [
+          "code_civil:1147",
+          "code_de_la_securite_sociale:L451",
+          "code_de_la_securite_sociale:L452-3",
+          "code_de_procedure_civile:455",
+          "code_de_procedure_civile:627",
+          "code_de_procedure_civile:700"
+        ],
+        "text": "LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant : \n\nAttendu, selon l'arrêt attaqué, que M. X... et quatre autres salariés de la société Babcock Wanson (la société) ont présenté leur démission pour prétendre au bénéfice de l'allocation de cessation anticipée d'activité des travailleurs de l'amiante (ACAATA) en application de l'article 41 de la loi n° 98-1194 du 23 décembre 1998 ; qu'ils ont saisi la juridiction prud'homale afin d'obtenir la condamnation de la société à leur verser ... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "12-12883",
+            "pourvoi_raw": "12-12.883",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 25 septembre 2013, pourvoi n° 12-12.883, Bull. 2013, V, n° 208 (cassation partielle sans renvoi)",
+            "resolved": {
+              "id": "6079c2e99ba5988459c57378",
+              "ecli": "ECLI:FR:CCASS:2013:SO01586",
+              "decision_date": "2013-09-25",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "12-12883",
+            "pourvoi_raw": "12-12.883",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 25 septembre 2013, pourvoi n° 12-12.883, Bull. 2013, V, n° 208 (cassation partielle sans renvoi), et l'arrêt cité",
+            "resolved": {
+              "id": "6079c2e99ba5988459c57378",
+              "ecli": "ECLI:FR:CCASS:2013:SO01586",
+              "decision_date": "2013-09-25",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "09-42241",
+            "pourvoi_raw": "09-42.241",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 11 mai 2010, pourvoi n° 09-42.241, Bull. 2010, V, n° 106 (cassation partielle)",
+            "resolved": {
+              "id": "6079ba8e9ba5988459c56fe3",
+              "ecli": "ECLI:FR:CCASS:2010:SO00939",
+              "decision_date": "2010-05-11",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "12-12110",
+            "pourvoi_raw": "12-12.110",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 25 septembre 2013, pourvoi n° 12-12.110, Bull. 2013, V, n° 201 (rejet)",
+            "resolved": {
+              "id": "6079c2ec9ba5988459c57379",
+              "ecli": "ECLI:FR:CCASS:2013:SO01585",
+              "decision_date": "2013-09-25",
+              "chamber": "Chambre sociale",
+              "solution": "Rejet"
+            }
+          }
+        ],
+        "n_parsable": 4,
+        "n_total_brut": 4
+      }
+    },
+    {
+      "id": "rapp-Q00751",
+      "decision": {
+        "id": "5fd9450ef421dc2c1aa9005b",
+        "ecli": "ECLI:FR:CCASS:2016:SO00268",
+        "pourvoi": "14-17.000",
+        "pourvois_all": [
+          "14-17.000"
+        ],
+        "chamber_raw": "Chambre sociale",
+        "chamber": "Soc.",
+        "decision_date": "2016-02-03",
+        "solution": "Cassation",
+        "publication": [
+          "Publié au Bulletin"
+        ],
+        "particularInterest": false,
+        "summary": "La date de la résiliation du contrat de travail ne peut être fixée qu'au jour de la décision qui la prononce dès lors que le contrat n'a pas été rompu avant cette date. Si, en cas de confirmation en appel du jugement prononçant la résiliation, la date de la rupture est celle fixée par le jugement, il en va autrement lorsque l'exécution du contrat de travail s'est poursuivie après cette décision",
+        "codes": [
+          "code_civil",
+          "code_de_l_organisation_judiciaire",
+          "code_de_procedure_civile",
+          "code_du_travail"
+        ],
+        "code_article_pairs": [
+          "code_civil:1184",
+          "code_de_l_organisation_judiciaire:R431-5",
+          "code_de_procedure_civile:700",
+          "code_du_travail:L1226-13"
+        ],
+        "text": "SOC.\n \n FB\n \n \n \n COUR DE CASSATION\n ______________________\n \n \n Audience publique du 3 février 2016\n \n \n \n \n Cassation partielle\n \n \n M. FROUIN, président\n \n \n \n Arrêt n° 268 FS-P+B\n \n Pourvoi n° T 14-17.000\n \n \n \n \n \n \n \n R É P U B L I Q U E F R A N Ç A I S E \n \n _________________________\n \n AU NOM DU PEUPLE FRANÇAIS\n _________________________\n \n \n LA COUR DE CASSATION, CHAMBRE SOCIALE, a rendu l'arrêt suivant :\n \n Statuant sur le pourvoi formé par la société Kéolis, société anonyme, dont le s... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "12-28237",
+            "pourvoi_raw": "12-28.237",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 21 janvier 2014, pourvoi n° <a href=\"6079c3fb9ba5988459c573ef\">12-28.237</a>, Bull. 2014, V, n° 26 (cassation partielle).",
+            "resolved": {
+              "id": "6079c3fb9ba5988459c573ef",
+              "ecli": "ECLI:FR:CCASS:2014:SO00130",
+              "decision_date": "2014-01-21",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "97-44373",
+            "pourvoi_raw": "97-44.373",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 28 mars 2000, pourvoi n° <a href=\"6079b1a49ba5988459c52c3c\">97-44.373</a>, Bull. 2000, V, n° 134  (cassation partielle).",
+            "resolved": {
+              "id": "6079b1a49ba5988459c52c3c",
+              "ecli": null,
+              "decision_date": "2000-03-28",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "01-42397",
+            "pourvoi_raw": "01-42.397",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 26 mars 2002, pourvoi n° <a href=\"6079b1ae9ba5988459c530d7\">01-42.397</a>, Bull. 2002, V, n° 101  (cassation partielle partiellement sans renvoi).",
+            "resolved": {
+              "id": "6079b1ae9ba5988459c530d7",
+              "ecli": null,
+              "decision_date": "2002-03-26",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "01-43876",
+            "pourvoi_raw": "01-43.876",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 10 décembre 2003, pourvoi n° <a href=\"6079b1ae9ba5988459c53152\">01-43.876</a>, Bull. 2003, V, n° 314 (cassation partielle sans renvoi).",
+            "resolved": {
+              "id": "6079b1ae9ba5988459c53152",
+              "ecli": null,
+              "decision_date": "2003-12-10",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "12-17273",
+            "pourvoi_raw": "12-17.273",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 12 juin 2013, pourvoi n° <a href=\"6079c2539ba5988459c57338\">12-17.273</a>, Bull. 2013, V, n° 153  (cassation partielle).",
+            "resolved": {
+              "id": "6079c2539ba5988459c57338",
+              "ecli": "ECLI:FR:CCASS:2013:SO01117",
+              "decision_date": "2013-06-12",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          }
+        ],
+        "n_parsable": 5,
+        "n_total_brut": 5
+      }
+    },
+    {
+      "id": "rapp-Q01001",
+      "decision": {
+        "id": "5fca95e456d46c8a7986e043",
+        "ecli": "ECLI:FR:CCASS:2018:CR00567",
+        "pourvoi": "17-85.603",
+        "pourvois_all": [
+          "17-85.603"
+        ],
+        "chamber_raw": "Chambre criminelle",
+        "chamber": "Crim.",
+        "decision_date": "2018-03-27",
+        "solution": "Cassation",
+        "publication": [
+          "Publié au Bulletin"
+        ],
+        "particularInterest": false,
+        "summary": "La méconnaissance des formalités substantielles régissant la géolocalisation peut être invoquée à l'appui d'une demande d'annulation d'actes ou de pièces de procédure par la partie titulaire d'un droit sur le véhicule géolocalisé ou qui établit, hors le cas d'un véhicule volé et faussement immatriculé, qu'il a, à l'occasion d'une telle investigation, été porté atteinte à sa vie privée. Doit être censuré l'arrêt d'une chambre de l'instruction qui, pour écarter l'argumentation du requérant tendant à contester la régularité de la géolocalisation de véhicules par l'intermédiaire desquelles il avait lui-même été géolocalisé, en sorte qu'il avait été porté atteinte à sa vie privée, retient que l'intéressé ne peut se prévaloir d'aucun droit sur ces véhicules, qui appartiennent à des tiers, alors qu'il n'était pas reproché à l'intéressé d'avoir pris place dans un véhicule volé et faussement immatriculé",
+        "codes": [
+          "code_de_procedure_penale",
+          "code_des_postes_et_des_communications_electroniques"
+        ],
+        "code_article_pairs": [
+          "code_de_procedure_penale:230-35",
+          "code_de_procedure_penale:77-1-1"
+        ],
+        "text": "N° Y 17-85.603 FS-P+B\n\nN° 567\n\nVD1\n27 MARS 2018\n\n\nCASSATION PARTIELLE\n\n\nM. X... président,\n\n\n\n\n\n\nR É P U B L I Q U E F R A N Ç A I S E\n________________________________________\n\n\nAU NOM DU PEUPLE FRANÇAIS\n_________________________\n\n\n\n\nLA COUR DE CASSATION, CHAMBRE CRIMINELLE, en son audience publique tenue au Palais de Justice à PARIS, a rendu l'arrêt suivant :\n\n CASSATION PARTIELLE et désignation de juridiction sur les pourvois formés par M. Abdelmalek Y..., M. Hocine Z..., contre l'arrêt de la ... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "15-87755",
+            "pourvoi_raw": "15-87.755",
+            "chamber_hint": "Crim",
+            "raw_title": "Crim., 7 juin 2016, pourvoi n° 15-87.755 , Bull. crim. 2016, n° 174 (rejet).",
+            "resolved": {
+              "id": "5fd9301fbd122f1001ebc07a",
+              "ecli": "ECLI:FR:CCASS:2016:CR03070",
+              "decision_date": "2016-06-07",
+              "chamber": "Chambre criminelle",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "17-82435",
+            "pourvoi_raw": "17-82.435",
+            "chamber_hint": "Crim",
+            "raw_title": "Crim., 20 décembre 2017, pourvoi n° 17-82.435, Bull. crim. 2017, n° 298 (rejet).",
+            "resolved": {
+              "id": "5fcaa80e8cbd619f17f2ad43",
+              "ecli": "ECLI:FR:CCASS:2017:CR02825",
+              "decision_date": "2017-11-14",
+              "chamber": "Chambre criminelle",
+              "solution": "QPC autres"
+            }
+          },
+          {
+            "pourvoi": "16-81904",
+            "pourvoi_raw": "16-81.904",
+            "chamber_hint": "Crim",
+            "raw_title": "Crim., 23 novembre 2016, pourvoi n° 16-81.904, Bull. crim. 2016, n° 306 (cassation partielle).",
+            "resolved": {
+              "id": "5fd917cef4ec36b359147b77",
+              "ecli": "ECLI:FR:CCASS:2016:CR05655",
+              "decision_date": "2016-11-23",
+              "chamber": "Chambre criminelle",
+              "solution": "Cassation"
+            }
+          }
+        ],
+        "n_parsable": 3,
+        "n_total_brut": 3
+      }
+    },
+    {
+      "id": "rapp-Q01201",
+      "decision": {
+        "id": "60dd5a833890147026238e80",
+        "ecli": "ECLI:FR:CCASS:2021:C200685",
+        "pourvoi": "20-12.303",
+        "pourvois_all": [
+          "20-12.303"
+        ],
+        "chamber_raw": "Deuxième chambre civile",
+        "chamber": "Civ. 2e",
+        "decision_date": "2021-07-01",
+        "solution": "Cassation",
+        "publication": [
+          "Publié au Bulletin"
+        ],
+        "particularInterest": false,
+        "summary": "Selon l'article 446-1, alinéa 1, du code de procédure civile, régissant la procédure orale, les parties présentent oralement à l'audience leurs prétentions et les moyens à leur soutien et peuvent également se référer aux prétentions et aux moyens qu'elles auraient formulés par écrit. En l'absence de formalisme particulier pour se référer à des écritures, satisfait aux prévisions de ce texte, la partie qui, hors le cas d'un refus opposé par le tribunal, dépose un dossier comportant ses écritures au cours d'une audience des débats à laquelle elle est présente ou représentée.\nEncourt par conséquent la censure le jugement d'un tribunal d'instance qui, tout en constatant que les parties avaient déposé à l'audience des dossiers contenant leurs écritures respectives, déclare irrecevables les demandes comme non soutenues oralement",
+        "codes": [
+          "code_de_procedure_civile"
+        ],
+        "code_article_pairs": [
+          "code_de_procedure_civile:1015",
+          "code_de_procedure_civile:122",
+          "code_de_procedure_civile:16",
+          "code_de_procedure_civile:446-1",
+          "code_de_procedure_civile:700"
+        ],
+        "text": "CIV. 2\n \n CF\n \n \n \n COUR DE CASSATION\n ______________________\n \n \n Audience publique du 1er juillet 2021\n \n \n \n \n Cassation\n \n \n M. PIREYRE, président\n \n \n \n Arrêt n° 685 F-B\n \n Pourvoi n° M 20-12.303 \n \n \n \n \n \n \n \n R É P U B L I Q U E F R A N Ç A I S E \n \n _________________________\n \n AU NOM DU PEUPLE FRANÇAIS\n _________________________\n \n \n ARRÊT DE LA COUR DE CASSATION, DEUXIÈME CHAMBRE CIVILE, DU 1ER JUILLET 2021\n \n Mme [A] [P], domiciliée [Adresse 1], a formé le pourvoi n° M 20-12.303 cont... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "96-44672",
+            "pourvoi_raw": "96-44.672",
+            "chamber_hint": "Soc",
+            "raw_title": "Soc., 17 juillet 1997, pourvoi n° <a href=\"6079b1879ba5988459c526d6\">96-44.672</a>, Bull. 1997, V, n° 281 (cassation).",
+            "resolved": {
+              "id": "6079b1879ba5988459c526d6",
+              "ecli": null,
+              "decision_date": "1997-07-17",
+              "chamber": "Chambre sociale",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "14-14904",
+            "pourvoi_raw": "14-14.904",
+            "chamber_hint": "1re Civ",
+            "raw_title": "1re Civ., 13 mai 2015, pourvoi n° <a href=\"607983c49ba5988459c4a486\">14-14.904</a>, Bull. 2015, I, n° 110 (cassation).",
+            "resolved": {
+              "id": "607983c49ba5988459c4a486",
+              "ecli": "ECLI:FR:CCASS:2015:C100512",
+              "decision_date": "2015-05-13",
+              "chamber": "Première chambre civile",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "12-27035",
+            "pourvoi_raw": "12-27.035",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 15 mai 2014, pourvoi n° <a href=\"60797cf39ba5988459c4a1d8\">12-27.035</a>, Bull. 2014, II, n° 111 (rejet).",
+            "resolved": {
+              "id": "60797cf39ba5988459c4a1d8",
+              "ecli": "ECLI:FR:CCASS:2014:C200827",
+              "decision_date": "2014-05-15",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Rejet"
+            }
+          }
+        ],
+        "n_parsable": 3,
+        "n_total_brut": 3
+      }
+    },
+    {
+      "id": "rapp-Q01401",
+      "decision": {
+        "id": "66d959efc2360f5a39d5a711",
+        "ecli": "ECLI:FR:CCASS:2024:C200715",
+        "pourvoi": "22-16.220",
+        "pourvois_all": [
+          "22-16.220"
+        ],
+        "chamber_raw": "Deuxième chambre civile",
+        "chamber": "Civ. 2e",
+        "decision_date": "2024-09-05",
+        "solution": "Rejet",
+        "publication": [
+          "Publié au Bulletin",
+          "Publié aux Lettres de chambre"
+        ],
+        "particularInterest": false,
+        "summary": "Il résulte de la combinaison des articles L. 431-2 et L. 452-4 du code de la sécurité sociale que la saisine de la caisse d'une requête tendant à la reconnaissance de la faute inexcusable de l'employeur interrompt la prescription biennale et qu'un nouveau délai ne recommence à courir qu'à compter de la notification, par la caisse aux parties, du résultat de la tentative de conciliation sur l'existence de la faute inexcusable, le montant de la majoration et des indemnités mentionnées à l'article L. 452-3.\nL'effet interruptif, qui s'attache à la saisine de la caisse aux fins de conciliation, se poursuit, dès lors, jusqu'à ce que la caisse ait fait connaître aux parties le résultat de la tentative de conciliation, sur le principe même de la faute inexcusable mais également sur ses conséquences indemnitaires",
+        "codes": [
+          "code_civil",
+          "code_de_la_securite_sociale",
+          "code_de_procedure_civile"
+        ],
+        "code_article_pairs": [
+          "code_civil:2238",
+          "code_de_la_securite_sociale:L431-2",
+          "code_de_la_securite_sociale:L442-1",
+          "code_de_la_securite_sociale:L452-4",
+          "code_de_procedure_civile:700"
+        ],
+        "text": "CIV. 2\n \n FD\n \n \n \n COUR DE CASSATION\n ______________________\n \n \n Audience publique du 5 septembre 2024\n \n \n \n \n Rejet\n \n \n Mme MARTINEL, président\n \n \n \n Arrêt n° 715 F-B\n \n Pourvoi n° K 22-16.220 \n \n \n \n \n R É P U B L I Q U E F R A N Ç A I S E \n \n _________________________\n \n AU NOM DU PEUPLE FRANÇAIS\n _________________________\n \n \n ARRÊT DE LA COUR DE CASSATION, DEUXIÈME CHAMBRE CIVILE, DU 5 SEPTEMBRE 2024\n \n 1°/ la société [4], société anonyme, dont le siège est [Adresse 3],\n \n 2°/ la socié... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "02-30490",
+            "pourvoi_raw": "02-30.490",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 16 septembre 2003, pourvoi n° <a href=\"60794d2a9ba5988459c48380\">02-30.490</a>, Bull. 2003, II, n°266 (rejet).",
+            "resolved": {
+              "id": "60794d2a9ba5988459c48380",
+              "ecli": null,
+              "decision_date": "2003-09-16",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "09-70419",
+            "pourvoi_raw": "09-70.419",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 3 mars 2011, pourvoi n° <a href=\"60796b379ba5988459c49ae3\">09-70.419</a>, Bull. 2011, II, n° 58 (cassation).",
+            "resolved": {
+              "id": "60796b379ba5988459c49ae3",
+              "ecli": "ECLI:FR:CCASS:2011:C200482",
+              "decision_date": "2011-03-03",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "08-21969",
+            "pourvoi_raw": "08-21.969",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 10 décembre 2009, pourvoi n°<a href=\"60795cbc9ba5988459c49532\">08-21.969</a>, Bull., II, n° 287 (cassation).",
+            "resolved": {
+              "id": "60795cbc9ba5988459c49532",
+              "ecli": "ECLI:FR:CCASS:2009:C202016",
+              "decision_date": "2009-12-10",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "15-12843",
+            "pourvoi_raw": "15-12.843",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 11 février 2016, pourvoi n° <a href=\"5fd9439827b1a32a78008f72\">15-12.843</a>, (rejet).",
+            "resolved": {
+              "id": "5fd9439827b1a32a78008f72",
+              "ecli": "ECLI:FR:CCASS:2016:C200208",
+              "decision_date": "2016-02-11",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Rejet"
+            }
+          }
+        ],
+        "n_parsable": 4,
+        "n_total_brut": 4
+      }
+    },
+    {
+      "id": "rapp-Q01501",
+      "decision": {
+        "id": "6763c1959097d8d54595427f",
+        "ecli": "ECLI:FR:CCASS:2024:C201204",
+        "pourvoi": "22-17.119",
+        "pourvois_all": [
+          "22-17.119"
+        ],
+        "chamber_raw": "Deuxième chambre civile",
+        "chamber": "Civ. 2e",
+        "decision_date": "2024-12-19",
+        "solution": "Rejet",
+        "publication": [
+          "Publié au Bulletin",
+          "Publié aux Lettres de chambre"
+        ],
+        "particularInterest": false,
+        "summary": "Seules les parties au contrat d'assurance peuvent invoquer le non-respect du formalisme prévu par  l'article L. 112-4 du code des assurances",
+        "codes": [
+          "code_civil",
+          "code_de_l_organisation_judiciaire",
+          "code_de_procedure_civile",
+          "code_des_assurances"
+        ],
+        "code_article_pairs": [
+          "code_de_l_organisation_judiciaire:R431-5",
+          "code_de_procedure_civile:700",
+          "code_des_assurances:L112-4",
+          "code_des_assurances:L124-3",
+          "code_des_assurances:L181-3"
+        ],
+        "text": "CIV. 2\n \n FD\n \n \n \n COUR DE CASSATION\n ______________________\n \n \n Audience publique du 19 décembre 2024\n \n \n \n \n Rejet\n \n \n Mme MARTINEL, président\n \n \n \n Arrêt n° 1204 FS-B\n \n Pourvoi n° N 22-17.119 \n \n \n \n \n R É P U B L I Q U E F R A N Ç A I S E \n \n _________________________\n \n AU NOM DU PEUPLE FRANÇAIS\n _________________________\n \n \n ARRÊT DE LA COUR DE CASSATION, DEUXIÈME CHAMBRE CIVILE, DU 19 DÉCEMBRE 2024\n \n La société Font noire énergie, société à responsabilité limitée, dont le siège es... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "96-18993",
+            "pourvoi_raw": "96-18.993",
+            "chamber_hint": "1re Civ",
+            "raw_title": "1re Civ., 1er décembre 1998, pourvoi n° <a href=\"60794cc69ba5988459c46e3f\">96-18.993</a>, Bull. (rejet).",
+            "resolved": {
+              "id": "60794cc69ba5988459c46e3f",
+              "ecli": null,
+              "decision_date": "1998-12-01",
+              "chamber": "Première chambre civile",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "18-18709",
+            "pourvoi_raw": "18-18.709",
+            "chamber_hint": "1re Civ",
+            "raw_title": "1re Civ., 18 décembre 2019, pourvoi n° <a href=\"5fca5fa20a694546ea5cd7fe\">18-18.709</a> et n° <a href=\"5fca5fa20a694546ea5cd7fe\">18-14.827</a>, Bull. (rejet).",
+            "resolved": {
+              "id": "5fca5fa20a694546ea5cd7fe",
+              "ecli": "ECLI:FR:CCASS:2019:C101080",
+              "decision_date": "2019-12-18",
+              "chamber": "Première chambre civile",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "21-20538",
+            "pourvoi_raw": "21-20.538",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 15 juin 2023, pourvoi n° <a href=\"648aaca002075b05db402413\">21-20.538</a>, Bull. (cassation partielle).",
+            "resolved": {
+              "id": "648aaca002075b05db402413",
+              "ecli": "ECLI:FR:CCASS:2023:C200665",
+              "decision_date": "2023-06-15",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Cassation"
+            }
+          }
+        ],
+        "n_parsable": 3,
+        "n_total_brut": 3
+      }
+    },
+    {
+      "id": "rapp-Q01532",
+      "decision": {
+        "id": "67c948d61a107e0f606ad715",
+        "ecli": "ECLI:FR:CCASS:2025:C200213",
+        "pourvoi": "22-18.307",
+        "pourvois_all": [
+          "22-18.307"
+        ],
+        "chamber_raw": "Deuxième chambre civile",
+        "chamber": "Civ. 2e",
+        "decision_date": "2025-03-06",
+        "solution": "Rejet",
+        "publication": [
+          "Publié au Bulletin",
+          "Publié aux Lettres de chambre"
+        ],
+        "particularInterest": false,
+        "summary": "Le commandement de payer, délivré conformément à l'article 2217 du code civil, demeurant applicable dans les départements du Bas-Rhin, du Haut-Rhin et de la Moselle, qui ne rend pas le bien indisponible et ne vaut pas saisie des fruits, ne constitue pas un acte d'exécution au sens de l'article 2244 du code civil et n'est, dès lors, pas interruptif de prescription",
+        "codes": [
+          "code_civil",
+          "code_de_procedure_civile",
+          "code_des_procedures_civiles_d_execution"
+        ],
+        "code_article_pairs": [
+          "code_civil:2217",
+          "code_civil:2244",
+          "code_de_procedure_civile:700",
+          "code_des_procedures_civiles_d_execution:L341-1"
+        ],
+        "text": "CIV. 2\n \n LM\n \n \n \n COUR DE CASSATION\n ______________________\n \n \n Audience publique du 6 mars 2025\n \n \n \n \n Rejet\n \n \n Mme MARTINEL, président\n \n \n \n Arrêt n° 213 F-B\n \n Pourvoi n° D 22-18.307 \n \n \n \n \n \n \n \n R É P U B L I Q U E F R A N Ç A I S E \n \n _________________________\n \n AU NOM DU PEUPLE FRANÇAIS\n _________________________\n \n \n ARRÊT DE LA COUR DE CASSATION, DEUXIÈME CHAMBRE CIVILE, DU 6 MARS 2025\n \n \n La caisse de Crédit mutuel du pays de Thann, association coopérative, dont le siège e... [TRONQUÉ POUR PREVIEW — FICHIER COMPLET DANS benchmark-rapp-v1.json]"
+      },
+      "ground_truth": {
+        "rapprochements": [
+          {
+            "pourvoi": "97-20487",
+            "pourvoi_raw": "97-20.487",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 1er juillet 1999, pourvoi n° <a href=\"60794ce89ba5988459c47809\">97-20.487</a>, Bull. 1999, II, n° 127 (rejet).",
+            "resolved": {
+              "id": "60794ce89ba5988459c47809",
+              "ecli": null,
+              "decision_date": "1999-07-01",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "02-20216",
+            "pourvoi_raw": "02-20.216",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 24 mars 2005, pourvoi n° <a href=\"60794db19ba5988459c48a27\">02-20.216</a>, Bull. 2005, II, n° 85 (cassation).",
+            "resolved": {
+              "id": "60794db19ba5988459c48a27",
+              "ecli": null,
+              "decision_date": "2005-03-24",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Cassation"
+            }
+          },
+          {
+            "pourvoi": "08-18329",
+            "pourvoi_raw": "08-18.329",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 9 juillet 2009, pourvoi n° <a href=\"6079648f9ba5988459c49847\">08-18.329</a>, Bull. 2009, II, n° 185 (rejet).",
+            "resolved": {
+              "id": "6079648f9ba5988459c49847",
+              "ecli": "ECLI:FR:CCASS:2009:C201307",
+              "decision_date": "2009-07-09",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "12-28270",
+            "pourvoi_raw": "12-28.270",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 14 novembre 2013, pourvoi n° <a href=\"6079796c9ba5988459c4a072\">12-28.270</a>, Bull. 2013, II, n° 219 (rejet).",
+            "resolved": {
+              "id": "6079796c9ba5988459c4a072",
+              "ecli": "ECLI:FR:CCASS:2013:C201701",
+              "decision_date": "2013-11-14",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Rejet"
+            }
+          },
+          {
+            "pourvoi": "14-27129",
+            "pourvoi_raw": "14-27.129",
+            "chamber_hint": "2e Civ",
+            "raw_title": "2e Civ., 28 janvier 2016, pourvoi n° <a href=\"5fd945f71af87d2d36651313\">14-27.129</a>, Bull. 2016, II, n° 29 (cassation).",
+            "resolved": {
+              "id": "5fd945f71af87d2d36651313",
+              "ecli": "ECLI:FR:CCASS:2016:C200112",
+              "decision_date": "2016-01-28",
+              "chamber": "Deuxième chambre civile",
+              "solution": "Cassation"
+            }
+          }
+        ],
+        "n_parsable": 5,
+        "n_total_brut": 5
+      }
+    }
+  ]
+}

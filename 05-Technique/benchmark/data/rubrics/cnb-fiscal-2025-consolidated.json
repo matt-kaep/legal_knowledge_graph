@@ -1,0 +1,740 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit fiscal (consolide)",
+    "source_path": "data/cnb-crfpa/2025/cas-pratiques.pdf (pages 26-28)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Droit fiscal (diffusion Cap'Barreau, 10 pages)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 6 (note 13/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 20 (note 12/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 25 (note 13.75/20)"
+    ],
+    "grille_path": "data/cnb-crfpa/2025-grilles/grille-droit-fiscal.pdf",
+    "copies_paths": [
+      "data/cnb-crfpa/2025-copies-iej/droit_fiscal_6.pdf",
+      "data/cnb-crfpa/2025-copies-iej/droit_fiscal_20.pdf",
+      "data/cnb-crfpa/2025-copies-iej/droit_fiscal_25__.pdf"
+    ],
+    "generated_by": "Claude Opus 4.7 (consolidation run)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-03",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_MecaTransfo_TVA": 10,
+        "Q2_Lemoine_IR": 8,
+        "Q3_Lemoine_acte_anormal_gestion": 2
+      },
+      "qualite_redactionnelle": "retrait max 2 points"
+    }
+  },
+  "questions": [
+    {
+      "id": "CNB-FISCAL-2025-Q1",
+      "branche": "fiscal",
+      "specialisation": "TVA - regime des operations, champ d'application materiel et territorial, exigibilite, deductibilite",
+      "question": "La SAS MecaTransfo (regime reel normal de TVA, fabrication de pieces mecaniques pour l'aeronautique) s'interroge sur le traitement TVA de six operations distinctes realisees en septembre : (a) prelevement d'un ordinateur de la societe par le president pour l'offrir a son fils (1200 EUR TTC, TVA initialement deduite), (b) indemnite d'assurance de 100 000 EUR suite a incendie d'une machine, (c) facture de conseil 10 000 HT + 2 000 TVA, facture recue fin septembre, reglee en octobre, prestataire ayant opte pour les debits, (d) importation de matieres premieres depuis Pekin (valeur en douane 100 000), paiement differe en octobre, (e) livraison de pieces a un client de Savoie 200 000 HT, reglement en octobre, (f) prestation sur mesure avec materiaux et main-d'oeuvre qualifiee pour une usine a Casablanca. Determiner le montant de TVA dont la societe sera redevable au titre de septembre.",
+      "perspective": "neutre",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Rappel du principe d'assujettissement a la TVA (art. 256 CGI) : sont soumises a la TVA les livraisons de biens et prestations de services effectuees a titre onereux par un assujetti agissant en tant que tel",
+            "linked_article": "code_general_des_impots:256",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En vertu des principes applicables en matiere de TVA (article 256 du CGI), sont soumises a la TVA les livraisons de biens ou les prestations de services effectuees a titre onereux par un assujetti agissant en tant que tel"
+          },
+          {
+            "text": "Operation (a) - Livraison a soi-meme (autoconsommation) : art. 257 II CGI impose le prelevement d'un bien de l'entreprise pour des besoins autres que ceux de l'entreprise, des lors que l'acquisition initiale a donne lieu a recuperation de la TVA. Base = valeur HT de l'ordinateur. Exigibilite a la date de changement d'affectation",
+            "linked_article": "code_general_des_impots:257",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En vertu de l'article 257 II du Code general des impots, sont imposables les livraisons a soi-meme de biens. Dans cette hypothese, on parle parfois d'autoconsommation. Il y a autoconsommation lorsque des biens, qu'il s'agisse de stocks ou d'immobilisations, sont affectes a des besoins autres que ceux de l'entreprise. Dans ce cas-la il y a imposition au titre de la livraison a soi-meme si l'acquisition initiale a donne lieu a la recuperation de la TVA. En cas de livraison a soi-meme la date d'exigibilite de la TVA est fixee a la date de changement d'affectation du bien"
+          },
+          {
+            "text": "Operation (a) - Application : ordinateur 1200 TTC, TVA deduite a 200 EUR. La TVA exigible au titre de la LASM est de 200 EUR au titre de septembre",
+            "linked_article": "code_general_des_impots:257",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "En l'espece, 200 euros ayant ete deduits lors de l'acquisition, 200 euros de TVA seront exigibles au titre du mois de septembre"
+          },
+          {
+            "text": "Operation (b) - Indemnite d'assurance hors champ TVA : une indemnite n'est soumise a TVA que si elle constitue la contrepartie d'une prestation de service individualisee rendue a celui qui la verse ou d'une livraison de biens. L'indemnite reparant un prejudice est hors champ",
+            "linked_article": "code_general_des_impots:256",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Pour etre imposees a la TVA, les indemnites doivent correspondre a des sommes percues en contrepartie d'une prestation de services individualisee rendue a celui qui la verse ou d'une livraison de biens. A l'inverse, une indemnite qui a pour objet exclusif de reparer un prejudice n'a pas a etre soumise a la TVA"
+          },
+          {
+            "text": "Operation (b) - Corollaire : la TVA initialement deduite sur la machine detruite est definitivement acquise, aucune regularisation n'est requise",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "dans ce cas, la TVA potentiellement initialement deduite sur l'achat de la machine est definitivement acquise et ne doit pas faire l'objet d'une regularisation"
+          },
+          {
+            "text": "Operation (c) - Regles generales de TVA sur prestations de services : fait generateur (art. 269, 1, a CGI) au moment ou la prestation est effectuee ; exigibilite (art. 269, 2, c CGI) en principe a l'encaissement du prix ; option possible pour les debits",
+            "linked_article": "code_general_des_impots:269",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'article 269, 1, a du CGI dispose que le fait generateur de la TVA en matiere de prestation de service est fixe au moment ou cette derniere est effectuee. En vertu de l'article 269, 2, c du CGI la date d'exigibilite est en principe fixee au moment de l'encaissement du prix. Ce principe souffre cependant d'une exception. Le redevable de la TVA peut opter pour les debits"
+          },
+          {
+            "text": "Operation (c) - Application de l'option pour les debits : la TVA devient exigible chez le prestataire a la facturation (septembre) et donc deductible simultanement chez la societe MecaTransfo au meme moment. L'option ne peut pas retarder l'exigibilite par rapport a la regle de l'encaissement",
+            "linked_article": "code_general_des_impots:269",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, le cabinet de conseil a exerce l'option pour les debits. La TVA est donc exigible de son cote au moment de la facturation en septembre et deductible au niveau de la societe MecaTransfo en septembre egalement"
+          },
+          {
+            "text": "Operation (c) - Conclusion : deductibilite conditionnee au lien direct avec les operations imposables en aval (art. 271 CGI implicite). Le conseil industriel etant en lien avec l'activite taxable, 2 000 EUR sont deductibles en septembre",
+            "linked_article": "code_general_des_impots:271",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Ce conseil en industrie est en lien direct avec les operations, en aval, courantes de la societe. Ces operations ouvrent ainsi sans doute droit a deduction. MecaTransfo pourra donc deduire 2000 euros de TVA au titre du mois de septembre"
+          },
+          {
+            "text": "Operation (d) - Importations : definition a l'art. 291 CGI (entree de biens sur le territoire UE mis a la consommation en France). Fait generateur et exigibilite au moment de l'entree en France (art. 293 A-1 CGI)",
+            "linked_article": "code_general_des_impots:291",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le regime des importations est traite par l'article 291 du Code general des impots qui la definit comme L'entree de biens sur le territoire de l'Union europeenne. Lorsque ces biens sont mis a la consommation en France (...) Le fait generateur et l'exigibilite se produisent lorsque le bien est considere comme importe, autrement dit lors de son entree en France (article 293 A-1)"
+          },
+          {
+            "text": "Operation (d) - Redevable : le destinataire des biens (art. 293 A CGI). Mecanisme d'autoliquidation (gestion DGFiP depuis le 1er janvier 2022) : collecte et deduction simultanees sans avance de tresorerie. 20 000 EUR exigibles et 20 000 EUR deductibles en septembre",
+            "linked_article": "code_general_des_impots:293A",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En vertu de l'article 293 A du CGI, le redevable de la TVA est le destinataire des biens. (...) depuis le 1er janvier 2022, la gestion et le recouvrement de la TVA a l'importation sont geres par la Direction generale des finances publiques (DGFiP). Cela permet aux redevables concernes de collecter et deduire simultanement la TVA a l'importation sur la declaration de TVA, sans avance de tresorerie"
+          },
+          {
+            "text": "Operation (e) - Livraison de biens : fait generateur et exigibilite simultanes au moment de la livraison (art. 269, 1 et 269, 2 CGI). Taux de droit commun de 20 %. 40 000 EUR exigibles en septembre, independamment du paiement differe en octobre",
+            "linked_article": "code_general_des_impots:269",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'article 269, 1 du CGI traite du fait generateur de la TVA et l'article 269, 2 du CGI traite de l'exigibilite. En vertu de ces deux dispositions, le fait generateur et l'exigibilite en matiere de livraisons de biens se produisent de maniere simultanee au moment ou la livraison du bien est effectuee. (...) La societe est donc redevable de 40 000 euros de TVA au titre du mois de septembre"
+          },
+          {
+            "text": "Operation (f) - Qualification d'operation complexe : principe que chaque operation est distincte, exception de l'operation unique complexe codifiee par l'art. 257 ter CGI d'apres la jurisprudence CJUE. Methode en deux etapes : (1) distinguer operations distinctes ou operation unique complexe ; (2) si unique, identifier l'element principal (point de vue du client), l'accessoire suit le principal",
+            "linked_article": "code_general_des_impots:257",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Pour resoudre cette problematique, il faut se tourner vers l'article 257 ter du Code general des impots qui a codifie une methode degagee par la Cour de Justice de l'Union Europeenne. La premiere etape est de determiner (...) si l'on est en presence de plusieurs prestations distinctes ou d'une prestation unique complexe. (...) Intervient alors la deuxieme etape du raisonnement, il faut identifier les elements predominants"
+          },
+          {
+            "text": "Operation (f) - Application : la main-d'oeuvre qualifiee (temps d'execution, technique, creation sur mesure) predomine sur les materiaux apportes. Qualification retenue : prestation de service",
+            "linked_article": "code_general_des_impots:257",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "La main-d'oeuvre semble ici la prestation principale au regard du temps d'execution et de la technique. La creation d'un produit sur mesure aux objectifs du client semble etre plus importante que la livraison des materiaux. La qualification de prestation de service devrait donc ici etre privilegiee au principal"
+          },
+          {
+            "text": "Operation (f) - Territorialite des prestations de services B2B (art. 259, 1 CGI) : imposition au lieu d'etablissement du preneur assujetti. Preneur a Casablanca (hors UE) : hors champ TVA francaise",
+            "linked_article": "code_general_des_impots:259",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il resulte de l'article 259 I du CGI que le lieu des prestations de services est situe en France lorsque : Le preneur est un assujetti qui a en France le siege de son activite economique (...) En l'espece le preneur est un assujetti etabli au Maroc, la TVA n'est donc pas due en France"
+          },
+          {
+            "text": "Synthese (bareme) : 200 EUR exigibles (a) + hors champ (b) + 2 000 EUR deductibles (c) + 20 000 exigibles et 20 000 deductibles (d) + 40 000 exigibles (e) + hors champ (f). Solde a payer : 60 200 - 22 000 = 38 200 EUR",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "60 200 - 22 000 = 38 200. La societe MecaTransfo est redevable de 38 200 euros de TVA au titre du mois de septembre"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Operation (c) - Art. 271 CGI : fondement du droit a deduction (la TVA deductible doit etre exigible chez le prestataire). La copie 6 cite explicitement l'art. 271",
+            "linked_article": "code_general_des_impots:271",
+            "sources": ["copie_iej"],
+            "why": "La grille ne cite pas explicitement l'art. 271 mais l'implique. La copie 6 et la copie 20 le citent comme fondement du droit a deduction"
+          },
+          {
+            "text": "Operation (d) - Valeur d'imposition : la valeur en douane + taxes afferentes constitue la base taxable (art. 292 CGI)",
+            "linked_article": "code_general_des_impots:292",
+            "sources": ["copie_iej"],
+            "why": "La copie 6 cite l'art. 292. La grille evoque implicitement la base (100 000 x 20 %) sans citer l'article"
+          },
+          {
+            "text": "Operation (e) - Art. 266 CGI : la TVA est collectee sur le prix HT, comprenant l'ensemble des sommes recues en contrepartie",
+            "linked_article": "code_general_des_impots:266",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 25 sur la base d'imposition. Grille silencieuse"
+          },
+          {
+            "text": "Operation (a) - L'operation de prelevement n'est pas onereuse et n'entre normalement pas dans le champ ; l'art. 257 II CGI realise une assimilation legale qui permet l'imposition au titre de la LASM",
+            "linked_article": "code_general_des_impots:257",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "why": "Nuance explicite dans la copie 20 et copie 25 : distinction entre champ d'application de droit commun (titre onereux) et assimilation legale par l'art. 257 II"
+          },
+          {
+            "text": "Operation (b) - L'operation (absence d'exigibilite) n'entraine pas non plus la remise en cause du droit a deduction initial sur la machine detruite (principe de definitivite de la deduction)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "why": "Point subtil de la grille non repris par toutes les copies"
+          },
+          {
+            "text": "Operation (c) - Respect des conditions formelles de deduction : facture conforme a l'art. 289 CGI",
+            "linked_article": "code_general_des_impots:289",
+            "sources": ["copie_iej"],
+            "why": "La copie 25 cite l'art. 289 comme condition formelle de deductibilite. Absent de la grille"
+          },
+          {
+            "text": "Operation (f) - Approche alternative : si l'operation etait qualifiee de livraison de bien avec expedition depuis la France, elle pourrait relever d'une livraison exoneree (art. 262 I CGI, exportation)",
+            "linked_article": "code_general_des_impots:262",
+            "sources": ["copie_iej"],
+            "why": "La copie 20 traite l'operation (f) sur l'angle de l'export exonere (art. 262) en citant CE 15 dec. 2000 Polyclad. La grille retient l'angle prestation de service (art. 259) mais la deux approches menent au meme resultat (hors TVA FR)",
+            "uncertainty_note": "CE 15 dec. 2000 Polyclad cite par la copie 20 ; reference non verifiable avec precision dans les sources fournies"
+          },
+          {
+            "text": "Regime reel normal : la TVA est declaree mensuellement (art. 287, 2 CGI), en reprenant operations imposables et taxe deductible",
+            "linked_article": "code_general_des_impots:287",
+            "sources": ["copie_iej"],
+            "why": "La copie 20 cite explicitement l'art. 287, 2 CGI sur la declaration mensuelle"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Operation (b) - Principe de contrepartie directe pose par la CJCE Apple and Pear Development Council (8 mars 1988, aff. C-102/86) : pas de TVA sans lien direct entre la somme versee et le service individualise rendu",
+            "linked_jp": "CJCE, 8 mars 1988, Apple and Pear Development Council, aff. C-102/86",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Cite par les copies 6 et 25. Absent de la grille qui se contente du principe doctrinal sans citer la jurisprudence fondatrice",
+            "uncertainty_note": "Reference celebre, mais numero d'affaire a verifier avant publication. ECLI : EU:C:1988:120 (a confirmer)"
+          },
+          {
+            "text": "Operation (b) - Doctrine administrative : BOI-TVA-BASE-10-10-50 sur le traitement TVA des indemnites",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 6 et la copie 20. Reference BOFiP utile en pratique"
+          },
+          {
+            "text": "Operation (d) - La reforme du 1er janvier 2022 (autoliquidation DGFiP) : mecanisme de neutralite permettant de collecter et deduire simultanement, effet nul sur la tresorerie",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Cependant, depuis le 1er janvier 2022, la gestion et le recouvrement de la TVA a l'importation sont geres par la Direction generale des finances publiques (DGFiP). Cela permet aux redevables concernes de collecter et deduire simultanement la TVA a l'importation sur la declaration de TVA, sans avance de tresorerie"
+          },
+          {
+            "text": "Operation (f) - L'article 257 ter CGI codifie une methode degagee par la CJUE (ex : CJCE 25 fev. 1999 Card Protection Plan, C-349/96 ; CJUE 27 oct. 2005 Levob, C-41/04) sur les prestations complexes uniques",
+            "linked_jp": "CJCE, 25 fev. 1999, Card Protection Plan, C-349/96",
+            "sources": ["llm_intrinsic"],
+            "why": "Arrets CJUE fondateurs de la doctrine prestation complexe unique. Grille et copies s'y referent implicitement sans citer les decisions",
+            "uncertainty_note": "References canoniques CJUE non citees par la grille ni les copies. A verifier avant integration benchmark (ECLI:EU:C:1999:93 et ECLI:EU:C:2005:649 a confirmer)"
+          },
+          {
+            "text": "Operation (f) - Approche export : les prestations accessoires a une livraison exoneree sont egalement exonerees des lors qu'elles concourent a sa realisation materielle (CE, sect., 15 dec. 2000, SA Polyclad)",
+            "linked_jp": "CE, sect., 15 decembre 2000, SA Polyclad",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 20 sur l'angle alternatif de traitement de l'operation marocaine",
+            "uncertainty_note": "Reference non verifiee dans les sources fournies ; a authentifier (numero de requete)"
+          },
+          {
+            "text": "Operation (a) - Art. 257 II, 1, 1 degre CGI vise specifiquement le prelevement d'un bien de son entreprise par un assujetti pour des besoins prives, lorsque ce bien a ouvert droit a deduction complete ou partielle",
+            "linked_article": "code_general_des_impots:257",
+            "sources": ["copie_iej"],
+            "why": "Precision apportee par les copies 20 et 25 (reference au 1 degre du II de l'art. 257). La grille se contente d'une reference generique"
+          },
+          {
+            "text": "Operation (e) - Definition de la livraison de biens : transfert du pouvoir de disposer du bien corporel comme un proprietaire (art. 256 II CGI)",
+            "linked_article": "code_general_des_impots:256",
+            "sources": ["copie_iej"],
+            "why": "Point de definition rappele par la copie 20 (transfert du pouvoir de disposer du bien corporel comme un proprietaire)"
+          },
+          {
+            "text": "Regime de l'option pour les debits : le prestataire qui opte doit en mentionner l'indication sur ses factures (formalite). Condition d'opposabilite a l'administration",
+            "sources": ["llm_intrinsic"],
+            "why": "Point pratique induit par l'enonce (mention sur facture). Ni la grille ni les copies ne developpent cette formalite"
+          },
+          {
+            "text": "Attention au piege : ne pas confondre exportations (art. 262 I CGI, livraison hors UE exoneree avec droit a deduction) et prestation de service B2B rendue hors UE (art. 259, 1 CGI, hors champ TVA francaise). Le montage (f) tombe sous 259 et non 262 si qualification PS retenue",
+            "linked_article": "code_general_des_impots:259",
+            "sources": ["grille_cnb", "llm_intrinsic"],
+            "why": "Distinction centrale sous-tendue par la grille, que les copies 6 et 20 traitent differemment (copie 20 applique 262, copie 6 applique 259)"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_general_des_impots:256",
+          "code_general_des_impots:257",
+          "code_general_des_impots:259",
+          "code_general_des_impots:269",
+          "code_general_des_impots:271",
+          "code_general_des_impots:291",
+          "code_general_des_impots:293A"
+        ],
+        "optionnels": [
+          "code_general_des_impots:262",
+          "code_general_des_impots:266",
+          "code_general_des_impots:287",
+          "code_general_des_impots:289",
+          "code_general_des_impots:292"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CJCE, 8 mars 1988, Apple and Pear Development Council, aff. C-102/86",
+          "sens_vs_question": "neutre",
+          "importance": 2,
+          "sources": ["copie_iej", "llm_intrinsic"],
+          "why": "Principe de contrepartie directe pour l'assujettissement TVA des sommes percues (pertinent pour indemnite d'assurance)",
+          "uncertainty_note": "Reference celebre mais non citee par la grille. ECLI EU:C:1988:120 a confirmer avant publication"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, sect., 15 decembre 2000, SA Polyclad",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Exoneration des prestations de services accessoires a une livraison exoneree (export) - cite par la copie 20",
+          "uncertainty_note": "Numero de requete non verifie ; a authentifier avant usage"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 25 fev. 1999, Card Protection Plan, C-349/96",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["llm_intrinsic"],
+          "why": "Arret fondateur de la methode de l'operation unique complexe en matiere de TVA, codifie a l'art. 257 ter CGI",
+          "uncertainty_note": "Reference doctrinale classique non citee explicitement dans la grille ni les copies ; a verifier"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Piege 1 - Operation (a) : ne pas oublier que la LASM suppose que l'acquisition initiale ait donne lieu a recuperation de TVA (ici OK). Piege 2 - Operation (b) : tentation de remettre en cause la deduction initiale sur la machine detruite (aucune regularisation exigee). Piege 3 - Operation (d) : ne pas appliquer le regime ancien d'avance de tresorerie (depuis 2022, autoliquidation DGFiP). Piege 4 - Operation (f) : qualification PS vs livraison de bien determinante pour choisir entre art. 259 (hors champ) et art. 262 (exoneration avec droit a deduction). Les deux aboutissent ici a l'absence de TVA FR mais relevent de regimes distincts."
+      },
+      "source_extract": "Monsieur Royal vous demande, en rappelant les regles applicables, le montant de TVA dont la societe sera redevable au titre du mois de septembre compte tenu de ces operations (a a f). (10 points)",
+      "consolidation_notes": "Question tres dense (10 pts). Six operations couvrant l'essentiel du programme TVA : LASM, hors champ, prestation de services avec option debits, importation et autoliquidation, livraison interne, operation complexe internationale. La grille attend le raisonnement correct sur chacune des six operations et la synthese. Comparaison des copies IEJ : copie 6 (13/20) tres propre, cite Apple & Pear, traite bien le (f) comme PS art. 259. Copie 20 (12/20) traite le (f) sur l'angle export art. 262 (approche alternative mais coherente), cite CE Polyclad 15 dec. 2000. Copie 25 (13.75/20) tres complete, cite CJCE 8 mars 1988 et CE 29 juil. 1998 sur les indemnites (la seconde reference non verifiee). La grille reste tres doctrinale et cite peu de JP explicitement - les copies apportent la jurisprudence."
+    },
+    {
+      "id": "CNB-FISCAL-2025-Q2",
+      "branche": "fiscal",
+      "specialisation": "Impot sur le revenu - categories de revenus (traitements et salaires, revenus fonciers, BNC), charges deductibles, foyer fiscal",
+      "question": "M. et Mme Lemoine, maries sous le regime de la separation de biens, vivant a Lyon, souhaitent evaluer leur revenu imposable a l'IR pour 2024. M. Lemoine : salarie d'une societe etablie a Aix-en-Provence (48 000 EUR imposable, 8 000 EUR de frais justifies de train/hotel). Il percoit egalement 18 000 EUR de loyers d'un appartement a Paris en location nue (5 000 EUR travaux d'entretien, 3 000 EUR interets d'emprunt, 10 000 EUR de remboursement du capital, 620 EUR CSG deductible payee en 2024 au titre des revenus fonciers 2023). Il verse 12 000 EUR de pension alimentaire a son fils majeur, etudiant a Paris, non rattache au foyer. Il effectue un don de 1 000 EUR a une association reconnue d'utilite publique. Mme Lemoine : avocate en droit public exercant en entreprise individuelle a Lyon (200 000 EUR d'honoraires encaisses en 2024, 10 000 EUR encaisses en janvier 2025 pour une procedure achevee en dec. 2024, 100 000 EUR de frais justifies). Determiner le(s) revenu(s) net(s) imposable(s) pour 2024.",
+      "perspective": "neutre",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Champ d'application personnel de l'IR (art. 6, 1 CGI) : le contribuable est imposable sur l'ensemble des revenus du foyer fiscal. Champ territorial : art. 4 A CGI (obligation fiscale illimitee si domicile fiscal en France) et art. 4 B CGI (criteres du domicile fiscal)",
+            "linked_article": "code_general_des_impots:6",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il resulte des dispositions du 1 de l'article 6 du code general des impots (CGI) que chaque contribuable est imposable a l'impot sur le revenu, sur l'ensemble des revenus des membres du foyer fiscal (...) L'article 4 A du CGI dispose que les personnes qui ont en France leur domicile fiscal sont passibles de l'impot sur le revenu en raison de l'ensemble de leurs revenus"
+          },
+          {
+            "text": "Composition du foyer fiscal : epoux maries en separation de biens vivant sous le meme toit = imposition commune. Le fils etudiant n'etant pas rattache sur option, n'appartient pas au foyer. Foyer = M. + Mme Lemoine",
+            "linked_article": "code_general_des_impots:6",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "En l'espece, les epoux sont maries sous le regime de la separation de bien et vivent sous le meme toit. Ils forment donc un foyer fiscal. Le fils de Monsieur Lemoine etant etudiant aurait sans doute pu etre rattache au foyer sur option mais l'enonce precise que ce n'est pas le cas"
+          },
+          {
+            "text": "Salaire de M. Lemoine - Categorie des traitements et salaires (art. 79 et s. CGI). Deux regimes de determination du net imposable : abattement forfaitaire de 10 % (de droit) ou option pour les frais reels",
+            "linked_article": "code_general_des_impots:79",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En vertu des articles 79 et suivants du Code general des impots, les remunerations percues a raison d'une activite salariee entrent dans la categorie des traitements et salaires. Deux regimes fiscaux de determination du salaire net imposable sont susceptibles de s'appliquer. Un abattement forfaitaire de 10% pour frais professionnels qui s'applique de droit ou une option pour les frais reels"
+          },
+          {
+            "text": "Salaire - Art. 83 CGI (frais reels) : lorsque la distance domicile-travail est superieure a 40 km, la deduction est limitee aux 40 premiers km, sauf circonstances particulieres notamment liees a l'emploi",
+            "linked_article": "code_general_des_impots:83",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'article 83 du CGI prevoit que lorsque la distance entre le domicile et l'emploi est superieure a 40 km, la deduction admise porte sur les quarante premiers kilometres, sauf circonstances particulieres notamment liees a l'emploi justifiant une prise en compte complete"
+          },
+          {
+            "text": "Salaire - Doctrine administrative : lorsque l'un des epoux doit parcourir > 40 km mais que l'autre exerce son activite a proximite du domicile commun, le premier peut deduire l'integralite de ses frais. Mme Lemoine travaille a Lyon (residence commune), donc M. Lemoine peut deduire ses 8 000 EUR de frais reels",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "La doctrine administrative prevoit cependant clairement que pour qualifier la distance separant le domicile du lieu de travail, il est tenu compte de la localisation differente du travail de chacun des epoux. En particulier, lorsque l'un des epoux doit parcourir une distance superieure a quarante kilometres pour se rendre a son travail mais que l'autre exerce son activite professionnelle a proximite du domicile commun, cette derniere circonstance permet au premier de deduire l'ensemble de ses frais de deplacement"
+          },
+          {
+            "text": "Salaire - Arbitrage : abattement 10 % = 4 800 EUR, frais reels = 8 000 EUR. L'option pour les frais reels est plus avantageuse. Salaire net imposable : 48 000 - 8 000 = 40 000 EUR",
+            "linked_article": "code_general_des_impots:83",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "Son salaire net imposable est donc de 40 000 euros (48 000 - 8000)"
+          },
+          {
+            "text": "Loyers - Categorie des revenus fonciers (art. 14 CGI) pour les revenus de proprietes batiees loues nues",
+            "linked_article": "code_general_des_impots:14",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Conformement aux dispositions de l'article 14 du CGI, sont compris pour l'etablissement de l'impot sur le revenu, dans la categorie des revenus fonciers, les revenus des proprietes baties et des proprietes non baties de toute nature"
+          },
+          {
+            "text": "Loyers - Regime micro-foncier (art. 32 CGI) : abattement de 30 % si revenu brut foncier < 15 000 EUR. En l'espece, 18 000 EUR > 15 000 EUR : regime reel de droit",
+            "linked_article": "code_general_des_impots:32",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "L'article 32 du code general des impots (CGI) prevoit en effet un regime d'imposition simplifie, dit du micro foncier, pour les revenus fonciers. Ce regime est cependant reserve aux contribuables dont le revenu brut foncier annuel n'excede pas 15 000"
+          },
+          {
+            "text": "Loyers - Regime reel : deduction des charges liees (interets d'emprunt, travaux d'entretien). Le remboursement du capital n'est pas une charge deductible. Revenu net foncier : 18 000 - 5 000 - 3 000 = 10 000 EUR",
+            "linked_article": "code_general_des_impots:31",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le regime reel consiste a deduire du revenu foncier, pour chaque immeuble donne a bail, les charges ayant concouru a l'obtention de ce revenu. En l'espece, les charges sont les suivantes : les interets d'emprunt et les travaux. Le remboursement du capital ne constitue pas une charge deductible. Le revenu net foncier est donc de 10.000 euros (18.000 - 8000 euros)"
+          },
+          {
+            "text": "BNC - Mme Lemoine avocate = BNC (art. 92 CGI). Regime micro-BNC applicable si CA < 77 700 EUR (art. 102 ter CGI). En l'espece 200 000 > 77 700 : regime reel (declaration controlee)",
+            "linked_article": "code_general_des_impots:92",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En vertu de l'article 92 du CGI, les revenus des professions liberales relevent de la categorie des benefices non commerciaux. Deux regimes sont susceptibles de s'appliquer, le regime reel et le regime du micro. En vertu de l'article 102 ter du CGI, le regime du micro n'est applicable qu'a la condition que le chiffre d'affaires n'excede pas 77.700 euros"
+          },
+          {
+            "text": "BNC - Regime reel (art. 93 CGI) : benefice = excedent des recettes totales sur les depenses necessitees par l'exercice de la profession. Comptabilite de caisse de principe (sauf option pour comptabilite d'engagement) : seules les recettes effectivement encaissees dans l'annee sont imposees",
+            "linked_article": "code_general_des_impots:93",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "En vertu de l'article 93 du CGI, le benefice a retenir dans les bases de l'impot sur le revenu est constitue par l'excedent des recettes totales sur les depenses necessitees par l'exercice de la profession. Les contribuables exercant une activite relevant des benefices non commerciaux relevent ainsi d'une comptabilite de caisse (sauf option pour la comptabilite d'engagement)"
+          },
+          {
+            "text": "BNC - Application : les 10 000 EUR encaisses en janvier 2025 relevent de l'exercice 2025, non de 2024 (comptabilite de caisse). BNC 2024 : 200 000 - 100 000 = 100 000 EUR",
+            "linked_article": "code_general_des_impots:93",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "En l'espece, Madame Lemoine a encaisse 200 000 euros durant l'annee 2024 et les 10 000 euros encaisses au cours du mois de janvier auront un impact sur son revenu de 2025 meme si la procedure concernee a eu lieu en 2024. Madame Lemoine pouvant justifier de 100 000 euros de frais deductibles, son revenu net imposable dans la categorie des BNC est egal a 100 000 euros"
+          },
+          {
+            "text": "Revenu brut global : somme des revenus categoriels = 40 000 (TS) + 10 000 (RF) + 100 000 (BNC) = 150 000 EUR",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "Pour obtenir le revenu brut global imposable soumis au bareme progressif de l'IR, il faut faire la somme des revenus categoriels calcules selon leurs modalites respectives (...) 40 000 + 10 000 + 100 000 = 150 000 euros"
+          },
+          {
+            "text": "Charge deductible - CSG sur revenus fonciers : une part est deductible du revenu global (art. L.136-6 CSS), avec decalage d'un an (CSG payee en 2024 sur revenus fonciers 2023). Deduction de 620 EUR en 2024",
+            "linked_article": "code_de_la_securite_sociale:L136-6",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Une part de la CSG supportee sur les revenus fonciers est deductible du revenu global (art. L136-6 code la securite sociale). Cette deduction s'opere avec un decalage (...) Cet acquittement a eu lieu en 2024 et la somme de 620 euros est donc deductible du revenu global au titre de l'annee 2024"
+          },
+          {
+            "text": "Charge deductible - Pension alimentaire a enfant majeur (art. 156, II, 2 CGI) : deductible si enfant detache du foyer + sans ressources. Plafonnee aux depenses reelles dans la limite de 6 794 EUR par enfant (art. 196 B CGI renvoyant a l'abattement de rattachement). Sur 12 000 verses, seuls 6 794 EUR deductibles",
+            "linked_article": "code_general_des_impots:156",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "Les pensions alimentaires versees a un proche sont deductibles des revenus imposables sous certaines conditions (art. 156, II, 2 du CGI) (...) lorsque l'enfant beneficiaire ne vit plus chez ses parents (...) les depenses reellement engagees et justifiees peuvent etre deduites dans la limite de 6 794 euros par enfant (art. 196 B du CGI). La pension versee, bien que deductible, se verra donc appliquee ce plafond et seuls 6 794 euros seront deductibles"
+          },
+          {
+            "text": "Don (art. 200 CGI) : le don de 1 000 EUR ouvre droit a une reduction d'IMPOT (66 %, plafond 20 % du revenu imposable), non a une deduction du revenu imposable. Piege : distinction reduction d'impot vs charge deductible. A ignorer a ce stade du calcul",
+            "linked_article": "code_general_des_impots:200",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "En regle generale, les dons ouvrent droit a une reduction d'impot sur le revenu (66 % du montant verse, dans la limite de 20 % du revenu imposable). En l'espece il nous est demande de calculer le revenu imposable et non l'impot sur le revenu, cette depense ne doit donc pas etre prise en compte a ce stade"
+          },
+          {
+            "text": "Synthese : revenu brut global 150 000 - charges globales 7 414 (620 CSG + 6 794 pension) = revenu net imposable 142 586 EUR",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "Revenu imposable brut : 150 000 euros. Charges globales : 7414. Revenu net imposable : 142 586 euros"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Conditions cumulatives de deduction de la pension (art. 156 II 2 CGI) : enfant detache du foyer ET sans ressources suffisantes. Le fils etudiant a Paris (non rattache, pas de travail indique) remplit les deux",
+            "linked_article": "code_general_des_impots:156",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "La pension versee a un enfant majeur est ainsi deductible si elle respecte les deux conditions cumulatives suivantes : L'enfant est detache du foyer fiscal de son parent versant la pension, L'enfant ne peut pas satisfaire a ses besoins elementaires par son travail ou est sans ressource"
+          },
+          {
+            "text": "Plafond de pension (6 794 EUR en 2024) cite comme montant precis par la grille - traduit l'actualisation de l'abattement de rattachement art. 196 B CGI",
+            "linked_article": "code_general_des_impots:196B",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "dans la limite de 6 794 euros par enfant (art. 196 B du CGI)"
+          },
+          {
+            "text": "BNC - Principe de deductibilite des depenses : seules les depenses NECESSITEES par l'exercice de la profession sont deductibles (art. 93, I CGI), contrairement aux BIC (art. 39) qui admettent toutes charges",
+            "linked_article": "code_general_des_impots:93",
+            "sources": ["grille_cnb"],
+            "why": "Distinction cle entre 93, I CGI (BNC) et 39 CGI (BIC) - sous-tend la Q3 sur l'acte anormal de gestion"
+          },
+          {
+            "text": "Seuil micro-BNC et abattement forfaitaire de 34 % (a defaut d'option) - non applicable ici vu le CA",
+            "linked_article": "code_general_des_impots:102",
+            "sources": ["copie_iej"],
+            "why": "La copie 25 rappelle le taux de 34 % de l'abattement micro-BNC. Grille silencieuse sur ce taux"
+          },
+          {
+            "text": "Option pour la comptabilite d'engagement (art. 93 A CGI) - si elle avait ete exercee, les 10 000 EUR de janvier 2025 auraient pu etre rattaches a l'exercice 2024 (creance acquise en dec. 2024)",
+            "linked_article": "code_general_des_impots:93A",
+            "sources": ["copie_iej"],
+            "why": "Nuance apportee par la copie 25 : alternative du regime d'engagement. Grille silencieuse"
+          },
+          {
+            "text": "Deficit foncier (art. 156, I, 3 CGI) - imputation sur le revenu global limitee a 10 700 EUR (hors interets d'emprunt), surplus imputable sur revenus fonciers des 10 annees suivantes. Non applicable ici (revenu foncier positif)",
+            "linked_article": "code_general_des_impots:156",
+            "sources": ["copie_iej"],
+            "why": "Mentionne par la copie 6 et copie 25 en cas de deficit - sans incidence ici mais connaissance attendue"
+          },
+          {
+            "text": "Calcul detaille de la CSG deductible : la CSG totale sur revenus fonciers est de 17,2 % mais seule une fraction est deductible (6,8 % au taux actuel). Le montant de 620 EUR donne dans l'enonce correspond deja a la part deductible",
+            "linked_article": "code_de_la_securite_sociale:L136-6",
+            "sources": ["copie_iej"],
+            "why": "Precision de la copie 25 sur le regime des prelevements sociaux. Grille donne directement le montant"
+          },
+          {
+            "text": "Montant exact des 10 % forfaitaires : l'abattement 10 % pour frais professionnels est soumis a un plancher et a un plafond annuel (revalorises chaque annee)",
+            "linked_article": "code_general_des_impots:83",
+            "sources": ["copie_iej"],
+            "why": "Point evoque par la copie 20. Grille silencieuse sur les bornes"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Criteres du domicile fiscal (art. 4 B CGI) : foyer, sejour principal, activite professionnelle, centre des interets economiques. Rappeles par la grille a titre liminaire",
+            "linked_article": "code_general_des_impots:4B",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "L'article 4B fixe les criteres de droit interne pour determiner le domicile fiscal"
+          },
+          {
+            "text": "Art. 196 A bis CGI : enfants recueillis a charge - hors scope mais mentionne par la grille dans le rappel liminaire du foyer fiscal",
+            "linked_article": "code_general_des_impots:196A",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "tant en raison de ses benefices et revenus personnels que de ceux de ses enfants et des personnes considerees comme etant a sa charge au sens de l'article 196 du CGI et de l'article 196 A bis du CGI"
+          },
+          {
+            "text": "Jurisprudence sur le caractere normal de la distance domicile-travail : CE 13 mai 1987 (cite par la copie 20) - criteres d'appreciation de la circonstance particuliere justifiant la deduction au-dela de 40 km",
+            "linked_jp": "CE, 13 mai 1987",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 20. Grille se contente de la doctrine administrative",
+            "uncertainty_note": "Numero de decision non cite par la copie ; reference a authentifier avant publication"
+          },
+          {
+            "text": "Pension alimentaire deductible = revenu imposable pour le beneficiaire (TS au titre de l'art. 79 ou BNC selon nature). Symetrie du traitement",
+            "linked_article": "code_general_des_impots:79",
+            "sources": ["copie_iej"],
+            "why": "Copie 6 rappelle que la pension est un revenu imposable symetrique pour le fils"
+          },
+          {
+            "text": "Plafond de rattachement vs plafond de pension : les 6 794 EUR correspondent au montant de l'abattement pour rattachement d'un enfant majeur (art. 196 B CGI), applique par parallelisme a la pension",
+            "linked_article": "code_general_des_impots:196B",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "why": "Subtilite de la grille (renvoi a 196 B CGI pour le plafond de pension)"
+          },
+          {
+            "text": "Art. 197 CGI - bareme progressif de l'IR par tranches, quotient familial, plafonnement des effets du quotient familial, decote. Etape ulterieure au calcul du revenu net imposable, hors scope strict de la question mais citee par la copie 6",
+            "linked_article": "code_general_des_impots:197",
+            "sources": ["copie_iej"],
+            "why": "Copie 6 precise les etapes suivantes (bareme, quotient, decote). Grille s'arrete au revenu net imposable"
+          },
+          {
+            "text": "Art. 13 CGI - definition structurelle du revenu net imposable (somme des revenus categoriels moins charges deductibles)",
+            "linked_article": "code_general_des_impots:13",
+            "sources": ["copie_iej"],
+            "why": "Copie 6 cite l'art. 13, 2 pour structurer le raisonnement global"
+          },
+          {
+            "text": "Prelevements sociaux sur revenus fonciers au taux global de 17,2 % (CSG 9,2 % + CRDS 0,5 % + prelevement de solidarite 7,5 %) - distinct de l'IR mais a mentionner pour completude",
+            "linked_article": "code_de_la_securite_sociale:L136-6",
+            "sources": ["copie_iej"],
+            "why": "Copie 25 mentionne les 17,2 %. Point de completude sur la fiscalite patrimoniale"
+          },
+          {
+            "text": "Piege : le don doit etre traite comme reduction d'IMPOT (calcul ulterieur au revenu imposable) et non comme charge deductible. La grille attribue 0,5 point au fait d'ecarter explicitement le don du calcul du revenu imposable",
+            "linked_article": "code_general_des_impots:200",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "Non prise en compte du don (0,5 point)"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_general_des_impots:4A",
+          "code_general_des_impots:4B",
+          "code_general_des_impots:6",
+          "code_general_des_impots:14",
+          "code_general_des_impots:32",
+          "code_general_des_impots:79",
+          "code_general_des_impots:83",
+          "code_general_des_impots:92",
+          "code_general_des_impots:93",
+          "code_general_des_impots:102",
+          "code_general_des_impots:156",
+          "code_general_des_impots:196B",
+          "code_general_des_impots:200",
+          "code_de_la_securite_sociale:L136-6"
+        ],
+        "optionnels": [
+          "code_general_des_impots:13",
+          "code_general_des_impots:31",
+          "code_general_des_impots:93A",
+          "code_general_des_impots:196A",
+          "code_general_des_impots:197"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CE, 13 mai 1987 (sur la distance domicile-travail)",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Cite par la copie 20 sur le caractere deductible des frais de transport au-dela de 40 km",
+          "uncertainty_note": "Numero non cite par la copie ; reference a authentifier"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Piege 1 - Don : ne pas le deduire du revenu imposable (reduction d'impot, pas charge). Piege 2 - Pension : plafond de 6 794 EUR (et non les 12 000 verses). Piege 3 - Honoraires de janvier 2025 : non rattaches a 2024 (comptabilite de caisse en BNC de droit). Piege 4 - Remboursement du capital d'emprunt : non deductible des revenus fonciers. Piege 5 - Distance 40 km : exception de l'art. 83 CGI lorsque le conjoint travaille a proximite du domicile commun, permet la deduction integrale."
+      },
+      "source_extract": "Le couple souhaite savoir quel(s) va(vont) etre leur(s) revenu(s) net(s) imposable(s) pour 2024. (8 points)",
+      "consolidation_notes": "Question tres structuree (8 pts) portant sur 3 categories de revenus + 2 charges globales + 1 reduction d'impot a ecarter. La grille detaille finement les points de bareme : 1 pt champ d'application, 1,5 TS, 1,5 RF, 1,5 BNC, 1 CSG, 0,5 pension, 0,5 don (piege), 0,5 synthese. Copie 6 (13/20) arrive a un resultat proche (136 406) mais conseille a tort de garder l'abattement 10 % (manque l'exception 40 km). Copie 20 (12/20) arrive a 132 586 environ (salaire non optimise). Copie 25 (13,75/20) tres propre, aboutit a 150 000 - 6 794 mais oublie la CSG deductible."
+    },
+    {
+      "id": "CNB-FISCAL-2025-Q3",
+      "branche": "fiscal",
+      "specialisation": "Acte anormal de gestion - application aux titulaires de BNC",
+      "question": "Mme Lemoine (avocate, BNC regime reel) a facture a un confrere/ami une procedure bien en deca du prix habituel. Son frere comptable soutient que l'Administration fiscale pourrait reintegrer dans son resultat imposable le montant des recettes auxquelles elle aurait du pretendre, sur le fondement de la theorie de l'acte anormal de gestion. Confirmer ou infirmer ce risque.",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "La theorie de l'acte anormal de gestion n'est PAS applicable aux titulaires de BNC (Conseil d'Etat, 23 decembre 2013, n 350075, Sarl Nachez) - position de principe",
+            "linked_jp": "CE, 23 decembre 2013, n 350075",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le Conseil d'Etat a ecarte, dans une decision du 23 decembre 2013 (CE, 23 decembre 2013, n 350075), l'application de la theorie de l'acte anormal de gestion aux titulaires de BNC",
+            "uncertainty_note": "Numero de decision cite par la grille (350075) - a authentifier. La jurisprudence CE 23 dec. 2013 rejetant l'AAG pour BNC est doctrinalement etablie"
+          },
+          {
+            "text": "Faculte substituee : l'Administration peut neanmoins reintegrer le montant des recettes auxquelles le contribuable BNC a renoncees, des lors que la renonciation (1) est depourvue de contrepartie equivalente, (2) n'est pas conforme aux regles ou usages de la profession, (3) n'est justifiee par aucun autre motif legitime",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le Conseil d'Etat a dans le meme temps admis la faculte pour l'Administration de reintegrer dans son resultat imposable le montant des recettes auxquelles le contribuable a renoncees, des lors que cette renonciation est depourvue de contrepartie equivalente pour lui, qu'elle ne peut etre regardee comme conforme aux regles ou usages de sa profession ou qu'elle n'est justifiee par aucun autre motif legitime"
+          },
+          {
+            "text": "Fondement textuel de la distinction : art. 93, I CGI (BNC) n'autorise la deduction que des depenses NECESSITEES PAR L'EXERCICE DE LA PROFESSION, contrairement a l'art. 39 CGI (BIC) qui admet TOUTES CHARGES. Cette difference textuelle justifie l'exclusion de la theorie de l'AAG des BNC",
+            "linked_article": "code_general_des_impots:93",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Cette position decoule notamment de la lettre des dispositions de l'article 93, I du CGI, qui n'autorisent la deduction que des depenses necessitees par l'exercice de la profession, contrairement a celles de l'article 39 du CGI, applicables au BIC, qui se bornent a prevoir que le benefice est etabli sous deduction de toutes charges"
+          },
+          {
+            "text": "Application aux faits : Mme Lemoine est imposee en BNC. Pas de risque de reintegration sur le fondement de l'AAG (inapplicable). Par ailleurs, le faible paiement demande a un confrere doit etre regarde comme conforme aux regles ou usages de la profession d'avocat",
+            "linked_article": "code_general_des_impots:93",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0.5,
+            "extract_from_grille": "En l'espece, Madame Lemoine est imposee dans la categorie des BNC. Elle n'a ainsi pas de risque de voir reintegrer la somme en question dans son resultat sur le fondement de l'acte anormal de gestion. Par ailleurs, au-dela de cette question de la categorie permettant une telle reintegration, le faible paiement demande a un confrere doit etre regardee comme conforme aux regles ou usages de la profession. Madame Lemoine ne court donc pas de risque sur ce point"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Definition generale de l'acte anormal de gestion : acte par lequel une entreprise s'appauvrit a des fins etrangeres a son interet propre (jurisprudence constante du CE, notamment CE 21 dec. 2018 n 402006 Societe Croe Suisse pour la doctrine moderne applicable aux capital)",
+            "linked_jp": "CE, 21 decembre 2018, n 402006, Societe Croe Suisse",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Cite par les copies 20 et 25. Arret recent du CE qui reformule la definition de l'AAG. Pertinent pour poser la definition avant de l'ecarter ici",
+            "uncertainty_note": "Numero de decision 402006 a verifier ; la reference au Croe Suisse 2018 est doctrinalement connue"
+          },
+          {
+            "text": "Distinction BIC vs BNC : la theorie de l'AAG est nee dans le domaine BIC et s'applique pleinement aux societes de capitaux (IS). Son exclusion du champ BNC est une exception logique fondee sur le texte de l'art. 93",
+            "linked_article": "code_general_des_impots:39",
+            "sources": ["grille_cnb", "copie_iej"],
+            "why": "Point doctrinal important. Grille y consacre un paragraphe. Copie 25 le formule mais conclut a tort a l'application de l'AAG aux BNC"
+          },
+          {
+            "text": "Conformite aux usages de la profession d'avocat : la pratique de tarifs reduits entre confreres est courante et ne constitue pas un acte anormal, meme en presence de l'AAG",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "le faible paiement demande a un confrere doit etre regardee comme conforme aux regles ou usages de la profession"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Jurisprudence historique sur la liberte de gestion : arret Dupont, CE 7 juil. 1958, n 35977 - posant le principe de liberte de gestion de l'entreprise. Applicable en matiere de BIC",
+            "linked_jp": "CE, 7 juillet 1958, n 35977, Dupont",
+            "sources": ["copie_iej", "llm_intrinsic"],
+            "why": "Cite par la copie 6 comme fondement jurisprudentiel de la liberte de gestion. Arret classique mais non cite par la grille",
+            "uncertainty_note": "Reference doctrinale classique ; numero exact a verifier avant publication"
+          },
+          {
+            "text": "Extension jurisprudentielle : CE 22 juillet 2022 a potentiellement etendu la theorie de l'AAG a d'autres situations (cite par la copie 25). A verifier",
+            "linked_jp": "CE, 22 juillet 2022",
+            "sources": ["copie_iej"],
+            "why": "Cite par la copie 25 mais sans references precises et dans un sens oriente (extension aux BNC) CONTRAIRE a la position de la grille",
+            "uncertainty_note": "Reference non verifiee. La copie 25 l'utilise pour conclure que l'AAG s'applique aux BNC, ce que la grille rejette explicitement. Discordance manifeste - la grille fait foi"
+          },
+          {
+            "text": "En cas d'application de l'AAG (hypothese exclue ici mais instructive), les sanctions eventuelles : redressement + penalites art. 1729 CGI (40 % pour manquement delibere, 80 % pour manoeuvres frauduleuses)",
+            "linked_article": "code_general_des_impots:1729",
+            "sources": ["copie_iej"],
+            "why": "Mentionne par la copie 25. Hors scope strict mais culture fiscale pertinente",
+            "uncertainty_note": "Ne pas appliquer les penalites ici : l'AAG est ecarte en BNC"
+          },
+          {
+            "text": "Option pour comptabilite d'engagement (art. 93 A CGI) : certains auteurs soutiennent que la theorie de l'AAG serait applicable aux BNC ayant opte pour cette comptabilite. Position minoritaire, non retenue par la grille",
+            "linked_article": "code_general_des_impots:93A",
+            "sources": ["copie_iej"],
+            "why": "Nuance apportee par la copie 25. La grille ne distingue pas et exclut l'AAG en BNC sans condition",
+            "uncertainty_note": "Position doctrinale minoritaire a manier avec prudence"
+          },
+          {
+            "text": "Solution pratique pour securiser le dossier : documenter les motifs legitimes du prix reduit (entraide professionnelle, prospection d'une relation d'affaires, reciprocite) pour prevenir toute reintegration meme sous l'angle de l'art. 93, I CGI",
+            "sources": ["llm_intrinsic"],
+            "why": "Conseil pratique decoulant de la structure du test CE 23 dec. 2013 : motif legitime / conformite aux usages / absence de contrepartie"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_general_des_impots:93"
+        ],
+        "optionnels": [
+          "code_general_des_impots:39",
+          "code_general_des_impots:93A",
+          "code_general_des_impots:1729"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CE, 23 decembre 2013, n 350075",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret de principe ecartant l'application de la theorie de l'acte anormal de gestion aux titulaires de BNC, tout en ouvrant la voie a une reintegration fondee sur l'art. 93 I CGI sous trois conditions cumulatives",
+          "uncertainty_note": "Numero de decision 350075 cite par la grille ; a authentifier avant publication"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 21 decembre 2018, n 402006, Societe Croe Suisse",
+          "sens_vs_question": "neutre",
+          "importance": 2,
+          "sources": ["copie_iej", "llm_intrinsic"],
+          "why": "Arret recent du CE reformulant la definition generale de l'acte anormal de gestion (appauvrissement volontaire contraire a l'interet propre de l'entreprise) - applicable aux societes de capitaux",
+          "uncertainty_note": "Numero de decision a verifier ; cite par les copies 20 et 25"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 7 juillet 1958, arret Dupont",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Arret historique sur la liberte de gestion de l'entreprise. Invoque par la copie 6 en soutien de la non-reintegration",
+          "uncertainty_note": "Reference ancienne, numero exact a verifier"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Piege principal - Ne pas appliquer la theorie de l'AAG aux BNC : elle en est exclue depuis CE 23 dec. 2013. La copie 25 tombe dans ce piege en concluant que l'AAG peut etre caracterise. Piege 2 - Ne pas confondre avec la faculte de reintegration fondee sur l'art. 93, I CGI (depenses necessitees par l'exercice de la profession), qui existe mais suppose : (1) absence de contrepartie equivalente, (2) non-conformite aux usages de la profession, (3) absence d'autre motif legitime. Piege 3 - Tarif reduit entre confreres = usage professionnel, donc non reintegrable meme sous l'angle de l'art. 93."
+      },
+      "source_extract": "Par ailleurs, Madame Lemoine vous alerte sur le fait qu'elle s'est occupee d'une procedure concernant un confrere, qui est egalement un ami, et qu'elle lui a facture une somme bien inferieure a ce qu'elle aurait demande a un client traditionnel. Elle a discute de cette situation avec son frere, comptable de metier, qui se pique de connaitre un peu de droit fiscal. Celui-ci soutient que l'Administration fiscale pourrait reintegrer dans son resultat imposable le montant des recettes qu'elle aurait normalement du percevoir pour cette procedure en se fondant sur la theorie de l'acte anormal de gestion. Elle vous demande de confirmer ou infirmer ce risque. (2 points)",
+      "consolidation_notes": "Question courte (2 pts) mais a piege. La grille est tres nette : AAG exclu en BNC (CE 23 dec. 2013 n 350075) + conformite aux usages de la profession. Comparaison des copies : copie 6 invoque Dupont 1958 (liberte de gestion, BIC) mais ne cite pas CE 2013 sur l'exclusion des BNC - lacune importante. Copie 20 tombe dans le piege en citant CE Croe Suisse 2013 (confusion entre deux arrets CE de 2013) et conclut a l'application de l'AAG. Copie 25 tombe egalement dans le piege : cite CE 21/12/2018 Croe Suisse + CE 22/07/2022 et conclut a une application de l'AAG, en contradiction avec la position de la grille. Aucune des trois copies ne cite CE 23 dec. 2013 n 350075 (arret de reference). Ecart significatif entre le plafond du barème et les meilleures copies."
+    }
+  ]
+}

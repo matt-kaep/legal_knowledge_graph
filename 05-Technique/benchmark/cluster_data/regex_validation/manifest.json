@@ -1,0 +1,39 @@
+{
+  "version": "1",
+  "seed": 42,
+  "min_text_len": 500,
+  "n_per_jurisdiction": {
+    "CC": 50,
+    "CA": 25,
+    "TJ": 25
+  },
+  "n_total": 100,
+  "source_dir": "/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph/05-Technique/benchmark/database-judilibre-enrichie",
+  "stats": {
+    "CC": {
+      "n": 50,
+      "text_len_min": 870,
+      "text_len_median": 3381,
+      "text_len_max": 32725,
+      "with_code_article_pairs": 45,
+      "code_article_pairs_total": 99
+    },
+    "CA": {
+      "n": 25,
+      "text_len_min": 1636,
+      "text_len_median": 9974,
+      "text_len_max": 112579,
+      "with_code_article_pairs": 24,
+      "code_article_pairs_total": 82
+    },
+    "TJ": {
+      "n": 25,
+      "text_len_min": 3249,
+      "text_len_median": 10782,
+      "text_len_max": 44876,
+      "with_code_article_pairs": 23,
+      "code_article_pairs_total": 135
+    }
+  },
+  "file_size_mb": 1.21
+}

@@ -1,0 +1,582 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit social (consolide)",
+    "source_path": "data/cnb-crfpa/2025/cas-pratiques.pdf (pages 10-12)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Droit social (Commission nationale - 3 septembre 2025, diffusion Cap'Barreau)",
+      "Meilleures copies IEJ Strasbourg 2025 - droit_social_3, droit_social_7, droit_social_8 (scans manuscrits, non OCRises faute de modele Tesseract francais disponible localement)"
+    ],
+    "generated_by": "Claude (Opus 4.7 1M, consolidation run direct)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-03",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_relations_individuelles": 9,
+        "Q2_accident_trajet": 4,
+        "Q3_relations_collectives": 7
+      },
+      "documents_autorises": [
+        "Code du travail : Dalloz, LexisNexis",
+        "Code de la securite sociale : Dalloz, LexisNexis"
+      ]
+    },
+    "consolidation_global_notes": "Les 3 copies IEJ (scans manuscrits issus de TOSHIBA e-STUDIO / PDF24) ne contiennent aucune couche texte et ne sont pas exploitables via pdftotext. Une tentative d'OCR Tesseract (langue anglaise uniquement installee localement) n'a pas permis d'extraire de maniere fiable les citations d'articles ou de jurisprudence. La rubrique est donc construite a partir de la grille officielle CNB (source premiere, autoritative) completee par des points de culture juridique (source llm_intrinsic) clairement identifies. Toute reexecution devra idealement inclure un OCR francais (ocrmypdf -l fra ou Azure DI/Mistral OCR) pour consolider avec les copies."
+  },
+  "questions": [
+    {
+      "id": "CNB-SOCIAL-2025-Q1",
+      "branche": "social",
+      "specialisation": "Droit du travail - relations individuelles : modification du contrat, discrimination / resiliation judiciaire, primes et greve",
+      "question": "L'entreprise TRANSFRAIS (218 salaries, 4 sites) rencontre trois difficultes. (a) M. Garcia, agent des services incendie en poste de nuit, refuse de travailler de jour (disposition conventionnelle permettant l'alternance jour/nuit) en invoquant la presence aupres de sa fille handicapee a 80 % ; l'employeur envisage un licenciement pour faute grave. (b) Mme Kaddouche, victime de propos racistes de son superieur hierarchique lors d'un repas de Noel du CSE, saisit le conseil de prud'hommes en resiliation judiciaire aux torts de l'employeur. (c) Une prime exceptionnelle a ete versee aux salaries non-grevistes pour surcroit de travail et tache hors contrat. Pensez-vous que l'on puisse reprocher une faute grave a M. Garcia ? L'action en resiliation judiciaire de Mme Kaddouche a-t-elle des chances d'aboutir ? La prime exceptionnelle est-elle contestable ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Distinguer modification du contrat de travail vs simple changement des conditions de travail : le changement d'horaires de nuit a jour n'est en principe qu'un changement des conditions de travail, mais une disposition conventionnelle peut expressement qualifier la mesure (alternance jour/nuit) comme relevant du pouvoir de direction, reduisant la capacite de resistance du salarie",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le salarie risque d'avancer qu'il s'agit d'une modification de son contrat de travail... le changement d'horaires ne constitue pas en principe une modification du contrat de travail... la qualification de changement des conditions de travail est retenue par une disposition conventionnelle, ce qui reduit considerablement la capacite de resistance du salarie"
+          },
+          {
+            "text": "Le refus d'un changement des conditions de travail ne constitue pas necessairement une faute grave lorsque le salarie justifie d'obligations familiales imperieuses ou d'une atteinte excessive a sa vie personnelle et familiale",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la Cour de cassation n'assimile pas toujours le refus d'un changement des conditions de travail a une faute grave, lorsque le salarie peut justifier d'une situation personnelle et familiale expliquant son refus (obligations familiales imperieuses)"
+          },
+          {
+            "text": "Application de l'arret Cass. soc. 29 mai 2024 n 22-21.814 : le refus de passer d'un horaire de nuit a un horaire de jour ne constitue pas une cause reelle et serieuse de licenciement si ce changement porte une atteinte excessive au droit au respect de la vie personnelle et familiale et est incompatible avec des obligations familiales imperieuses - risque de requalification du licenciement pour faute grave en licenciement sans cause reelle et serieuse",
+            "linked_jp": "Cass. soc., 29 mai 2024, n 22-21.814",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "C'est ce que la Cour de cassation a retenu dans une affaire similaire le 29 mai 2024 (n 22-21814) : le refus du salarie de passer d'un horaire de nuit a un horaire de jour, ne constitue pas une cause reelle et serieuse de licenciement si ce changement porte une atteinte excessive a son droit au respect de sa vie personnelle et familiale et est incompatible avec des obligations familiales imperieuses"
+          },
+          {
+            "text": "Principe de non-discrimination (art. L.1132-1 C. trav.) : aucune personne ne peut faire l'objet, a tout stade de la relation de travail, d'une mesure discriminatoire notamment en raison de son origine",
+            "linked_article": "code_du_travail:L1132-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aucune personne ne peut faire l'objet, a tout stade de la relation de travail, d'une mesure discriminatoire en raison, entre autres, de son origine (art. L. 1132-1 C. trav.)"
+          },
+          {
+            "text": "Amenagement probatoire en matiere de discrimination (art. L.1134-1 C. trav.) : le salarie presente des elements de fait laissant supposer l'existence d'une discrimination, puis il incombe a l'employeur de prouver que ses decisions sont justifiees par des elements objectifs etrangers a toute discrimination",
+            "linked_article": "code_du_travail:L1134-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'amenagement des modes de preuve en matiere de discrimination (art. L. 1134-1 C. trav.)... lorsque le salarie presente des elements de fait constituant selon lui une discrimination directe ou indirecte, il appartient au juge d'apprecier si ces derniers laissent supposer l'existence d'une telle discrimination et, dans l'affirmative, il incombe a l'employeur de prouver que ses decisions sont justifiees par des elements objectifs etrangers a toute discrimination"
+          },
+          {
+            "text": "Imputation des propos d'un superieur hierarchique a l'employeur : les propos racistes tenus par un superieur engagent la responsabilite de l'employeur, qui doit en assumer les consequences",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "les propos racistes emanent d'un superieur hierarchique dont l'employeur doit assumer les consequences"
+          },
+          {
+            "text": "Application de l'arret Cass. soc. 15 mai 2024 n 22-16.287 : un repas de Noel reserve aux salaries, meme organise par le CSE (personne morale distincte) et hors temps de travail, s'inscrit dans le prolongement de l'activite professionnelle - l'employeur ne peut s'exonerer en invoquant l'autonomie du CSE",
+            "linked_jp": "Cass. soc., 15 mai 2024, n 22-16.287",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Les faits du cas pratique s'inspirent de la situation decrite dans l'arret du 15 mai 2024 (n 22-16287)... pour la Cour de cassation, le repas de Noel, reserve aux salaries, s'inscrit bien dans le prolongement de l'activite professionnelle"
+          },
+          {
+            "text": "Effets de la resiliation judiciaire aux torts de l'employeur en presence d'une discrimination : elle produit les effets d'un licenciement nul (et non seulement injustifie) + droit a des dommages-interets pour discrimination",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le juge a donc accepte de faire droit aux demandes de la requerante tendant au paiement de dommages-interets pour discrimination. La resiliation du contrat est retenue aux torts de l'employeur produisant les effets d'un licenciement non pas seulement injustifie, mais nul"
+          },
+          {
+            "text": "Principe jurisprudentiel d'interdiction des primes antigrevistes (primes faisant l'objet d'une retenue uniquement en cas de greve) : Cass. soc. 1er juin 2010 n 09-40.144",
+            "linked_jp": "Cass. soc., 1er juin 2010, n 09-40.144",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Traditionnellement, la jurisprudence interdit les primes dites antigreve, celles qui font l'objet d'une retenue uniquement en cas de greve (Cass. soc. 1er juin 2010, n 09-40144)"
+          },
+          {
+            "text": "Validation des primes exceptionnelles attribuees aux non-grevistes pour surcroit de travail / execution de taches hors contrat : ne constituent pas une mesure discriminatoire (Cass. soc. 3 avril 2024 n 22-23.321)",
+            "linked_jp": "Cass. soc., 3 avril 2024, n 22-23.321",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'employeur a attribue une prime exceptionnelle a des salaries non-grevistes qui ont accepte un accroissement temporaire de leurs taches ne relevant pas de leur travail, de sorte qu'il y a eu surcroit de travail. La Cour de cassation a valide ce type de prime, en indiquant qu'elle ne constituait pas une mesure discriminatoire (Cass. soc. 3 avril 2024, n 22-23321)"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Regime des primes d'assiduite et greve : admises si toute absence (greve ou autre cause, ex. maladie) entraine le meme abattement, de sorte que le greviste n'est ni mieux ni moins bien traite qu'un autre salarie",
+            "linked_jp": "Cass. soc., 15 fev. 2006, n 04-45.738",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la Cour de cassation ne s'oppose pas a cette forme et a ce regime de remuneration si toute absence - resultant d'une greve ou de tout autre evenement, tel que la maladie - entraine le meme abattement (Soc. 15 fev. 2006, n 04-45738)"
+          },
+          {
+            "text": "Confirmation historique de la regle par Cass. soc. 13 janv. 1999 (RJS 1999 n 258) : assimilation licite greve/autres absences pour l'attribution d'une prime d'assiduite",
+            "linked_jp": "Cass. soc., 13 janv. 1999",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Cass. soc., 13 janv. 1999, RJS 1999, n 258",
+            "uncertainty_note": "Numero de pourvoi non fourni par la grille - seule la reference RJS est donnee"
+          },
+          {
+            "text": "Distinction prime antigreve / prime d'assiduite / prime exceptionnelle pour surcroit de travail : en l'espece il ne s'agit ni d'une prime antigreve ni d'une prime d'assiduite stricto sensu mais d'une prime exceptionnelle pour execution de taches supplementaires - qualification centrale pour ecarter le grief de discrimination",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Dans le cas present, il ne s'agit pas a proprement parler d'une prime antigreve ou d'une prime d'assiduite"
+          },
+          {
+            "text": "Base conventionnelle de la qualification 'changement des conditions de travail' : souligner que l'invocation par l'employeur d'une disposition conventionnelle prevoyant l'alternance jour/nuit pour les agents incendie renforce sa position contre le grief de modification unilaterale du contrat",
+            "sources": ["grille_cnb", "llm_intrinsic"],
+            "grille_weight": 1,
+            "extract_from_grille": "la qualification de changement des conditions de travail est retenue par une disposition conventionnelle"
+          },
+          {
+            "text": "Rattachement du droit au respect de la vie personnelle et familiale a l'art. 8 CEDH + art. L.1121-1 C. trav. (proportionnalite des atteintes aux libertes du salarie par l'employeur)",
+            "linked_article": "code_du_travail:L1121-1",
+            "sources": ["llm_intrinsic"],
+            "why": "Fondement classique non explicite dans la grille mais structurant pour argumenter l'atteinte excessive a la vie personnelle et familiale"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Articulation resiliation judiciaire / prise d'acte : dans les deux cas, la gravite des manquements de l'employeur conditionne l'effet (licenciement sans cause reelle et serieuse ou nul en cas de violation d'une liberte fondamentale comme la non-discrimination)",
+            "sources": ["llm_intrinsic"],
+            "why": "Point de culture juridique : la grille s'arrete au regime de la resiliation, sans expliciter la parente avec la prise d'acte"
+          },
+          {
+            "text": "Sanctions specifiques du licenciement nul pour discrimination : reintegration de droit + indemnite reparant le prejudice du licenciement (non plafonnee par le bareme Macron, art. L.1235-3-1 C. trav.)",
+            "linked_article": "code_du_travail:L1235-3-1",
+            "sources": ["llm_intrinsic"],
+            "why": "La grille qualifie le licenciement de 'nul' sans exposer les consequences financieres - point de profondeur pour un benchmark"
+          },
+          {
+            "text": "Harcelement discriminatoire et obligation de securite de l'employeur (art. L.4121-1 C. trav.) : articulation avec la discrimination de l'art. L.1132-1, possibilite d'un double fondement",
+            "linked_article": "code_du_travail:L4121-1",
+            "sources": ["llm_intrinsic"],
+            "why": "Dimension transversale non traitee par la grille mais classiquement attendue en deuxieme couche"
+          },
+          {
+            "text": "Regime probatoire de la modification du contrat : charge pesant sur le salarie d'etablir le caractere substantiel de la modification (remuneration, qualification, duree du travail, lieu sauf clause de mobilite)",
+            "sources": ["llm_intrinsic"],
+            "why": "Fondamentaux du droit du travail non detailles par la grille - pertinents pour mesurer la profondeur"
+          },
+          {
+            "text": "Arrets fondateurs en matiere de primes et greve (jurisprudence comparable) : Cass. soc. 23 juin 2009 sur la condition d'egalite de traitement des absences (anteriorite doctrinale)",
+            "sources": ["llm_intrinsic"],
+            "why": "Point de culture non mentionne dans la grille",
+            "uncertainty_note": "Reference a verifier - plusieurs arrets proches existent sur la question des primes liees a l'assiduite, ne pas citer sans certification"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_du_travail:L1132-1",
+          "code_du_travail:L1134-1"
+        ],
+        "optionnels": [
+          "code_du_travail:L1121-1",
+          "code_du_travail:L1235-3-1",
+          "code_du_travail:L4121-1"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 29 mai 2024, n 22-21.814",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot de la question (a) Garcia : refus du passage nuit -> jour non constitutif d'une cause reelle et serieuse si atteinte excessive a la vie personnelle et familiale / obligations familiales imperieuses. Favorable au salarie contre l'employeur.",
+          "uncertainty_note": "ECLI non verifie ; reference donnee par la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 15 mai 2024, n 22-16.287",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot de la question (b) Kaddouche : repas de Noel organise par le CSE dans le prolongement de l'activite professionnelle => imputabilite a l'employeur des propos discriminatoires. Favorable a la salariee.",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 3 avril 2024, n 22-23.321",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot de la question (c) prime : prime exceptionnelle pour surcroit de travail attribuee aux non-grevistes non discriminatoire. Favorable a l'employeur / cliente de l'avocat (perspective defense).",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 1er juin 2010, n 09-40.144",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Principe d'interdiction des primes antigreve - encadre strictement la pratique des primes liees a l'absence a une greve",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 15 fev. 2006, n 04-45.738",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Tolerance des primes d'assiduite si toutes les absences entrainent le meme abattement - cadre l'analyse mais non directement transposable a la prime exceptionnelle de l'espece",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 13 janv. 1999, RJS 1999 n 258",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation historique du regime des primes liees a l'assiduite et greve",
+          "uncertainty_note": "Numero de pourvoi absent de la grille - seule reference RJS"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre les trois regimes : (i) prime antigreve prohibee, (ii) prime d'assiduite toleree a condition d'egalite de traitement des absences, (iii) prime exceptionnelle pour taches supplementaires validee. Ne pas qualifier trop vite le changement d'horaires de modification du contrat : la disposition conventionnelle l'empeche en principe."
+      },
+      "source_extract": "M. Jean-Claude Dupin souhaite licencier pour faute grave M. Garcia qui, en tant qu'agent des services incendie, a refuse de travailler de jour alors qu'il etait en poste la nuit... il se trouvait dans l'obligation d'etre present a son domicile en journee afin de s'occuper de sa fille handicapee a 80 %... Mme Kaddouche a fait l'objet de propos racistes de la part de son superieur hierarchique lors d'un repas de Noel organise par les representants du personnel du comite social et economique (CSE)... M. Jean-Claude Dupin s'est vu reprocher par les syndicats l'attribution d'une prime exceptionnelle a des salaries non-grevistes sur le fondement d'un surcroit de travail... Pensez-vous que l'on puisse reprocher une faute grave a M. Garcia ? L'action en resiliation judiciaire engagee par Mme Kaddouche a-t-elle des chances d'aboutir favorablement ? La prime exceptionnelle est-elle contestable ? (9 points)",
+      "consolidation_notes": "Question tres ponderee (9 pts sur 20) avec 3 sous-questions distinctes. La grille cite 5 arrets nommes avec numeros (29 mai 2024, 15 mai 2024, 3 avril 2024, 1er juin 2010, 15 fev. 2006) + 1 reference RJS (13 janv. 1999) et 2 articles du C. trav. (L.1132-1, L.1134-1). Les copies IEJ n'ont pas pu etre confrontees a la grille (scans manuscrits non OCRises de maniere fiable). Points llm_intrinsic isoles en strate expert pour signaler qu'ils ne sont pas attestes par la grille."
+    },
+    {
+      "id": "CNB-SOCIAL-2025-Q2",
+      "branche": "social",
+      "specialisation": "Droit de la securite sociale - accident de trajet",
+      "question": "Le 3 janvier 2025, M. Stefan s'est reveille plus tot que d'habitude pour proceder au deneigement de son vehicule gare a l'exterieur de son domicile. Il chute, se blesse et ne peut se rendre a son travail. Il revendique le benefice de la legislation sur les accidents de trajet, mais l'employeur et la caisse de securite sociale objectent que l'accident n'a pas eu lieu a l'horaire habituel de trajet (depart anticipe). Peut-on donner raison au salarie ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Definition de l'accident de trajet (art. L.411-2 C. secu. soc.) : accident survenu pendant le trajet entre la residence du salarie et le lieu de travail, pris en charge au titre de la legislation professionnelle ; le salarie est couvert des qu'il quitte son domicile prive",
+            "linked_article": "code_de_la_securite_sociale:L411-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le candidat devra rappeler la definition d'un accident de trajet que l'on trouve a l'article L. 411-2 C. SS : l'accident survenu pendant le trajet entre la residence du salarie et le lieu de travail est considere comme un accident devant etre pris en charge au titre de la legislation professionnelle. Le salarie est donc couvert des qu'il quitte son domicile prive"
+          },
+          {
+            "text": "Conditions cumulatives : l'accident doit avoir lieu sur le trajet protege et survenir durant le temps normal du trajet (pas trop en avance, ni trop tard par rapport a l'horaire de travail)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Encore faut-il que l'accident ait lieu sur ce que l'on appelle le trajet protege et qu'il survienne durant le temps normal du trajet, c'est-a-dire pas trop en avance, ni trop tard par rapport a l'horaire de travail"
+          },
+          {
+            "text": "Regime des interruptions : une interruption ne rompt la protection que si elle n'est pas justifiee par une necessite essentielle de la vie courante ou par un motif non dicte par l'interet personnel du salarie",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "S'il y a interruption, celle-ci doit etre justifiee par une necessite essentielle de la vie courante ou un motif non dicte par l'interet personnel du salarie"
+          },
+          {
+            "text": "Qualification : le deneigement du vehicule, rendu necessaire par des conditions meteorologiques exceptionnelles, se rattache au trajet lui-meme sans constituer une interruption pour motif personnel - l'acte accompli est integre au trajet",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "il reste possible d'admettre que les premiers temps du parcours (le deneigement), de caractere exceptionnel, sont rattaches au trajet, sans constituer une interruption pour un motif dicte par l'interet personnel... Ce sont des elements exterieurs - les conditions meteorologiques - qui lui ont impose de prendre des precautions afin de pouvoir effectuer son trajet"
+          },
+          {
+            "text": "Application de l'arret Cass. 2e civ. 29 fev. 2024 n 22-14.592 : appui direct sur la jurisprudence recente pour retenir la qualification d'accident de trajet malgre un depart anticipe en raison de circonstances exterieures",
+            "linked_jp": "Cass. civ. 2e, 29 fev. 2024, n 22-14.592",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Cass. 2eme civ., 29 fevrier 2024, n 22-14592"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Precedent jurisprudentiel confirmant la solution : Cass. soc. 8 mars 1990 n 87-16.818 (anteriorite doctrinale de la meme ligne)",
+            "linked_jp": "Cass. soc., 8 mars 1990, n 87-16.818",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "v. deja Cass. soc. 8 mars 1990, n 87-16818"
+          },
+          {
+            "text": "Importance du lieu de survenance : le fait que l'accident ait eu lieu sur la voie publique (non dans une enceinte privee) renforce le rattachement au trajet",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le fait qu'il ait eu lieu sur la voie publique participe de la solution retenue"
+          },
+          {
+            "text": "Distinction accident du travail (art. L.411-1 C. secu. soc.) / accident de trajet (art. L.411-2) : seul le second est en cause ici",
+            "linked_article": "code_de_la_securite_sociale:L411-1",
+            "sources": ["llm_intrinsic"],
+            "why": "Distinction classique pour cadrer le raisonnement, non explicitee par la grille"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Regime probatoire : presomption d'imputabilite attachee a l'accident de trajet (allegement de la preuve) - le salarie beneficie d'une presomption des que les conditions de lieu et de temps sont reunies",
+            "sources": ["llm_intrinsic"],
+            "why": "Element classique du regime, non developpe dans la grille qui se concentre sur la qualification"
+          },
+          {
+            "text": "Consequences indemnitaires de la qualification : prise en charge a 100 % des soins, indemnites journalieres majorees, eventuelle rente en cas d'incapacite permanente - distinct du regime d'accident du travail pour la faute inexcusable (non applicable au trajet sauf exceptions)",
+            "sources": ["llm_intrinsic"],
+            "why": "Consequences operationnelles de la qualification, absentes de la grille mais attendues d'un praticien"
+          },
+          {
+            "text": "Controle de la qualification par la Cour de cassation : appreciation souveraine des juges du fond sur l'integration de l'acte au trajet, sous controle de la qualification juridique par la Haute juridiction",
+            "sources": ["llm_intrinsic"],
+            "why": "Meta-regle sur le controle, pertinente pour un avocat, non developpee dans la grille"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_la_securite_sociale:L411-2"
+        ],
+        "optionnels": [
+          "code_de_la_securite_sociale:L411-1"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 2e, 29 fev. 2024, n 22-14.592",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot recent : qualification d'accident de trajet retenue malgre depart anticipe lorsque les circonstances exterieures (meteo) imposent une preparation du vehicule integree au trajet - favorable au salarie",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 8 mars 1990, n 87-16.818",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Anteriorite doctrinale : la Cour de cassation admet depuis longtemps le rattachement au trajet des actes exterieurs necessites par les conditions materielles",
+          "uncertainty_note": "ECLI non verifie ; a l'epoque arret de la chambre sociale"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas confondre accident du travail (L.411-1) et accident de trajet (L.411-2). Ne pas exclure la qualification sur le seul motif du depart anticipe : la cle est le rattachement de l'acte au trajet, pas sa strict simultaneite avec l'horaire habituel."
+      },
+      "source_extract": "Le 3 janvier 2025, M. Stefan s'est reveille plus tot que d'habitude, pour proceder au deneigement de son vehicule gare sur une place a l'exterieur de son domicile. Ayant chute et s'etant blesse, il n'a jamais pu se rendre a son travail. Souffrant de lesions multiples, M. Stefan revendique l'application de la legislation sur les accidents de trajet. Mais l'employeur et la caisse de securite sociale lui ont fait remarquer que l'accident n'avait pas eu lieu a l'horaire habituel de trajet, le salarie etant parti en avance de son domicile. M. Stefan envisage d'agir en justice pour faire reconnaitre ses droits. (4 points)",
+      "consolidation_notes": "Question ciblee sur la qualification d'un accident de trajet. Grille explicite citant 1 article (L.411-2 CSS) et 2 arrets (29 fev. 2024 pivot + 8 mars 1990 anteriorite). Strate core entierement attestee par la grille. Strate expert enrichie de points llm_intrinsic (presomption d'imputabilite, regime indemnitaire, controle de qualification) non abordes par la grille mais constitutifs du regime de l'accident de trajet."
+    },
+    {
+      "id": "CNB-SOCIAL-2025-Q3",
+      "branche": "social",
+      "specialisation": "Droit du travail - relations collectives : activites sociales et culturelles du CSE, vacance de siege apres annulation postelectorale, transparence financiere syndicale",
+      "question": "TRANSFRAIS rencontre trois difficultes dans ses relations collectives. (a) A Montpellier, le CSE a subordonne l'acces aux activites sociales et culturelles a une condition d'anciennete ; plusieurs salaries exclus contestent, avec intervention d'un syndicat. (b) A Tourcoing, un contentieux postelectoral a annule l'election d'un candidat du genre masculin surrepresente ; son siege est vacant. (c) A Strasbourg, la transparence financiere du syndicat SPTF est contestee pour defaut d'approbation des comptes du dernier exercice (que le syndicat SPTF considere comme non clos). Reponses attendues : (a) licite ou illicite, et recevabilite de l'intervention syndicale ? (b) comment combler la vacance ? (c) la contestation electorale a-t-elle une chance d'aboutir ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Monopole de gestion des activites sociales et culturelles (ASC) par le CSE, mais interdiction de subordonner l'ouverture du droit a une condition d'anciennete : Cass. soc. 3 avril 2024 n 22-16.812",
+            "linked_jp": "Cass. soc., 3 avril 2024, n 22-16.812",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "il a ete juge que l'ouverture du droit de l'ensemble des salaries et des stagiaires au sein de l'entreprise a beneficier des activites sociales et culturelles ne saurait etre subordonnee a une condition d'anciennete (Cass. soc. 3 avril 2024, n 22-16812)"
+          },
+          {
+            "text": "Action syndicale en defense de l'interet collectif de la profession (art. L.2132-3 C. trav.) : un syndicat peut intervenir a titre accessoire dans un proces prud'homal pour obtenir reparation du prejudice a l'interet collectif, notamment lorsque la mesure peut priver les salaries du benefice d'une reglementation du travail d'ordre public ou porter atteinte a leurs droits collectifs",
+            "linked_article": "code_du_travail:L2132-3",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Sur le fondement de l'action en defense de l'interet collectif de la profession (art. L. 2132-3 C. trav.), un syndicat peut intervenir a titre accessoire au cours d'un proces opposant, devant le conseil de prud'hommes, un salarie ou plusieurs salaries a l'employeur et demander reparation du prejudice porte a l'interet collectif"
+          },
+          {
+            "text": "En l'espece, priver plusieurs salaries du benefice des ASC pour des motifs non prevus par la loi porte atteinte aux droits collectifs des salaries => intervention du syndicat recevable",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, il est question de priver plusieurs salaries du benefice d'activites sociales et culturelles pour des motifs qui ne figurent pas dans la loi. L'intervention du syndicat est recevable"
+          },
+          {
+            "text": "Regle de calcul des sieges CSE (art. L.2314-29 et R.2314-19 C. trav.) : representation proportionnelle avec repartition des restes a la plus forte moyenne, fondee sur le quotient electoral",
+            "linked_article": "code_du_travail:L2314-29",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Pour les elections du comite social et economique, les sieges sont attribues a la representation proportionnelle avec repartition des restes a la plus forte moyenne... (art. L. 2314-29 et R. 2314-19 C. trav.)"
+          },
+          {
+            "text": "Impossibilite de recalculer les sieges en cours de cycle electoral : Cass. soc. 11 sept. 2024 n 23-60.107 - la regle du quotient + plus forte moyenne vaut a l'issue du scrutin, pas en cours de cycle",
+            "linked_jp": "Cass. soc., 11 sept. 2024, n 23-60.107",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'arret du 11 septembre 2024 (n 23-60107) a rejete cette solution, qui ne vaut qu'a l'issue d'un scrutin, non pas en cours de cycle electoral"
+          },
+          {
+            "text": "Technique de la suppleance ecartee : la perte par annulation judiciaire du mandat d'un candidat surrepresente n'est pas une hypothese justifiant une suppleance au sens de l'art. L.2314-33 C. trav. - Cass. soc. 22 sept. 2021 n 20-16.859",
+            "linked_article": "code_du_travail:L2314-33",
+            "linked_jp": "Cass. soc., 22 sept. 2021, n 20-16.859",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Mais si l'on se fie a l'art. L. 2314-33 C. trav., la perte par annulation judiciaire du mandat d'un candidat surrepresente ne fait pas partie des hypotheses justifiant une suppleance (Cass. soc. 22 septembre 2021, n 20-16859)"
+          },
+          {
+            "text": "Elections partielles (art. L.2314-10 C. trav.) comme seule voie residuelle pour combler la vacance - mais leurs conditions (seuil de sieges affectes) ne sont souvent pas reunies apres une annulation pour manquement a la representation equilibree F/H ; le siege risque de rester vacant",
+            "linked_article": "code_du_travail:L2314-10",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Seul le recours a des elections partielles peut permettre de combler cette vacance (art. L. 2314-10 C. trav.). Mais l'annulation d'une election sur le fondement de la representation equilibree entre les femmes et les hommes n'affecte souvent qu'un nombre de sieges insuffisant pour satisfaire les criteres... Il est a craindre que le siege ne reste vacant"
+          },
+          {
+            "text": "Sanction du defaut de transparence financiere : privation des prerogatives syndicales, y compris la possibilite de presenter sa candidature aux elections professionnelles et aux scrutins sur sigle - Cass. soc. 12 juillet 2024 n 24-16.057",
+            "linked_jp": "Cass. soc., 12 juillet 2024, n 24-16.057",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Une organisation qui neglige d'etablir, de faire approuver et de publier ses comptes risque d'etre privee de l'exercice des prerogatives juridiques ouvertes aux syndicats representatifs et non representatifs, en particulier de la possibilite de presenter sa candidature aux elections professionnelles et aux scrutins sur sigle (Cass. soc. 12 juillet 2024, n 24-16057)"
+          },
+          {
+            "text": "Date d'appreciation de la transparence financiere : a la date de l'exercice de la prerogative syndicale ; l'approbation des comptes d'un exercice clos doit intervenir au plus tard a la cloture de l'exercice suivant - Cass. soc. 21 novembre 2024 nos 24-20.853, 24-20.882 et 24-20.888",
+            "linked_jp": "Cass. soc., 21 novembre 2024, n 24-20.853",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la condition de transparence financiere doit etre appreciee a la date de l'exercice de la prerogative syndicale... Dans l'arret du 21 novembre 2024 (n 24-20.853, 24-20.882 et 24-20.888), l'approbation des comptes pour un exercice clos doit avoir lieu au plus tard a la cloture de l'exercice suivant"
+          },
+          {
+            "text": "Application en l'espece : les comptes 2024 ne sont pas encore clos et ne constituent donc pas l'exercice comptable de reference - c'est la transparence sur les comptes 2023 qu'il fallait contester ; rien ne montre qu'ils n'ont pas ete publies => contestation du SF vouee a l'echec",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece les comptes de l'annee 2024, qui ne sont pas encore clos, ne constituent pas l'exercice comptable de reference pour apprecier la transparence financiere. Le syndicat contestataire aurait du porter son attention sur les comptes 2023. Rien dans les faits ne montre qu'ils n'ont pas ete elabores, approuves et publies"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Fondement textuel du monopole des ASC : art. L.2312-78 et s. C. trav. - le CSE a competence exclusive pour definir les ASC au benefice des salaries et de leurs familles",
+            "linked_article": "code_du_travail:L2312-78",
+            "sources": ["llm_intrinsic"],
+            "why": "La grille renvoie au monopole sans citer l'article de fondement ; ajout de culture juridique"
+          },
+          {
+            "text": "Principe d'egalite de traitement entre salaries pour l'acces aux ASC - toute differenciation doit reposer sur des criteres objectifs et pertinents",
+            "sources": ["llm_intrinsic"],
+            "why": "Principe sous-jacent a l'arret du 3 avril 2024, utile pour argumenter l'illiceite de la condition d'anciennete"
+          },
+          {
+            "text": "Obligation de representation equilibree F/H sur les listes (art. L.2314-30 C. trav.) - fondement de l'annulation de l'election du candidat surrepresente",
+            "linked_article": "code_du_travail:L2314-30",
+            "sources": ["llm_intrinsic"],
+            "why": "La grille parle de 'representation equilibree entre les femmes et les hommes' sans donner le fondement textuel"
+          },
+          {
+            "text": "Conditions cumulatives des elections partielles de l'art. L.2314-10 : vacance entrainant une reduction >= 50 % du nombre de membres titulaires d'un college OU nombre de titulaires reduit a 0 - conditions rarement reunies apres une seule annulation",
+            "sources": ["grille_cnb", "llm_intrinsic"],
+            "grille_weight": 0,
+            "extract_from_grille": "l'annulation d'une election sur le fondement de la representation equilibree entre les femmes et les hommes n'affecte souvent qu'un nombre de sieges insuffisant pour satisfaire les criteres de l'art. L. 2314-10"
+          },
+          {
+            "text": "Obligation de transparence financiere des syndicats : art. L.2135-1 a L.2135-6 C. trav. - etablissement, approbation et publication des comptes",
+            "linked_article": "code_du_travail:L2135-1",
+            "sources": ["llm_intrinsic"],
+            "why": "La grille vise le regime sans citer les articles - point manquant pour un argumentaire complet"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Arret pivot 3 avril 2024 (ASC) : confirme et actualise la jurisprudence anterieure Cass. soc. 20 fev. 2019 sur l'absence de condition d'anciennete (continuite doctrinale)",
+            "sources": ["llm_intrinsic"],
+            "why": "Mise en perspective doctrinale non fournie par la grille",
+            "uncertainty_note": "Reference a verifier - jurisprudence Cass. soc. 20 fev. 2019 citee de memoire, a confirmer avant usage dans un benchmark"
+          },
+          {
+            "text": "Articulation entre action individuelle des salaries exclus et action collective du syndicat : cumul autorise, l'intervention du syndicat ne prive pas les salaries de leur action propre",
+            "sources": ["llm_intrinsic"],
+            "why": "Point procedural classique - distinction action individuelle vs interet collectif"
+          },
+          {
+            "text": "Pour la vacance de siege : distinction avec l'hypothese d'une demission, d'un deces ou d'une rupture du contrat (L.2314-33 vise ces cas typiques) - la perte de mandat pour manquement a la parite est d'origine judiciaire et sui generis",
+            "linked_article": "code_du_travail:L2314-33",
+            "sources": ["llm_intrinsic"],
+            "why": "Analyse doctrinale du champ d'application de la suppleance"
+          },
+          {
+            "text": "Regime de la transparence financiere : les syndicats non representatifs sont egalement soumis a l'obligation depuis la loi du 20 aout 2008 (art. L.2135-1 C. trav.)",
+            "linked_article": "code_du_travail:L2135-1",
+            "sources": ["llm_intrinsic"],
+            "why": "Portee etendue de l'obligation - point d'erudition"
+          },
+          {
+            "text": "Effet temporel de la regle 'cloture de l'exercice suivant' (arret 21 nov. 2024) : stabilise la pratique syndicale en donnant un delai clair, concilie securite juridique et effectivite du controle",
+            "sources": ["llm_intrinsic"],
+            "why": "Commentaire analytique de l'apport de l'arret - profondeur attendue a l'oral"
+          },
+          {
+            "text": "Option alternative pour la vacance : cooptation conventionnelle par accord collectif ? Rejet probable car contraire au principe d'election directe - piste a ecarter explicitement",
+            "sources": ["llm_intrinsic"],
+            "why": "Piste d'argumentation a ecarter, utile pour un dossier defensif",
+            "uncertainty_note": "Pas de base textuelle precise - piste a evacuer"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_du_travail:L2132-3",
+          "code_du_travail:L2314-10",
+          "code_du_travail:L2314-29",
+          "code_du_travail:L2314-33",
+          "code_du_travail:R2314-19"
+        ],
+        "optionnels": [
+          "code_du_travail:L2135-1",
+          "code_du_travail:L2312-78",
+          "code_du_travail:L2314-30"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 3 avril 2024, n 22-16.812",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot (a) : interdiction de subordonner les ASC a une condition d'anciennete. Defavorable a l'employeur qui voudrait defendre la deliberation du CSE",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 11 sept. 2024, n 23-60.107",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot (b) : la regle de recalcul des sieges ne vaut qu'a l'issue du scrutin, pas en cours de cycle - ecarte une des solutions envisageables",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 22 septembre 2021, n 20-16.859",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Ecarte la technique de la suppleance pour combler la vacance apres annulation - contribue a la conclusion que le siege risque de rester vacant",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 12 juillet 2024, n 24-16.057",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Affirme la sanction de la non-transparence (privation de prerogatives syndicales) - cadre general de la question (c), favorable a la position du syndicat contestataire en theorie mais neutralise en l'espece par la question de la date",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 21 novembre 2024, n 24-20.853 (et 24-20.882, 24-20.888)",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot (c) : precise la date d'appreciation de la transparence financiere (cloture de l'exercice suivant) - favorable au SPTF qui dispose encore d'un delai pour les comptes 2024",
+          "uncertainty_note": "ECLI non verifie ; 3 pourvois joints"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Trois pieges principaux : (i) ne pas proposer de recalculer les sieges en cours de cycle (rejete par Cass. soc. 11 sept. 2024) ; (ii) ne pas invoquer la suppleance sur le fondement de L.2314-33 pour une annulation judiciaire pour surrepresentation (rejete par Cass. soc. 22 sept. 2021) ; (iii) ne pas contester la transparence financiere sur les comptes 2024 non encore clos - c'est l'exercice 2023 qui est la reference pertinente."
+      },
+      "source_extract": "M. Jean-Claude Dupin vient d'organiser recemment des elections professionnelles au sein des quatre etablissements de son entreprise. Dans l'etablissement de Montpellier, le nouveau CSE entend immediatement reglementer l'acces aux activites sociales et culturelles en instituant une condition d'anciennete... Dans l'etablissement de Tourcoing, un contentieux postelectoral a conclu a l'annulation de l'election d'un candidat appartenant au genre masculin surrepresente. Depuis lors, son siege est vacant... dans l'etablissement de Strasbourg, les candidatures du syndicat SPTF... ont ete contestees par... le SF (Syndicat du frais), sur le fondement d'un defaut de transparence financiere... (7 points)",
+      "consolidation_notes": "Question tres riche (7 pts) couvrant 3 themes distincts des relations collectives. La grille cite 5 arrets (3 avril 2024, 11 sept. 2024, 22 sept. 2021, 12 juillet 2024, 21 nov. 2024) et 5 articles du C. trav. (L.2132-3, L.2314-10, L.2314-29, L.2314-33, R.2314-19). C'est la question la plus technique et la plus dense en references normatives. Les points expected ajoutes (L.2312-78 pour le monopole ASC, L.2314-30 pour la parite, L.2135-1 pour la transparence) completent l'architecture textuelle sans s'ecarter de la grille. La grille est auto-suffisante ; l'absence d'OCR des copies IEJ n'a pas de consequence majeure sur la couverture core/expected car les references sont explicites et nombreuses."
+    }
+  ]
+}

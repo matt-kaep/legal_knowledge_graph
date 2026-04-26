@@ -1,0 +1,1016 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit administratif (consolide)",
+    "source_path": "data/cnb-crfpa/2025/cas-pratiques.pdf (partie Droit administratif)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Droit administratif (diffusion Cap'Barreau)",
+      "Meilleures copies IEJ Strasbourg 2025 - copies 25, 32, 35 (scans manuscrits - OCR en francais indisponible, exploitation limitee)",
+      "LLM intrinsic (complements jurisprudentiels verifiables)"
+    ],
+    "generated_by": "Claude (general-purpose subagent, consolidation run)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-03",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_avanza_delegation": 10,
+        "Q1a_autorisation_ministerielle": 4,
+        "Q1b_interdiction_municipale": 4,
+        "Q1c_delegation_police": 2,
+        "Q2_ramoun_discipline": 5,
+        "Q3_responsabilite_attroupements": 5
+      }
+    },
+    "notes_extraction_copies": "Les 3 copies IEJ Strasbourg sont des scans de copies manuscrites. Tesseract n'avait pas le dictionnaire francais disponible sur l'environnement ; l'OCR en anglais a produit un texte illisible (taux de reconnaissance tres bas sur ecriture manuscrite). Les fichiers PDF et PNG/TXT intermediaires sont conserves dans 2025-copies-iej/. Triangulation principale : grille_cnb + llm_intrinsic. copie_iej notee quand un point est evidemment du au cadre general d'une bonne copie."
+  },
+  "questions": [
+    {
+      "id": "CNB-ADMIN-2025-Q1A",
+      "branche": "administratif",
+      "specialisation": "Droit administratif - acte administratif unilateral, motivation, competence",
+      "question": "Le maire d'Arles souhaite obtenir l'annulation de l'arrete ministeriel du 13 avril 2025 autorisant l'usage de l'herbicide Avanza a titre derogatoire (art. 53 reglement n 1107/2009). L'arrete ne contient que deux articles et ne mentionne aucun element de droit ou de fait. Quelles sont les chances de succes du recours en annulation ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Identifier le partage de competence : le directeur general de l'ANSES est en principe competent pour les AMM des produits phytopharmaceutiques (art. R. 253-5 CRPM), mais le ministre de l'Agriculture est competent pour les autorisations derogatoires temporaires prises sur le fondement de l'art. 53 du reglement (CE) n 1107/2009 (art. R. 253-6 CRPM)",
+            "linked_article": "code_rural_et_de_la_peche_maritime:R253-6",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le code prevoit (art. R. 253-6, en annexe au sujet) que le ministre de l'Agriculture est competent pour delivrer les autorisations derogatoires temporaires, prises sur le fondement de l'article 53 du reglement"
+          },
+          {
+            "text": "Qualifier l'arrete ministeriel de decision individuelle : la delivrance d'une autorisation est l'exemple topique d'une decision individuelle (portee nominative). La distinction acte reglementaire/individuel/decision d'espece est d'origine doctrinale et pretorienne, reprise par l'art. L. 200-1 CRPA",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L200-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Un acte reglementaire se caracterise par sa portee generale et impersonnelle, la ou une decision individuelle est au contraire marquee par son caractere nominatif. La delivrance d'une autorisation est l'exemple topique d'une decision individuelle"
+          },
+          {
+            "text": "Identifier le champ d'application de l'obligation de motivation : l'art. L. 211-2 CRPA (decisions individuelles defavorables) et surtout l'art. L. 211-3 CRPA (decisions individuelles qui derogent aux regles generales fixees par la loi ou le reglement)",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L211-3",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'obligation de motivation des actes administratifs individuels n'est qu'exceptionnelle. Elle vise essentiellement : les decisions administratives individuelles defavorables (art. L. 211-2 CRPA) et les decisions administratives individuelles qui derogent aux regles generales fixees par la loi ou le reglement (art. L. 211-3 CRPA)"
+          },
+          {
+            "text": "Contenu de la motivation (art. L. 211-5 CRPA) : indication ecrite des considerations de droit et de fait qui constituent le fondement de la decision ; le juge controle la suffisance de la motivation",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L211-5",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'obligation de motivation s'entend de l'indication ecrite des considerations de droit et de fait qui constituent le fondement de la decision (art. L211-5 CRPA). Le juge controlera que la motivation est suffisante"
+          },
+          {
+            "text": "Application : l'autorisation de l'Avanza est expressement derogatoire aux regles europeennes et nationales (dispositions europeennes fixant un regime de principe + derogations). Elle entre dans le champ de l'art. L. 211-3 CRPA et devait donc etre motivee. L'arrete ne comportant pas les elements de droit et de fait, il est illegal pour vice de forme / defaut de motivation",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L211-3",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'autorisation de l'Avanza est expressement derogatoire aux lois et reglements... Elle semble donc entrer dans le champ de l'article L. 211-3 du CRPA, imposant une motivation... l'arrete ministeriel ne semble pas comporter les elements de droit et de fait qui constituent le fondement de la decision : celle-ci sera donc consideree comme illegale pour vice de forme"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Article R. 253-5 CRPM : competence de principe du directeur general de l'ANSES pour les AMM",
+            "linked_article": "code_rural_et_de_la_peche_maritime:R253-5",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "En France, c'est le directeur de l'Agence nationale de securite sanitaire de l'alimentation, de l'environnement et du travail, qui est competent pour delivrer des autorisations de mise sur le marche de produits phytopharmaceutiques (art. R. 253-5 code rural et de la peche maritime, en annexe au sujet)"
+          },
+          {
+            "text": "Mention du fondement europeen : le reglement (CE) n 1107/2009 du 21 octobre 2009 autorise les Etats membres a deroger (art. 53), a titre exceptionnel, a la procedure classique d'autorisation precedee de consultations",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Le reglement europeen du 21 octobre 2009 definit differentes procedures d'autorisation et de controle des produits phytopharmaceutiques. A ce titre, il autorise les Etats membres a deroger (art. 53), a titre exceptionnel, a la procedure classique d'autorisation"
+          },
+          {
+            "text": "Comparaison / precedent : CE 23 dec. 2014, n 360958 (sur l'obligation de motivation d'une decision derogatoire similaire)",
+            "linked_jp": "CE, 23 dec. 2014, n 360958",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Elle semble donc entrer dans le champ de l'article L. 211-3 du CRPA, imposant une motivation (par comparaison, CE 23 dec. 2014, n 360958)",
+            "uncertainty_note": "Reference donnee par la grille sans ECLI. A verifier - la Cour administrative n'emet pas d'ECLI systematique pour les decisions anterieures a 2016."
+          },
+          {
+            "text": "Illustration sur les AMM : CE, 22 juin 2003, n 247736 (autorisations de mise sur le marche des medicaments - exemple d'acte individuel)",
+            "linked_jp": "CE, 22 juin 2003, n 247736",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "par ex. les autorisations de mise sur le marche des medicaments, CE, 22 juin 2003, n 247736",
+            "uncertainty_note": "Numero de decision cite par la grille, ECLI non verifie"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Qualification du vice de forme/procedure : le defaut de motivation est un vice de forme substantiel (non regularisable en principe), conduisant a l'annulation",
+            "sources": ["llm_intrinsic"],
+            "why": "Precision theorique sur la nature du vice - la grille parle simplement de 'vice de forme' sans developper le caractere substantiel"
+          },
+          {
+            "text": "Base CRPA de la regularisation eventuelle : l'art. L. 211-6 CRPA permet une communication a posteriori des motifs en cas de demande, mais cela ne repare pas un defaut initial pour les decisions soumises a L. 211-3",
+            "linked_article": "code_des_relations_entre_le_public_et_l_administration:L211-6",
+            "sources": ["llm_intrinsic"],
+            "why": "Point de culture non mentionne dans la grille mais pertinent pour qualifier l'irregularite",
+            "uncertainty_note": "La numerotation L. 211-6 CRPA est a verifier ; la base de l'article sur la communication ulterieure des motifs existe sous une forme proche"
+          },
+          {
+            "text": "TA Melun, 13 juin 2024, n 2404979 : decision factuellement inspiratrice du sujet, portant precisement sur une autorisation temporaire de l'Avanza (l'enonce precise que les candidats ne sont PAS tenus de citer cette jurisprudence)",
+            "linked_jp": "TA Melun, 13 juin 2024, n 2404979",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Il est precise, a toutes fins utiles, qu'une partie de cet enonce est inspiree de la decision du TA de Melun, 13 juin 2024, n 2404979, portant precisement sur une autorisation temporaire de l'Avanza. Il n'est pas attendu des candidats qu'ils citent cette jurisprudence",
+            "uncertainty_note": "ECLI non verifie"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_des_relations_entre_le_public_et_l_administration:L211-3",
+          "code_des_relations_entre_le_public_et_l_administration:L211-5",
+          "code_rural_et_de_la_peche_maritime:R253-6"
+        ],
+        "optionnels": [
+          "code_des_relations_entre_le_public_et_l_administration:L200-1",
+          "code_des_relations_entre_le_public_et_l_administration:L211-2",
+          "code_rural_et_de_la_peche_maritime:R253-5"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CE, 23 dec. 2014, n 360958",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Comparaison pour l'application de L. 211-3 CRPA a une decision derogatoire",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 22 juin 2003, n 247736",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Exemple topique d'acte individuel (AMM medicament)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "TA Melun, 13 juin 2024, n 2404979",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Decision inspiratrice du sujet - non exigee des candidats",
+          "uncertainty_note": "ECLI non verifie, citation explicitement non attendue selon la grille"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "La grille indique explicitement qu'il n'est pas attendu des candidats qu'ils citent le TA Melun 13 juin 2024. L'arrete etant derogatoire, privilegier L. 211-3 CRPA plutot que L. 211-2 (qui vise les decisions defavorables)."
+      },
+      "source_extract": "Par une decision en date du 13 avril 2025, le ministre de l'agriculture a autorise les agriculteurs camarguais a utiliser l'herbicide denomme Avanza... en application de l'article 53 du reglement n 1107/2009... Il souhaite d'abord deposer un recours contre l'arrete ministeriel pour obtenir son annulation : il est particulierement etonne qu'une telle derogation aux regles europeennes soit si simple, l'arrete ne contenant en tout et pour tout que deux minces articles, l'un accordant l'autorisation temporaire d'utilisation de l'Avanza et l'autre chargeant les prefets et autorites de l'Etat d'en assurer l'application. Les elements de fait et de droit justifiant cette mesure ne sont aucunement indiques. (4 points)",
+      "consolidation_notes": "Question classique sur la motivation des actes administratifs unilateraux avec subtilite sur le champ L. 211-2 vs L. 211-3 CRPA. La grille est lineaire et tres focalisee : identifier la competence, qualifier la decision, appliquer le champ de la motivation, conclure sur le vice. Peu de JP - logique a respecter. Copies IEJ non exploitables (scans manuscrits)."
+    },
+    {
+      "id": "CNB-ADMIN-2025-Q1B",
+      "branche": "administratif",
+      "specialisation": "Droit administratif - police administrative, concours police generale/police speciale, principe de precaution",
+      "question": "Le maire d'Arles a pris un arrete interdisant purement et simplement l'utilisation de l'Avanza sur l'ensemble du territoire de la commune, en se fondant sur l'article 5 de la Charte de l'environnement. Cet arrete municipal est-il legal face a l'arrete ministeriel autorisant l'Avanza ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Rappeler la competence du maire en matiere de police municipale generale (art. L. 2212-2 CGCT) : bon ordre, surete, securite et salubrite publiques sur le territoire communal",
+            "linked_article": "code_general_des_collectivites_territoriales:L2212-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le maire est l'autorite de police municipale en charge du bon ordre, de la surete, de la securite et salubrite publiques, sur le territoire de la commune (art. L2212-2 CGCT)"
+          },
+          {
+            "text": "Identifier l'existence d'une police speciale en matiere de produits phytopharmaceutiques, devolue en principe a l'ANSES et, par exception, au ministre de l'Agriculture (code rural)",
+            "linked_article": "code_rural_et_de_la_peche_maritime:R253-5",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En application du code rural et de la peche maritime precite, l'autorisation des produits phytopharmaceutiques releve cependant d'une police speciale devolue en principe a l'Agence nationale de securite sanitaire... et, par exception, au ministre de l'Agriculture"
+          },
+          {
+            "text": "Enoncer le principe d'exclusivite : l'existence (ou plus exactement l'exercice) d'une police speciale exclut en principe l'intervention de la police generale (CE, 30 juill. 1935, Ets SATAN)",
+            "linked_jp": "CE, 30 juill. 1935, Etablissements SATAN",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "des lors que la police speciale assure la preservation de tous les imperatifs de l'ordre public, s'applique un principe dit d'exclusivite : l'existence d'une police speciale (son exercice plus exactement) exclut l'intervention de la police generale (CE, 30 juillet 1935, Ets SATAN)",
+            "uncertainty_note": "Arret ancien 1935 : pas d'ECLI. Reference courte officielle uniquement"
+          },
+          {
+            "text": "Application specifique aux produits phytopharmaceutiques : CE, 31 dec. 2020, Commune d'Arcueil, n 439253 - le maire ne peut legalement user de la police generale pour edicter une reglementation sur les conditions generales d'utilisation des produits phytopharmaceutiques",
+            "linked_jp": "CE, 31 dec. 2020, Commune d'Arcueil, n 439253",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Cette jurisprudence a ete expressement appliquee en matiere de produits phytopharmaceutiques : CE, 31 dec. 2020, Cne d'Arcueil, n 439253",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Exception : la police generale retrouve une raison d'etre si la sauvegarde de l'ordre public par la police speciale n'est pas suffisante ou en cas de carence (CE 1959 Ste Les Films Lutetia ; CE 1985 Ville d'Aix-en-Provence c/ Ste Gaumont)",
+            "linked_jp": "CE, 18 dec. 1959, Societe Les Films Lutetia",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La police generale retrouve en revanche une raison d'etre si la sauvegarde de l'ordre public n'est pas suffisante ou, a fortiori, si aucune mesure n'a ete prise (CE 1959 Ste Les Films Lutetia ; CE 1985 Ville d'Aix-en-Pce c/ Societe Gaumont distribution et autres)",
+            "uncertainty_note": "Films Lutetia = 18 dec. 1959, reference courte usuelle. ECLI inexistant pour cette epoque"
+          },
+          {
+            "text": "Analyse du principe de precaution (art. 5 de la Charte de l'environnement) : vise les risques incertains mais suffisamment plausibles et vraisemblables pour justifier des mesures, et justifie d'abord des mesures d'evaluation puis des mesures adaptees - les interdictions ne sont qu'exceptionnellement legales",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Meme si le principe de precaution vise des risques a la realisation incertaine, il faut tout de meme que les risques en question soient suffisamment plausibles et vraisemblables pour justifier des mesures... le principe de precaution ne justifie pas necessairement des mesures d'interdiction : il justifie d'abord des mesures d'evaluation des risques et ensuite des mesures adaptees"
+          },
+          {
+            "text": "CE, 30 janv. 2012, Societe Orange France, n 344992 : l'intervention concurrente d'une mesure de police generale fondee sur le principe de precaution n'est legale qu'en presence d'elements circonstancies de nature a etablir l'existence, en l'etat des connaissances scientifiques, d'un risque",
+            "linked_jp": "CE, 30 janv. 2012, Societe Orange France, n 344992",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le Conseil d'Etat s'est prononce sur la question dans un arret du 30 janvier 2012, Soc. Orange France, n 344992. Il juge que l'intervention concurrente d'une mesure de police generale n'est legale qu'en presence d'elements circonstancies de nature a etablir l'existence, en l'etat des connaissances scientifiques, d'un risque",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Application : l'arrete ministeriel pris dans le respect des exigences legales exclut a priori l'intervention du maire ; il n'y a pas de carence ; la nocivite de l'Avanza n'est pas pleinement reconnue, l'autorisation est temporaire. Le maire a pris une mesure d'interdiction generale et absolue, en principe exclue en matiere de police (CE, 22 juin 1951, Fed. fr. des photographes-filmeurs)",
+            "linked_jp": "CE, 22 juin 1951, Federation francaise des photographes-filmeurs",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, l'intervention de l'arrete ministeriel, pris dans le respect des exigences legales et reglementaires, exclut a priori l'intervention du maire... le maire a pris une mesure d'interdiction generale et absolue, ce qui est en principe exclu en matiere de police (CE, 22 juin 1951, Fed. fr. des photographes-filmeurs)",
+            "uncertainty_note": "Arret ancien sans ECLI"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Article L. 2212-1 CGCT : competence du maire pour la police municipale",
+            "linked_article": "code_general_des_collectivites_territoriales:L2212-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "si les articles L. 2212-1 et L. 22122 du code general des collectivites territoriales habilitent le maire"
+          },
+          {
+            "text": "Cas d'application du principe de precaution ou le CE a valide ou rejete l'intervention concurrente : exploitation de granulats en mer (CE, 25 fev. 2019, Asso. Le peuple des Dunes des Pays de la Loire, n 410170) ; dissemination d'OGM (CE, Ass., 26 oct. 2011, Commune de Saint-Denis)",
+            "linked_jp": "CE, 25 fev. 2019, Asso Le peuple des Dunes des Pays de la Loire, n 410170",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "celui de l'exploitation de granulats en mer (CE, 25 fev. 2019, Asso. Le peuple des Dunes des Pays de la Loire, n 410170), ou encore de la dissemination d'OGM (CE, Ass., 26 oct. 2011, Commune de Saint-Denis)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Criteres de mise en balance pour le risque vraisemblable : processus d'homologation de l'Avanza non acheve MAIS existence d'un processus d'evaluation ; produits toxiques MAIS dangerosite limitee ; autorisation temporaire ; mesure du maire generale et absolue",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Les elements a mettre a balance : le processus d'homologation de l'Avanza n'etait pas acheve, mais il existe bien un processus d'evaluation des risques ; l'Avanza contient des produits toxiques mais sa dangerosite semble limitee ; l'autorisation est temporaire ; le maire a pris une mesure generale et absolue"
+          },
+          {
+            "text": "Obligation de l'administration d'agir lorsque le risque est plausible (CE, 25 fev. 2019) - a contrario, si le risque est trop incertain l'autorite ne peut mobiliser la precaution pour interdire",
+            "linked_jp": "CE, 25 fev. 2019, Asso Le peuple des Dunes des Pays de la Loire, n 410170",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Lorsque le risque est plausible, l'autorite administrative doit agir (CE, 25 fev. 2019, Asso. Le peuple des Dunes des Pays de la Loire, n 410170)"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Derogations au principe d'exclusivite de la police speciale : le juge admet parfois une intervention du maire en cas de peril imminent / circonstances locales particulieres (nuance classique sur Commune d'Arcueil)",
+            "linked_jp": "CE, 31 dec. 2020, Commune d'Arcueil, n 439253",
+            "sources": ["llm_intrinsic"],
+            "why": "Nuance jurisprudentielle non detaillee dans la grille mais importante pour une defense complete"
+          },
+          {
+            "text": "Valeur constitutionnelle du principe de precaution (Charte de l'environnement adossee au preambule de 1958 depuis 2005)",
+            "sources": ["llm_intrinsic"],
+            "why": "Precision de hierarchie des normes - la grille mentionne l'article 5 de la Charte sans rappeler sa valeur constitutionnelle"
+          },
+          {
+            "text": "Interdiction generale et absolue en matiere de police : principe constant depuis CE 1951 Photographes-filmeurs - meme avec fondement legitime, une mesure doit etre proportionnee (necessite, adaptation)",
+            "linked_jp": "CE, 22 juin 1951, Federation francaise des photographes-filmeurs",
+            "sources": ["grille_cnb", "llm_intrinsic"],
+            "grille_weight": 0,
+            "extract_from_grille": "le maire a pris une mesure d'interdiction generale et absolue, ce qui est en principe exclu en matiere de police"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_general_des_collectivites_territoriales:L2212-2"
+        ],
+        "optionnels": [
+          "code_general_des_collectivites_territoriales:L2212-1",
+          "code_rural_et_de_la_peche_maritime:R253-5",
+          "code_rural_et_de_la_peche_maritime:R253-6"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CE, 30 juill. 1935, Etablissements SATAN",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret fondateur du principe d'exclusivite police speciale / police generale",
+          "uncertainty_note": "Pas d'ECLI (arret anterieur a 2000)"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 31 dec. 2020, Commune d'Arcueil, n 439253",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Application directe du principe d'exclusivite aux produits phytopharmaceutiques - cle contre la defense du maire",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 30 janv. 2012, Societe Orange France, n 344992",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Standard de controle de l'intervention de police generale fondee sur la precaution (elements circonstancies)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 22 juin 1951, Federation francaise des photographes-filmeurs",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Prohibition de principe des mesures de police generales et absolues",
+          "uncertainty_note": "Pas d'ECLI (arret ancien)"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 18 dec. 1959, Societe Les Films Lutetia",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Le maire peut intervenir en cas de carence ou d'insuffisance de la police speciale - ouverture pour la defense",
+          "uncertainty_note": "Pas d'ECLI"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 1985, Ville d'Aix-en-Provence c/ Ste Gaumont distribution",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la possibilite d'intervention concurrente en cas d'insuffisance",
+          "uncertainty_note": "Date precise et numero non cites par la grille ; pas d'ECLI"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 25 fev. 2019, Asso Le peuple des Dunes des Pays de la Loire, n 410170",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Application du principe de precaution - obligation d'agir si risque plausible",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, Ass., 26 oct. 2011, Commune de Saint-Denis",
+          "sens_vs_question": "nuance",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "OGM et principe de precaution",
+          "uncertainty_note": "Numero de pourvoi non cite par la grille ; ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas conclure automatiquement a la legalite d'une interdiction fondee sur la precaution - le principe de precaution ne justifie pas les interdictions par principe. Ne pas ignorer le caractere general et absolu de la mesure municipale."
+      },
+      "source_extract": "Le maire a par ailleurs lui-meme pris un premier arrete interdisant purement et simplement l'utilisation de l'Avanza sur l'ensemble du vaste territoire de la commune. Un seul motif suffit a assurer ce combat selon lui : l'article 5 de la Charte de l'environnement. (4 points)",
+      "consolidation_notes": "Question tres riche en JP - noyau dur : SATAN 1935, Arcueil 2020, Orange France 2012, Photographes-filmeurs 1951. Articulation police generale / police speciale + principe de precaution. La grille developpe beaucoup la mise en balance des elements factuels pour apprecier la vraisemblance du risque - point pratique important. Copies IEJ non exploitables pour triangulation."
+    },
+    {
+      "id": "CNB-ADMIN-2025-Q1C",
+      "branche": "administratif",
+      "specialisation": "Droit administratif - delegation de police administrative a une personne privee, identite constitutionnelle de la France",
+      "question": "Le maire d'Arles a pris un second arrete deleguant aux agents de la Tour du Valat (fondation privee de recherche) la mission de proceder a des controles inopines aupres des exploitations agricoles pour faire respecter l'interdiction de l'Avanza. La mesure s'appuie sur une directive europeenne transposee. Cette delegation est-elle legale ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Enoncer le principe d'interdiction de deleguer une mission de police administrative a une personne privee (CE, ass., 17 juin 1932, Ville de Castelnaudary)",
+            "linked_jp": "CE, ass., 17 juin 1932, Ville de Castelnaudary",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le principe est donc celui de l'interdiction de deleguer une mission de police a une personne privee (CE, ass., 17 juin 1932, Ville de Castelnaudary)",
+            "uncertainty_note": "Pas d'ECLI (arret ancien)"
+          },
+          {
+            "text": "Valeur constitutionnelle de l'interdiction : Cons. const., 25 fev. 1992, n 92-307 DC ; Cons. const., 26 juin 2003, n 2003-473 DC - fondement sur l'article 12 de la DDHC",
+            "linked_jp": "Cons. const., 25 fev. 1992, n 92-307 DC",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le Conseil constitutionnel confere une valeur constitutionnelle a cette interdiction (Cons. const., 25 fevr. 1992, n 1992-307 DC ; Cons. const., 26 juin 2003, n 2003-473 DC)",
+            "uncertainty_note": "Numeros DC verifies par rapprochement avec la grille - la forme officielle est 92-307 DC pour 1992"
+          },
+          {
+            "text": "Principe inherent a l'identite constitutionnelle de la France (Cons. const., 15 oct. 2021, n 2021-940 QPC) - protege contre les derogations qui reposeraient sur le droit de l'UE",
+            "linked_jp": "Cons. const., 15 oct. 2021, n 2021-940 QPC",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "au point de la reconnaitre, sur le fondement de l'article 12 de la DDHC, comme un principe inherent a l'identite constitutionnelle de la France, permettant de la proteger contre d'eventuelles derogations qui reposeraient sur le droit de l'Union europeenne (CC, 15 oct. 2021, n 2021-940 QPC)",
+            "uncertainty_note": "Reference officielle : decision n 2021-940 QPC"
+          },
+          {
+            "text": "Evolution recente : Cons. const., 24 avr. 2025, n 2025-878 DC - l'interdiction ne fait pas obstacle a ce que des prerogatives de portee limitee soient exercees par des personnes privees dans des lieux determines relevant de leur competence, strictement necessaires a leurs missions de surveillance/securite legalement confiees, ni a ce qu'elles soient associees dans l'espace public sous controle effectif des agents de la force publique",
+            "linked_jp": "Cons. const., 24 avr. 2025, n 2025-878 DC",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Dans une decision du 24 avril 2025 (n 2025-878 DC), le Conseil constitutionnel a toutefois precise l'etendue de cette interdiction : Cette exigence ne fait cependant pas obstacle a ce que des prerogatives de portee limitee puissent etre exercees par des personnes privees, dans des lieux determines relevant de leur competence, lorsqu'elles sont strictement necessaires a l'accomplissement des missions de surveillance ou de securite qui leur sont legalement confiees",
+            "uncertainty_note": "Decision tres recente - ECLI non verifie, a croiser avec la base CC"
+          },
+          {
+            "text": "Application : l'arrete municipal procede a la delegation d'activites de police (controles preventifs = prevention des atteintes a l'ordre public). Les missions sont certes limitees (controles inopines) mais elles s'exercent dans des lieux prives, en dehors d'une competence legale confiee a la fondation, et sans controle par les agents de la force publique. La delegation est donc illegale",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, l'arrete municipal semble bien proceder a la delegation d'activites de police administrative... Les missions confiees aux agents de la Tour du Valat semblent certes limitees (simples controles inopines) mais elles vont s'exercer dans des lieux prives, en dehors d'une quelconque competence legale confiee a la fondation portant sur la surveillance ou la securite. Il n'est par ailleurs pas fait mention d'un controle de ces agents et prerogatives par les agents de la force publique. Des lors, il apparait illegal de deleguer"
+          },
+          {
+            "text": "Le fondement sur une directive europeenne transposee ne sauve pas la delegation : l'interdiction etant inherente a l'identite constitutionnelle francaise, le droit de l'UE ne peut y deroger",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le fait que cette delegation soit permise et fondee sur le droit de l'UE ne change rien a son interdiction : celle-ci etant inherente a l'identite constitutionnelle francaise, le droit de l'UE ne peut y deroger"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Exemples d'illegalite : missions de surveillance des voies publiques (CE, 29 dec. 1997, Commune d'Ostricourt)",
+            "linked_jp": "CE, 29 dec. 1997, Commune d'Ostricourt",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "ce qui vise par exemple les missions de surveillance des voies publiques (CE, 29 dec. 1997, Cne Ostricourt)",
+            "uncertainty_note": "Numero non cite ; ECLI non verifie"
+          },
+          {
+            "text": "Exemples d'illegalite : veille de la salubrite d'une plage et securite des baigneurs (CE, 21 juin 2000, Sarl Plage)",
+            "linked_jp": "CE, 21 juin 2000, Sarl Plage",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "les missions de veille de la salubrite d'une plage et la securite des baigneurs (CE, 21 juin 2000, Sarl Plage)",
+            "uncertainty_note": "Numero non cite ; ECLI non verifie"
+          },
+          {
+            "text": "Critere du statut de la personne delegataire : Cons. const., 31 mars 2023, n 2023-1042 QPC - l'ONF peut exercer des missions de police car personne publique, meme s'il emploie des agents de droit prive",
+            "linked_jp": "Cons. const., 31 mars 2023, n 2023-1042 QPC",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "C'est bien le statut de la personne delegataire qui est le critere (CC, 31 mars 2023, n 2023-1042 QPC : meme s'il emploie des agents de droit prive, l'ONF peut exercer des missions de police car il s'agit d'une personne publique)",
+            "uncertainty_note": "Reference officielle : decision n 2023-1042 QPC"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Evolution de la JP : la delegation d'activites accessoires (ex. constatations materielles) est traditionnellement admise, ce qui distingue tache executante / pouvoir de police",
+            "sources": ["llm_intrinsic"],
+            "why": "Distinction non explicitement dans la grille mais importante pour qualifier le caractere de la mission (ici controle inopine = prerogative de police)"
+          },
+          {
+            "text": "Articulation avec la jurisprudence europeenne : decision Commune de Saint-Denis (CE, Ass., 26 oct. 2011) sur l'articulation droit UE / norme constitutionnelle pour la police",
+            "sources": ["llm_intrinsic"],
+            "why": "Pour etayer le raisonnement sur le test d'identite constitutionnelle face au droit UE",
+            "uncertainty_note": "L'arret Commune de Saint-Denis de 2011 portait sur les OGM, pas directement sur la delegation de police - references a croiser"
+          },
+          {
+            "text": "Fondement Article 12 DDHC : la force publique est instituee pour l'avantage de tous, principe eleve au rang de condition constitutionnelle de la delegation",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "sur le fondement de l'article 12 de la DDHC"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [],
+        "optionnels": []
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CE, ass., 17 juin 1932, Ville de Castelnaudary",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret fondateur de l'interdiction de deleguer la police a une personne privee",
+          "uncertainty_note": "Pas d'ECLI (arret ancien)"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cons. const., 15 oct. 2021, n 2021-940 QPC",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Identite constitutionnelle de la France - bloc central de la reponse",
+          "uncertainty_note": "Reference officielle : decision n 2021-940 QPC (verifiee par coherence avec la doctrine)"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cons. const., 24 avr. 2025, n 2025-878 DC",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Definit les conditions strictes d'une delegation possible - permet de qualifier l'arrete d'illegal en l'espece (lieux prives, absence de controle par la force publique)",
+          "uncertainty_note": "Decision tres recente (2025) - ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cons. const., 25 fev. 1992, n 92-307 DC",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Valeur constitutionnelle de l'interdiction",
+          "uncertainty_note": "La grille ecrit 1992-307 DC - la forme officielle standard est n 92-307 DC"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cons. const., 26 juin 2003, n 2003-473 DC",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de la valeur constitutionnelle",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cons. const., 31 mars 2023, n 2023-1042 QPC",
+          "sens_vs_question": "neutre",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Critere du statut du delegataire (ONF personne publique)",
+          "uncertainty_note": "Reference officielle non verifiee"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 29 dec. 1997, Commune d'Ostricourt",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Illustration - surveillance voies publiques non delegable",
+          "uncertainty_note": "Numero non cite ; ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 21 juin 2000, Sarl Plage",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Illustration - salubrite plage et securite baigneurs non delegables",
+          "uncertainty_note": "Numero non cite ; ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas se contenter de viser la directive europeenne comme justification suffisante - l'identite constitutionnelle fait barrage. Ne pas confondre fondation privee / personne publique (critere du statut)."
+      },
+      "source_extract": "Enfin, le maire a pris un second arrete deleguant aux agents de la Tour du Valat, institut prive de recherche qui beneficie d'un statut de fondation, la mission d'operer des controles inopines aupres des exploitations agricoles, pour s'assurer du respect de l'interdiction. Cette mesure s'appuie sur une directive europeenne, pleinement transposee en droit francais par une recente loi. (2 points)",
+      "consolidation_notes": "Question courte (2 pts) mais tres dense jurisprudentiellement. Axe principal : articulation interdiction de deleguer / identite constitutionnelle / droit UE. La decision Cons. const. 24 avr. 2025 n 2025-878 DC est centrale et tres recente, donc peu probable qu'un LLM l'ait sans pre-entrainement. Enjeu benchmark : tester la capacite du KG a remonter cette decision de 2025 via la relation 'identite_constitutionnelle'."
+    },
+    {
+      "id": "CNB-ADMIN-2025-Q2",
+      "branche": "administratif",
+      "specialisation": "Droit de la fonction publique - discipline, liberte d'expression des agents publics, obligation de reserve et neutralite",
+      "question": "Monsieur Ramoun, fonctionnaire titulaire a la prefecture (adjoint au directeur du controle de legalite), a publie sur le reseau social X un message assimilant les elus ecologistes du maire d'Arles a des 'khmers verts' et appelant a les 'bouter par tous moyens'. Il a ete suspendu temporairement et une procedure disciplinaire a ete engagee. La prefecture demande la saisine du conseil de discipline et souhaite savoir si une sanction peut etre prononcee, et laquelle.",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualifier la situation statutaire de M. Ramoun : fonctionnaire civil de l'Etat au sens de l'article L. 3 CGFP (agent titulaire d'une prefecture, administration de l'Etat) - CGFP applicable",
+            "linked_article": "code_general_de_la_fonction_publique:L3",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'on doit d'abord preciser que M. Ramoun releve de la fonction publique de l'Etat (1 point). Selon l'article L3 du code general de la fonction publique : Les fonctionnaires civils de l'Etat sont les personnes qui ont ete nommees dans un emploi permanent a temps complet et ont ete titularisees dans un grade de la hierarchie administrative"
+          },
+          {
+            "text": "Obligations statutaires : art. L. 121-1 CGFP (dignite, impartialite, integrite, probite) et art. L. 121-2 CGFP (neutralite, laicite, abstention de manifester ses opinions)",
+            "linked_article": "code_general_de_la_fonction_publique:L121-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'article L121-1 du CGFP : L'agent public exerce ses fonctions avec dignite, impartialite, integrite et probite ; l'article L121-2 du meme code : Dans l'exercice de ses fonctions, l'agent public est tenu a l'obligation de neutralite"
+          },
+          {
+            "text": "Faute disciplinaire : l'agent public qui ne respecte pas ses obligations commet une faute de nature a engager sa responsabilite disciplinaire (art. L. 530-1 CGFP)",
+            "linked_article": "code_general_de_la_fonction_publique:L530-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'agent public qui ne respecte pas ces obligations commet une faute, de nature a engager sa responsabilite disciplinaire (art. L. 530-1 CGFP)"
+          },
+          {
+            "text": "Contrepoids : droits et libertes - art. L. 111-1 CGFP (liberte d'opinion garantie aux agents publics) ; liberte d'expression non codifiee mais fondee sur l'art. 11 DDHC et l'art. 10 Conv. EDH",
+            "linked_article": "code_general_de_la_fonction_publique:L111-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "article L111-1 CGFP : la liberte d'opinion est garantie aux agents publics ; la liberte d'expression, qui n'est pas specifiquement et expressement prevu par le statut, mais repose sur l'article 11 de la DDHC ou encore l'article 10 Conv. EDH"
+          },
+          {
+            "text": "Distinction pendant/hors fonction : pendant les fonctions, obligation stricte de neutralite ; hors des fonctions, obligation de reserve dont l'etendue depend de la nature des fonctions, du rang hierarchique, du lien entre les propos et le service, du lieu",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La conciliation de ces differentes exigences s'apprecie differemment selon que l'agent est en fonction ou non. A l'occasion des fonctions, les agents sont tenus a une stricte obligation de ne pas exprimer leurs opinions... En dehors des fonctions, la liberte des agents est plus grande mais ils sont tout de meme tenus a une obligation de reserve, dont l'etendue est variable"
+          },
+          {
+            "text": "Procedure de suspension : art. L. 531-1 CGFP - l'autorite disciplinaire peut suspendre l'agent auteur d'une faute grave, le conseil de discipline doit etre saisi sans delai ; duree maximale de 4 mois",
+            "linked_article": "code_general_de_la_fonction_publique:L531-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "en application de l'article L531-1 CGFP, l'autorite exercant le pouvoir disciplinaire a la possibilite de suspendre le fonctionnaire auteur d'une faute grave, le conseil de discipline devant etre saisi sans delai. Cette suspension ne peut aller au-dela de 4 mois"
+          },
+          {
+            "text": "Echelle des sanctions (art. L. 533-1 et s. CGFP) : 1er groupe (avertissement, blame, exclusion temporaire max 3 jours) ; 2e groupe (radiation tableau d'avancement, abaissement d'echelon, exclusion temporaire 4-15 jours, deplacement d'office) ; 3e groupe (retrogradation, exclusion temporaire 16 jours - 2 ans) ; 4e groupe (mise a la retraite, revocation)",
+            "linked_article": "code_general_de_la_fonction_publique:L533-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "les sanctions envisageables sont prevues par les articles L533-1 et s. du CGFP. Sont possibles, par gradation : l'avertissement, le blame et l'exclusion temporaire de maximum 3 jours ; la radiation du tableau d'avancement, l'abaissement d'echelon, l'exclusion temporaire entre 4 et 15 jours et le deplacement d'office ; la retrogradation et l'exclusion temporaire entre 16 jours et deux ans ; la mise a la retraite et la revocation"
+          },
+          {
+            "text": "Application : caracterisation probable d'une faute (moyen de communication grand public, propos outranciers, rang hierarchique important, lien avec les fonctions de controle de legalite). Mais gravite faible si c'est le seul reproche - orientation vers des sanctions du 1er groupe (avertissement, blame, exclusion max 3 jours)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Ces elements penchent plutot en faveur de la caracterisation d'une faute... la gravite de la faute semble tout de meme extremement faible, s'il s'agit du seul reproche fait a l'agent. Des lors, l'on pencherait plutot pour des sanctions relevant du 1er groupe"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Criteres d'appreciation de la reserve : nature des fonctions, rang hierarchique, lien propos/service, lieu - enumeration classique",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "elle depend de la nature des fonctions ; du rang hierarchique de l'agent ; du lien entre les propos et le service ; du lieu ou l'agent s'exprime"
+          },
+          {
+            "text": "JP reseaux sociaux : Cass. 19 oct. 2022, n 21-12.370 - agent du service public publiant sur Facebook critique de partis politiques et diffusion du Coran accompagnees de citations appelant a la violence = faute",
+            "linked_jp": "Cass., 19 oct. 2022, n 21-12.370",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "commet une faute l'agent du service public (ici agent de droit prive) qui publie sur facebook une critique importante et tendancieuse de deux partis politiques, des appels a la diffusion du Coran accompagnes de citations appelant a la violence (Ccass. 19 octobre 2022, n 21-12.370)",
+            "uncertainty_note": "Jurisprudence judiciaire (Cour de cassation) applicable aux agents de droit prive ; pour les agents publics, il faut distinguer. ECLI non verifie"
+          },
+          {
+            "text": "JP reseaux sociaux : CAA Versailles, 26 juin 2021, n 19VE03416 - agent publiant sur Facebook des declarations mettant en cause sa hierarchie sous un titre accusatoire = faute",
+            "linked_jp": "CAA Versailles, 26 juin 2021, n 19VE03416",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "un agent qui publie sur facebook des declarations mettant en cause sa hierarchie, sous le titre La guerre est declaree entre les habitants et la commune (CAA Versailles, 26 juin 2021, n 19VE03416)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "JP reseaux sociaux : CAA Toulouse, 13 sept. 2022, n 21TL02578 - agent ayant tenu des propos injurieux a l'encontre d'elus et appelant a un changement de majorite = faute",
+            "linked_jp": "CAA Toulouse, 13 sept. 2022, n 21TL02578",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "l'agent qui a tenu sur les reseaux sociaux, a plusieurs reprises, des propos injurieux a l'encontre des elus de sa commune en appelant notamment a un changement de majorite municipale lors des elections a venir (CAA Toulouse, 13 septembre 2022, n 21TL02578)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Mise en balance des elements : utilisation d'un moyen grand public (X), contenu outrancier (khmers verts, bouter par tous moyens, croisades), rang hierarchique important (adjoint au directeur), nature des fonctions exercees (controle de legalite - lien avec l'objet des propos)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "on attend des candidats, une fois rappeles ces principes, qu'ils discutent les elements tendant ou non a une sanction : utilisation d'un moyen de communication grand public ; contenu des propos assez outranciers (khmers verts ; bouter par tous moyens ; evocation des croisades...) ; rang hierarchique important de l'agent (adjoint au directeur d'un service) ; nature des fonctions exercees (controle de legalite)"
+          }
+        ],
+        "expert": [
+          {
+            "text": "JP constante du CE : l'obligation de reserve est d'intensite variable selon la situation de l'agent (CE, 28 juil. 1993, Marchand ; CE, 15 oct. 2003) - principe jurisprudentiel etabli",
+            "sources": ["llm_intrinsic"],
+            "why": "Complement - la grille ne cite pas de CE sur la reserve elle-meme, se concentre sur des exemples de CAA",
+            "uncertainty_note": "References jurisprudentielles historiques sur l'obligation de reserve a verifier"
+          },
+          {
+            "text": "Proportionnalite de la sanction : le juge de l'exces de pouvoir exerce un plein controle depuis CE, Ass., 13 nov. 2013, Dahan (n 347704)",
+            "linked_jp": "CE, Ass., 13 nov. 2013, Dahan, n 347704",
+            "sources": ["llm_intrinsic"],
+            "why": "Standard de controle juridictionnel pertinent pour le choix de la sanction - absent de la grille mais pilier du contentieux disciplinaire",
+            "uncertainty_note": "Reference Dahan : CE Ass. 13 nov. 2013 - numero de pourvoi a verifier"
+          },
+          {
+            "text": "Non-bis in idem : la sanction disciplinaire peut se cumuler avec une sanction penale eventuelle (principe constant de la JP administrative)",
+            "sources": ["llm_intrinsic"],
+            "why": "Ouverture sur l'articulation disciplinaire/penal - non soulevee ici mais culture pertinente"
+          },
+          {
+            "text": "Distinction agent public / agent de droit prive : la reference Cass. 19 oct. 2022 porte sur un agent de droit prive d'un service public, regime different du CGFP",
+            "linked_jp": "Cass., 19 oct. 2022, n 21-12.370",
+            "sources": ["grille_cnb", "llm_intrinsic"],
+            "grille_weight": 0,
+            "extract_from_grille": "commet une faute l'agent du service public (ici agent de droit prive)"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_general_de_la_fonction_publique:L3",
+          "code_general_de_la_fonction_publique:L121-1",
+          "code_general_de_la_fonction_publique:L121-2",
+          "code_general_de_la_fonction_publique:L530-1",
+          "code_general_de_la_fonction_publique:L531-1",
+          "code_general_de_la_fonction_publique:L533-1"
+        ],
+        "optionnels": [
+          "code_general_de_la_fonction_publique:L111-1"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass., 19 oct. 2022, n 21-12.370",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Illustration d'une faute via reseaux sociaux - propos violents",
+          "uncertainty_note": "Juridiction judiciaire (agent de droit prive) ; ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CAA Versailles, 26 juin 2021, n 19VE03416",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Illustration - mise en cause de la hierarchie sur reseaux sociaux",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CAA Toulouse, 13 sept. 2022, n 21TL02578",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Illustration - propos injurieux contre elus et appel a changement de majorite",
+          "uncertainty_note": "ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas proposer automatiquement une sanction severe (revocation) : la grille oriente vers le 1er groupe. Ne pas oublier l'articulation obligation de reserve / liberte d'expression (art. 10 CEDH)."
+      },
+      "source_extract": "Monsieur Ramoun, agent titulaire de la prefecture des Bouches-du-Rhone, a lui aussi vivement reagi aux actions du maire... Son poste a la prefecture d'adjoint au directeur du controle de legalite lui permet d'etre aux premieres loges... il a en particulier publie ce message sur le reseau social X : La Camargue a vu le depart des croisades, mais celles-ci n'etaient pas ideologiques. Il faut bouter hors de notre region, par tous moyens, ces elus khmers verts... Ce dernier a immediatement fait l'objet d'une suspension a titre temporaire, une procedure disciplinaire ayant ete entamee a son encontre. (5 points)",
+      "consolidation_notes": "Question tres structuree par la grille : qualification statutaire (1pt) + caracterisation faute (2pts) + sanctions (2pts). Orientation claire vers sanctions du 1er groupe. Le CGFP (articles L3, L121-1, L121-2, L111-1, L530-1, L531-1, L533-1) est au coeur de la reponse attendue. Point de vigilance LLM : verifier la numerotation CGFP (entre en vigueur 1er mars 2022), les numeros L530-1 et L533-1 sont exacts."
+    },
+    {
+      "id": "CNB-ADMIN-2025-Q3",
+      "branche": "administratif",
+      "specialisation": "Droit administratif - responsabilite administrative sans faute, regime des attroupements et rassemblements (art. L. 211-10 CSI)",
+      "question": "Entre le 1er juin et le 1er juillet 2025, des riziculteurs ont installe a plusieurs reprises des barrages routiers aux sorties de la RN 113 desservant Arles pour protester contre les arretes du maire, bloquant ainsi l'acces des touristes au festival international de la photographie. La societe organisatrice subit une perte de recettes. Quel est le regime de responsabilite applicable et quelles sont les chances de succes de la demande de reparation ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Principe : les activites de l'administration engagent sa responsabilite (TC, 8 fev. 1873, Blanco), selon deux regimes - responsabilite pour faute ou responsabilite sans faute, organises par la loi ou la jurisprudence",
+            "linked_jp": "TC, 8 fev. 1873, Blanco",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "S'agissant de la responsabilite administrative, les activites de l'administration engagent sa responsabilite (TC 8 fev.1873 Blanco), selon deux regimes : une responsabilite pour faute ou une responsabilite meme sans faute",
+            "uncertainty_note": "Arret fondateur - pas d'ECLI"
+          },
+          {
+            "text": "Regime legislatif de responsabilite sans faute pour les attroupements et manifestations (loi du 16 avril 1914 codifiee au code de la securite interieure)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En matiere d'attroupements et de manifestations, le legislateur a fait le choix d'un regime legislatif de responsabilite meme sans faute... Le principe a ete fixe par une loi du 16 avril 1914, plusieurs fois modifiee et aujourd'hui codifiee au sein du code de la securite interieure"
+          },
+          {
+            "text": "Article L. 211-10 CSI : l'Etat est civilement responsable des degats et dommages resultant des crimes et delits commis, a force ouverte ou par violence, par des attroupements ou rassemblements armes ou non armes, soit contre les personnes, soit contre les biens",
+            "linked_article": "code_de_la_securite_interieure:L211-10",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Selon l'article L211-10 du code de la securite interieure : L'Etat est civilement responsable des degats et dommages resultant des crimes et delits commis, a force ouverte ou par violence, par des attroupements ou rassemblements armes ou non armes, soit contre les personnes, soit contre les biens"
+          },
+          {
+            "text": "Condition 1 - fait generateur : attroupement ou rassemblement ayant un caractere spontane. Inclut les manifestations sans but protestataire (CE, 13 dec. 2002, Cie ass. Les Lloyd's)",
+            "linked_jp": "CE, 13 dec. 2002, Cie d'assurances Les Lloyd's",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le fait generateur doit etre un attroupement ou un rassemblement ayant un caractere spontane. Le juge a admis que constituait bien un tel rassemblement une manifestation par un groupe meme sans but protestataire (CE, 13 dec. 2002, Cie ass. Les Lloyds's)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Condition 1 (negative) - exclusion des actes premedites : des dommages causes par des casseurs volontaires ne constituent pas de tels rassemblements (CE, 26 mars 2004, Soc. BV Exportslachterij Apeldoorn ESA ; CE, 11 juil. 2011, Mutuelle des collectivites locales, n 331669 ; CE, 28 oct. 2022, Soc. SANEF, n 451659). La premeditation s'apprecie au regard des dommages et non des actes eux-memes (CE, 11 oct. 2023, SNCF Reseau, n 465591)",
+            "linked_jp": "CE, 11 oct. 2023, SNCF Reseau, n 465591",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "des dommages causes par des casseurs volontaires ne constituent pas des rassemblements en ce sens (par ex. CE, 26mars 2004, Soc. BV Exportslachterij Apeldoorn ESA), en raison de leur caractere premedite (v. egalement CE, 11 juillet 2011, n 331669, Soc. Mutuelle d'assurances des collectivites locales ; CE, 28 oct. 2022, n 451659, Soc. SANEF)... Le Conseil d'Etat a precise que la premeditation s'appreciait au regard des dommages et non des actes eux-memes (CE, 11 oct. 2023, n 465591, SNCF Reseau)",
+            "uncertainty_note": "ECLI non verifies"
+          },
+          {
+            "text": "Condition 2 - les actes commis doivent etre caracterises comme des crimes ou delits",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "les actes commis doivent etre caracterises comme des crimes ou delits"
+          },
+          {
+            "text": "Condition 3 - reparation integrale : tous les prejudices en resultant peuvent etre repares, y compris les prejudices commerciaux (CE, ass., avis, 6 avril 1990, Cofiroute), sans que le prejudice n'ait a etre special ou anormal",
+            "linked_jp": "CE, ass., avis, 6 avril 1990, Cofiroute",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "tous les prejudices en resultant peuvent etre repares, y compris les prejudices commerciaux (CE, ass., avis, 6 avril 1990, Cofiroute), sans que ce prejudice n'ait a etre special ou anormal",
+            "uncertainty_note": "ECLI non verifie (avis d'assemblee)"
+          },
+          {
+            "text": "Application en l'espece : mouvement de protestation sans objet principal de realiser des dommages ; barrages repetes = infraction (entrave a la circulation, art. L. 412-1 code de la route) ; societe organisatrice subit une perte de recettes (prejudice commercial reparable) - regime applicable, Etat responsable",
+            "linked_article": "code_de_la_route:L412-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, il semble bien que ce regime soit applicable (confirmation par la decision du 28 fev. 2025 precitee) : l'on est dans le cadre d'un mouvement de protestation, qui n'a pour objet principal la realisation de dommages ; les barrages repetes sont constitutifs d'une infraction, en l'occurrence l'entrave a la circulation, sur le fondement de l'article L412-1 du code de la route (NB : cet article n'est pas attendu expressement de la part des candidats)"
+          },
+          {
+            "text": "Responsabilite : c'est l'Etat qui sera tenu responsable et indemnisera la societe. L'Etat peut exercer une action recursoire contre les auteurs defaillants du dommage",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Des lors, c'est l'Etat qui sera tenu responsable et indemnisera la societe... L'Etat condamne a indemniser peut toujours se retourner contre les auteurs defaillants du dommage"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Decision confirmatoire du sujet : CE, 28 fev. 2025, n 473904, Societe Lib Industries - les faits sont inspires de cette decision",
+            "linked_jp": "CE, 28 fev. 2025, Societe Lib Industries, n 473904",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Les faits sont largement inspires d'une recente decision du CE, 28 fev. 2025, n 473904, Soc. Lib Industries",
+            "uncertainty_note": "Decision tres recente - ECLI non verifie"
+          },
+          {
+            "text": "CE, 26 mars 2004, Societe BV Exportslachterij Apeldoorn ESA - exemple de dommages causes par casseurs volontaires exclus du regime",
+            "linked_jp": "CE, 26 mars 2004, Societe BV Exportslachterij Apeldoorn ESA",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "par ex. CE, 26mars 2004, Soc. BV Exportslachterij Apeldoorn ESA",
+            "uncertainty_note": "Numero non cite ; ECLI non verifie"
+          },
+          {
+            "text": "CE, 11 juillet 2011, Societe Mutuelle d'assurances des collectivites locales, n 331669 - confirmation exclusion actes premedites",
+            "linked_jp": "CE, 11 juillet 2011, Mutuelle des collectivites locales, n 331669",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "CE, 11 juillet 2011, n 331669, Soc. Mutuelle d'assurances des collectivites locales",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "CE, 28 oct. 2022, Societe SANEF, n 451659 - actes delictuels sur autoroute a caractere premedite exclus",
+            "linked_jp": "CE, 28 oct. 2022, Societe SANEF, n 451659",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "CE, 28 oct. 2022, n 451659, Soc. SANEF : a propos d'actes delictuels commis sur une autoroute mais avec un caractere premedite",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Commune d'Arles non inquietee en premier lieu ; action recursoire de l'Etat contre la commune delicate a etablir (barrages sur route nationale, police nationale competente, opposition du maire au simple declencheur)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La commune d'Arles ne sera pas inquietee en premier lieu mais il sera toujours possible pour l'Etat d'exercer une action recursoire a son encontre. Cela etant, il faudrait que l'Etat prouve que la commune a une part dans la realisation du dommage, ce qui est tout de meme delicat : les barrages sont sur une route nationale ; c'est certainement la police nationale qui est intervenue ; certes l'opposition du maire d'Arles a l'Avanza est a l'origine du mecontentement, mais ce n'est qu'un element declenchant"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Champ de l'art. L. 211-10 CSI : inclut les prejudices immateriels et les pertes commerciales (JP Cofiroute 1990 + confirmations ulterieures)",
+            "linked_article": "code_de_la_securite_interieure:L211-10",
+            "sources": ["grille_cnb", "llm_intrinsic"],
+            "grille_weight": 0,
+            "extract_from_grille": "tous les prejudices en resultant peuvent etre repares, y compris les prejudices commerciaux"
+          },
+          {
+            "text": "CE, 11 oct. 2023, SNCF Reseau, n 465591 - precision sur l'appreciation de la premeditation au regard des dommages et non des actes",
+            "linked_jp": "CE, 11 oct. 2023, SNCF Reseau, n 465591",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Le Conseil d'Etat a precise que la premeditation s'appreciait au regard des dommages et non des actes eux-memes (CE, 11 oct. 2023, n 465591, SNCF Reseau)",
+            "uncertainty_note": "ECLI non verifie - decision recente"
+          },
+          {
+            "text": "Charge de la preuve du prejudice : la societe organisatrice doit apporter la preuve de la perte de recettes (comptabilite comparative, attestations, etc.)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "sous reserve qu'elle en apporte la preuve, la societe organisatrice du festival subit une perte de recettes, constitutive d'un prejudice commercial et financier"
+          },
+          {
+            "text": "Articulation avec la responsabilite pour faute : la victime pourrait theoriquement aussi agir sur un fondement pour faute (carence du service d'ordre) mais le regime sans faute est plus favorable",
+            "sources": ["llm_intrinsic"],
+            "why": "Culture juridique - alternative non souvent retenue mais pertinente pour une reponse complete"
+          },
+          {
+            "text": "NB grille : l'article L. 412-1 du code de la route n'est pas attendu expressement des candidats",
+            "linked_article": "code_de_la_route:L412-1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "NB : cet article n'est pas attendu expressement de la part des candidats"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_la_securite_interieure:L211-10"
+        ],
+        "optionnels": [
+          "code_de_la_route:L412-1"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "TC, 8 fev. 1873, Blanco",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret fondateur de la responsabilite administrative",
+          "uncertainty_note": "Pas d'ECLI (arret ancien)"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, ass., avis, 6 avril 1990, Cofiroute",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Avis fondateur sur la reparation integrale y compris les prejudices commerciaux",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 28 fev. 2025, Societe Lib Industries, n 473904",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Decision confirmatoire recente - faits inspirateurs du sujet",
+          "uncertainty_note": "Decision tres recente - ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 13 dec. 2002, Cie d'assurances Les Lloyd's",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Inclusion des rassemblements sans but protestataire dans le champ de l'art. L. 211-10",
+          "uncertainty_note": "Numero non cite ; ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 11 oct. 2023, SNCF Reseau, n 465591",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Precision sur l'appreciation de la premeditation au regard des dommages",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 26 mars 2004, Societe BV Exportslachterij Apeldoorn ESA",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Exclusion des actes premedites - limite potentielle",
+          "uncertainty_note": "Numero non cite ; ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 11 juillet 2011, Mutuelle des collectivites locales, n 331669",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Confirmation de l'exclusion des actes premedites",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CE, 28 oct. 2022, Societe SANEF, n 451659",
+          "sens_vs_question": "defavorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Actes delictuels sur autoroute a caractere premedite exclus",
+          "uncertainty_note": "ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Ne pas qualifier trop vite les barrages de 'casseurs premedites' : en l'espece, le contexte protestataire et la spontaneite des barrages les font entrer dans le regime L. 211-10 CSI. La commune d'Arles n'est pas responsable en premier lieu (pas de confusion avec la responsabilite communale)."
+      },
+      "source_extract": "Une bonne partie des riziculteurs entendent eux aussi protester contre les mesures prises par le maire d'Arles... Ils ont ainsi decide de perturber le festival international de la photographie... Ils ont pour ce faire installe a plusieurs reprises des barrages aux differentes sorties de la Route Nationale 113 qui desservent Arles, entre le 1er juin et le 1er juillet 2025, a l'aide de camions, de palettes et de pneus... afin de bloquer l'acces des touristes aux differents lieux d'exposition... La societe organisatrice du festival de la photographie souhaite obtenir reparation des prejudices subis, essentiellement une perte de recettes pour le festival. (5 points)",
+      "consolidation_notes": "Question classique de responsabilite administrative sans faute pour attroupements. Noyau : L. 211-10 CSI + Cofiroute 1990 + trilogie d'arrets sur l'exclusion des actes premedites (2004, 2011, 2022) + precision 2023 (SNCF Reseau) + confirmation tres recente 2025 (Lib Industries). La grille fait un NB explicite que l'art. L. 412-1 code route n'est pas attendu. La reponse doit conclure a la responsabilite de l'Etat (commune non responsable en premier lieu)."
+    }
+  ],
+  "summary_benchmark": {
+    "nb_questions": 5,
+    "total_bareme_points": 20,
+    "distribution_sources": {
+      "grille_cnb_only": "majorite des points (tous les core et la quasi-totalite des expected)",
+      "grille_cnb_plus_copie_iej": "aucun - les copies IEJ sont des scans manuscrits non exploitables (OCR francais indisponible)",
+      "grille_cnb_plus_llm_intrinsic": "points expert (Dahan 2013, non-bis in idem, valeur constitutionnelle Charte 2005)",
+      "llm_intrinsic_only": "quelques points expert de culture juridique (L. 211-6 CRPA, JP Marchand/reserve)"
+    },
+    "ecarts_notables": [
+      "Copies IEJ 25/32/35 : scans manuscrits - OCR en anglais produit un texte non exploitable (tesseract fra non installe sur l'environnement). Triangulation reduite a grille + llm_intrinsic, contrairement au consolidated Obligations qui beneficiait d'une copie type.",
+      "Q1c (delegation) : la decision cle Cons. const. 24 avr. 2025 n 2025-878 DC est tres recente. Enjeu benchmark fort : verifier si le KG la remonte.",
+      "Q3 : decision confirmatoire CE 28 fev. 2025 Lib Industries non exigee par la grille mais mentionnee comme source inspiratrice - distinction core/expert a manipuler avec precaution.",
+      "Aucune reference a des articles du Code de justice administrative dans la grille officielle - le sujet porte essentiellement sur des questions de fond (police, fonction publique, responsabilite) plutot que de procedure. Hypothese initiale de l'utilisateur sur 'code_justice_administrative' non retenue.",
+      "Nombreux arrets anciens (Blanco 1873, Castelnaudary 1932, SATAN 1935, Photographes-filmeurs 1951, Films Lutetia 1959) sans ECLI possible : uncertainty_note systematique."
+    ]
+  }
+}
