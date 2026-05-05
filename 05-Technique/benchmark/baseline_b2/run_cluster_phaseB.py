@@ -57,11 +57,12 @@ import pyarrow.parquet as pq
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════
 
-MODEL_REGISTRY: dict[str, tuple[str, int, str]] = {
-    "e5-base":         ("intfloat/multilingual-e5-base",         768, "Multilingual E5 base"),
-    "e5-large":        ("intfloat/multilingual-e5-large",       1024, "Multilingual E5 large"),
-    "bge-m3":          ("BAAI/bge-m3",                           1024, "BGE-M3 long context"),
-    "camembert-large": ("dangvantuan/sentence-camembert-large",  1024, "Sentence-CamemBERT FR large"),
+MODEL_REGISTRY: dict[str, tuple[str, int, str, int]] = {
+    # alias → (hf_id, emb_dim, note, recommended_emb_batch_for_40GB)
+    "e5-base":         ("intfloat/multilingual-e5-base",         768,  "Multilingual E5 base",         512),
+    "e5-large":        ("intfloat/multilingual-e5-large",       1024,  "Multilingual E5 large",        128),
+    "bge-m3":          ("BAAI/bge-m3",                           1024, "BGE-M3 long context",          128),
+    "camembert-large": ("dangvantuan/sentence-camembert-large",  1024, "Sentence-CamemBERT FR large",  128),
 }
 
 DEFAULT_MODELS = ["e5-base", "e5-large", "bge-m3", "camembert-large"]
@@ -74,9 +75,10 @@ LOG_DIR    = HERE / "logs";       LOG_DIR.mkdir(exist_ok=True)
 CHUNK_SIZE         = 510
 OVERLAP            = 64
 MAX_CHUNKS_PER_DOC = 8
-DOC_BATCH_DEFAULT  = 16_000     # vs 4 000 avant
-EMB_BATCH_DEFAULT  = 2_048      # vs 512 avant
+DOC_BATCH_DEFAULT  = 4_000      # conservateur si VRAM partagée
+EMB_BATCH_DEFAULT  = 128        # conservateur ; tune via --emb-batch si VRAM dispo
 PREFIX_PASSAGE     = "passage: "
+MAX_SEQ_LENGTH     = 512        # clamp côté model.encode() pour éviter re-tok > 510
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -109,6 +111,28 @@ def detect_device() -> str:
     if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
         return "mps"
     return "cpu"
+
+
+def gpu_memory_info() -> tuple[float, float] | None:
+    """Renvoie (free_gb, total_gb) pour le GPU 0, ou None si pas de CUDA."""
+    try:
+        import torch
+        if not torch.cuda.is_available():
+            return None
+        free_b, total_b = torch.cuda.mem_get_info(0)
+        return free_b / 1e9, total_b / 1e9
+    except Exception:
+        return None
+
+
+def warn_if_low_vram(threshold_gb: float = 15.0) -> None:
+    info = gpu_memory_info()
+    if info is None:
+        return
+    free, total = info
+    print(f"  GPU mem : {free:.1f} GB libre / {total:.1f} GB total")
+    if free < threshold_gb:
+        print(f"  ⚠ VRAM libre < {threshold_gb} GB — réduisez --emb-batch si OOM")
 
 
 def chunk_token_ids(tids, size: int, overlap: int, max_chunks: int):
@@ -173,7 +197,11 @@ def embed_one_model(alias: str, hf_id: str, emb_dim: int, args) -> dict:
     print(f"  Chargement de {hf_id}…")
     device = detect_device()
     print(f"  Device : {device}")
+    warn_if_low_vram()
     model = SentenceTransformer(hf_id, device=device)
+    # Force la troncature côté model.encode() : même si le re-tokenize après decode
+    # produit > MAX_SEQ_LENGTH tokens, ils seront tronqués proprement
+    model.max_seq_length = MAX_SEQ_LENGTH
     tokenizer = model.tokenizer
 
     pbar = tqdm(total=n_jp, initial=start_offset, desc=f"embed/{alias}",
@@ -205,14 +233,26 @@ def embed_one_model(alias: str, hf_id: str, emb_dim: int, args) -> dict:
             doc_chunk_counts.append(len(decoded))
             all_chunks.extend(decoded)
 
-        # Embedder en gros batch GPU
-        chunk_embs = model.encode(
-            all_chunks,
-            batch_size=args.emb_batch,
-            normalize_embeddings=True,
-            convert_to_numpy=True,
-            show_progress_bar=False,
-        ).astype(np.float32)
+        # Embedder avec retry on OOM (divise le batch par 2)
+        import torch
+        current_batch = args.emb_batch
+        chunk_embs = None
+        while chunk_embs is None:
+            try:
+                chunk_embs = model.encode(
+                    all_chunks,
+                    batch_size=current_batch,
+                    normalize_embeddings=True,
+                    convert_to_numpy=True,
+                    show_progress_bar=False,
+                ).astype(np.float32)
+            except torch.cuda.OutOfMemoryError:
+                torch.cuda.empty_cache()
+                if current_batch <= 16:
+                    print(f"\n  ✗ OOM même à batch={current_batch}, abandon")
+                    raise
+                current_batch = max(16, current_batch // 2)
+                print(f"\n  ⚠ OOM → retry avec emb_batch={current_batch}")
 
         # Mean pool par doc + L2-normalize après mean
         doc_embs = np.zeros((batch_n, emb_dim), dtype=np.float32)
@@ -262,6 +302,10 @@ def embed_one_model(alias: str, hf_id: str, emb_dim: int, args) -> dict:
 
         del all_chunks, chunk_embs, doc_embs, texts, doc_chunk_counts, encoded_batch
         gc.collect()
+        try:
+            torch.cuda.empty_cache()
+        except Exception:
+            pass
 
         chunks_written += n_new
         offset += batch_n
@@ -325,8 +369,9 @@ def main() -> int:
                     help=f"Cap chunks/doc (défaut: {MAX_CHUNKS_PER_DOC} ≈ 3500 tokens)")
     ap.add_argument("--doc-batch", type=int, default=DOC_BATCH_DEFAULT,
                     help=f"Docs par batch I/O (défaut: {DOC_BATCH_DEFAULT})")
-    ap.add_argument("--emb-batch", type=int, default=EMB_BATCH_DEFAULT,
-                    help=f"Chunks par forward GPU (défaut: {EMB_BATCH_DEFAULT})")
+    ap.add_argument("--emb-batch", type=int, default=None,
+                    help="Chunks par forward GPU (défaut: auto par modèle "
+                         "— e5-base 512, e5-large/bge-m3/camembert 128)")
     ap.add_argument("--force", action="store_true",
                     help="Re-run même si artefacts existent")
     ap.add_argument("--no-purge", action="store_true",
@@ -339,8 +384,12 @@ def main() -> int:
     print(f"Embeddings : {EMB_DIR}")
     print(f"Modèles    : {args.only}")
     print(f"Doc batch  : {args.doc_batch}")
-    print(f"Emb batch  : {args.emb_batch}")
+    print(f"Emb batch  : {args.emb_batch if args.emb_batch is not None else 'auto par modèle'}")
     print(f"Max chunks : {args.max_chunks}")
+    info = gpu_memory_info()
+    if info:
+        free, total = info
+        print(f"VRAM       : {free:.1f} GB libre / {total:.1f} GB total")
 
     aliases = args.only
     unknown = [a for a in aliases if a not in MODEL_REGISTRY]
@@ -349,10 +398,16 @@ def main() -> int:
         print(f"Dispo : {list(MODEL_REGISTRY.keys())}")
         return 1
 
+    user_emb_batch = args.emb_batch  # None = auto, int = forcé
     summary = []
     for alias in aliases:
-        hf_id, emb_dim, note = MODEL_REGISTRY[alias]
-        print(f"\n{'='*70}\n[{alias}] {hf_id}  |  {note}\n{'='*70}")
+        hf_id, emb_dim, note, recommended_batch = MODEL_REGISTRY[alias]
+        if user_emb_batch is None:
+            args.emb_batch = recommended_batch
+            print(f"\n→ emb_batch auto pour {alias} = {recommended_batch}")
+        else:
+            args.emb_batch = user_emb_batch
+        print(f"{'='*70}\n[{alias}] {hf_id}  |  {note}\n{'='*70}")
 
         try:
             from huggingface_hub import snapshot_download
