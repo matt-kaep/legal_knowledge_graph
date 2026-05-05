@@ -1,0 +1,575 @@
+% !TEX program = pdflatex
+% Presentation superviseur -- Week 4 -- 2026-05-05
+% Baseline B2 (embedding naïf) : succès apparent, échec démasqué, diagnostic
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, fit, backgrounds}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{footnote}{size=\tiny}
+
+\definecolor{accent}{RGB}{41, 92, 155}
+\definecolor{accentsoft}{RGB}{230, 238, 247}
+\definecolor{warn}{RGB}{200, 80, 40}
+\definecolor{ok}{RGB}{30, 130, 70}
+
+\newcommand{\keybox}[1]{%
+  \begin{center}
+  \colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\warnbox}[1]{%
+  \begin{center}
+  \colorbox{red!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\okbox}[1]{%
+  \begin{center}
+  \colorbox{green!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+
+\title[KG juridique FR --- Week 4]{Construction d'un Knowledge Graph juridique français}
+\subtitle{Point d'avancement --- Week 4 : baseline B2 et diagnostic embedding}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{5 mai 2026}
+
+\begin{document}
+
+% ============================================================
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ============================================================
+\begin{frame}{Plan de la séance}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Rappel des engagements et pivot S4}
+
+\begin{frame}{Engagements actés en semaine 3 (29 avril)}
+  \footnotesize
+  \textbf{Roadmap décidée avec le superviseur} -- 4 priorités séquentielles :
+
+  \vspace{0.3em}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{}c p{6.5cm} l@{}}
+    \toprule
+    \textbf{\#} & \textbf{Chantier} & \textbf{Statut S4} \\
+    \midrule
+    \textbf{P1} & \textbf{Baseline B2 -- embedding naïf + KG sur CRFPA} & \textcolor{accent}{\textbf{Exécutée + auditée}} \\
+    P2 & Récupérer le texte des articles (fetch Légifrance, $\sim$88k articles) & À faire \\
+    P3 & Graphe complémentaire « article $\times$ article » (structure des codes) & À faire \\
+    P4 & Contrastive learning sur embeddings spécialisés & À faire \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+  \keybox{\textbf{Cible chiffrée P1} : montrer que le retrieval naïf via le KG bat le \textbf{plafond LLM nu} \\(\(S_{\text{retrieval}}\) moyen $\approx$ \textbf{0,095} sur les 7 modèles benchmarkés en S3).}
+
+  \vspace{0.4em}
+  \textbf{Idée P1 (rappel)} :
+  \begin{itemize}\footnotesize
+    \item Embed la question CRFPA + les JP avec un encodeur généraliste (BERT FR / E5)
+    \item Top-$K$ JP voisines au sens cosinus
+    \item Articles cités par ces $K$ JP via les arêtes du graphe
+    \item Scorer sur le harness CRFPA (régime retrieval pur)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Décision de pivot pour S4 : focus pénal}
+  \footnotesize
+  \textbf{Pourquoi un sous-corpus} : embedder 1,07 M JP avec un modèle généraliste, c'est $\sim$20 h sur Mac MPS. Trop lent pour itérer dans la semaine.
+
+  \vspace{0.4em}
+  \textbf{Filtre choisi} : on garde toute JP qui cite au moins un article d'un \textbf{code pénal} :
+  \texttt{code\_penal} (2 999 art.), \texttt{code\_de\_procedure\_penale} (3 924), \texttt{code\_de\_la\_route} (1 125), \texttt{code\_de\_la\_justice\_penale\_des\_mineurs} (37).
+
+  \vspace{0.4em}
+  \begin{tabular}{@{}l r r r@{}}
+    \toprule
+    & \textbf{Corpus complet} & \textbf{Sous-corpus pénal} & \textbf{Réduction} \\
+    \midrule
+    JP totales        & 1 072 646  & \textbf{118 112}  & $\times$ 9 \\
+    \quad dont CC     & 511 575    & 97 060            & \\
+    \quad dont CA     & 422 965    & 14 315            & \\
+    \quad dont TJ     & 138 106    & 6 737             & \\
+    Articles cités    & 87 821     & 87 821 (idem)     & \\
+    Questions CRFPA   & 41         & \textbf{8} (3 droit pénal + 5 procédure) & $\times$ 5 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \keybox{\textbf{Avantage} : pipeline complet (embed + queries + scoring) en \textbf{$\sim$10 min sur cluster L40S}, donc itérations rapides sur les choix de design.}
+\end{frame}
+
+% ============================================================
+\section{Pipeline B2 : architecture et choix de design}
+
+\begin{frame}{Pipeline baseline B2 -- vue d'ensemble}
+  \footnotesize
+  \begin{center}
+  \begin{tikzpicture}[
+    node distance=0.7em and 1.2em,
+    box/.style={draw=accent, fill=accentsoft, rounded corners, minimum height=2.0em, minimum width=2.6cm, align=center, font=\scriptsize},
+    arr/.style={-Latex, thick, accent},
+  ]
+    \node[box] (q) {Question CRFPA \\\textit{texte libre}};
+    \node[box, right=of q] (qe) {Embed (E5) \\\textit{vecteur 768d}};
+    \node[box, right=of qe] (cos) {Cosine vs \\118k JP};
+    \node[box, right=of cos] (top) {Top-$K$ JP};
+    \node[box, below=1.6em of top] (art) {Articles cités \\\textit{via le graphe}};
+    \node[box, left=of art] (agg) {Agrégation \\\textit{(4 stratégies)}};
+    \node[box, left=of agg] (canon) {parsed\_canon \\\textit{art + JP}};
+    \node[box, left=of canon] (score) {Scoring \\\textit{eval\_rubric}};
+
+    \draw[arr] (q) -- (qe);
+    \draw[arr] (qe) -- (cos);
+    \draw[arr] (cos) -- (top);
+    \draw[arr] (top) -- (art);
+    \draw[arr] (art) -- (agg);
+    \draw[arr] (agg) -- (canon);
+    \draw[arr] (canon) -- (score);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.4em}
+  \textbf{Variables expérimentales} (cœur de l'XP) :
+
+  \begin{itemize}\footnotesize
+    \item \textbf{$K$} (nb voisins) $\in \{3, 4, 5, 7, 10\}$
+    \item \textbf{Stratégie d'agrégation} : 4 variantes comparables (slide suivante)
+  \end{itemize}
+
+  $\Rightarrow$ \textbf{20 configurations} $\times$ 8 questions = 160 évaluations dans un seul CSV.
+
+  \vspace{0.4em}
+  \textbf{Modèle utilisé} : \texttt{intfloat/multilingual-e5-base} (768d, 278M params). Chunking 510 tokens, overlap 64, max 8 chunks/doc, mean pooling, L2-normalisation.
+\end{frame}
+
+\begin{frame}{Quatre stratégies d'agrégation -- ce qu'elles testent}
+  \footnotesize
+  Donné top-$K$ JP voisines de la question, comment agréger les articles qu'elles citent ?
+
+  \vspace{0.4em}
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{@{}p{2.2cm} p{6cm} p{6cm}@{}}
+    \toprule
+    \textbf{Stratégie} & \textbf{Logique} & \textbf{Hypothèse testée} \\
+    \midrule
+    \texttt{union}        & Article cité par $\geq 1$ JP du top-$K$
+                          & « Tout signal est utile » -- recall max, précision faible \\
+    \texttt{intersection} & Article cité par TOUTES les $K$ JP
+                          & « Seul le consensus strict compte » -- précision max \\
+    \texttt{majority}     & Article cité par $\geq \lceil K/2 \rceil$ JP
+                          & « Compromis classique du vote majoritaire » \\
+    \texttt{weighted}     & Top-$N$ articles classés par $\sum$ similarité des JP citantes (défaut $N$=5)
+                          & « La proximité de similarité importe plus que le compte » \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+  \keybox{Lecture comparative attendue : \texttt{intersection} se durcit avec $K$ croissant (recall $\downarrow$), \texttt{union} devient plus large mais bruité, \texttt{weighted} sous-couvre par construction. Le couple \texttt{majority} / $K$ moyen est souvent le compromis empirique.}
+\end{frame}
+
+\begin{frame}{Infrastructure : bundle autonome cluster}
+  \footnotesize
+  \textbf{Pipeline reproductible} : un dossier auto-suffisant transférable en \texttt{scp} sur n'importe quel nœud GPU.
+
+  \vspace{0.4em}
+  \begin{tabular}{@{}l p{8cm} r@{}}
+    \toprule
+    \textbf{Fichier} & \textbf{Contenu} & \textbf{Taille} \\
+    \midrule
+    \texttt{jp\_index\_penal.parquet}  & 118k JP : id, number (pourvoi), juris, text & 346 MB \\
+    \texttt{graph\_penal.npz}          & Sous-graphe CSR pénal $\times$ tous articles & 2 MB \\
+    \texttt{rubrics\_penal.json}       & 8 questions pénales fusionnées & 100 KB \\
+    \texttt{eval\_rubric.py}           & Module de scoring CRFPA (identique aux LLMs) & 12 KB \\
+    \texttt{run\_cluster.py}           & Script all-in-one : download $\to$ embed $\to$ eval $\to$ purge & 26 KB \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.4em}
+  \textbf{Caractéristiques techniques notables} :
+  \begin{itemize}\footnotesize
+    \item Embedding \textbf{resumable} via \texttt{np.memmap} + state JSON (reprise après Ctrl+C)
+    \item Boucle multi-modèles avec \texttt{try/finally + purge cache HF} -- pattern emprunté à \texttt{run\_all\_models.py}
+    \item Auto-détection CUDA / MPS / CPU
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Performance L40S} : \(118\,000\) JP embeddées en \textbf{6 minutes} avec e5-base. Les 20 configs scoring en \(\sim\) 3 min supplémentaires.
+\end{frame}
+
+% ============================================================
+\section{Résultats du run cluster}
+
+\begin{frame}{Résultats des 20 configurations -- Top 6}
+  \footnotesize
+  \textbf{Modèle} \texttt{multilingual-e5-base}, 8 questions pénales CRFPA.
+
+  \vspace{0.4em}
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{@{}l c r r r r r@{}}
+    \toprule
+    \textbf{Stratégie} & \textbf{$K$} & $S_{\text{ret}}$ & $\bar{S}_{\text{art}}$ & $\bar{S}_{\text{jp}}$ & \textbf{N art} & \textbf{N JP} \\
+    \midrule
+    \rowcolor{green!10}
+    \texttt{union}        & \textbf{10} & \textbf{0,158} & \textbf{0,315} & 0,000 & 49 & 10 \\
+    \texttt{union}        & 7  & 0,138 & 0,276 & 0,000 & 39 & 7  \\
+    \texttt{union}        & 5  & 0,091 & 0,182 & 0,000 & 31 & 5  \\
+    \texttt{weighted}     & 7  & 0,079 & 0,157 & 0,000 & 5  & 7  \\
+    \texttt{weighted}     & 10 & 0,055 & 0,110 & 0,000 & 5  & 10 \\
+    \texttt{majority}     & 4  & 0,023 & 0,047 & 0,000 & 4  & 4  \\
+    \midrule
+    \texttt{intersection} & tous & \textbf{0,000} & 0,000 & 0,000 & $<1$ & -- \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \okbox{\textbf{Lecture en façade} : \texttt{union} avec $K=10$ atteint \(S_{\text{retrieval}} = 0{,}158\), soit \textbf{+66\,\% au-dessus du plafond LLM nu} (0,095). \\Engagement P1 \textbf{tenu}.}
+
+  \vspace{0.3em}
+  \warnbox{\textbf{MAIS} : $\bar{S}_{\text{jp}} = 0{,}000$ sur les 160 évaluations -- pas un seul match JP. À investiguer.}
+\end{frame}
+
+\begin{frame}{Lecture détaillée des stratégies}
+  \footnotesize
+  \begin{itemize}
+    \item \texttt{union} \textbf{gagne nettement} : $\bar{S}_{\text{art}}$ croît monotone avec $K$ (0,058 $\to$ 0,168 $\to$ 0,182 $\to$ 0,276 $\to$ \textbf{0,315}). Pas de saturation visible. Probable que $K=20$ ou 50 améliorerait encore.
+
+    \vspace{0.4em}
+    \item \texttt{intersection} \textbf{catastrophe totale} : à $K=3$, en moyenne 1 article retenu ; à $K=10$, 0,125 article. \textit{Le consensus strict détruit le signal} -- les top-$K$ JP au sens cosinus partagent très peu d'articles entre elles.
+
+    \vspace{0.4em}
+    \item \texttt{majority} : presque tout à zéro sauf $K=4$ ($S_{\text{ret}} = 0{,}023$). La règle $\lceil K/2 \rceil$ reste trop restrictive ici.
+
+    \vspace{0.4em}
+    \item \texttt{weighted} : plafonne à $S_{\text{ret}} = 0{,}079$ ($K=7$) car cap fixé à 5 articles. La GT moyenne fait $\sim$7 core + 3 expected + 8 expert = 18 articles. \textit{Sous-dimensionné par construction}.
+  \end{itemize}
+
+  \vspace{0.6em}
+  \keybox{Le seul classement gagnant est \texttt{union} avec grand $K$. Les 3 autres stratégies sont soit trop strictes (intersection / majority), soit mal paramétrées (weighted).}
+\end{frame}
+
+\begin{frame}{Le problème du score JP -- analyse approfondie}
+  \footnotesize
+  \textbf{Constat} : sur les 160 évaluations, $\bar{S}_{\text{jp}} = 0{,}000$ \textbf{partout}.
+
+  \vspace{0.4em}
+  \textbf{Exemple sur Q1} (viol conjugal) :
+  \begin{itemize}\scriptsize
+    \item \textbf{Pourvois prédits} (top-10 entry) : \texttt{03-83.237, 17-81.762, 06/00310, 07/02009, 04-83.975,\\22/06840, 05-81.036, 16-85.848, 96-84.331, 00-80.827}
+    \item \textbf{Pourvois GT} : \texttt{18-82.829, 20-80.135, 00-85.467, 90-83.786, 98-80.730}
+    \item \textbf{Match strict} : \textcolor{warn}{\textbf{zéro}}
+  \end{itemize}
+
+  \vspace{0.6em}
+  \textbf{Hypothèses à départager} :
+  \begin{enumerate}\footnotesize
+    \item Les pourvois GT ne sont pas dans notre corpus (filtre pénal trop strict ?)
+    \item L'embedding ne remonte pas les bonnes JP au top-$K$ ($K$ trop petit ?)
+    \item Le format pourvoi est mal normalisé (CC vs CA vs TJ : formats différents)
+  \end{enumerate}
+
+  \vspace{0.4em}
+  \keybox{$\Rightarrow$ \textbf{Phase A : audit local} pour départager. 3 scripts d'analyse écrits sur Mac (les embeddings ont été rapatriés du cluster).}
+
+  \vspace{0.3em}
+  \textbf{Conséquence pratique du \(\bar{S}_{\text{jp}} = 0\)} : comme \(S_{\text{retrieval}} = 0{,}5 \cdot \bar{S}_{\text{art}} + 0{,}5 \cdot \bar{S}_{\text{jp}}\), \\le score officiel est \textbf{divisé par 2 par construction}. Le « vrai » signal est sur \(\bar{S}_{\text{art}}\) seul.
+\end{frame}
+
+% ============================================================
+\section{Phase A -- audit local : trois découvertes}
+
+\begin{frame}{A.1 -- Couverture GT dans le corpus pénal}
+  \footnotesize
+  \textbf{Question} : la GT JP est-elle même présente dans notre sous-corpus pénal ?
+
+  \vspace{0.4em}
+  \textbf{Méthode} : pour chaque pourvoi GT extractible par regex (format CC \texttt{XX-XX.XXX}), on cherche le \texttt{number} dans \texttt{jp\_index\_penal.parquet}.
+
+  \vspace{0.4em}
+  \begin{tabular}{@{}l c c c@{}}
+    \toprule
+    \textbf{Strate} & \textbf{GT extraits} & \textbf{Trouvés dans le corpus} & \textbf{Couverture} \\
+    \midrule
+    \texttt{core}     & 8 & 8 & \textbf{100,0 \%} \\
+    \texttt{expected} & 5 & 5 & \textbf{100,0 \%} \\
+    \texttt{expert}   & 3 & 3 & \textbf{100,0 \%} \\
+    \midrule
+    \textbf{Total}    & 16 & 16 & \textbf{100,0 \%} \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \okbox{\textbf{Conclusion A.1} : \textbf{tous les pourvois GT extractibles sont dans le corpus}.\\
+  Le problème de \(\bar{S}_{\text{jp}} = 0\) n'est PAS un défaut de couverture -- c'est purement un défaut de \textit{retrieval}.}
+
+  \vspace{0.4em}
+  \textbf{Note} : 2 GT non extractibles (« CA Papeete, 27 juin 2002 », « Cass. crim., 25 juin 1857 ») -- pas de pourvoi standard, hors champ de la regex du scorer.
+\end{frame}
+
+\begin{frame}{A.2 -- À quel rang sont les GT dans le ranking de l'embedding ?}
+  \footnotesize
+  \textbf{Méthode} : pour chaque question, embed avec e5-base et calculer la similarité cosinus avec \textbf{toutes} les 118k JP. Quel est le rang de chaque pourvoi GT dans le tri décroissant ?
+
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}l r@{}}
+      \toprule
+      \textbf{Métrique} & \textbf{Valeur} \\
+      \midrule
+      Rang médian & \textbf{76 782} / 118 112 \\
+      Rang moyen  & 58 319 \\
+      Rang min    & 549 \\
+      Rang max    & 110 485 \\
+      \bottomrule
+    \end{tabular}
+
+    \column{0.48\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}l r@{}}
+      \toprule
+      \textbf{Recall cumulé} & \textbf{Pourvois récupérés} \\
+      \midrule
+      top-10     & \textbf{0 / 16} \\
+      top-100    & \textbf{0 / 16} \\
+      top-1 000  & 2 / 16 (12 \%) \\
+      top-10 000 & 3 / 16 (19 \%) \\
+      top-50 000 & 8 / 16 (50 \%) \\
+      \bottomrule
+    \end{tabular}
+  \end{columns}
+
+  \vspace{0.6em}
+  \warnbox{\textbf{Conclusion A.2} : le rang médian de la GT est dans le \textbf{tiers le plus mal classé} du corpus.\\
+  L'embedding e5-base ne capture quasiment \textbf{aucun signal pertinent}. Augmenter $K$ ne sauve rien.}
+
+  \vspace{0.4em}
+  \textbf{Diagnostic} : \texttt{multilingual-e5-base} est un modèle généraliste multilingue, jamais entraîné sur du juridique FR. Les résumés CC en MAJUSCULES et le style ancien sont sémantiquement éloignés des questions modernes.
+\end{frame}
+
+\begin{frame}{A.3 -- Le graphe peut-il rattraper l'embedding ?}
+  \footnotesize
+  \textbf{Idée} : faire du \textbf{multi-hop} via le KG. Question $\to$ top-10 JP entry $\to$ leurs articles $\to$ JP qui citent $\geq M$ de ces articles $\to$ leurs articles.
+
+  \vspace{0.3em}
+  \textbf{Pari} : même si les top-10 JP entry sont mauvaises, les JP qui partagent leurs articles (2-hop) pourraient ramener la GT.
+
+  \vspace{0.4em}
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{@{}l r r r r@{}}
+    \toprule
+    \textbf{Config} & \textbf{Recall $\bar{S}_{\text{art}}$} & \textbf{N articles retournés} & \textbf{Précision} & \textbf{N JP expandus} \\
+    \midrule
+    \texttt{1hop} (baseline)    & 0,315 & 49 & \textbf{3,67 \%} & 0 \\
+    \texttt{2hop\_M2}           & \textbf{0,893} & 9 189 & 0,06 \% & 13 443 \\
+    \texttt{2hop\_M3}           & 0,794 & 5 028 & 0,12 \% & 5 760 \\
+    \texttt{2hop\_M5}           & 0,669 & 1 848 & 0,53 \% & 1 659 \\
+    \texttt{2hop\_M2\_top200}   & 0,520 & 608   & 0,56 \% & 200 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \warnbox{\textbf{Le scoring CRFPA récompense l'over-fishing} : il mesure du recall pur, donc retourner 9 000 articles donne un quasi-100 \% du score, mais avec une \textbf{précision de 0,06 \%}. \\Inexploitable côté humain ($\sim$6 articles utiles noyés dans 9 183 inutiles).}
+
+  \vspace{0.4em}
+  \textbf{Sur la dimension JP} : le 2-hop ramène \textbf{1,12 GT JP en moyenne} sur 13 500 expandues (\textit{0,008 \% de précision JP}). Pour atteindre \(\bar{S}_{\text{jp}} = 0{,}07\) (premier signal non-nul), il faut retourner \textbf{1 000 JP} au scorer.
+\end{frame}
+
+% ============================================================
+\section{Diagnostic et choix de design questionnés}
+
+\begin{frame}{Diagnostic global}
+  \footnotesize
+  \textbf{Le bottleneck N'EST PAS} :
+  \begin{itemize}
+    \item \textcolor{ok}{\checkmark} La couverture du corpus (100 \% des GT y sont)
+    \item \textcolor{ok}{\checkmark} La taille de $K$ (même $K$ = 10 000 ne récupère que 19 \% des GT)
+    \item \textcolor{ok}{\checkmark} La structure du graphe (le KG porte du signal, mais explose en sur-extension)
+  \end{itemize}
+
+  \vspace{0.6em}
+  \warnbox{\textbf{Le bottleneck EST l'embedding}.\\
+  \texttt{multilingual-e5-base} ne capture pas la sémantique juridique française.\\
+  Médiane GT à 76 782 / 118 112 = retrieval quasi aléatoire.}
+
+  \vspace{0.6em}
+  \textbf{Conséquence pratique} : \textit{tester un autre encodeur} avant tout autre changement.
+
+  \begin{itemize}\footnotesize
+    \item \texttt{intfloat/multilingual-e5-large} (1024d, $\sim$560M params)
+    \item \texttt{BAAI/bge-m3} (long context 8k tokens, multilingue SOTA)
+    \item \texttt{dangvantuan/sentence-camembert-large} (FR-spécifique)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Choix de design questionnés post-XP}
+  \footnotesize
+  \textbf{Trois choix faits en S4 dont l'impact mérite d'être mesuré} :
+
+  \vspace{0.5em}
+  \begin{enumerate}
+    \item \textbf{Mean pooling sur les chunks (1 vecteur par JP)} \\
+    \footnotesize Pour 1 JP avec 8 chunks, on moyenne $\to$ 1 seul vecteur. \\
+    \textit{Risque} : un passage clé dans 1 chunk sur 8 est \textbf{dilué} parmi 7 chunks de boilerplate. \\
+    \textit{Alternative à tester} : \textbf{chunk retrieval (max pooling)} -- garder les 8 vecteurs, considérer la JP comme matchée si l'un de ses chunks est dans le top-$K$.
+
+    \vspace{0.4em}
+    \item \textbf{Texte CC : \texttt{summary} privilégié vs \texttt{text} brut} \\
+    \footnotesize Pour CC : on a embeddé le résumé jurisprudentiel ($\sim$471 chars en moyenne, en MAJUSCULES). \\
+    Pour CA/TJ : on a embeddé le texte brut ($\sim$10 k chars). \\
+    \textit{Problème} : la représentation est \textbf{hétérogène} entre juridictions, donc on ne peut pas comparer proprement les modèles d'embedding.
+
+    \vspace{0.4em}
+    \item \textbf{Pourvoi comme identifiant unique} \\
+    \footnotesize Le \texttt{number} (pourvoi) n'est pas unique : 13k doublons CC, formats hétérogènes CA/TJ, 16k collisions inter-juridictions. \\
+    \textit{Conséquence} : la regex du scorer matche que le format CC, donc \textbf{seules les JP CC sont évaluables} sur la dimension JP.
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Plan S5 : Phase B et perspectives}
+
+\begin{frame}{Phase B -- re-embedding multi-modèles (en cours)}
+  \footnotesize
+  \textbf{Objectif} : tester plusieurs encodeurs ET comparer mean pooling vs chunk retrieval, dans des conditions homogènes.
+
+  \vspace{0.4em}
+  \textbf{Modifications par rapport à la baseline B2 initiale} :
+  \begin{itemize}\footnotesize
+    \item \textbf{Texte uniforme} : \texttt{text} brut pour tous (CC inclus, pas de summary privilégié)
+    \item \textbf{Chunks gardés en plus du mean pool} : permet de tester le \textit{chunk retrieval}
+    \item \textbf{4 modèles} séquentiels : e5-base, e5-large, bge-m3, sentence-camembert-large
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Métrique principale} : \textit{rang médian des GT} (top-10 / top-100 / top-1k) plutôt que \(S_{\text{retrieval}}\).
+  Mesure la \textbf{qualité intrinsèque} de l'embedding, indépendamment du scoring CRFPA biaisé par le recall pur.
+
+  \vspace{0.4em}
+  \textbf{Optimisations cluster} :
+  \begin{itemize}\footnotesize
+    \item EMB\_BATCH 512 $\to$ 2048 (meilleure utilisation L40S 48 GB VRAM)
+    \item DOC\_BATCH 4k $\to$ 16k (moins d'I/O répétitifs)
+    \item Tokenisation batchée (fast tokenizer Rust)
+    \item Pré-passe supprimée (memmap chunks alloué worst-case puis tronqué)
+  \end{itemize}
+
+  \vspace{0.3em}
+  $\Rightarrow$ Durée estimée : \textbf{$\sim$17 min} pour les 4 modèles (vs $\sim$45 min initialement).
+\end{frame}
+
+\begin{frame}{Idée émergente : embedder les ARTICLES, pas les JP}
+  \footnotesize
+  \textbf{Inversion conceptuelle} :
+  \begin{center}
+  \texttt{Question $\to$ embed $\to$ top-$K$ \textbf{articles} (pas JP) $\to$ JP citant ces articles via le KG}
+  \end{center}
+
+  \vspace{0.5em}
+  \textbf{Intuition} : on essaie de matcher la question avec des arrêts (textes longs, narratifs, faits + procédure + motifs $\to$ beaucoup de bruit thématique). Mais une question CRFPA cible un \textbf{point de droit précis}, qui est \textit{codifié dans un article}. Renverser l'approche met le signal du bon côté.
+
+  \vspace{0.5em}
+  \textbf{Avantages potentiels} :
+  \begin{itemize}\footnotesize
+    \item Articles = textes courts, denses, structurés ($\sim$88k vs 118k JP)
+    \item Pas de bruit factuel/procédural, signal thématique pur
+    \item Fini la dépendance au summary/text/chunk hétérogène entre CC/CA/TJ
+    \item Les JP retrouvées par back-edge graphe sont \textbf{topiquement correctes} par construction
+  \end{itemize}
+
+  \vspace{0.5em}
+  \keybox{\textbf{Prérequis} : nécessite le \textbf{texte intégral des articles} -- exactement la \textbf{Priorité 2} de la roadmap (fetch Légifrance, $\sim$8 000 articles pénaux).}
+
+  \vspace{0.3em}
+  \textbf{Hypothèse à tester en Phase D} : le score articles devrait être bien meilleur, et le score JP \textit{aussi}, par construction du back-edge.
+\end{frame}
+
+\begin{frame}{Récap : ce qui a avancé en S4}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{}p{6.0cm} l@{}}
+    \toprule
+    \textbf{Item} & \textbf{Statut} \\
+    \midrule
+    Pipeline B2 implémenté + bundle cluster autonome
+    & \textcolor{ok}{\textbf{Fait}} \\
+    Run cluster sur 8 questions pénales, 20 configs (e5-base)
+    & \textcolor{ok}{\textbf{Fait}} \\
+    Scripts d'audit local : couverture GT, rang GT, multi-hop
+    & \textcolor{ok}{\textbf{Fait}} \\
+    Identification du bottleneck (embedding inadapté)
+    & \textcolor{ok}{\textbf{Fait}} \\
+    \midrule
+    Phase B : re-embedding cluster avec 4 modèles + chunks gardés
+    & \textcolor{accent}{\textbf{Code prêt, à lancer}} \\
+    Phase C : analyses comparatives mean / max pool / first chunk
+    & \textcolor{accent}{\textbf{Code prêt}} \\
+    \midrule
+    Phase D : embedder les articles (dépend de P2 -- fetch Légifrance)
+    & \textcolor{warn}{\textbf{Idée à valider}} \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+  \keybox{\textbf{Engagement P1 tenu} : $S_{\text{retrieval}} = 0{,}158$ vs plafond LLM 0,095 (+66 \%). \\
+  \textbf{Mais audit révèle} : la dimension JP du score est invalidée et l'embedding sous-jacent est un goulot. \\
+  \textbf{Décision} : pivoter vers la qualité d'embedding avant d'investir dans P4 (contrastive).}
+\end{frame}
+
+\begin{frame}{Questions ouvertes pour la discussion}
+  \footnotesize
+  \begin{enumerate}
+    \item \textbf{Métrique d'évaluation à privilégier} \\
+    \footnotesize Le scoring CRFPA mesure du recall pur. Notre 2-hop M=2 obtient \(\bar{S}_{\text{art}} = 0{,}89\) avec 9 000 articles retournés (precision 0,06 \%). \\
+    Faut-il \textbf{publier ce score brut} ou rapporter un \textbf{score F1 / précision-recall conjoint} pour être honnête ?
+
+    \vspace{0.4em}
+    \item \textbf{Priorité d'investigation} \\
+    \footnotesize Trois leviers possibles, dans quel ordre ?
+    \begin{itemize}\scriptsize
+      \item Phase B (autres encodeurs + chunk retrieval) -- le plus rapide, $\sim$1 jour
+      \item Phase D (article-based) -- nécessite P2 (fetch Légifrance) -- $\sim$1 semaine
+      \item Phase P4 (contrastive learning) -- direct sur le constat « pas d'encodeur généraliste ne marchera » -- $\sim$2-3 semaines
+    \end{itemize}
+
+    \vspace{0.4em}
+    \item \textbf{Faut-il sortir du sous-corpus pénal ?} \\
+    \footnotesize 8 questions est très peu pour distinguer des stratégies. Étendre à civil + commercial aussi ?
+
+    \vspace{0.4em}
+    \item \textbf{Le scoring JP est-il sauvable ?} \\
+    \footnotesize Le format pourvoi non unique limite la dimension à $\sim$50 \% des cas (CC seulement). Faut-il intégrer un matching basé sur les articles cités plutôt que sur l'identifiant ?
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\begin{frame}
+  \begin{center}
+    \vspace{1em}
+    {\Huge \textcolor{accent}{Merci.}}\\[1.5em]
+    {\Large Questions ?}\\[2em]
+    \footnotesize Compte-rendu, journal et scripts disponibles dans le repo. \\
+    \texttt{05-Technique/benchmark/baseline\_b2/}\\
+    \texttt{01-Projet/journal/2026-05-05.md}
+  \end{center}
+\end{frame}
+
+\end{document}
