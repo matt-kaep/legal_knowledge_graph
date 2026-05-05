@@ -1,29 +1,32 @@
 #!/usr/bin/env python
 """Baseline B2 — Embedding naïf sur le benchmark CRFPA pénal (cluster L40S).
 
-Pour chaque modèle d'embedding du registre, séquentiellement :
+Pipeline pour chaque modèle d'embedding :
     download HF → embed les 118k JP pénales (chunking + mean pool) →
-    run sur les 8 questions CRFPA pénales (K ∈ {3, 5, 10}) →
-    score via eval_rubric → purge cache HF
+    pour chaque (stratégie d'agrégation, K) → retrieve + score →
+    purge cache HF
+
+Stratégies d'agrégation testées (pour un top-K de JP voisines donné) :
+    union         articles cités par ≥ 1 des K JP (recall max, précision faible)
+    intersection  articles cités par TOUTES les K JP (consensus strict)
+    majority      articles cités par ≥ ⌈K/2⌉ des K JP (compromis)
+    weighted      articles classés par somme des similarités des JP citantes,
+                  on garde les top-N (N = nombre moyen d'articles dans la
+                  rubrique GT, soit ~5)
 
 Usage (depuis penal_bundle/) :
     export HF_TOKEN=hf_xxx
     export HF_HOME=/scratch/hf_cache
-    python run_cluster.py
+    python run_cluster.py                      # défaut: e5-base seul
+    python run_cluster.py --only e5-base e5-large
+    python run_cluster.py --strategies union intersection majority weighted
+    python run_cluster.py --k 3 4 5 7 10
+    python run_cluster.py --weighted-top 5     # nb articles à garder en weighted
 
-Flags :
-    --only e5-base e5-large    # ne run que ces alias (défaut : tous)
-    --force                    # re-run même si results/<alias>.json existe
-    --k 3 5 10                 # valeurs de K à tester
-    --min-freq 1               # articles cités par ≥ N JP voisines
-    --no-purge                 # garder les modèles HF après usage
-    --max-chunks 8             # cap du nombre de chunks par doc
-
-Artefacts produits :
-    results/<alias>.json                 # détail par config K
-    results/comparison_b2_penal.csv      # 1 ligne par (modèle, K)
-    results/per_question/<qid>__<alias>__k<K>.json
-    logs/embed_<alias>.log               # log embedding
+Artefacts :
+    results/comparison_b2_penal.csv          # 1 ligne par (modèle, K, strategy)
+    results/<alias>.json                     # détail agrégé par modèle
+    results/per_question/<qid>__<alias>__<strategy>__k<K>.json
 """
 from __future__ import annotations
 
@@ -46,16 +49,20 @@ from scipy.sparse import csr_matrix
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# CONFIGURATION — registre des modèles d'embedding
+# CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════
 
 MODEL_REGISTRY: dict[str, tuple[str, int, str]] = {
-    "e5-small":      ("intfloat/multilingual-e5-small",  384,  "Multilingual E5 small (~118M, 384d), rapide"),
-    "e5-base":       ("intfloat/multilingual-e5-base",   768,  "Multilingual E5 base (~278M, 768d), équilibré"),
-    "e5-large":      ("intfloat/multilingual-e5-large", 1024,  "Multilingual E5 large (~560M, 1024d), qualité"),
-    "bge-m3":        ("BAAI/bge-m3",                    1024,  "BGE-M3 (long context 8k tokens, 1024d)"),
-    "camembert-base":("dangvantuan/sentence-camembert-base", 768, "Sentence-CamemBERT FR base (768d)"),
+    "e5-small":       ("intfloat/multilingual-e5-small",      384, "Multilingual E5 small (~118M, 384d), rapide"),
+    "e5-base":        ("intfloat/multilingual-e5-base",       768, "Multilingual E5 base (~278M, 768d), équilibré"),
+    "e5-large":       ("intfloat/multilingual-e5-large",     1024, "Multilingual E5 large (~560M, 1024d), qualité"),
+    "bge-m3":         ("BAAI/bge-m3",                         1024, "BGE-M3 (long context 8k tokens, 1024d)"),
+    "camembert-base": ("dangvantuan/sentence-camembert-base",  768, "Sentence-CamemBERT FR base (768d)"),
 }
+
+DEFAULT_MODELS     = ["e5-base"]
+DEFAULT_STRATEGIES = ["union", "intersection", "majority", "weighted"]
+DEFAULT_K          = [3, 4, 5, 7, 10]
 
 HERE       = Path(__file__).parent.resolve()
 PARQUET    = HERE / "jp_index_penal.parquet"
@@ -68,7 +75,7 @@ LOG_DIR    = HERE / "logs";             LOG_DIR.mkdir(exist_ok=True)
 
 CSV_PATH   = RESULTS / "comparison_b2_penal.csv"
 CSV_HEADER = [
-    "alias", "model_id", "k", "min_freq", "n_q",
+    "alias", "model_id", "strategy", "k", "param", "n_q",
     "S_retrieval_mean", "S_e2e_mean",
     "S_bar_art_mean", "S_bar_jp_mean",
     "art_core_mean", "art_expected_mean", "art_expert_mean",
@@ -80,7 +87,7 @@ CSV_HEADER = [
 CHUNK_SIZE         = 510
 OVERLAP            = 64
 DOC_BATCH          = 4_000
-EMB_BATCH          = 512        # L40S 48 GB VRAM
+EMB_BATCH          = 512
 PREFIX_PASSAGE     = "passage: "
 PREFIX_QUERY       = "query: "
 
@@ -89,7 +96,7 @@ from eval_rubric import evaluate
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# UTILS — cache HF, GPU, IO
+# UTILS
 # ═══════════════════════════════════════════════════════════════════════
 
 def hf_cache_dir() -> Path:
@@ -129,10 +136,6 @@ def detect_gpus() -> int:
         return 0
 
 
-# ═══════════════════════════════════════════════════════════════════════
-# CSV
-# ═══════════════════════════════════════════════════════════════════════
-
 def init_csv_if_needed() -> None:
     if CSV_PATH.exists():
         return
@@ -146,7 +149,7 @@ def append_csv(row: dict) -> None:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# CHUNKING
+# CHUNKING + EMBEDDING
 # ═══════════════════════════════════════════════════════════════════════
 
 def chunk_token_ids(tids, size: int, overlap: int, max_chunks: int):
@@ -160,17 +163,7 @@ def chunk_token_ids(tids, size: int, overlap: int, max_chunks: int):
     return chunks
 
 
-# ═══════════════════════════════════════════════════════════════════════
-# PHASE 1 — EMBEDDING DU CORPUS (resumable)
-# ═══════════════════════════════════════════════════════════════════════
-
-def embed_corpus(
-    alias: str,
-    hf_id: str,
-    emb_dim: int,
-    args,
-) -> tuple[Path, Path, float]:
-    """Embed les 118k JP pénales avec ce modèle. Resumable via state JSON."""
+def embed_corpus(alias: str, hf_id: str, emb_dim: int, args) -> tuple[Path, Path, float]:
     from sentence_transformers import SentenceTransformer
     from tqdm import tqdm
 
@@ -260,12 +253,10 @@ def embed_corpus(
     elapsed = time.time() - t0
     print(f"  ✓ Embedding fini en {elapsed/60:.1f} min ({n_total/max(elapsed,1):.0f} doc/s)")
 
-    # Libérer le modèle de la VRAM
     del model
     gc.collect()
     try:
-        import torch
-        torch.cuda.empty_cache()
+        import torch; torch.cuda.empty_cache()
     except Exception:
         pass
 
@@ -273,10 +264,12 @@ def embed_corpus(
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# PHASE 2 — RETRIEVER
+# RETRIEVER + STRATÉGIES D'AGRÉGATION
 # ═══════════════════════════════════════════════════════════════════════
 
 class NaiveRetriever:
+    """Charge embeddings + sous-graphe, expose query() avec stratégie variable."""
+
     def __init__(self, hf_id: str, emb_dim: int, emb_path: Path, ids_path: Path):
         from sentence_transformers import SentenceTransformer
 
@@ -313,7 +306,65 @@ class NaiveRetriever:
         device = detect_device()
         self._model = SentenceTransformer(hf_id, device=device)
 
-    def query(self, question: str, k: int = 5, min_freq: int = 1) -> dict:
+    # ─── Stratégies d'agrégation ─────────────────────────────────────
+
+    def _aggregate_union(self, top_k_idx, jp_scores, _param):
+        """Articles cités par au moins 1 JP du top-K."""
+        cited = np.zeros(len(self._article_ids), dtype=np.int32)
+        for idx in top_k_idx:
+            cited[self._mat_sub.getrow(idx).indices] += 1
+        keep = np.where(cited >= 1)[0]
+        return self._article_ids[keep]
+
+    def _aggregate_intersection(self, top_k_idx, jp_scores, _param):
+        """Articles cités par TOUTES les K JP (consensus strict)."""
+        K = len(top_k_idx)
+        cited = np.zeros(len(self._article_ids), dtype=np.int32)
+        for idx in top_k_idx:
+            cited[self._mat_sub.getrow(idx).indices] += 1
+        keep = np.where(cited >= K)[0]
+        return self._article_ids[keep]
+
+    def _aggregate_majority(self, top_k_idx, jp_scores, _param):
+        """Articles cités par ≥ ⌈K/2⌉ JP."""
+        K = len(top_k_idx)
+        thresh = (K + 1) // 2  # ⌈K/2⌉
+        cited = np.zeros(len(self._article_ids), dtype=np.int32)
+        for idx in top_k_idx:
+            cited[self._mat_sub.getrow(idx).indices] += 1
+        keep = np.where(cited >= thresh)[0]
+        return self._article_ids[keep]
+
+    def _aggregate_weighted(self, top_k_idx, jp_scores, top_n: int):
+        """Articles classés par somme des similarités des JP citantes,
+        on garde les top_n."""
+        weights = np.zeros(len(self._article_ids), dtype=np.float32)
+        for idx, sim in zip(top_k_idx, jp_scores):
+            cols = self._mat_sub.getrow(idx).indices
+            weights[cols] += float(sim)
+        if top_n is None:
+            top_n = 5
+        nonzero = np.where(weights > 0)[0]
+        if len(nonzero) <= top_n:
+            return self._article_ids[nonzero]
+        # Top-N indices
+        top_idx = nonzero[np.argsort(weights[nonzero])[-top_n:][::-1]]
+        return self._article_ids[top_idx]
+
+    _STRATEGIES = {
+        "union":        "_aggregate_union",
+        "intersection": "_aggregate_intersection",
+        "majority":     "_aggregate_majority",
+        "weighted":     "_aggregate_weighted",
+    }
+
+    # ─── Requête ─────────────────────────────────────────────────────
+
+    def query(self, question: str, k: int = 5, strategy: str = "union",
+              param: int | None = None) -> dict:
+        if strategy not in self._STRATEGIES:
+            raise ValueError(f"Stratégie inconnue : {strategy}")
+
         q_vec = self._model.encode(
             [PREFIX_QUERY + question],
             normalize_embeddings=True,
@@ -326,13 +377,9 @@ class NaiveRetriever:
         jp_ids_topk = self._sub_ids[top_k_idx]
         jp_scores   = scores[top_k_idx]
 
-        article_counts = np.zeros(self._article_ids.shape[0], dtype=np.int32)
-        for idx in top_k_idx:
-            row = self._mat_sub.getrow(idx)
-            article_counts[row.indices] += 1
-
-        retained_idx = np.where(article_counts >= min_freq)[0]
-        retained_art = self._article_ids[retained_idx]
+        # Aggregation selon stratégie
+        agg_method = getattr(self, self._STRATEGIES[strategy])
+        retained_art = agg_method(top_k_idx, jp_scores, param)
 
         articles = [{"pair_key": pk} for pk in retained_art]
         jurisprudences = [
@@ -344,13 +391,18 @@ class NaiveRetriever:
             "articles":       articles,
             "jurisprudences": jurisprudences,
             "arguments":      [],
-            "_meta": {"k": k, "min_freq": min_freq,
-                      "n_articles": len(articles), "n_jp": len(jurisprudences)},
+            "_meta": {
+                "k":          k,
+                "strategy":   strategy,
+                "param":      param,
+                "n_articles": len(articles),
+                "n_jp":       len(jurisprudences),
+            },
         }
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# PHASE 3 — ÉVALUATION
+# ÉVALUATION D'UNE CONFIG
 # ═══════════════════════════════════════════════════════════════════════
 
 def _mean(values):
@@ -358,31 +410,30 @@ def _mean(values):
     return round(sum(vals) / len(vals), 4) if vals else None
 
 
-def per_question_path(qid: str, alias: str, k: int) -> Path:
+def per_q_path(qid: str, alias: str, strategy: str, k: int) -> Path:
     safe = qid.replace("/", "_")
-    return PER_Q_DIR / f"{safe}__{alias}__k{k}.json"
+    return PER_Q_DIR / f"{safe}__{alias}__{strategy}__k{k}.json"
 
 
-def evaluate_one_config(retriever: NaiveRetriever, alias: str,
-                          questions: list[dict], k: int, min_freq: int) -> dict:
+def evaluate_config(retriever, alias, questions, k, strategy, param) -> dict:
     from tqdm import tqdm
 
     per_q = []
-    for q in tqdm(questions, desc=f"{alias} k={k}", ncols=80):
-        t0 = time.time()
-        canon  = retriever.query(q["question"], k=k, min_freq=min_freq)
+    desc = f"{alias} {strategy} k={k}"
+    for q in tqdm(questions, desc=desc, ncols=80, leave=False):
+        canon  = retriever.query(q["question"], k=k, strategy=strategy, param=param)
         scores = evaluate(canon, q)
-        latency = round(time.time() - t0, 3)
         record = {
-            "qid":     q["id"],
-            "branche": q.get("branche"),
-            "alias":   alias,
-            "k":       k,
-            "canon":   canon,
-            "scores":  scores,
-            "latency": latency,
+            "qid":      q["id"],
+            "branche":  q.get("branche"),
+            "alias":    alias,
+            "strategy": strategy,
+            "k":        k,
+            "param":    param,
+            "canon":    canon,
+            "scores":   scores,
         }
-        per_question_path(q["id"], alias, k).write_text(
+        per_q_path(q["id"], alias, strategy, k).write_text(
             json.dumps(record, ensure_ascii=False, indent=2, default=str),
             encoding="utf-8",
         )
@@ -402,7 +453,8 @@ def evaluate_one_config(retriever: NaiveRetriever, alias: str,
         "n_articles":   _mean([r["canon"]["_meta"]["n_articles"] for r in per_q]),
         "n_jp":         _mean([r["canon"]["_meta"]["n_jp"]       for r in per_q]),
     }
-    return {"k": k, "min_freq": min_freq, "means": means, "per_question": per_q}
+    return {"k": k, "strategy": strategy, "param": param,
+            "means": means, "per_question": per_q}
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -412,24 +464,27 @@ def evaluate_one_config(retriever: NaiveRetriever, alias: str,
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--only", nargs="+", metavar="ALIAS",
-                    help="Ne run que ces alias (défaut : tous)")
-    ap.add_argument("--force", action="store_true",
-                    help="Re-run même si embedding/JSON existent")
-    ap.add_argument("--k", nargs="+", type=int, default=[3, 5, 10],
-                    help="Valeurs de K à tester (défaut: 3 5 10)")
-    ap.add_argument("--min-freq", type=int, default=1,
-                    help="Articles cités par ≥ N JP voisines (défaut: 1)")
+    ap.add_argument("--only", nargs="+", default=DEFAULT_MODELS, metavar="ALIAS",
+                    help=f"Modèles à run (défaut: {DEFAULT_MODELS})")
+    ap.add_argument("--strategies", nargs="+", default=DEFAULT_STRATEGIES,
+                    choices=DEFAULT_STRATEGIES,
+                    help=f"Stratégies d'agrégation (défaut: {DEFAULT_STRATEGIES})")
+    ap.add_argument("--k", nargs="+", type=int, default=DEFAULT_K,
+                    help=f"Valeurs de K (défaut: {DEFAULT_K})")
+    ap.add_argument("--weighted-top", type=int, default=5,
+                    help="Nb articles à garder en stratégie weighted (défaut: 5)")
     ap.add_argument("--max-chunks", type=int, default=8,
-                    help="Cap chunks/doc (défaut: 8 ≈ 3500 tokens couverts)")
+                    help="Cap chunks/doc (défaut: 8)")
+    ap.add_argument("--force", action="store_true",
+                    help="Re-run même si artefacts existent")
     ap.add_argument("--no-purge", action="store_true",
-                    help="Ne pas supprimer le modèle HF après usage")
+                    help="Ne pas supprimer les modèles HF après usage")
     ap.add_argument("--list-questions", action="store_true",
                     help="Liste les question IDs et quitte")
     args = ap.parse_args()
 
     n_gpus = detect_gpus()
-    print(f"GPUs       : {n_gpus} (device détecté : {detect_device()})")
+    print(f"GPUs       : {n_gpus} (device : {detect_device()})")
     print(f"HF cache   : {hf_cache_dir()}")
     print(f"Bundle     : {HERE}")
     print(f"Résultats  : {RESULTS}")
@@ -441,10 +496,15 @@ def main() -> int:
             print(f"  {q['id']:30s}  [{q.get('branche'):16s}]  {q.get('specialisation','')[:60]}")
         print(f"\nTotal : {len(questions)} questions")
         return 0
-    print(f"Questions  : {len(questions)} (branches : "
-          f"{sorted(set(q.get('branche') for q in questions))})")
+    print(f"Questions  : {len(questions)}")
+    print(f"Modèles    : {args.only}")
+    print(f"Stratégies : {args.strategies}")
+    print(f"K          : {args.k}")
+    n_configs = len(args.only) * len(args.strategies) * len(args.k)
+    print(f"→ {n_configs} configs × {len(questions)} questions = "
+          f"{n_configs * len(questions)} évaluations")
 
-    aliases = args.only if args.only else list(MODEL_REGISTRY.keys())
+    aliases = args.only
     unknown = [a for a in aliases if a not in MODEL_REGISTRY]
     if unknown:
         print(f"[ERREUR] Alias inconnus : {unknown}")
@@ -456,79 +516,62 @@ def main() -> int:
     # ─── BOUCLE PRINCIPALE ───────────────────────────────────────────
     for alias in aliases:
         hf_id, emb_dim, note = MODEL_REGISTRY[alias]
-        out_json = RESULTS / f"{alias}.json"
-
-        # Skip si déjà fait pour TOUS les K demandés
-        skip = False
-        if out_json.exists() and not args.force:
-            try:
-                done = json.loads(out_json.read_text())
-                done_ks = {c["k"] for c in done.get("configs", [])}
-                if set(args.k).issubset(done_ks):
-                    skip = True
-            except Exception:
-                pass
-        if skip:
-            print(f"\n[{alias}] déjà fait → skip ({out_json})")
-            continue
-
         print(f"\n{'='*70}\n[{alias}] {hf_id}  |  {note}\n{'='*70}")
+
         try:
             from huggingface_hub import snapshot_download
-
-            # 1) Download
             print("  ↳ download…"); t0 = time.time()
             snapshot_download(repo_id=hf_id, ignore_patterns=["*.md", "*.txt", "original/*"])
             print(f"  ↳ download OK ({int(time.time()-t0)}s)")
 
-            # 2) Embed
             emb_path, ids_path, embed_time = embed_corpus(alias, hf_id, emb_dim, args)
 
-            # 3) Build retriever
-            print("  ↳ build retriever…")
+            print("\n  ↳ build retriever…")
             retriever = NaiveRetriever(hf_id, emb_dim, emb_path, ids_path)
 
-            # 4) Run for each K
-            configs = []
-            t_query = time.time()
-            for k in args.k:
-                print(f"\n  ── Config k={k}, min_freq={args.min_freq} ─────")
-                result = evaluate_one_config(retriever, alias, questions,
-                                              k=k, min_freq=args.min_freq)
-                configs.append(result)
-                m = result["means"]
-                append_csv({
-                    "alias":           alias,
-                    "model_id":        hf_id,
-                    "k":               k,
-                    "min_freq":        args.min_freq,
-                    "n_q":             len(result["per_question"]),
-                    "S_retrieval_mean":  m["S_retrieval"],
-                    "S_e2e_mean":        m["S_e2e"],
-                    "S_bar_art_mean":    m["S_bar_art"],
-                    "S_bar_jp_mean":     m["S_bar_jp"],
-                    "art_core_mean":     m["art_core"],
-                    "art_expected_mean": m["art_expected"],
-                    "art_expert_mean":   m["art_expert"],
-                    "jp_core_mean":      m["jp_core"],
-                    "jp_expected_mean":  m["jp_expected"],
-                    "jp_expert_mean":    m["jp_expert"],
-                    "n_articles_mean":   m["n_articles"],
-                    "n_jp_mean":         m["n_jp"],
-                    "embed_time_s":      round(embed_time, 1) if k == args.k[0] else "",
-                    "query_time_s":      round(time.time() - t_query, 1),
-                    "status":            "ok",
-                })
-                print(f"    S_retrieval = {m['S_retrieval']}  (plafond LLM ≈ 0.095)")
-                print(f"    S̄_art={m['S_bar_art']}  S̄_jp={m['S_bar_jp']}  "
-                      f"N_art={m['n_articles']}  N_jp={m['n_jp']}")
+            configs_done = []
+            t_query_start = time.time()
+            for strategy in args.strategies:
+                for k in args.k:
+                    param = args.weighted_top if strategy == "weighted" else None
+                    print(f"\n  ── {alias} | {strategy} | k={k}"
+                          + (f" | top={param}" if param else ""))
+                    result = evaluate_config(retriever, alias, questions,
+                                              k=k, strategy=strategy, param=param)
+                    configs_done.append(result)
 
-            # 5) Save aggregate
-            out_json.write_text(json.dumps({
+                    m = result["means"]
+                    append_csv({
+                        "alias":            alias,
+                        "model_id":         hf_id,
+                        "strategy":         strategy,
+                        "k":                k,
+                        "param":            param if param else "",
+                        "n_q":              len(result["per_question"]),
+                        "S_retrieval_mean":  m["S_retrieval"],
+                        "S_e2e_mean":        m["S_e2e"],
+                        "S_bar_art_mean":    m["S_bar_art"],
+                        "S_bar_jp_mean":     m["S_bar_jp"],
+                        "art_core_mean":     m["art_core"],
+                        "art_expected_mean": m["art_expected"],
+                        "art_expert_mean":   m["art_expert"],
+                        "jp_core_mean":      m["jp_core"],
+                        "jp_expected_mean":  m["jp_expected"],
+                        "jp_expert_mean":    m["jp_expert"],
+                        "n_articles_mean":   m["n_articles"],
+                        "n_jp_mean":         m["n_jp"],
+                        "embed_time_s":      round(embed_time, 1) if (strategy, k) == (args.strategies[0], args.k[0]) else "",
+                        "query_time_s":      round(time.time() - t_query_start, 1),
+                        "status":            "ok",
+                    })
+                    print(f"    S_retrieval={m['S_retrieval']}  S̄_art={m['S_bar_art']}  "
+                          f"S̄_jp={m['S_bar_jp']}  N_art={m['n_articles']}  N_jp={m['n_jp']}")
+
+            (RESULTS / f"{alias}.json").write_text(json.dumps({
                 "alias":      alias,
                 "model_id":   hf_id,
                 "embed_time_s": embed_time,
-                "configs":    configs,
+                "configs":    configs_done,
             }, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
 
         except Exception as e:
@@ -544,7 +587,8 @@ def main() -> int:
     try:
         import pandas as pd
         df = pd.read_csv(CSV_PATH)
-        cols = ["alias", "k", "S_retrieval_mean", "S_bar_art_mean", "S_bar_jp_mean",
+        cols = ["alias", "strategy", "k", "S_retrieval_mean",
+                "S_bar_art_mean", "S_bar_jp_mean",
                 "n_articles_mean", "n_jp_mean", "status"]
         print("\n" + df[cols].to_string(index=False))
     except ImportError:

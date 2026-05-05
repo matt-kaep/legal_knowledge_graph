@@ -1,4 +1,37 @@
-# Baseline B2 — Droit pénal — Pipeline cluster (L40S)
+# Baseline B2 — Droit pénal — Cluster L40S
+
+## Expérience testée
+
+**Hypothèse** : un retrieval naïf basé sur un encodeur texte + agrégation via le KG bat un LLM nu sur le benchmark CRFPA.
+
+**Pipeline** (par question) :
+```
+Question CRFPA → embed → cosine vs 118k JP pénales → top-K JP voisines
+              → leurs articles cités dans le graphe → agrégation → parsed_canon
+              → eval_rubric → S_retrieval
+```
+
+**Variables** :
+- 1 modèle d'embedding par défaut (`e5-base`, 768d), registre extensible
+- 4 stratégies d'agrégation (voir ci-dessous)
+- 5 valeurs de K (3, 4, 5, 7, 10)
+
+→ **20 configs × 8 questions = 160 évaluations** par modèle.
+
+**Critère de succès** : `S_retrieval_mean > 0.095` (plafond LLM nu).
+
+## Stratégies d'agrégation (le cœur de l'XP)
+
+Donné top-K JP voisines de la question, comment agréger leurs articles cités ?
+
+| Strategy | Logique | Effet attendu |
+|----------|---------|---------------|
+| `union` | Article retenu s'il est cité par ≥ 1 des K JP | Recall max, précision faible (beaucoup de bruit) |
+| `intersection` | Article cité par TOUTES les K JP | Consensus strict, précision élevée mais recall qui s'effondre quand K augmente |
+| `majority` | Article cité par ≥ ⌈K/2⌉ JP | Compromis classique |
+| `weighted` | Articles classés par Σ similarité des JP citantes, garde top-N (défaut N=5) | Privilégie les articles cités par les JP **les plus proches** |
+
+L'XP compare ces 4 stratégies × 5 K pour identifier la bonne politique de retrieval.
 
 ## Contenu du bundle
 
@@ -8,88 +41,77 @@
 | `graph_penal.npz` | Sous-graphe CSR pénal × tous articles | ~2 MB |
 | `rubrics_penal.json` | 8 questions pénales fusionnées | ~100 KB |
 | `eval_rubric.py` | Module de scoring CRFPA | ~12 KB |
-| `run_cluster.py` | **Script all-in-one** | ~17 KB |
+| `run_cluster.py` | **Script all-in-one** | ~21 KB |
 | `requirements.txt` | Dépendances Python | <1 KB |
 
 ## Setup environnement
 
 ```bash
-# 1. venv + torch CUDA
 python -m venv venv && source venv/bin/activate
 pip install torch --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
 
-# 2. Cache HF sur disque rapide
 export HF_TOKEN=hf_xxx
 export HF_HOME=/scratch/hf_cache
 
-# 3. Vérifier le GPU
-python -c "import torch; print('CUDA:', torch.cuda.is_available(), '|', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU')"
+python -c "import torch; print('CUDA:', torch.cuda.is_available(), '|', torch.cuda.get_device_name(0))"
 ```
 
 ## Lancer la baseline
 
 ```bash
-# Tous les modèles du registre (séquentiel : download → embed → eval → purge)
+# Défaut : e5-base, 4 stratégies, K ∈ {3,4,5,7,10}
 python run_cluster.py
 
-# Subset
-python run_cluster.py --only e5-base e5-large
-
-# Variantes K et seuil
-python run_cluster.py --k 3 5 10 20 --min-freq 1
-
-# Garder les modèles HF (debug)
-python run_cluster.py --no-purge
-
-# Lister les questions
+# Variantes
+python run_cluster.py --only e5-large bge-m3
+python run_cluster.py --strategies intersection majority
+python run_cluster.py --k 5 10
+python run_cluster.py --weighted-top 3
 python run_cluster.py --list-questions
 ```
 
-## Modèles dans le registre
+## Modèles disponibles dans le registre
 
 | Alias | HF id | Dims | Notes |
 |-------|-------|------|-------|
 | `e5-small` | `intfloat/multilingual-e5-small` | 384 | Rapide, 118M params |
-| `e5-base` | `intfloat/multilingual-e5-base` | 768 | Équilibré, 278M params |
+| `e5-base` ⭐ | `intfloat/multilingual-e5-base` | 768 | **Défaut** — équilibré, 278M params |
 | `e5-large` | `intfloat/multilingual-e5-large` | 1024 | Qualité, 560M params |
 | `bge-m3` | `BAAI/bge-m3` | 1024 | Long context (8k tokens), SOTA multilingue |
 | `camembert-base` | `dangvantuan/sentence-camembert-base` | 768 | FR-spécifique |
 
-## Durées attendues sur L40S (48 GB VRAM, ~118k JP pénales)
+## Durées estimées sur L40S
 
-| Modèle | Embedding | Query × 3K + score |
-|--------|-----------|--------------------|
-| `e5-small` | ~3 min | <1 min |
-| `e5-base` | ~6 min | <1 min |
-| `e5-large` | ~12 min | <1 min |
-| `bge-m3` | ~15 min | ~1 min |
+| Étape | e5-base | e5-large | bge-m3 |
+|-------|---------|----------|--------|
+| Embedding 118k JP | ~6 min | ~12 min | ~15 min |
+| 20 configs × 8 questions | ~3 min | ~3 min | ~3 min |
+| **Total** | **~10 min** | **~15 min** | **~20 min** |
 
 ## Sortie
 
 ```
 results/
-├── comparison_b2_penal.csv           # ← tableau de synthèse (1 ligne par modèle×K)
-├── <alias>.json                      # détail agrégé par modèle
+├── comparison_b2_penal.csv             # ← clé : 1 ligne par (modèle, strategy, K)
+├── <alias>.json                        # détail agrégé par modèle
 └── per_question/
-    └── <qid>__<alias>__k<K>.json     # détail par question
+    └── <qid>__<alias>__<strategy>__k<K>.json   # détail par évaluation
 embeddings/
-└── jp_embeddings_<alias>.npy         # cache embeddings (resumable)
-logs/                                  # logs futurs
+└── jp_embeddings_<alias>.npy           # cache (resumable)
 ```
 
-**Métrique clé** : `S_retrieval_mean` dans le CSV — plafond LLM nu ≈ 0,095.
+**Métrique principale** : `S_retrieval_mean` dans le CSV — à comparer à 0,095.
 
-## Comportement de reprise
+## Reprise après interruption
 
-- **Embedding interrompu** → relancer = reprend depuis le dernier batch (state JSON).
-- **Modèle déjà fait** → skip automatique sauf `--force`.
-- **Crash sur un modèle** → la boucle continue avec les suivants, statut "error: ..." dans le CSV.
+- **Embedding** : memmap + state JSON, relancer reprend automatiquement.
+- **Modèle déjà fait** : skip sauf `--force`.
+- **Crash sur un modèle** : la boucle continue, statut "error: ..." dans le CSV.
 
-## Récupération des résultats
+## Récupération
 
 ```bash
-# Depuis le Mac
 scp -r cluster:~/penal_bundle/results ./05-Technique/benchmark/baseline_b2/results_cluster/
 ```
 
