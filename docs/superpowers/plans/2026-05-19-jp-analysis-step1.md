@@ -34,7 +34,7 @@ Base dir: `05-Technique/benchmark/jp_analysis/`
 | `budget.py` | `verify_max_model_len()`, `prompt_overhead_tokens()`, `is_oversized()` (two-pass) |
 | `ledger.py` | `derive_done_ids()`, `atomic_write_shard()`, `load_quarantine()` |
 | `analyzer/jp_analyzer.py` | Streaming orchestrator: budget filter, batching, vLLM call, parse, validate, persist, resume, circuit breaker |
-| `run_step1.py` | CLI: `--pilot[N] --juris --limit --resume --max-model-len --out` |
+| `run_step1.py` | CLI: `--pilot[N] --juris --limit --resume --max-model-len --concurrency --out`; bounded thread-pool dispatch of `analyze_record` |
 | `serve_vllm.sh` | Launch vLLM server for `gemma4-31B-AWQ` |
 | `tests/` | pytest unit tests per module |
 
@@ -1277,6 +1277,18 @@ def test_retryable_goes_to_quarantine_not_shard(tmp_path: Path):
     assert not list(out.glob("*/part-*.jsonl"))            # no terminal record
     q = (out / "_quarantine.jsonl").read_text().strip()
     assert json.loads(q)["id"] == "z"
+
+def test_concurrent_run_processes_every_id_exactly_once(tmp_path: Path):
+    out = tmp_path / "outputs" / "step1"
+    cfg = RunConfig(model="gemma4-31B", threshold=10_000)
+    rows = [{"id": f"r{i}", "number": str(i), "juris": "CC", "text": "x"}
+            for i in range(40)]
+    run(rows, FakeClient(_good_payload()), cfg, out_root=out, concurrency=8)
+    ids = [json.loads(l)["id"]
+           for shard in out.glob("*/part-*.jsonl")
+           for l in shard.read_text().splitlines()]
+    assert sorted(ids) == sorted(r["id"] for r in rows)   # no loss
+    assert len(ids) == len(set(ids))                       # no duplicate
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -1312,7 +1324,15 @@ def _iter_parquet(path, limit=None, juris=None):
             if limit and seen >= limit:
                 return
 
-def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500):
+def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500,
+        concurrency: int = 16):
+    """Stream rows, dispatch analyze_record across a bounded thread pool
+    (vLLM continuous-batches server-side; client concurrency is the throughput
+    lever). analyze_record is a pure per-record function -> thread-safe. ALL
+    result handling (quarantine, buckets, flush, circuit breaker) runs in this
+    coordinator thread only, so shard atomicity (§9) is preserved.
+    concurrency=1 == sequential."""
+    import concurrent.futures as cf
     out_root = Path(out_root)
     done = derive_done_ids(out_root)
     quarantine = load_quarantine(out_root / "_quarantine.jsonl")
@@ -1339,12 +1359,10 @@ def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500):
         counters[juris] = n + 1
         buckets[juris] = []
 
-    for row in rows:
-        if row["id"] in done:
-            continue
-        try:
-            rec = analyze_record(row, client, cfg)
-        except RetryableError as exc:
+    def handle(row, result_exc):
+        """Coordinator-thread post-processing of one finished record."""
+        rec, exc = result_exc
+        if isinstance(exc, RetryableError):
             attempts = quarantine.get(row["id"], 0) + 1
             cb.record(ok=False)
             if attempts >= cfg.max_attempts:
@@ -1356,18 +1374,42 @@ def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500):
                 append_jsonl(out_root / "_quarantine.jsonl",
                              {"id": row["id"], "attempt_count": attempts,
                               "error_message": str(exc)})
-                if cb.tripped():
-                    raise RuntimeError(
-                        "circuit breaker tripped: retryable failure rate too "
-                        "high — pausing run (infra likely degraded)") from exc
-                continue
-        cb.record(ok=(rec["status"] == "ok"))
+                return cb.tripped()
+        else:
+            cb.record(ok=(rec["status"] == "ok"))
         buckets.setdefault(row["juris"], []).append(rec)
         if len(buckets[row["juris"]]) >= shard_size:
             flush(row["juris"])
-        if cb.tripped():
-            flush(row["juris"])
-            raise RuntimeError("circuit breaker tripped — pausing run")
+        return cb.tripped()
+
+    def work(row):
+        try:
+            return analyze_record(row, client, cfg), None
+        except RetryableError as exc:
+            return None, exc
+
+    pending = (r for r in rows if r["id"] not in done)
+    with cf.ThreadPoolExecutor(max_workers=max(1, concurrency)) as pool:
+        inflight: dict = {}
+        exhausted = False
+        while True:
+            while not exhausted and len(inflight) < max(1, concurrency):
+                nxt = next(pending, None)
+                if nxt is None:
+                    exhausted = True
+                    break
+                inflight[pool.submit(work, nxt)] = nxt
+            if not inflight:
+                break
+            done_fut, _ = cf.wait(inflight, return_when=cf.FIRST_COMPLETED)
+            for fut in done_fut:
+                row = inflight.pop(fut)
+                if handle(row, fut.result()):
+                    for j in list(buckets):
+                        flush(j)
+                    raise RuntimeError(
+                        "circuit breaker tripped — pausing run "
+                        "(retryable failure rate too high; infra degraded)")
     for j in list(buckets):
         flush(j)
 
@@ -1382,6 +1424,8 @@ def main(argv=None):
     p.add_argument("--base-url", default="http://localhost:8000/v1")
     p.add_argument("--out", default="outputs/step1")
     p.add_argument("--parquet", default=PARQUET)
+    p.add_argument("--concurrency", type=int, default=16,
+                   help="in-flight vLLM requests (1 = sequential)")
     args = p.parse_args(argv)
 
     from openai import OpenAI
@@ -1404,7 +1448,7 @@ def main(argv=None):
             _iter_parquet(args.parquet, per, "TJ"))
     else:
         rows = _iter_parquet(args.parquet, args.limit, args.juris)
-    run(rows, client, cfg, Path(args.out))
+    run(rows, client, cfg, Path(args.out), concurrency=args.concurrency)
 
 if __name__ == "__main__":
     main()
@@ -1483,7 +1527,18 @@ Run: `cd 05-Technique/benchmark/jp_analysis && python run_step1.py --pilot 30 --
 Expected: 30 records across `outputs/step1_pilot/{CC,CA,TJ}/part-*.jsonl`, exit 0.
 
 - [ ] **Step 3: Qualitative review → `PILOT.md`**
-  Record: % `status==ok`, % `themes_valid`, `_themes_anomalies` list (taxonomy gaps), `attendu_cle` verbatim fidelity (spot-check vs source text — R2), guided-decoding success (R4), throughput (records/min → extrapolate full-run GPU cost, R3), oversize/backlog counts.
+  Record: % `status==ok`, % `themes_valid`, `_themes_anomalies` list (taxonomy gaps), `attendu_cle` verbatim fidelity (spot-check vs source text — R2), guided-decoding success (R4), oversize/backlog counts.
+
+- [ ] **Step 3b: Parallelization benchmark (spec §10)**
+  Re-run the same 30-JP sample at `--concurrency` ∈ {1, 8, 16, 32} against the same vLLM server (use a throwaway `--out` per level so shards don't collide; the resume ledger would otherwise skip already-done ids):
+  ```
+  for C in 1 8 16 32; do
+    rm -rf outputs/step1_bench_$C
+    /usr/bin/time -p python run_step1.py --pilot 30 --max-model-len 32768 \
+      --concurrency $C --out outputs/step1_bench_$C
+  done
+  ```
+  Record in `PILOT.md` a table: concurrency → wall time, records/min, latence p50/p95 (from `_metrics.jsonl` `duration_ms`), error rate. Identify the knee where throughput saturates (vLLM server becomes the bottleneck). Pick the full-run `--concurrency` from this and recompute the 1.12 M GPU-hours estimate (R3).
 
 - [ ] **Step 4: Human gate (spec §10)**
   Present `PILOT.md` to the user. Do NOT launch the full 1.12 M run without explicit approval. Taxonomy adjustments from anomalies → bump `TAXONOMY_VERSION`, re-pilot if material.
@@ -1504,7 +1559,7 @@ git commit -m "docs(jp-analysis): pilot 30 JP run log + qualitative review"
 - §3.2 themes validation (finding #1) → Task 5. §3.3 record metadata/status → Task 10 `_terminal`/`rec`. ✓
 - §4 live budget (finding #4) → Task 6 + Task 11 `verify_max_model_len`/`compute_threshold`. ✓
 - §5 taxonomy → Task 1. §6 routing/assembly → Tasks 8–9. ✓
-- §7 file structure → all tasks; §8 flow → Tasks 10–11; §9 terminal/retryable + circuit breaker + atomic ledger (findings #2,#3) → Tasks 4, 7, 10, 11. ✓
+- §7 file structure → all tasks; §8 flow incl. client-side concurrency (`--concurrency`, bounded thread pool, coordinator-thread result handling) → Tasks 10–11; §9 terminal/retryable + circuit breaker + atomic ledger (findings #2,#3) → Tasks 4, 7, 10, 11; §10 pilot parallelization benchmark → Task 13 Step 3b. ✓
 - §11 tests → every task is TDD. §12 R1–R4 → Task 13 steps. ✓
 
 **2. Placeholder scan:** The only intentional `<<< transcribe ... >>>` markers are in Task 8, with an explicit verbatim-source pointer and structural-invariant tests — this is a copy-from-source instruction, not undefined behavior. All logic modules have complete code.

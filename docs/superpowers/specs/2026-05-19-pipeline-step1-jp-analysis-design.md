@@ -293,8 +293,15 @@ accolades JSON du schéma dans le prompt cassent `.format()`.
 3. Budget (§4 deux passes) dépassé → record terminal `status:"oversized"`.
 4. `text` vide → record terminal `status:"no_fulltext"`.
 5. `court ← map(juris)` → `build_prompt(variant)`.
-6. Lots ; appel vLLM batché `guided_json=<json_schema>`, `temperature=0.1`,
-   `max_tokens=4000`.
+6. Lots traités avec **concurrence client-side** (`--concurrency N`, défaut
+   16) : N appels vLLM en vol simultanément via un pool de threads borné
+   (vLLM fait du continuous batching côté serveur → la concurrence client est
+   le principal levier de débit ; `--concurrency 1` = mode séquentiel).
+   Chaque appel : `guided_json=<json_schema>`, `temperature=0.1`,
+   `max_tokens=4000`. `analyze_record` est une fonction pure par décision
+   donc thread-safe ; circuit breaker et écriture des shards restent
+   exécutés dans le thread coordinateur après collecte des futures
+   (atomicité §9 préservée).
 7. Parse robuste (`json.loads` → strip ```` ```json ```` → `jsonrepair`).
 8. Validation Pydantic stricte + canonicalisation `themes` (§3.2).
    - Échec **terminal** (JSON irréparable après 1 retry, contenu invalide) →
@@ -348,8 +355,12 @@ accolades JSON du schéma dans le prompt cassent `.format()`.
 Échantillon : 10 CC + 10 CA + 10 TJ, mélange de tailles (court / médian /
 proche du seuil). Objectifs : valider prompts (3 variantes), guided decoding,
 parsing, validation schéma, **qualité juridique FR de gemma4-31B**, et
-**calage de la taxonomie** (taux de `Autre:`, pertinence des thèmes). Livrable :
-30 JSON + rapport qualitatif + liste des `Autre:`.
+**calage de la taxonomie** (taux de `Autre:`, pertinence des thèmes).
+**Benchmark de parallélisation** : rejouer le pilote à `--concurrency` ∈
+{1, 8, 16, 32}, mesurer records/min et latence p50/p95, identifier le palier
+où le débit sature (le serveur vLLM devient le goulot) → fixe la concurrence
+du run complet et l'estimation GPU-heures. Livrable : 30 JSON + rapport
+qualitatif + liste des `Autre:` + **tableau débit vs concurrence**.
 
 **Gate** : revue humaine du pilote avant run complet (qualité jugée
 acceptable, taxonomie ajustée si besoin).
