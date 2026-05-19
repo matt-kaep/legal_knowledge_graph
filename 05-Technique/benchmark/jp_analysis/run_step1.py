@@ -8,7 +8,8 @@ import itertools
 import re
 from pathlib import Path
 
-from analyzer.jp_analyzer import analyze_record, CircuitBreaker, RunConfig, RetryableError
+from analyzer.jp_analyzer import (analyze_record, CircuitBreaker, RunConfig,
+                                  RetryableError, build_terminal_record)
 from ledger import (atomic_write_shard, derive_done_ids, append_jsonl,
                     load_quarantine)
 
@@ -76,15 +77,31 @@ def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500,
             attempts = quarantine.get(row["id"], 0) + 1
             cb.record(ok=False)
             if attempts >= cfg.max_attempts:
-                rec = {"id": row["id"], "number": row.get("number", ""),
-                       "juris": row["juris"], "status": "failed_terminal",
-                       "failed": True, "error_class": "retryable",
-                       "error_message": str(exc), "attempt_count": attempts}
+                # CRITICAL 2: exhausted retryable → FULL-key terminal record
+                # via the shared factory (spec §3.1/§3.3 key set can't drift);
+                # error_class stays "retryable" so it's traceable per spec §9.
+                rec = build_terminal_record(
+                    row["id"], row.get("number", ""), row["juris"],
+                    "failed_terminal", variant=None, err=str(exc),
+                    error_class="retryable", attempt_count=attempts)
             else:
                 append_jsonl(out_root / "_quarantine.jsonl",
                              {"id": row["id"], "attempt_count": attempts,
                               "error_message": str(exc)})
                 return cb.tripped()
+        elif isinstance(exc, tuple) and exc and exc[0] == "__terminal__":
+            # CRITICAL 3: a non-RetryableError escaped work() (e.g. route()
+            # ValueError on a bad juris, KeyError on a malformed row). At
+            # 1.12M rows ONE bad row must not abort the pool — it becomes a
+            # terminal record (NOT quarantined, non-retryable) and the run
+            # continues. Same factory as Critical 2 so the key set holds.
+            bad = exc[1]
+            cb.record(ok=False)
+            rec = build_terminal_record(
+                row.get("id", ""), row.get("number", ""),
+                row.get("juris", ""), "failed_terminal", variant=None,
+                err=f"{type(bad).__name__}: {bad}",
+                error_class="terminal", attempt_count=1)
         else:
             cb.record(ok=(rec["status"] == "ok"))
         buckets.setdefault(row["juris"], []).append(rec)
@@ -97,6 +114,13 @@ def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500,
             return analyze_record(row, client, cfg), None
         except RetryableError as exc:
             return None, exc
+        except Exception as exc:  # noqa: BLE001
+            # CRITICAL 3: any non-retryable exception escaping analyze_record
+            # (route() ValueError, KeyError on a malformed row, a bug in
+            # canonicalize_themes...) must NOT propagate via fut.result() and
+            # kill the whole pool at 1.12M rows. Signal it as a non-retryable
+            # terminal so handle() turns it into a terminal record.
+            return None, ("__terminal__", exc)
 
     pending = (r for r in rows if r["id"] not in done)
     with cf.ThreadPoolExecutor(max_workers=max(1, concurrency)) as pool:

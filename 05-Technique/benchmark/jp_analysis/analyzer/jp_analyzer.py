@@ -42,23 +42,33 @@ class CircuitBreaker:
             return False
         return (sum(self.events) / len(self.events)) > self.max_fail_rate
 
-def _terminal(rec_id, number, juris, status, variant=None, err=None):
+_UNSET = object()
+
+def build_terminal_record(rec_id, number, juris, status, variant=None,
+                          err=None, error_class=_UNSET, attempt_count=1):
+    """Single factory for every terminal JSONL record so the spec §3.1/§3.3
+    key set cannot drift across call sites. ``error_class`` defaults to the
+    legacy behaviour ("terminal" for non-ok, else None); pass an explicit
+    value (e.g. "retryable" for an exhausted-retryable record, spec §9) to
+    override without changing the default-arg path used by analyze_record."""
+    if error_class is _UNSET:
+        error_class = "terminal" if status != "ok" else None
     return {"id": rec_id, "number": number, "juris": juris, "status": status,
             "failed": status != "ok", "themes_valid": None,
             "themes_taxonomy_version": TAXONOMY_VERSION,
             "schema_version": SCHEMA_VERSION, "model": None,
             "prompt_variant": variant, "tokens_in": None, "tokens_out": None,
-            "duration_ms": None, "attempt_count": 1,
-            "error_class": ("terminal" if status != "ok" else None),
+            "duration_ms": None, "attempt_count": attempt_count,
+            "error_class": error_class,
             "error_message": err, "_anomalies": None}
 
 def analyze_record(row: dict, client, cfg: RunConfig) -> dict:
     rid, number, juris = row["id"], row.get("number", ""), row["juris"]
     text = row.get("text") or ""
     if not text.strip():
-        return _terminal(rid, number, juris, "no_fulltext", err="empty fullText")
+        return build_terminal_record(rid, number, juris, "no_fulltext", err="empty fullText")
     if is_oversized(text, cfg.threshold, tokenizer=cfg.tokenizer):
-        return _terminal(rid, number, juris, "oversized",
+        return build_terminal_record(rid, number, juris, "oversized",
                          err="exceeds context budget")
     system, variant = build_system_prompt(juris)
     t0 = time.time()
@@ -79,14 +89,14 @@ def analyze_record(row: dict, client, cfg: RunConfig) -> dict:
         if classify_error(exc) == ErrorClass.RETRYABLE:
             exc_r = RetryableError(str(exc))
             raise exc_r from exc
-        return _terminal(rid, number, juris, "failed_terminal", variant,
+        return build_terminal_record(rid, number, juris, "failed_terminal", variant,
                          err=f"{type(exc).__name__}: {exc}")
     dur = int((time.time() - t0) * 1000)
     try:
         data = parse_model_json(raw)
         model_obj = Step1Output.model_validate(data)
     except (ParseError, ValueError) as exc:
-        return _terminal(rid, number, juris, "failed_terminal", variant,
+        return build_terminal_record(rid, number, juris, "failed_terminal", variant,
                          err=f"{type(exc).__name__}: {exc}")
     payload = model_obj.model_dump()
     clean, themes_valid, anomalies = canonicalize_themes(payload["themes"])

@@ -32,3 +32,14 @@ def test_mixed_keeps_good_drops_bad():
     pairs, valid, anomalies = canonicalize_themes(t)
     assert {"branche": PEN, "sous_branche": SUB} in pairs
     assert len(pairs) == 1 and valid is False and len(anomalies) == 1
+
+def test_autre_with_french_curly_apostrophe_accepted():
+    # CRITICAL 1 regression: French legal text from gemma4/Judilibre uses the
+    # curly apostrophe U+2019 ('’') pervasively. Such Autre: labels must be
+    # accepted, not silently dropped to anomalies (spec §3.2).
+    t = [{"branche": "Autre:droit de l’environnement",
+          "sous_branche": "Autre:police de l’eau"}]
+    pairs, valid, anomalies = canonicalize_themes(t)
+    assert pairs == t
+    assert valid is True
+    assert anomalies == []

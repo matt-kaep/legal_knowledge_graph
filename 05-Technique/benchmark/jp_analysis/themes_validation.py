@@ -5,7 +5,7 @@ import unicodedata
 from rapidfuzz import process, fuzz
 from prompts.step1.themes_taxonomy import PAIRS
 
-_AUTRE = re.compile(r"^Autre:[\w \-''/().]{2,40}$")
+_AUTRE = re.compile(r"^Autre:[\w \-'’/().]{2,40}$")
 _FUZZ_MIN = 92  # high threshold: canonicalize only near-identical variants
 
 def _norm(s: str) -> str:
@@ -14,7 +14,10 @@ def _norm(s: str) -> str:
     s = re.sub(r"[\s\-—–]+", " ", s).strip().lower()
     return s
 
-# normalized canonical lookup: normed (branche|sous) -> exact canonical pair
+# normalized canonical lookup: normed (branche|sous) -> exact canonical pair.
+# PAIRS is a frozenset (unordered): a FUTURE taxonomy edit that introduces a
+# normalization collision (two raw pairs normalizing to the same key) would
+# resolve order-dependently here — surface it explicitly if PAIRS ever grows.
 _LOOKUP = {(_norm(b), _norm(s)): (b, s) for (b, s) in PAIRS}
 _NORM_KEYS = list(_LOOKUP.keys())
 
