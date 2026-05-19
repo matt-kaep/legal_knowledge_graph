@@ -244,8 +244,12 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
             return 2
         print(f"  ↳ vLLM prêt ({int(time.time()-t0)}s)")
 
+        # timeout généreux : le decoding JSON-guidé strict sur un gros
+        # contexte (gros L2 ~27k tok) peut prendre plusieurs minutes —
+        # le défaut openai (600s) suffit en général mais on marge large.
         client = OpenAI(base_url=f"http://localhost:{args.port}/v1",
-                         api_key="EMPTY")
+                         api_key="EMPTY",
+                         timeout=args.req_timeout, max_retries=1)
 
         # Budget d'entrée = contexte modèle − sortie réservée − marge
         # (template chat, tokens spéciaux). Un L1 dont le prompt estimé
@@ -298,6 +302,22 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
                         "doc_id": doc_id,
                         "questions": [],
                         "_error": "vllm_400",
+                        "_error_message": str(e),
+                        "_source_offsets": offs,
+                    })
+                    continue
+                except (openai.APITimeoutError,
+                        openai.APIConnectionError) as e:
+                    # Decoding trop lent / connexion vLLM coupée. On NE tue
+                    # PAS le run : unité marquée, on continue (modèle B,
+                    # docs suivants, phases 2-3 restent récupérables).
+                    print(f"    SKIP {unit['section_id']} — timeout/conn "
+                          f"API : {e}")
+                    sections_out.append({
+                        "section_id": unit["section_id"],
+                        "doc_id": doc_id,
+                        "questions": [],
+                        "_error": "api_timeout",
                         "_error_message": str(e),
                         "_source_offsets": offs,
                     })
@@ -357,6 +377,8 @@ def main() -> int:
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--num-gpus", type=int, default=None)
     ap.add_argument("--wait-timeout", type=int, default=900)
+    ap.add_argument("--req-timeout", type=float, default=1800.0,
+                    help="timeout (s) par requête vLLM (decoding guidé lent)")
     ap.add_argument("--temperature", type=float, default=0.2)
     ap.add_argument("--force", action="store_true",
                     help="Régénérer même si le fichier existe")
