@@ -6,6 +6,7 @@ from prompts.step1.step1_tribunal import PREAMBULE_TRIBUNAL
 
 def test_preambules_are_distinct_and_nonempty():
     ps = [PREAMBULE_CASSATION, PREAMBULE_COUR_APPEL, PREAMBULE_TRIBUNAL]
+    # sanity floor — each préambule is ~1.5k+ chars; 400 is a loose regression guard
     assert all(len(p) > 400 for p in ps)
     assert len(set(ps)) == 3
 
@@ -26,3 +27,5 @@ def test_shared_blocks_present():
 def test_taxonomy_block_injected():
     assert "Autre:" in sh.BLOC_TAXONOMIE_THEMES
     assert "Taxonomie des thèmes" in sh.BLOC_TAXONOMIE_THEMES
+    # taxonomy body actually injected (guards against an emptied TAXONOMY)
+    assert "Droit du travail" in sh.BLOC_TAXONOMIE_THEMES
