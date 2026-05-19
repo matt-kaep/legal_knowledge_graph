@@ -5,6 +5,7 @@ handling (quarantine, buckets, flush, circuit breaker) runs in this coordinator
 thread only -> shard atomicity (§9) preserved. concurrency=1 == sequential."""
 import argparse
 import itertools
+import re
 from pathlib import Path
 
 from analyzer.jp_analyzer import analyze_record, CircuitBreaker, RunConfig, RetryableError
@@ -40,6 +41,14 @@ def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500,
     cb = CircuitBreaker()
     buckets: dict[str, list] = {}
     counters: dict[str, int] = {}
+    # Resume: seed next shard number per juris from existing shards so a
+    # resumed run never reuses part-00000 and atomically clobbers prior
+    # committed records (shards = single source of truth, spec finding #3).
+    for p in out_root.glob("*/part-*.jsonl"):
+        m = re.search(r"part-(\d+)\.jsonl$", p.name)
+        if m:
+            jn = p.parent.name
+            counters[jn] = max(counters.get(jn, 0), int(m.group(1)) + 1)
 
     def flush(juris):
         recs = buckets.get(juris)
@@ -102,12 +111,15 @@ def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500,
                 inflight[pool.submit(work, nxt)] = nxt
             if not inflight:
                 break
-            done_fut, _ = cf.wait(inflight, return_when=cf.FIRST_COMPLETED)
-            for fut in done_fut:
+            ready, _ = cf.wait(inflight, return_when=cf.FIRST_COMPLETED)
+            for fut in ready:
                 row = inflight.pop(fut)
                 if handle(row, fut.result()):
                     for j in list(buckets):
                         flush(j)
+                    # In-flight futures abandoned; pool.__exit__ waits but
+                    # discards results. Their ids aren't in any shard ->
+                    # retried next run. Intentional (resumable).
                     raise RuntimeError(
                         "circuit breaker tripped — pausing run "
                         "(retryable failure rate too high; infra degraded)")
@@ -127,16 +139,21 @@ def main(argv=None):
     p.add_argument("--parquet", default=PARQUET)
     p.add_argument("--concurrency", type=int, default=16,
                    help="in-flight vLLM requests (1 = sequential)")
+    p.add_argument("--tokenizer-id", default=None,
+                   help="HF tokenizer id for exact near-threshold token "
+                        "counts; None=char estimate")
     args = p.parse_args(argv)
 
     from openai import OpenAI
-    from transformers import AutoTokenizer
     from budget import compute_threshold, verify_max_model_len
     from prompts.step1.build_prompt import build_system_prompt
 
     client = OpenAI(base_url=args.base_url, api_key="EMPTY")
     verify_max_model_len(client, args.max_model_len)
-    tok = AutoTokenizer.from_pretrained(args.model) if False else None  # set real id at deploy
+    tok = None
+    if args.tokenizer_id:
+        from transformers import AutoTokenizer
+        tok = AutoTokenizer.from_pretrained(args.tokenizer_id)
     overhead = max(len(build_system_prompt(j)[0]) // 3 for j in ("CC", "CA", "TJ"))
     threshold = compute_threshold(args.max_model_len, overhead, 4000)
     cfg = RunConfig(model=args.model, threshold=threshold, tokenizer=tok)

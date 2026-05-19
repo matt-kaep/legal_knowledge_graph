@@ -45,3 +45,18 @@ def test_concurrent_run_processes_every_id_exactly_once(tmp_path: Path):
            for l in shard.read_text().splitlines()]
     assert sorted(ids) == sorted(r["id"] for r in rows)   # no loss
     assert len(ids) == len(set(ids))                       # no duplicate
+
+def test_resume_does_not_overwrite_prior_shards(tmp_path: Path):
+    out = tmp_path / "outputs" / "step1"
+    cfg = RunConfig(model="gemma4-31B", threshold=10_000)
+    r1 = [{"id": f"a{i}", "number": str(i), "juris": "CC", "text": "x"} for i in range(3)]
+    r2 = [{"id": f"b{i}", "number": str(i), "juris": "CC", "text": "y"} for i in range(3)]
+    run(r1, FakeClient(_good_payload()), cfg, out_root=out, shard_size=1)
+    shards_after_r1 = sorted(p.name for p in (out / "CC").glob("part-*.jsonl"))
+    run(r2, FakeClient(_good_payload()), cfg, out_root=out, shard_size=1)
+    ids = [json.loads(l)["id"] for s in (out / "CC").glob("part-*.jsonl")
+           for l in s.read_text().splitlines()]
+    assert set(ids) == {f"a{i}" for i in range(3)} | {f"b{i}" for i in range(3)}
+    assert len(ids) == len(set(ids))
+    # the original shard filenames from run 1 still exist (not overwritten)
+    assert set(shards_after_r1).issubset(p.name for p in (out / "CC").glob("part-*.jsonl"))
