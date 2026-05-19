@@ -1,0 +1,16 @@
+# numpy<2 IMPÉRATIF : numexpr/bottleneck/sklearn du cluster sont compilés
+# contre numpy 1.x. Un numpy 2.x casse l'ABI (ImportError au runtime).
+numpy<2
+# transformers DOIT connaître l'architecture Gemma 4 (Gemma4ForConditionalGeneration).
+# Vérifier après install :  python3 -c "from transformers import AutoConfig;
+#   AutoConfig.from_pretrained('QuantTrio/gemma-4-31B-it-AWQ')"
+transformers>=4.57
+vllm>=0.6.4
+pdfplumber>=0.10
+pypdf>=4.0
+jsonschema>=4.20
+requests>=2.31
+unidecode>=1.3
+openai>=1.40
+huggingface_hub>=0.24
+tqdm>=4.66
