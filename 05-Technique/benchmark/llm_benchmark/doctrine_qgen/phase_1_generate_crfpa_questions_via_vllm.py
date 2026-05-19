@@ -41,6 +41,15 @@ MODEL_REGISTRY: dict[str, tuple[str, str]] = {
     "gemma4-26B-A4B": ("cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit", "Gemma 4 MoE 26B/4B — AWQ 4-bit"),
 }
 
+# Révision HF épinglée par modèle (None = main).
+# gemma4-26B-A4B : le repo a été ré-uploadé le 2026-05-01 (re-quantif →
+# nommage de poids d'experts MoE que vLLM 0.19 ne sait plus charger,
+# KeyError 'layers.0.experts.0.down_proj.weight_packed'). On repointe
+# sur le dernier upload AVANT le run OK du 28/04 (commit du 2026-04-12).
+MODEL_REVISION: dict[str, str] = {
+    "gemma4-26B-A4B": "519bdca117c8",
+}
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # vLLM lifecycle
@@ -59,7 +68,8 @@ def kill_vllm() -> None:
 
 
 def start_vllm(model_id: str, log_path: Path, port: int, max_len: int,
-               gpu_util: float, num_gpus: int) -> subprocess.Popen:
+               gpu_util: float, num_gpus: int,
+               revision: str | None = None) -> subprocess.Popen:
     cmd = [
         sys.executable, "-m", "vllm.entrypoints.openai.api_server",
         "--model", model_id,
@@ -68,6 +78,8 @@ def start_vllm(model_id: str, log_path: Path, port: int, max_len: int,
         "--gpu-memory-utilization", str(gpu_util),
         "--port", str(port),
     ]
+    if revision:
+        cmd += ["--revision", revision]
     log_f = open(log_path, "w")
     proc = subprocess.Popen(cmd, stdout=log_f, stderr=subprocess.STDOUT,
                              preexec_fn=os.setsid)
@@ -234,10 +246,13 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
     # Démarre vLLM
     log_path = LOG_DIR / f"vllm_qgen_{alias}.log"
     num_gpus = args.num_gpus or detect_num_gpus()
-    print(f"  ↳ start vLLM ({hf_id})  GPUs={num_gpus}  max_len={args.max_len}")
+    revision = MODEL_REVISION.get(alias)
+    rev_msg = f"  rev={revision}" if revision else ""
+    print(f"  ↳ start vLLM ({hf_id})  GPUs={num_gpus}  "
+          f"max_len={args.max_len}{rev_msg}")
     t0 = time.time()
     proc = start_vllm(hf_id, log_path, args.port, args.max_len,
-                       args.gpu_util, num_gpus)
+                       args.gpu_util, num_gpus, revision=revision)
     try:
         if not wait_vllm(proc, args.port, timeout_s=args.wait_timeout):
             print(f"  ✗ vLLM KO — voir {log_path}")
