@@ -244,8 +244,12 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
             return 2
         print(f"  ↳ vLLM prêt ({int(time.time()-t0)}s)")
 
+        # timeout par requête + AUCUN retry : si vLLM se fige (grammaire
+        # xgrammar bloquée, GPU à 0%), réessayer sur le même serveur figé
+        # ne fait que doubler le temps perdu.
         client = OpenAI(base_url=f"http://localhost:{args.port}/v1",
-                         api_key="EMPTY")
+                         api_key="EMPTY",
+                         timeout=args.req_timeout, max_retries=0)
 
         # Budget d'entrée = contexte modèle − sortie réservée − marge
         # (template chat, tokens spéciaux). Un L1 dont le prompt estimé
@@ -254,7 +258,14 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
         print(f"  ↳ budget entrée = {budget_tokens} tok "
               f"(max_len {args.max_len} − sortie {args.max_tokens_out} − 512)")
 
+        # Disjoncteur : N timeouts CONSÉCUTIFS = vLLM figé → on arrête
+        # proprement ce modèle au lieu de gaspiller req_timeout × N unités.
+        consec_timeouts = 0
+        vllm_dead = False
+
         for parsed_file in parsed_files:
+            if vllm_dead:
+                break
             doc = json.loads(parsed_file.read_text(encoding="utf-8"))
             doc_id = doc["doc_id"]
             out_dir = RESULTS_DIR / doc_id
@@ -288,9 +299,8 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
                         )
                 except openai.BadRequestError as e:
                     # Typiquement : prompt + sortie > contexte max du modèle.
-                    # Avec le découpage hybride ça ne devrait plus arriver ;
-                    # si ça arrive on NE tue PAS le run : unité marquée
-                    # (donnée pour phase 2 / blind review), on continue.
+                    # vLLM A RÉPONDU (juste un 400) → reset du disjoncteur.
+                    consec_timeouts = 0
                     print(f"    SKIP {unit['section_id']} — vLLM 400 "
                           f"(contexte dépassé ?) : {e}")
                     sections_out.append({
@@ -302,6 +312,29 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
                         "_source_offsets": offs,
                     })
                     continue
+                except (openai.APITimeoutError,
+                        openai.APIConnectionError) as e:
+                    # vLLM n'a PAS répondu (figé / coupé). Unité marquée.
+                    consec_timeouts += 1
+                    print(f"    SKIP {unit['section_id']} — timeout/conn "
+                          f"API ({consec_timeouts}) : {e}")
+                    sections_out.append({
+                        "section_id": unit["section_id"],
+                        "doc_id": doc_id,
+                        "questions": [],
+                        "_error": "api_timeout",
+                        "_error_message": str(e),
+                        "_source_offsets": offs,
+                    })
+                    if consec_timeouts >= args.max_consec_timeouts:
+                        print(f"  ⚠ {consec_timeouts} timeouts consécutifs "
+                              f"→ vLLM figé, abandon du modèle {alias} "
+                              f"(docs restants non générés, reprenables).")
+                        vllm_dead = True
+                        break
+                    continue
+                # vLLM a répondu (conforme ou non) → reset du disjoncteur.
+                consec_timeouts = 0
                 if result is None:
                     sections_out.append({
                         "section_id": unit["section_id"],
@@ -317,6 +350,14 @@ def run_generation_for_model(alias: str, hf_id: str, args) -> int:
                     result["doc_id"] = doc_id
                     result["_source_offsets"] = offs
                     sections_out.append(result)
+
+            if vllm_dead:
+                # Doc interrompu par le disjoncteur : NE PAS écrire de
+                # fichier (sinon out_file.exists() le skipperait à jamais
+                # alors qu'un rerun avec vLLM frais le réussirait).
+                print(f"    ✗ {doc_id} non écrit (vLLM figé) — "
+                      f"sera repris au prochain run.")
+                break
 
             payload = {
                 "doc_id": doc_id,
@@ -357,6 +398,10 @@ def main() -> int:
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--num-gpus", type=int, default=None)
     ap.add_argument("--wait-timeout", type=int, default=900)
+    ap.add_argument("--req-timeout", type=float, default=900.0,
+                    help="timeout (s) par requête vLLM (défaut 900 = 15 min)")
+    ap.add_argument("--max-consec-timeouts", type=int, default=3,
+                    help="N timeouts consécutifs = vLLM figé → abandon modèle")
     ap.add_argument("--temperature", type=float, default=0.2)
     ap.add_argument("--force", action="store_true",
                     help="Régénérer même si le fichier existe")
