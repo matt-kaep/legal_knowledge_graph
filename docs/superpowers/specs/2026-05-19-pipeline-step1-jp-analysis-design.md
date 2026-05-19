@@ -136,99 +136,40 @@ tokenizer chargé dans le filtre).
 ## 5. Taxonomie `themes` (giga-précise, fixe)
 
 Hiérarchie à 2 niveaux **injectée dans le prompt**. Le LLM **doit** choisir
-une paire `(branche, sous_branche)` de la liste ; s'il n'y a aucune
-correspondance raisonnable, il met `branche="Autre:<libellé libre court>"` et
-`sous_branche="Autre:<libellé libre court>"`. Plusieurs thèmes possibles par
-décision (1 à 4 typiquement). Les valeurs `Autre:` sont collectées post-hoc
-pour **étendre la taxonomie** entre deux runs.
+1 à 4 paires `(branche, sous_branche)` de la liste ; à défaut de correspondance
+raisonnable, `branche="Autre:<libellé court>"` et
+`sous_branche="Autre:<libellé court>"`. Les `Autre:` sont collectées post-hoc
+pour **étendre la taxonomie** entre deux runs (bump `themes_taxonomy_version`).
 
-> Domaine : contentieux **judiciaire** français (civil, commercial, social,
-> pénal, et procédures associées). Conçue pour servir de **points d'entrée de
-> filtres** stables.
+**Source canonique unique** :
+[`docs/superpowers/specs/themes-taxonomy-jp.md`](./themes-taxonomy-jp.md) —
+**18 branches / ~190 sous-branches**, calée sur la nomenclature « matières »
+officielle de la Cour de cassation (endpoint Judilibre `/taxonomy?id=theme`),
+affinée pour l'usage filtre. Ce fichier est **gelé** dans
+`prompts/step1/themes_taxonomy.py` à l'implémentation (single source of truth ;
+le spec ne duplique pas les 190 lignes pour éviter le drift).
 
-### 5.1 Droit pénal — fond
-- Atteintes aux personnes (homicides, violences, mise en danger, harcèlement, viol et agressions sexuelles, atteintes à la dignité)
-- Atteintes aux biens (vol, escroquerie, abus de confiance, recel, destruction/dégradation, extorsion)
-- Infractions économiques & financières (blanchiment, corruption, fraude fiscale, abus de biens sociaux, délit d'initié)
-- Infractions routières (homicide/blessures involontaires routiers, conduite sous l'emprise, défaut de permis/assurance)
-- Stupéfiants (usage, détention, trafic, blanchiment associé)
-- Atteintes à l'autorité de l'État & terrorisme (association de malfaiteurs, terrorisme, outrage/rébellion)
-- Presse & expression (diffamation, injure, provocation)
-- Droit pénal du travail / des affaires (travail dissimulé, entrave, mise en danger)
-- Peines & sanctions (nature et quantum, sursis, aménagement, confiscation, période de sûreté)
-- Responsabilité pénale (imputabilité, complicité, tentative, causes d'irresponsabilité, personnes morales)
+### 5.1 Les 18 branches
+Droit pénal — fond · Procédure pénale · Droit pénal des affaires · Droit des
+obligations et des contrats · Responsabilité civile · Droit des biens et
+sûretés · Droit immobilier, baux et construction · Droit de la famille · Droit
+des sociétés et des affaires · Entreprises en difficulté · Concurrence,
+distribution et propriété intellectuelle · Droit du travail · Sécurité sociale
+et protection sociale · Droit de la consommation · Droit des assurances et
+bancaire · Procédure civile et arbitrage · Voies d'exécution et juge de
+l'exécution · Droit international privé.
 
-### 5.2 Procédure pénale
-- Enquête & garde à vue (mesures coercitives, droits de la défense, nullités)
-- Instruction (mise en examen, détention provisoire, contrôle judiciaire, expertises, nullités)
-- Jugement & audience (citation, comparution, administration de la preuve, droits des parties)
-- Voies de recours (appel, pourvoi en cassation, réexamen)
-- Action publique & action civile (prescription, constitution de partie civile, transaction/CRPC)
-- Exécution des peines (application des peines, libération conditionnelle, contentieux post-sentenciel)
-- Entraide & extradition (mandat d'arrêt européen, coopération internationale)
-
-### 5.3 Droit civil — obligations & contrats
-- Formation du contrat (consentement, vices, capacité, objet, cause/contenu)
-- Exécution & inexécution (responsabilité contractuelle, résolution, exception d'inexécution)
-- Régime des obligations (cession, subrogation, compensation, prescription)
-- Contrats spéciaux — vente (garantie des vices, conformité, garantie d'éviction)
-- Contrats spéciaux — louage & entreprise (contrat d'entreprise, mandat, prêt, dépôt)
-- Quasi-contrats (gestion d'affaires, paiement de l'indu, enrichissement injustifié)
-
-### 5.4 Droit civil — responsabilité délictuelle
-- Responsabilité du fait personnel (faute, lien de causalité, préjudice)
-- Responsabilité du fait des choses & d'autrui (gardien, commettant, parents)
-- Responsabilités spéciales (produits défectueux, accidents de la circulation — loi Badinter, troubles anormaux de voisinage)
-- Réparation du préjudice (postes de préjudice, évaluation, perte de chance)
-
-### 5.5 Droit des biens & sûretés
-- Propriété & démembrements (usufruit, servitudes, indivision, mitoyenneté)
-- Possession & publicité foncière (prescription acquisitive, action en revendication)
-- Sûretés personnelles (cautionnement, garantie autonome)
-- Sûretés réelles (hypothèque, gage, nantissement, privilèges, fiducie-sûreté)
-
-### 5.6 Droit de la famille
-- Couple (mariage, PACS, régimes matrimoniaux, divorce, prestation compensatoire)
-- Filiation (établissement, contestation, adoption, PMA)
-- Autorité parentale & enfance (résidence, contribution à l'entretien, assistance éducative)
-- Successions & libéralités (dévolution, réserve, partage, testament, donations)
-- Protection des majeurs (tutelle, curatelle, habilitation familiale)
-
-### 5.7 Droit commercial & des affaires
-- Sociétés (constitution, gouvernance, responsabilité des dirigeants, pactes, cession de droits sociaux)
-- Procédures collectives (sauvegarde, redressement, liquidation, déclaration de créances, responsabilité pour insuffisance d'actif)
-- Fonds de commerce & baux commerciaux (cession, déspécialisation, renouvellement, indemnité d'éviction)
-- Concurrence & distribution (pratiques restrictives, rupture brutale de relations, clauses de non-concurrence)
-- Effets de commerce & instruments de paiement (lettre de change, chèque, garanties bancaires)
-- Propriété intellectuelle (marques, brevets, droit d'auteur, concurrence déloyale/parasitisme)
-- Contrats commerciaux spéciaux (transport, assurance, agence commerciale, franchise)
-
-### 5.8 Droit du travail & sécurité sociale
-- Contrat de travail (formation, requalification CDD/intérim, modification, transfert)
-- Rupture (licenciement personnel/économique, rupture conventionnelle, prise d'acte, résiliation judiciaire)
-- Conditions de travail (durée du travail, rémunération, santé-sécurité, harcèlement, discrimination)
-- Relations collectives (représentation, négociation collective, grève, conflits collectifs)
-- Protection sociale (accidents du travail/maladies pro, faute inexcusable, contentieux des prestations)
-
-### 5.9 Procédure civile & voies d'exécution
-- Compétence & organisation judiciaire (compétence matérielle/territoriale, litispendance, connexité)
-- Action & instance (intérêt/qualité à agir, prescription, péremption, désistement)
-- Preuve (charge, modes de preuve, mesures d'instruction, expertise judiciaire)
-- Jugement & voies de recours (appel, effet dévolutif, pourvoi, tierce opposition, autorité de chose jugée)
-- Procédures spéciales (référé, requête, injonction de payer, procédures accélérées)
-- Voies d'exécution & saisies (titre exécutoire, saisie-attribution, saisie immobilière, mesures conservatoires)
-- Arbitrage & MARD (clause compromissoire, sentence, médiation/conciliation)
-
-### 5.10 Transverses
-- Droit international privé (conflits de lois, conflits de juridictions, exequatur)
-- Droit de la consommation (clauses abusives, crédit, démarchage, pratiques commerciales déloyales)
-- Droit des assurances (garantie, déchéance, subrogation de l'assureur, assurance de responsabilité)
-- Droits & libertés fondamentaux dans le procès (CESDH art. 6, contradictoire, délai raisonnable)
-- Responsabilité de la puissance publique devant le juge judiciaire (voie de fait, emprise)
-
-> Cette taxonomie est **validée à l'écriture du spec** puis figée dans
-> `prompts/step1/themes_taxonomy.py`. Toute extension passe par revue des
-> `Autre:` collectés et un bump de `themes_taxonomy_version`.
+### 5.2 Arbitrages structurants (utilisateur, 2026-05-19)
+- **Responsabilité contractuelle → branche « Droit des obligations et des
+  contrats »** ; « Responsabilité civile » = délictuel + régimes spéciaux
+  (produits, Badinter, médical) + réparation. Frontière de filtre la plus
+  intuitive.
+- **Baux commerciaux → branche « Droit immobilier, baux et construction »**
+  (tous les baux regroupés). « Sociétés et affaires » conserve « fonds de
+  commerce et opérations sur fonds » ; le multi-thème couvre les arrêts mixtes.
+- Tranchés sans escalade (justifiés dans le fichier canonique) : éclatement du
+  commercial en 3 branches ; assurances+bancaire fusionnés ; voies d'exécution
+  branche autonome / MARD en sous-branche de procédure civile.
 
 ## 6. Routage juridiction → prompt (3 variantes, schéma identique)
 
