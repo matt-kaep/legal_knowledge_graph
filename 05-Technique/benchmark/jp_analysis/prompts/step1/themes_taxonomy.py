@@ -1,10 +1,10 @@
 """Taxonomie thèmes JP — figée. Source: docs/superpowers/specs/themes-taxonomy-jp.md
 Toute modification = bump TAXONOMY_VERSION + revue _themes_anomalies."""
 
-TAXONOMY_VERSION = "1.0.0"
+TAXONOMY_VERSION: str = "1.0.0"
 
-TAXONOMY: dict[str, list[str]] = {
-    "Droit pénal — fond": [
+TAXONOMY: dict[str, tuple[str, ...]] = {
+    "Droit pénal — fond": (
         "atteintes volontaires aux personnes",
         "atteintes involontaires aux personnes",
         "infractions sexuelles et atteintes aux mœurs",
@@ -17,8 +17,8 @@ TAXONOMY: dict[str, list[str]] = {
         "responsabilité pénale et imputation",
         "peines, mesures de sûreté et confiscations",
         "mineurs délinquants",
-    ],
-    "Procédure pénale": [
+    ),
+    "Procédure pénale": (
         "enquête, garde à vue et mesures coercitives",
         "instruction et juge des libertés et de la détention",
         "détention provisoire et contrôle judiciaire",
@@ -31,8 +31,8 @@ TAXONOMY: dict[str, list[str]] = {
         "exécution et application des peines",
         "mandat d'arrêt européen, extradition et entraide",
         "droits de la défense et procès équitable au pénal",
-    ],
-    "Droit pénal des affaires": [
+    ),
+    "Droit pénal des affaires": (
         "abus de biens sociaux et infractions de gestion",
         "escroquerie, faux et abus de confiance aggravés",
         "blanchiment et recel",
@@ -43,8 +43,8 @@ TAXONOMY: dict[str, list[str]] = {
         "travail dissimulé et infractions au droit du travail",
         "atteintes à l'environnement et à la santé publique",
         "responsabilité pénale de la personne morale et du dirigeant",
-    ],
-    "Droit des obligations et des contrats": [
+    ),
+    "Droit des obligations et des contrats": (
         "formation du contrat et vices du consentement",
         "contenu, validité et nullités du contrat",
         "interprétation et effets du contrat entre les parties",
@@ -56,8 +56,8 @@ TAXONOMY: dict[str, list[str]] = {
         "quasi-contrats et restitutions",
         "vente civile et garanties",
         "mandat, prêt, dépôt et autres contrats spéciaux",
-    ],
-    "Responsabilité civile": [
+    ),
+    "Responsabilité civile": (
         "responsabilité pour faute personnelle",
         "responsabilité du fait des choses et des animaux",
         "responsabilité du fait d'autrui",
@@ -67,8 +67,8 @@ TAXONOMY: dict[str, list[str]] = {
         "évaluation et postes de préjudice",
         "perte de chance et préjudice économique",
         "recours et partage de responsabilité",
-    ],
-    "Droit des biens et sûretés": [
+    ),
+    "Droit des biens et sûretés": (
         "propriété, accession et revendication",
         "démembrements et servitudes",
         "indivision et mitoyenneté",
@@ -79,8 +79,8 @@ TAXONOMY: dict[str, list[str]] = {
         "gage, nantissement et sûretés mobilières",
         "fiducie et propriété-sûreté",
         "droit de rétention et clause de réserve de propriété",
-    ],
-    "Droit immobilier, baux et construction": [
+    ),
+    "Droit immobilier, baux et construction": (
         "baux d'habitation et mixtes",
         "baux commerciaux et indemnité d'éviction",
         "baux ruraux",
@@ -92,8 +92,8 @@ TAXONOMY: dict[str, list[str]] = {
         "expropriation et préemption devant le juge judiciaire",
         "troubles anormaux de voisinage",
         "urbanisme et servitudes d'utilité publique devant le juge judiciaire",
-    ],
-    "Droit de la famille": [
+    ),
+    "Droit de la famille": (
         "mariage, PACS et concubinage",
         "régimes matrimoniaux et liquidation",
         "divorce et séparation de corps",
@@ -105,8 +105,8 @@ TAXONOMY: dict[str, list[str]] = {
         "successions et partages",
         "libéralités, testaments et réserve héréditaire",
         "protection juridique des majeurs",
-    ],
-    "Droit des sociétés et des affaires": [
+    ),
+    "Droit des sociétés et des affaires": (
         "constitution, capital et statuts",
         "gouvernance et fonctionnement des organes",
         "responsabilité civile des dirigeants",
@@ -117,8 +117,8 @@ TAXONOMY: dict[str, list[str]] = {
         "associations, sociétés civiles et groupements particuliers",
         "fonds de commerce et opérations sur fonds",
         "effets de commerce et instruments de paiement",
-    ],
-    "Entreprises en difficulté": [
+    ),
+    "Entreprises en difficulté": (
         "prévention et procédures amiables",
         "ouverture et période d'observation",
         "sauvegarde et redressement judiciaire",
@@ -129,8 +129,8 @@ TAXONOMY: dict[str, list[str]] = {
         "sanctions et responsabilité pour insuffisance d'actif",
         "faillite personnelle et interdiction de gérer",
         "situation des contrats et des salariés dans la procédure",
-    ],
-    "Concurrence, distribution et propriété intellectuelle": [
+    ),
+    "Concurrence, distribution et propriété intellectuelle": (
         "pratiques anticoncurrentielles",
         "pratiques restrictives et déséquilibre significatif",
         "rupture brutale de relations commerciales établies",
@@ -141,8 +141,8 @@ TAXONOMY: dict[str, list[str]] = {
         "droit des marques",
         "brevets et secrets d'affaires",
         "droit d'auteur et droits voisins",
-    ],
-    "Droit du travail": [
+    ),
+    "Droit du travail": (
         "formation et requalification du contrat de travail",
         "modification du contrat et conditions de travail",
         "durée du travail et rémunération",
@@ -155,8 +155,8 @@ TAXONOMY: dict[str, list[str]] = {
         "représentation du personnel et droit syndical",
         "négociation collective et conventions",
         "grève et conflits collectifs",
-    ],
-    "Sécurité sociale et protection sociale": [
+    ),
+    "Sécurité sociale et protection sociale": (
         "affiliation et assujettissement",
         "assiette, cotisations et recouvrement URSSAF",
         "contrôle, redressement et contentieux du recouvrement",
@@ -167,8 +167,8 @@ TAXONOMY: dict[str, list[str]] = {
         "retraite et pensions",
         "recours des organismes et tiers payeurs",
         "protection sociale complémentaire et prévoyance",
-    ],
-    "Droit de la consommation": [
+    ),
+    "Droit de la consommation": (
         "clauses abusives et déséquilibre du contrat de consommation",
         "pratiques commerciales déloyales et trompeuses",
         "obligation d'information et démarchage",
@@ -179,8 +179,8 @@ TAXONOMY: dict[str, list[str]] = {
         "surendettement des particuliers",
         "contrats numériques, abonnements et services",
         "action de groupe et défense collective des consommateurs",
-    ],
-    "Droit des assurances et bancaire": [
+    ),
+    "Droit des assurances et bancaire": (
         "formation et exécution du contrat d'assurance",
         "déchéance, nullité et fausse déclaration",
         "assurance de dommages et de chose",
@@ -191,8 +191,8 @@ TAXONOMY: dict[str, list[str]] = {
         "crédit, garanties bancaires et taux",
         "comptes, paiements et instruments",
         "responsabilité des intermédiaires financiers",
-    ],
-    "Procédure civile et arbitrage": [
+    ),
+    "Procédure civile et arbitrage": (
         "compétence et organisation judiciaire",
         "intérêt, qualité et action en justice",
         "nullités, fins de non-recevoir et péremption",
@@ -205,8 +205,8 @@ TAXONOMY: dict[str, list[str]] = {
         "autorité de chose jugée et tierce opposition",
         "frais, dépens et aide juridictionnelle",
         "arbitrage, médiation et conciliation",
-    ],
-    "Voies d'exécution et juge de l'exécution": [
+    ),
+    "Voies d'exécution et juge de l'exécution": (
         "titre exécutoire et contestation",
         "saisie-attribution et saisie des rémunérations",
         "saisie-vente et saisie mobilière",
@@ -217,8 +217,8 @@ TAXONOMY: dict[str, list[str]] = {
         "saisie des comptes et procédures spécifiques",
         "contentieux de l'exécution et responsabilité de l'huissier",
         "exécution des décisions étrangères et titres européens",
-    ],
-    "Droit international privé": [
+    ),
+    "Droit international privé": (
         "compétence juridictionnelle internationale",
         "conflits de lois et loi applicable",
         "reconnaissance et exequatur des décisions étrangères",
@@ -229,15 +229,17 @@ TAXONOMY: dict[str, list[str]] = {
         "arbitrage international et sentences étrangères",
         "immunités de juridiction et d'exécution",
         "nationalité et condition des étrangers devant le juge judiciaire",
-    ],
+    ),
 }
 
+# Flat cross-product (branche, sous_branche) of TAXONOMY for O(1) membership.
 PAIRS: frozenset[tuple[str, str]] = frozenset(
     (branche, sous) for branche, subs in TAXONOMY.items() for sous in subs
 )
 
 
 def render_for_prompt() -> str:
+    """Return the Markdown prompt block listing every taxonomy (branche, sous_branche) pair + the Autre: escape-hatch instruction."""
     lines = [
         "# Taxonomie des thèmes (OBLIGATOIRE)",
         "Choisis 1 à 4 paires (branche, sous_branche) STRICTEMENT dans la liste",
