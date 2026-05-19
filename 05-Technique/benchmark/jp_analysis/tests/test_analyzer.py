@@ -77,3 +77,18 @@ def test_circuit_breaker_trips():
     cb.record(ok=False)
     cb.record(ok=False)
     assert cb.tripped() is True
+
+def test_empty_choices_is_retryable_not_uncaught():
+    class EmptyChoicesClient:
+        @property
+        def chat(self):
+            class Comp:
+                def create(inner, **kw):
+                    return type("R", (), {"choices": [],
+                        "usage": type("U", (), {"prompt_tokens": 1,
+                                                "completion_tokens": 0})()})()
+            return type("Chat", (), {"completions": Comp()})()
+    with pytest.raises(Exception) as e:
+        analyze_record({"id": "9", "number": "", "juris": "CC", "text": "a"},
+                       EmptyChoicesClient(), CFG)
+    assert getattr(e.value, "error_class", None) == "retryable"

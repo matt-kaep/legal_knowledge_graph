@@ -8,10 +8,15 @@ from dataclasses import dataclass
 from budget import is_oversized
 from errors import classify_error, ErrorClass
 from parsing import parse_model_json, ParseError
-from schema import Step1Output, SCHEMA_VERSION
+from schema import Step1Output, SCHEMA_VERSION, json_schema
 from themes_validation import canonicalize_themes
 from prompts.step1.themes_taxonomy import TAXONOMY_VERSION
 from prompts.step1.build_prompt import build_system_prompt
+
+# Built once at import: the vLLM guided_json schema is identical for every
+# record, so rebuilding it per call wasted ~1.12M model_json_schema() calls at
+# corpus scale. json_schema() also enforces additionalProperties:False.
+_GUIDED_JSON_SCHEMA = json_schema()
 
 @dataclass
 class RunConfig:
@@ -32,7 +37,8 @@ class CircuitBreaker:
     def record(self, ok: bool):
         self.events.append(0 if ok else 1)
     def tripped(self) -> bool:
-        if len(self.events) < self.events.maxlen // 10 + 1:
+        # Don't trip until ≥10% of the window (min 1 event); window=500 → 50.
+        if len(self.events) < max(self.events.maxlen // 10, 1):
             return False
         return (sum(self.events) / len(self.events)) > self.max_fail_rate
 
@@ -44,7 +50,7 @@ def _terminal(rec_id, number, juris, status, variant=None, err=None):
             "prompt_variant": variant, "tokens_in": None, "tokens_out": None,
             "duration_ms": None, "attempt_count": 1,
             "error_class": ("terminal" if status != "ok" else None),
-            "error_message": err}
+            "error_message": err, "_anomalies": None}
 
 def analyze_record(row: dict, client, cfg: RunConfig) -> dict:
     rid, number, juris = row["id"], row.get("number", ""), row["juris"]
@@ -62,16 +68,20 @@ def analyze_record(row: dict, client, cfg: RunConfig) -> dict:
             messages=[{"role": "system", "content": system},
                       {"role": "user", "content": text}],
             temperature=cfg.temperature, max_tokens=cfg.max_tokens,
-            extra_body={"guided_json": Step1Output.model_json_schema()},
+            extra_body={"guided_json": _GUIDED_JSON_SCHEMA},
         )
+        # Inside the same try: an empty `choices`/missing attr (malformed or
+        # truncated response) must flow through classify_error as an infra
+        # hiccup → RetryableError (capped by max_attempts in Task 11), never
+        # an uncaught IndexError that silently drops the record in the pool.
+        raw = resp.choices[0].message.content
     except Exception as exc:  # noqa: BLE001
         if classify_error(exc) == ErrorClass.RETRYABLE:
-            re = RetryableError(str(exc)); re.error_class = "retryable"
-            raise re from exc
+            exc_r = RetryableError(str(exc))
+            raise exc_r from exc
         return _terminal(rid, number, juris, "failed_terminal", variant,
                          err=f"{type(exc).__name__}: {exc}")
     dur = int((time.time() - t0) * 1000)
-    raw = resp.choices[0].message.content
     try:
         data = parse_model_json(raw)
         model_obj = Step1Output.model_validate(data)
