@@ -94,20 +94,7 @@ Problème : phrases incomplètes, flèches, mots-clés concaténés. C'est lisib
 
 # Format de sortie — JSON strict
 
-Tu réponds par un OBJET JSON UNIQUE sans balise markdown, sans préambule, sans commentaire. Tu commences DIRECTEMENT par l'objet JSON. Aucun préambule. Aucun commentaire après.
-
-Schéma attendu (les valeurs sont des exemples de types ; respecte TOUJOURS les noms de clés) :
-{
-  "contexte": "...",
-  "fondements_retenus": ["..."],
-  "attendu_cle": "...",
-  "cited_articles": ["..."],
-  "solution_resume": "...",
-  "dispositif_summary": "...",
-  "dispositif_nature": "...",
-  "synthese_pour_avocat": "...",
-  "themes": [{"branche": "...", "sous_branche": "..."}]
-}"""
+Tu réponds par un OBJET JSON UNIQUE sans balise markdown, sans préambule, sans commentaire. Tu commences DIRECTEMENT par l'objet JSON. Aucun préambule. Aucun commentaire après."""
 
 # Seul ajout vs Hector : la taxonomie figée, appendée après le format de sortie.
 BLOC_TAXONOMIE_THEMES = render_for_prompt()
