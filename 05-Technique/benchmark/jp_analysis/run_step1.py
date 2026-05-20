@@ -15,28 +15,102 @@ from ledger import (atomic_write_shard, derive_done_ids, append_jsonl,
 
 PARQUET = "05-Technique/benchmark/baseline_b2/jp_index.parquet"
 
-def _iter_parquet(path, limit=None, juris=None):
-    """Stream rows from a parquet FILE or a DIRECTORY of *.parquet files
-    (e.g. one per court on the cluster). Reads only the 4 used columns;
-    pyarrow raises a clear error if any is missing from a file's schema."""
+# Filename -> juris (Judilibre dumps). Matches baseline_b2/build_jp_index.py.
+_JURIS_FROM_FILENAME = {
+    # cluster naming (extensionless, spaces)
+    "cour de cassation": "CC", "cours d'appel": "CA", "cour d'appel": "CA",
+    "tribunal judiciaire": "TJ",
+    # local naming (cc.jsonl / ca.jsonl / tj.jsonl)
+    "cc": "CC", "ca": "CA", "tj": "TJ",
+}
+
+def _juris_from_filename(p):
+    name = p.name.lower(); stem = p.stem.lower()
+    if name in _JURIS_FROM_FILENAME: return _JURIS_FROM_FILENAME[name]
+    if stem in _JURIS_FROM_FILENAME: return _JURIS_FROM_FILENAME[stem]
+    if "cassation" in name: return "CC"
+    if "appel" in name: return "CA"
+    if "tribunal" in name or "judiciaire" in name: return "TJ"
+    raise ValueError(f"cannot derive juris from filename {p.name!r}")
+
+def _best_text(d, juris):
+    """Same heuristic as baseline_b2/build_jp_index.py:31."""
+    if juris == "CC":
+        s = (d.get("summary") or "").strip()
+        if len(s) > 100:
+            return s
+    return (d.get("text") or "").strip()
+
+def _iter_jsonl_file(path, juris_filter):
+    import json
+    from pathlib import Path as _P
+    fp = _P(path); juris = _juris_from_filename(fp)
+    if juris_filter and juris_filter != juris:
+        return
+    with open(fp, encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                d = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            uid = d.get("id")
+            if not uid:
+                continue
+            # Judilibre dump uses `number` (singular) on CC and `numbers` (array)
+            # on CA/TJ. Take whichever exists; fall back to empty string.
+            num = d.get("number") or ""
+            if not num and isinstance(d.get("numbers"), list) and d["numbers"]:
+                num = d["numbers"][0] or ""
+            yield {"id": uid, "number": num, "juris": juris,
+                   "text": _best_text(d, juris)}
+
+def _iter_parquet_file(path, juris_filter):
     import pyarrow.parquet as pq
+    pf = pq.ParquetFile(str(path))
+    for rg in range(pf.num_row_groups):
+        tbl = pf.read_row_group(rg, columns=["id", "number", "juris", "text"])
+        for r in tbl.to_pylist():
+            if juris_filter and r["juris"] != juris_filter:
+                continue
+            yield r
+
+def _iter_corpus(path, limit=None, juris=None):
+    """Stream rows from a parquet/JSONL FILE or a DIR containing either.
+    JSONL juris is derived from the filename (matches build_jp_index.py)."""
     from pathlib import Path as _P
     p = _P(path)
-    files = sorted(p.glob("*.parquet")) if p.is_dir() else [p]
+    if p.is_dir():
+        files = sorted({*p.glob("*.parquet"), *p.glob("*.jsonl"),
+                        *(f for f in p.iterdir()
+                          if f.is_file() and f.suffix == ""
+                          and not f.name.startswith("."))})
+    else:
+        files = [p]
     if not files:
-        raise FileNotFoundError(f"no parquet files at {path}")
+        raise FileNotFoundError(f"no corpus files at {path}")
     seen = 0
     for fpath in files:
-        pf = pq.ParquetFile(str(fpath))
-        for rg in range(pf.num_row_groups):
-            tbl = pf.read_row_group(rg, columns=["id", "number", "juris", "text"])
-            for r in tbl.to_pylist():
-                if juris and r["juris"] != juris:
-                    continue
-                yield r
-                seen += 1
-                if limit and seen >= limit:
-                    return
+        # Parquet magic = last 4 bytes "PAR1". JSONL = anything else.
+        is_parquet = False
+        try:
+            with open(fpath, "rb") as fh:
+                fh.seek(-4, 2)
+                is_parquet = fh.read(4) == b"PAR1"
+        except OSError:
+            is_parquet = fpath.suffix == ".parquet"
+        it = _iter_parquet_file(fpath, juris) if is_parquet \
+            else _iter_jsonl_file(fpath, juris)
+        for r in it:
+            yield r
+            seen += 1
+            if limit and seen >= limit:
+                return
+
+# Backward-compat alias for any caller that still imports _iter_parquet.
+_iter_parquet = _iter_corpus
 
 def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500,
         concurrency: int = 16):

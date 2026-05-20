@@ -109,3 +109,32 @@ def test_non_retryable_exception_does_not_abort_run(tmp_path: Path):
     assert _FULL_KEYS.issubset(recs["bad"].keys())
     assert recs["g1"]["status"] == "ok"
     assert recs["g2"]["status"] == "ok"
+
+def test_iter_corpus_reads_jsonl_with_juris_from_filename(tmp_path: Path):
+    """Reproduces the build_jp_index.py mapping on a tiny synthetic dump."""
+    from run_step1 import _iter_corpus
+    db = tmp_path / "database-judilibre"; db.mkdir()
+    # CC: summary > 100 chars -> used as text (best_text rule)
+    cc = db / "Cour de cassation"
+    cc.write_text(
+        '{"id":"i1","number":"00-12.345","summary":"' + ("x"*150) + '","text":"raw cc"}\n'
+        '{"id":"i2","numbers":["01-99.999"],"summary":"short","text":"fallback to text"}\n',
+        encoding="utf-8")
+    # CA: numbers (array), no summary used
+    ca = db / "Cours d'appel"
+    ca.write_text(
+        '{"id":"i3","numbers":["95-00807"],"text":"ca text body"}\n',
+        encoding="utf-8")
+    # TJ: same pattern
+    tj = db / "Tribunal judiciaire"
+    tj.write_text(
+        '{"id":"i4","numbers":["23/08541"],"text":"tj text body"}\n',
+        encoding="utf-8")
+    rows = list(_iter_corpus(db))
+    by_id = {r["id"]: r for r in rows}
+    assert set(by_id) == {"i1", "i2", "i3", "i4"}
+    assert by_id["i1"]["juris"] == "CC" and by_id["i1"]["text"] == "x"*150
+    assert by_id["i2"]["juris"] == "CC" and by_id["i2"]["text"] == "fallback to text"
+    assert by_id["i2"]["number"] == "01-99.999"          # picked from numbers[]
+    assert by_id["i3"]["juris"] == "CA" and by_id["i3"]["number"] == "95-00807"
+    assert by_id["i4"]["juris"] == "TJ" and by_id["i4"]["text"] == "tj text body"

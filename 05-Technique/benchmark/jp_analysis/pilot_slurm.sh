@@ -49,7 +49,7 @@ VLLM_PORT="${VLLM_PORT:-8000}"
 VLLM_VERSION="${VLLM_VERSION:-}"                    # vide = dernière ; sinon ex. "0.6.3"
 HEALTH_TIMEOUT="${HEALTH_TIMEOUT:-2400}"            # s d'attente du chargement modèle (31B AWQ = lent)
 MAX_NUM_BATCHED_TOKENS="${MAX_NUM_BATCHED_TOKENS:-8192}"  # ≥ max_tokens_per_mm_item de gemma-4 (~2496)
-PARQUET_PATH="${PARQUET_PATH:-../baseline_b2/jp_index.parquet}"  # corpus JP — adapter au layout cluster
+PARQUET_PATH="${PARQUET_PATH:-../baseline_b2/jp_index.parquet}"  # corpus JP — parquet OU dossier de JSONL Judilibre (script détecte auto)
 PILOT_N="${PILOT_N:-30}"
 BENCH_LEVELS="${BENCH_LEVELS:-1 8 16 32}"
 export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
@@ -148,7 +148,12 @@ if [ ! -e "$PARQUET_PATH" ]; then
   echo "    contenant *.parquet (ex. /home/.../database-judilibre/)." >&2
   exit 2
 fi
-echo "→ Corpus : $PARQUET_PATH$([ -d "$PARQUET_PATH" ] && echo " (dossier ; $(ls "$PARQUET_PATH"/*.parquet 2>/dev/null | wc -l | tr -d ' ') fichiers parquet)" || echo " (fichier)")"
+if [ -d "$PARQUET_PATH" ]; then
+  npq=$(find "$PARQUET_PATH" -maxdepth 1 -type f \( -name "*.parquet" -o -name "*.jsonl" -o ! -name ".*" \) 2>/dev/null | wc -l | tr -d ' ')
+  echo "→ Corpus : $PARQUET_PATH (dossier ; ~$npq fichiers ; parquet/JSONL auto-détecté par magic)"
+else
+  echo "→ Corpus : $PARQUET_PATH (fichier ; format auto-détecté)"
+fi
 COMMON_ARGS=( --max-model-len "$MAX_MODEL_LEN" --model "$MODEL_ID"
               --tokenizer-id "$MODEL_ID" --base-url "$BASE_URL"
               --parquet "$PARQUET_PATH" )
