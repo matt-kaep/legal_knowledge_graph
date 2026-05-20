@@ -48,6 +48,7 @@ MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"
 VLLM_PORT="${VLLM_PORT:-8000}"
 VLLM_VERSION="${VLLM_VERSION:-}"                    # vide = dernière ; sinon ex. "0.6.3"
 HEALTH_TIMEOUT="${HEALTH_TIMEOUT:-2400}"            # s d'attente du chargement modèle (31B AWQ = lent)
+MAX_NUM_BATCHED_TOKENS="${MAX_NUM_BATCHED_TOKENS:-8192}"  # ≥ max_tokens_per_mm_item de gemma-4 (~2496)
 PILOT_N="${PILOT_N:-30}"
 BENCH_LEVELS="${BENCH_LEVELS:-1 8 16 32}"
 export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
@@ -107,9 +108,14 @@ python -m vllm.entrypoints.openai.api_server \
   --port "$VLLM_PORT" \
   --gpu-memory-utilization 0.92 \
   --max-num-seqs 32 \
+  --max-num-batched-tokens "$MAX_NUM_BATCHED_TOKENS" \
   > "$SERVER_LOG" 2>&1 &
-# Note : --guided-decoding-backend supprimé en vLLM 0.21 (xgrammar est le défaut ;
-# si on doit le changer, c'est via --structured-outputs-config '{"backend":"..."}').
+# Notes vLLM 0.21 :
+#  - --guided-decoding-backend a été supprimé (xgrammar est le défaut implicite ;
+#    le client envoie `guided_json` dans extra_body et c'est tout).
+#  - --max-num-batched-tokens DOIT être ≥ max_tokens_per_mm_item du modèle pour
+#    les modèles multimodaux comme gemma-4, même en usage text-only (l'encodeur
+#    image est dimensionné au démarrage). Défaut 2048 trop bas pour gemma-4.
 VLLM_PID=$!
 # Arrêt propre du serveur quoi qu'il arrive (fin, erreur, timeout SLURM)
 trap 'echo "→ Arrêt serveur vLLM (pid $VLLM_PID)"; kill "$VLLM_PID" 2>/dev/null || true; wait "$VLLM_PID" 2>/dev/null || true' EXIT
