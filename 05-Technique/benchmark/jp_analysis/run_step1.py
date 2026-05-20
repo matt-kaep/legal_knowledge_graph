@@ -16,18 +16,27 @@ from ledger import (atomic_write_shard, derive_done_ids, append_jsonl,
 PARQUET = "05-Technique/benchmark/baseline_b2/jp_index.parquet"
 
 def _iter_parquet(path, limit=None, juris=None):
+    """Stream rows from a parquet FILE or a DIRECTORY of *.parquet files
+    (e.g. one per court on the cluster). Reads only the 4 used columns;
+    pyarrow raises a clear error if any is missing from a file's schema."""
     import pyarrow.parquet as pq
-    pf = pq.ParquetFile(path)
+    from pathlib import Path as _P
+    p = _P(path)
+    files = sorted(p.glob("*.parquet")) if p.is_dir() else [p]
+    if not files:
+        raise FileNotFoundError(f"no parquet files at {path}")
     seen = 0
-    for rg in range(pf.num_row_groups):
-        tbl = pf.read_row_group(rg, columns=["id", "number", "juris", "text"])
-        for r in tbl.to_pylist():
-            if juris and r["juris"] != juris:
-                continue
-            yield r
-            seen += 1
-            if limit and seen >= limit:
-                return
+    for fpath in files:
+        pf = pq.ParquetFile(str(fpath))
+        for rg in range(pf.num_row_groups):
+            tbl = pf.read_row_group(rg, columns=["id", "number", "juris", "text"])
+            for r in tbl.to_pylist():
+                if juris and r["juris"] != juris:
+                    continue
+                yield r
+                seen += 1
+                if limit and seen >= limit:
+                    return
 
 def run(rows, client, cfg: RunConfig, out_root: Path, shard_size=500,
         concurrency: int = 16):

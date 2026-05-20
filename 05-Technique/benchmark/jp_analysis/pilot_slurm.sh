@@ -142,11 +142,13 @@ done
 echo "→ Serveur prêt ✓ ($(date -Is))"
 
 BASE_URL="http://127.0.0.1:${VLLM_PORT}/v1"
-if [ ! -f "$PARQUET_PATH" ]; then
-  echo "ERREUR : parquet introuvable à '$PARQUET_PATH'." >&2
-  echo "  → exporte PARQUET_PATH=<chemin/sur/cluster/jp_index.parquet> avant de relancer." >&2
+if [ ! -e "$PARQUET_PATH" ]; then
+  echo "ERREUR : parquet introuvable à '$PARQUET_PATH' (ni fichier, ni dossier)." >&2
+  echo "  → exporte PARQUET_PATH=<chemin>. Accepte un .parquet ou un dossier" >&2
+  echo "    contenant *.parquet (ex. /home/.../database-judilibre/)." >&2
   exit 2
 fi
+echo "→ Corpus : $PARQUET_PATH$([ -d "$PARQUET_PATH" ] && echo " (dossier ; $(ls "$PARQUET_PATH"/*.parquet 2>/dev/null | wc -l | tr -d ' ') fichiers parquet)" || echo " (fichier)")"
 COMMON_ARGS=( --max-model-len "$MAX_MODEL_LEN" --model "$MODEL_ID"
               --tokenizer-id "$MODEL_ID" --base-url "$BASE_URL"
               --parquet "$PARQUET_PATH" )
