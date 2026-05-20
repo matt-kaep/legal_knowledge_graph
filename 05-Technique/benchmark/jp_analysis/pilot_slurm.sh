@@ -49,6 +49,7 @@ VLLM_PORT="${VLLM_PORT:-8000}"
 VLLM_VERSION="${VLLM_VERSION:-}"                    # vide = dernière ; sinon ex. "0.6.3"
 HEALTH_TIMEOUT="${HEALTH_TIMEOUT:-2400}"            # s d'attente du chargement modèle (31B AWQ = lent)
 MAX_NUM_BATCHED_TOKENS="${MAX_NUM_BATCHED_TOKENS:-8192}"  # ≥ max_tokens_per_mm_item de gemma-4 (~2496)
+PARQUET_PATH="${PARQUET_PATH:-../baseline_b2/jp_index.parquet}"  # corpus JP — adapter au layout cluster
 PILOT_N="${PILOT_N:-30}"
 BENCH_LEVELS="${BENCH_LEVELS:-1 8 16 32}"
 export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
@@ -141,8 +142,14 @@ done
 echo "→ Serveur prêt ✓ ($(date -Is))"
 
 BASE_URL="http://127.0.0.1:${VLLM_PORT}/v1"
+if [ ! -f "$PARQUET_PATH" ]; then
+  echo "ERREUR : parquet introuvable à '$PARQUET_PATH'." >&2
+  echo "  → exporte PARQUET_PATH=<chemin/sur/cluster/jp_index.parquet> avant de relancer." >&2
+  exit 2
+fi
 COMMON_ARGS=( --max-model-len "$MAX_MODEL_LEN" --model "$MODEL_ID"
-              --tokenizer-id "$MODEL_ID" --base-url "$BASE_URL" )
+              --tokenizer-id "$MODEL_ID" --base-url "$BASE_URL"
+              --parquet "$PARQUET_PATH" )
 
 # ── 1) Pilote 30 JP stratifiées ──────────────────────────────────────────────
 echo "=============================================================="
