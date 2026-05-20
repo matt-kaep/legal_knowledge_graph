@@ -33,9 +33,9 @@
 #SBATCH --gres=gpu:1                 # 1 GPU (L40S 48GB). Variante possible: --gpus=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
-# #SBATCH --partition=gpu            # <-- DÉCOMMENTE + mets ta partition GPU
-# #SBATCH --account=ton_compte       # <-- DÉCOMMENTE si ton cluster exige -A
-# #SBATCH --constraint=l40s          # <-- DÉCOMMENTE si tu dois cibler la L40S
+#SBATCH --partition=L40S             # cluster_check.sh 2026-05-20 : défaut = P100, partition L40S requise
+# #SBATCH --account=ton_compte       # non requis sur ton cluster (sacctmgr indispo)
+# #SBATCH --constraint=l40s          # inutile : la partition L40S filtre déjà sur les bons nœuds
 
 set -euo pipefail
 
