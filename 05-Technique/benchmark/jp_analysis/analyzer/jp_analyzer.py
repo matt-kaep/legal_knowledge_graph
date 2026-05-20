@@ -78,7 +78,18 @@ def analyze_record(row: dict, client, cfg: RunConfig) -> dict:
             messages=[{"role": "system", "content": system},
                       {"role": "user", "content": text}],
             temperature=cfg.temperature, max_tokens=cfg.max_tokens,
-            extra_body={"guided_json": _GUIDED_JSON_SCHEMA},
+            # OpenAI-standard structured output, honored by vLLM ≥ 0.21
+            # (the legacy `extra_body={"guided_json": …}` is silently ignored
+            # on recent vLLM → strict=True here enforces xgrammar against the
+            # schema; finding #1 / spec D3).
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "Step1Output",
+                    "strict": True,
+                    "schema": _GUIDED_JSON_SCHEMA,
+                },
+            },
         )
         # Inside the same try: an empty `choices`/missing attr (malformed or
         # truncated response) must flow through classify_error as an infra
