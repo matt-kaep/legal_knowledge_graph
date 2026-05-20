@@ -10,5 +10,5 @@ python -m vllm.entrypoints.openai.api_server \
   --model "$MODEL_ID" \
   --max-model-len "$MAX_MODEL_LEN" \
   --port "$PORT" \
-  --guided-decoding-backend xgrammar \
   --gpu-memory-utilization 0.92
+# --guided-decoding-backend a été supprimé en vLLM 0.21 (xgrammar par défaut).

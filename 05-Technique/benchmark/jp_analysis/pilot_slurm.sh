@@ -105,10 +105,11 @@ python -m vllm.entrypoints.openai.api_server \
   --model "$MODEL_ID" \
   --max-model-len "$MAX_MODEL_LEN" \
   --port "$VLLM_PORT" \
-  --guided-decoding-backend xgrammar \
   --gpu-memory-utilization 0.92 \
   --max-num-seqs 32 \
   > "$SERVER_LOG" 2>&1 &
+# Note : --guided-decoding-backend supprimé en vLLM 0.21 (xgrammar est le défaut ;
+# si on doit le changer, c'est via --structured-outputs-config '{"backend":"..."}').
 VLLM_PID=$!
 # Arrêt propre du serveur quoi qu'il arrive (fin, erreur, timeout SLURM)
 trap 'echo "→ Arrêt serveur vLLM (pid $VLLM_PID)"; kill "$VLLM_PID" 2>/dev/null || true; wait "$VLLM_PID" 2>/dev/null || true' EXIT
