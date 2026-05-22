@@ -497,8 +497,9 @@ CREATE TABLE jp_step1 (
   status                   TEXT NOT NULL CHECK (status IN ('ok','failed_terminal','oversized','no_fulltext')),
 
   -- ----- champs Step1Output (NULL si status != 'ok') -----
+  -- NB : arguments_parties n'est PAS sur jp_step1 — voir table normalisée
+  -- jp_argument (§6.3), source de vérité unique + porte les embeddings (§7).
   contexte                 TEXT,
-  arguments_parties        JSONB,                      -- [{partie, argument, reponse_juge}]
   fondements_retenus       TEXT,
   dispositif               TEXT,
   attendu_cle              TEXT,
@@ -536,7 +537,46 @@ CREATE INDEX jp_step1_synth_fts_idx ON jp_step1
                          coalesce(contexte,'')));
 ```
 
-### 6.3 Table N-N `jp_cited_article` (arêtes JP → Article)
+### 6.3 Table normalisée `jp_argument` (PRINCIPAL TARGET D'EMBEDDING)
+
+**C'est la table la plus précieuse pour la recherche par similarité.** Chaque
+argument soulevé + sa réponse motivée par le juge devient une ligne dédiée,
+embeddable indépendamment. Une JP avec 5 arguments produit 5 vecteurs ; la
+recherche se fait à la granularité de l'argument, pas de la décision entière.
+
+```sql
+CREATE TABLE jp_argument (
+  jp_id        TEXT NOT NULL REFERENCES jp_step1(id) ON DELETE CASCADE,
+  position     INTEGER NOT NULL,           -- ordre dans arguments_parties[]
+  partie       TEXT NOT NULL,              -- "demandeur", "défendeur", "intimé", "demandeur au pourvoi"…
+  argument     TEXT NOT NULL,              -- la prétention/le moyen
+  reponse_juge TEXT NOT NULL,              -- raisonnement spécifique du juge (POURQUOI accepté/rejeté)
+  -- l'embedding est ajouté par le pipeline downstream (cf. §7)
+  -- embedding   vector(1024),             -- pgvector (BGE-M3 défaut 1024d), nullable au début
+  PRIMARY KEY (jp_id, position)
+);
+CREATE INDEX jp_argument_partie_idx ON jp_argument(partie);
+-- full-text FR pour filtre/recherche textuelle classique (fallback ou prefilter)
+CREATE INDEX jp_argument_fts_idx ON jp_argument
+  USING GIN (to_tsvector('french', argument || ' ' || reponse_juge));
+-- index ANN (à créer une fois la colonne embedding peuplée par la Phase B) :
+-- CREATE INDEX jp_argument_ann_idx ON jp_argument
+--   USING ivfflat (embedding vector_cosine_ops) WITH (lists = 200);
+```
+
+**Pourquoi pas `JSONB` comme prévu initialement** : on veut un vecteur
+d'embedding **par argument** (au moins ~5 M vecteurs pour 1,12 M JP), filtrer
+par `partie` ou par texte, et joindre sur l'ANN — toutes ces opérations sont
+significativement plus simples sur une table relationnelle propre que sur
+JSONB. Le coût de stockage est négligeable comparé aux embeddings eux-mêmes.
+
+**Workflow embedding** (Phase B) :
+1. `SELECT jp_id, position, argument, reponse_juge FROM jp_argument WHERE embedding IS NULL` (idempotent).
+2. Pour chaque ligne, construire le texte à embedder : `f"{argument}\n\nRéponse du juge : {reponse_juge}"` (l'argument SEUL n'est pas suffisant — la réponse est ce qui donne sa valeur jurisprudentielle à l'argument).
+3. Batch via BGE-M3 (8k context suffit largement, un argument fait quelques centaines de tokens).
+4. `UPDATE jp_argument SET embedding = … WHERE jp_id = … AND position = …`.
+
+### 6.4 Table N-N `jp_cited_article` (arêtes JP → Article)
 
 ```sql
 CREATE TABLE jp_cited_article (
@@ -607,55 +647,171 @@ selon la taille des corpus rapatriés.
 ## 7. Downstream : embedding et recherche par similarité
 
 C'est l'**Étape 1** de la roadmap Johnny (cf. journal 2026-05-05 §7) :
-embedder articles + JP-summary, mesurer le recall top-K sans graphe.
+embedder les champs structurés produits par Step 1, mesurer le recall
+top-K sur les questions gold.
 
-### 7.1 Champs candidats à l'embedding (par usage)
+### 7.1 Les 5 stratégies d'embedding possibles
 
-| Usage | Champs à embedder | Pourquoi |
-|---|---|---|
-| **Recherche thématique générale** | `contexte` + `synthese_pour_avocat` (concat ~400–500 chars) | Texte court, dense, conçu pour autosuffisance avocat |
-| **Similarité d'arrêt** (« trouve-moi un arrêt qui dit la même chose ») | `attendu_cle` seul | Motif déterminant verbatim — le cœur sémantique de la décision |
-| **Recherche par dispositif** (« autres décisions qui ont confirmé… ») | `solution_resume` + `dispositif_summary` + `dispositif_nature` | Capture l'issue plus que le raisonnement |
-| **Fallback texte brut** | Le `text` original Judilibre (pas dans `jp_step1` — joindre depuis le parquet/JSONL source si besoin) | Si les champs LLM ne suffisent pas |
+Toutes opèrent sur les champs LLM (jamais sur le `text` brut Judilibre,
+qui est trop hétérogène entre CC/CA/TJ — médiane CC 2,8k chars vs CA 10,3k
+vs TJ 9,3k, cf. journal 2026-05-05). Elles ne sont **pas mutuellement
+exclusives** : on peut maintenir 2 ou 3 colonnes vectorielles en parallèle
+et choisir le bon vecteur selon la requête. Décision finale après Phase B
+benchmark.
 
-**Note importante** : ne PAS embedder le texte intégral des arrêts (longs,
-bruités, hétérogènes entre CC/CA/TJ comme le journal 2026-05-05 l'a
-prouvé — médiane CC 2,8k chars vs CA 10,3k vs TJ 9,3k). L'intérêt
-fondamental d'avoir un Step 1 structuré, c'est précisément d'avoir des
-champs **dimensionnellement homogènes** entre juridictions, prêts pour
-l'embedding.
+| Stratégie | Granularité | Texte embedded | # vecteurs | Use case |
+|---|---|---|---|---|
+| **A.** Synthèse | 1 / JP | `contexte` + `synthese_pour_avocat` (+ `solution_resume`) | ~1,12 M | « Trouve-moi un arrêt sur le même sujet général » |
+| **B.** Arguments concaténés ⭐ | 1 / JP | tous les `{partie, argument, reponse_juge}` concaténés en un texte | ~1,12 M | « Trouve-moi un arrêt qui a traité un faisceau d'arguments similaire à celui-ci » |
+| **C.** Argument par argument ⭐ | N / JP | chaque `{argument, reponse_juge}` séparément | ~5–15 M | « Trouve-moi des arrêts où le juge a tranché précisément cet argument » |
+| **D.** Attendu clé | 1 / JP | `attendu_cle` seul (verbatim) | ~1,12 M | « Trouve-moi la même règle de droit posée » |
+| **E.** Dispositif | 1 / JP | `solution_resume` + `dispositif_summary` + `dispositif_nature` | ~1,12 M | « Autres décisions qui ont confirmé / cassé / condamné sur le même schéma » |
 
-### 7.2 Workflow recherche typique
+⭐ = **stratégies privilégiées** pour démarrer (cf. §7.2).
+
+### 7.2 Stratégies privilégiées : B et C (les deux centrées arguments_parties)
+
+Les `arguments_parties` capturent **le dialogue argumentatif réel** —
+prétention de chaque partie + réponse motivée du juge (pas juste l'issue,
+le POURQUOI). C'est le signal le plus dense et le plus actionnable pour
+un avocat ou pour un retrieval juridique en aval, parce qu'une recherche
+par similarité sur un argument retrouve directement les motivations
+similaires plutôt que des synthèses paraphrasées.
+
+#### Stratégie B — Embedding global des `arguments_parties` (1 vecteur / JP)
+
+- **Texte source par JP** : concaténation, ex :
+  ```
+  Demandeur : <argument 1> — Réponse du juge : <reponse_juge 1>
+  Défendeur : <argument 2> — Réponse du juge : <reponse_juge 2>
+  ...
+  ```
+- **~1,12 M vecteurs**, alignés avec les autres filtres relationnels
+  (`juris`, `themes`, `cited_articles`) sur la même clé `jp_step1.id`.
+- **Pros** : compacité, peu coûteux, requête simple (ORDER BY embedding
+  sur `jp_step1`), capture le faisceau argumentatif d'ensemble.
+- **Cons** : une JP avec 5 arguments hétérogènes (un sur la prescription,
+  un sur le fond, un sur les dépens) donne **un seul vecteur dilué** — la
+  recherche par argument précis peut mélanger. BGE-M3 supporte 8k tokens,
+  donc la concaténation ne déborde quasi jamais.
+
+#### Stratégie C — Embedding par argument (N vecteurs / JP)
+
+- **Texte source par ligne** de `jp_argument` :
+  `f"{argument}\n\nRéponse du juge : {reponse_juge}"` (la réponse seule
+  ou l'argument seul ne suffisent pas — c'est leur couple qui porte la
+  valeur jurisprudentielle).
+- **~5–15 M vecteurs** (estimation 5 args/JP en moyenne × 1,12 M JP).
+- **Pros** : **granularité maximale**, signal pur, link direct depuis
+  l'argument trouvé vers la JP qui le contient (`jp_id`) ; deux arguments
+  isolés similaires dans des JP différentes se retrouvent même si les JP
+  globales sont thématiquement différentes.
+- **Cons** : storage ~5–15× plus gros, requête en deux temps (top-K
+  arguments → agrégation par `jp_id` → top-K JP), index ANN à dimensionner
+  pour le volume.
+
+#### Recommandation de démarrage
+
+**Maintenir B et C en parallèle.** Coût marginal de B sur jp_step1 est
+faible (~1,12 M vecteurs × 1024d float32 ≈ 4,5 GB), C dimensionne le gros
+de l'index (~20–60 GB). On bénéficie des deux résolutions :
+- requête à coarse (« arrêts sur des problématiques sociales similaires »)
+  → utilise B sur `jp_step1`
+- requête précise (« arrêts ayant traité l'argument du défaut de mise en
+  demeure ») → utilise C sur `jp_argument` puis JOIN
+
+À l'issue de Phase B (benchmark), on saura si l'une suffit ou si la
+combinaison apporte vraiment. Décision finale data-driven.
+
+### 7.3 Stratégies complémentaires (A, D, E) — utilité secondaire
+
+Toutes peuvent être ajoutées comme **colonnes vectorielles
+additionnelles** sur `jp_step1` au cas par cas, sans toucher au reste du
+schéma. Aucune n'est bloquante pour démarrer.
+
+- **A. Synthèse** (`contexte` + `synthese_pour_avocat`) — utile si la
+  recherche se fait en langue avocat, en mode « j'écris ma requête comme
+  je décris mon dossier ». Capté en partie par B (les `synthese` reflètent
+  les arguments).
+- **D. Attendu clé** — bon complément de C pour rechercher la même RÈGLE
+  de droit (vs le même argument). Petit (~1,12 M × 1024d).
+- **E. Dispositif** — niche : recherche par issue concrète. Probablement
+  pas vital tant qu'on a déjà filtré sur `dispositif_nature` côté
+  relationnel.
+
+### 7.4 Workflow de recherche typique (avec stratégies B + C)
 
 ```
-1. Filtres relationnels (rapides, exact match) :
+Phase 1 — Filtres relationnels (rapides, exact match) :
+   SELECT jp_step1.id
+   FROM jp_step1
    WHERE juris_family = 'judiciaire'
      AND dispositif_nature LIKE 'CASSE%'
-     AND EXISTS (SELECT 1 FROM jp_theme t WHERE t.jp_id = jp_step1.id
-                  AND t.branche = 'Droit du travail')
-   → réduit à ~quelques milliers de candidats
+     AND EXISTS (SELECT 1 FROM jp_theme t
+                  WHERE t.jp_id = jp_step1.id
+                    AND t.branche = 'Droit du travail')
+   → réduit à ~quelques milliers de candidats.
 
-2. Similarité d'embedding sur les candidats :
-   ORDER BY embedding <=> :query_embedding
+Phase 2a — Similarité par JP (stratégie B, requête « faisceau ») :
+   ORDER BY jp_step1.embedding_args <=> :q
    LIMIT 50
-   → top-K sémantique
+
+— OU —
+
+Phase 2b — Similarité par argument (stratégie C, requête précise) :
+   SELECT jp_id, position, argument, reponse_juge,
+          embedding <=> :q AS dist
+   FROM jp_argument
+   WHERE jp_id IN (<candidats Phase 1>)
+   ORDER BY dist
+   LIMIT 200
+   → on aggregate par jp_id (best score), on retourne top-K JP avec
+     l'argument matchant highlighté dans l'UI.
 ```
 
-C'est la combinaison **filtre relationnel SQL + similarité vectorielle**
-qui donne l'expérience cherchée (« licenciement pour faute grave dans le
-BTP, motivation similaire à celle-ci »). D'où l'importance de NORMALISER
-`themes` et `cited_articles` en tables séparées : sans ça, l'étape 1 du
-workflow est lente.
+C'est la combinaison **filtre relationnel SQL + similarité vectorielle
+(B ou C selon la requête)** qui donne l'expérience cherchée. D'où
+l'importance d'avoir NORMALISÉ `themes`, `cited_articles` ET
+`arguments_parties` en tables séparées : sans ça, la Phase 1 est lente
+et la Phase 2c (par argument) impossible.
 
-### 7.3 Modèle d'embedding recommandé
+### 7.5 Stockage des embeddings dans le schéma DB
 
-Cf. journal 2026-05-05 §7.1 et Note-Optimisation-Embedding-Completion :
-priorité **BGE-M3** (long contexte 8k, multilingue SOTA), à benchmarker
-contre `multilingual-e5-large` et `dangvantuan/sentence-camembert-large`
-sur 4 critères :
+Colonnes vectorielles ajoutées **après** le premier run complet, par
+`ALTER TABLE` (pgvector ne pénalise pas les colonnes NULL). Une fois
+peuplées, créer les index ANN.
+
+```sql
+-- pgvector setup
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Stratégie A (synthèse) — optionnelle, à ajouter au cas par cas
+-- ALTER TABLE jp_step1 ADD COLUMN embedding_synth vector(1024);
+
+-- Stratégie B (arguments concaténés) — privilégiée
+ALTER TABLE jp_step1 ADD COLUMN embedding_args vector(1024);
+CREATE INDEX jp_step1_ann_args_idx ON jp_step1
+  USING ivfflat (embedding_args vector_cosine_ops) WITH (lists = 200);
+
+-- Stratégie C (par argument) — privilégiée
+ALTER TABLE jp_argument ADD COLUMN embedding vector(1024);
+CREATE INDEX jp_argument_ann_idx ON jp_argument
+  USING ivfflat (embedding vector_cosine_ops) WITH (lists = 500);
+
+-- Stratégies D / E si retenues — même pattern
+-- ALTER TABLE jp_step1 ADD COLUMN embedding_attendu vector(1024);
+-- ALTER TABLE jp_step1 ADD COLUMN embedding_dispositif vector(1024);
+```
+
+### 7.6 Modèle d'embedding recommandé
+
+Cf. journal 2026-05-05 §7.1 et `Note-Optimisation-Embedding-Completion` :
+priorité **BGE-M3** (long contexte 8k, multilingue SOTA, dense+sparse+colbert),
+à benchmarker contre `multilingual-e5-large` et
+`dangvantuan/sentence-camembert-large` sur 4 critères :
 - Rang médian des GT (gold truth) sur les 8 questions CRFPA pénales
 - Recall top-10 / top-100 / top-1 000
-- Coût stockage (1024d vs 768d × 1,12 M JP)
+- Coût stockage (1024d vs 768d × N vecteurs)
 - Latence d'inférence
 
 À faire sur cluster en **Phase B** une fois ce pipeline Step 1 terminé.
