@@ -17,21 +17,33 @@ audience: collègue reprenant le sujet
 
 ## 0. TL;DR
 
-- **Objectif** : pour chaque JP de Judilibre (1,12 M aujourd'hui CC/CA/TJ ;
+- **Objectif** : pour chaque JP (1,12 M Judilibre aujourd'hui CC/CA/TJ ;
   à terme CE/CAA/TA/Tcom + CJUE + CEDH), produire **un objet JSON structuré**
-  par un LLM open-source (`gemma-4-31B-AWQ` via vLLM), persisté en DB pour
-  filtrer par spécialisation/juridiction et alimenter des embeddings de
-  similarité.
+  par un LLM (lecture neutre extractive, 10 champs Hector + thèmes), persisté
+  en DB pour filtrer par spécialisation/juridiction et alimenter des
+  embeddings de similarité.
 - **Méthode** : port d'une spec de production Hector (« Step 1 ») — lecture
   **neutre et purement extractive** de l'arrêt (pas de jugement de pertinence,
   c'est l'étape Step 2 hors scope). 3 prompts routés par juridiction, schéma
-  de sortie strict, guided decoding xgrammar.
-- **État** : code mergé, spec/plan/taxonomie versionnés (commits ffc4bfc puis
-  fixes successifs), pilote 30 JP exécuté sur cluster (a tourné sans crash
-  infra mais 0/29 ok car vLLM 0.21 ignore `extra_body.guided_json` — switch
-  vers `response_format` json_schema strict commité, re-pilote en attente).
-- **Prochaine action** : re-pilote → inspection qualité → tuning `max_tokens`
-  → scaling multi-GPU data-parallel → run complet → ingestion DB.
+  de sortie strict.
+- **Statut technique** : pipeline complet écrit + testé (53 tests verts),
+  mergé sur `main`. Tourne sur cluster L40S via vLLM + gemma-4-31B-AWQ (env
+  isolé `uv`). Pilote 30 JP fonctionnel après fix `response_format` (vLLM
+  0.21 ignore `extra_body.guided_json`).
+- **Pivot de priorité (2026-05-22)** : le débit gemma sur 1 L40S
+  (~12 rec/min, ~65 j pour le corpus complet sur 1 GPU) est trop lent
+  pour la production. **Le collègue pivote vers une extraction batch
+  API** (OpenAI Batch / OpenRouter / Anthropic Batches — SLA 24 h, ~50%
+  de remise batch, quelques milliers d'euros pour 1,12 M JP). La pipeline
+  gemma reste comme prototype validé et backup zéro-coût-API.
+- **Répartition Matthieu / collègue** :
+  - **Collègue** : écrire `batch_step1.py` (driver batch API réutilisant
+    les prompts/schema/parsing existants), faire tourner sur Judilibre
+    complet, écrire l'ingestion DB, faire l'embedding (Phase B).
+  - **Matthieu** : passe regex V5 sur les JP (CPU cluster Télécom, déjà
+    fait sur Judilibre, à étendre aux corpus admin/CJUE) → alimente la
+    colonne `source='regex'` de `jp_cited_article` indépendamment.
+- **Prochaine action côté collègue** : écrire `batch_step1.py` ; voir §8.
 
 ---
 
@@ -632,25 +644,30 @@ En bref :
   appel par un timeout 15-30 s avec fallback `extract_pairs_v3` (la note
   HANDOFF-REGEX-V5.md fournit le snippet `safe_extract`).
 
-#### Rôle dans le pipeline d'ingestion DB
+#### Rôle dans le pipeline d'ingestion DB — **OWNERSHIP : Matthieu**
 
-Le regex V5 tourne au moment de l'**ingestion JSONL → DB** (pas dans le
-pipeline LLM Step 1, qui n'a besoin que du `text`). Le script
-`ingest_jsonl_to_db.py` (à écrire) :
+> **À ne PAS prendre en charge côté reprise du sujet.** L'extraction regex V5
+> sur le corpus complet est faite **par Matthieu** sur un cluster CPU à
+> Télécom (cœurs très puissants, parallélisme massif natif). La passe a déjà
+> été réalisée sur les **JP Judilibre judiciaires** (résultats disponibles
+> côté Matthieu) et sera étendue aux corpus administratif / CJUE / etc.
+> au fur et à mesure de leur arrivée.
 
-1. Pour chaque shard `outputs/step1_shard_*/<juris>/part-*.jsonl` :
-   - Lit la ligne (record `ok` ou terminal).
-   - Insère dans `jp_step1` (avec ses champs LLM).
-   - Insère les paires `arguments_parties` → `jp_argument` (normalisé).
-   - Insère les `themes` → `jp_theme`.
-   - Pour les `cited_articles` (LLM) : normalise via `iterate_regex` →
-     insère dans `jp_cited_article` avec `source='llm'`.
-2. **En parallèle** : joindre le `text` original Judilibre (depuis le
-   JSONL source `/home/.../database-judilibre/<juris>`) → appliquer
-   `safe_extract(text)` → insérer les paires dans `jp_cited_article` avec
-   `source='regex'`. Possiblement en job séparé pour profiter du
-   parallélisme 8 cœurs (l'étape LLM est GPU-bound, le regex est
-   CPU-bound, indépendants).
+**Pour le collègue** : ne pas écrire de wiring regex dans
+`ingest_jsonl_to_db.py`. Prévoir simplement que la table
+`jp_cited_article` accueille des inserts `source='regex'` qui seront
+poussés par un script séparé (Matthieu) — l'ingestion LLM ne dépend pas
+de ces lignes, elles s'ajoutent en parallèle quand elles arrivent. Le
+script `ingest_jsonl_to_db.py` à écrire ne traite donc que :
+
+1. Pour chaque shard `<juris>/part-*.jsonl` produit par le pipeline LLM :
+   - Insertion dans `jp_step1` (champs LLM + métadonnées).
+   - `arguments_parties` → `jp_argument` (normalisé, prêt pour embeddings §7).
+   - `themes` → `jp_theme` + anomalies → `jp_theme_anomaly`.
+   - `cited_articles` (LLM) normalisés → `jp_cited_article` avec `source='llm'`.
+
+Matthieu pousse ensuite les `source='regex'` séparément (UPSERT
+idempotent grâce au PK `(jp_id, article_norm, source)`).
 
 #### Usage pour le filtrage et le KG
 
@@ -1031,16 +1048,25 @@ priorité **BGE-M3** (long contexte 8k, multilingue SOTA, dense+sparse+colbert),
 
 ## 8. Prochaines étapes (ordre)
 
-| # | Action | Bloquant pour |
-|---|---|---|
-| 1 | **Re-pilote post-fix `response_format`** sur cluster | Tout le reste |
-| 2 | `bash inspect_pilot.sh` — valider qualité juridique FR + distribution `tokens_out` | Décision max_tokens |
-| 3 | **Tuner `max_tokens`** (probable cut 4000 → 1500–2000) | Économies massives sur le run complet |
-| 4 | **Sharding multi-GPU data-parallel** : ajouter `--shard-idx K --shard-count N` à `run_step1.py`, runner SLURM templaté | Run complet faisable en temps raisonnable |
-| 5 | **Run complet** 1,12 M JP en N×L40S parallèles (~quelques jours) | Tout le downstream |
-| 6 | **Ingestion DB** : écrire `ingest_jsonl_to_db.py` qui consume `outputs/step1_shard_*/` et alimente les tables. Inclut : normalisation des `cited_articles` LLM, **passe regex V5** (`iterate_regex.extract_pairs_v5` avec timeout-fallback v3, ~1 h en parallèle 8 cœurs) → `jp_cited_article(source='regex')` | Recherche utilisable, KG explicite |
-| 7 | **Phase B embedding** : embedder les champs §7.1 avec BGE-M3, indexer (pgvector ou FAISS) | Recherche par similarité |
-| 8 | **Extension juridictions** : enrichir corpus CE/CAA/TA depuis Légifrance, étendre taxonomie v2 (admin + européen), router via mêmes 3 préambules (CJUE/CEDH → 4e à créer) | Périmètre cible final |
+> **Pivot de priorité (2026-05-22)** : à l'usage du pilote gemma, le débit
+> sur 1 L40S est ~12 rec/min → **65 jours** pour 1,12 M en série. Même
+> multiplié par 8 GPU = ~8 jours, mais cela mobilise du cluster GPU
+> précieux pour des semaines. **Décision** : **basculer la passe complète
+> sur batch API** (OpenAI Batch / OpenRouter / Anthropic Messages
+> Batches). Coût total estimé pour 1,12 M JP × ~5k tok in + ~1,5k tok
+> out : quelques milliers d'euros, **24 h SLA**, zéro contention cluster.
+> La pipeline gemma reste utile comme prototype et secours zéro-coût.
+
+| # | Action | Owner | Bloquant pour |
+|---|---|---|---|
+| **1** | **Écrire `batch_step1.py`** : driver qui construit les fichiers JSONL d'input batch (1 ligne / JP, payload `chat.completions` avec `response_format` json_schema strict — réutilise prompts/schema/parsing existants), soumet le batch, poll, télécharge la sortie, l'écrit dans `outputs/step1_batch_*/<juris>/part-*.jsonl` au même format que le pipeline gemma | Collègue | Tout le reste |
+| 2 | Choix du modèle batch (qualité × coût) : tester sur un échantillon stratifié de ~100 JP. Candidats : GPT-4.1-mini (cheap, batch -50%), Claude Haiku 4.5 (rapide, batch -50%), Claude Sonnet 4.6 (qualité, batch -50%). Critères : verbatim `attendu_cle`, calibrage `synthese_pour_avocat`, fidélité `cited_articles` | Collègue | Run complet |
+| 3 | **Run complet batch** 1,12 M JP via le modèle retenu, ~24 h SLA, shards JSONL sortants ingérables tel quel | Collègue | DB + embeddings |
+| 4 | **Ingestion DB** : écrire `ingest_jsonl_to_db.py` (consomme les shards du #3, alimente `jp_step1` + `jp_argument` + `jp_theme` + `jp_cited_article` source `'llm'`). Normalisation des `cited_articles` LLM via parser FR ; pour les inserts `'regex'`, on attend la passe Matthieu (cf. §6.4) | Collègue | Recherche utilisable |
+| 5 | **Phase B embedding** : embedder les champs choisis (§7 — démarrer B et C avec BGE-M3), peupler les colonnes vectorielles, créer les index ivfflat | Collègue | Recherche par similarité |
+| 6 | **Passe regex V5** sur le corpus complet (Judilibre + administratif au fur et à mesure) → push `jp_cited_article(source='regex')` | Matthieu (Télécom CPU cluster) | KG explicite enrichi |
+| 7 | **Extension juridictions** : enrichir corpus CE/CAA/TA depuis Légifrance, étendre taxonomie v2 (admin + européen), router via mêmes 3 préambules (CJUE/CEDH → 4e préambule à créer) | À répartir | Périmètre cible final |
+| — | *Alternative / secours zéro-coût API* : reprendre la pipeline gemma open-source (déjà fonctionnelle, code prêt, fix `response_format` appliqué, sharding `--shard-idx/--shard-count` à ajouter pour data-parallel multi-GPU) si la voie batch API n'est pas tenable (budget, contraintes RGPD/IP sur sortie de données) | Backup | — |
 
 ---
 
