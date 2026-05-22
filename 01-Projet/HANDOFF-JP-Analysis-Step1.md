@@ -803,7 +803,117 @@ CREATE INDEX jp_argument_ann_idx ON jp_argument
 -- ALTER TABLE jp_step1 ADD COLUMN embedding_dispositif vector(1024);
 ```
 
-### 7.6 Modèle d'embedding recommandé
+### 7.6 Approche hybride multi-facette : score fusionné situation × juridique
+
+**Idée.** La similarité juridique a (au moins) **deux axes orthogonaux** qui
+ne corrèlent pas systématiquement :
+- **Axe « situation »** : type de litige, qualité des parties, configuration
+  factuelle, secteur (ex. promettant ↔ acquéreur en immobilier neuf).
+- **Axe « juridique »** : règle de droit appliquée, article-pivot, principe
+  motivé (ex. art. 1304-3 C.civ. — condition suspensive réputée accomplie).
+
+Un embedding unique mélange les deux et force l'utilisateur à un compromis
+fixe. **Solution** : maintenir **deux colonnes vectorielles dédiées** sur
+`jp_step1` (et/ou `jp_argument`), entraîner chacune sur des champs distincts,
+et combiner au moment de la requête avec un poids α réglable.
+
+#### Décomposition des champs (sans surcoût LLM)
+
+| Axe | Champs sources concaténés | Pourquoi |
+|---|---|---|
+| **situation** | `contexte` + 1ère phrase de `synthese_pour_avocat` + tous les `argument` de `jp_argument` | La 1ère phrase de la synthèse est par construction Hector « SITUATION + PRINCIPE » (parties désignées par leur QUALITÉ JURIDIQUE) ; les `argument` capturent les prétentions factuelles |
+| **juridique** | `attendu_cle` + `fondements_retenus` + `cited_articles` joints en chaîne + tous les `reponse_juge` de `jp_argument` | L'attendu, les fondements et la réponse motivée du juge portent la règle ; `cited_articles` ancre la similarité par article-pivot |
+
+Cette décomposition est **approximative** (la 1ère phrase de synthèse a un peu
+de juridique dedans, les `argument` un peu de juridique aussi) mais
+suffisamment polarisée pour que la similarité cosinus capture le bon
+signal dominant. Une décomposition stricte sans recouvrement demanderait
+une 2e passe LLM (coûteuse, peu de gain attendu).
+
+#### Combinaison au moment de la requête
+
+```sql
+-- α ∈ [0,1] réglable par l'utilisateur (curseur UI)
+-- α = 1   → recherche par situation pure (« même configuration factuelle »)
+-- α = 0   → recherche par règle juridique pure (« même principe appliqué »)
+-- α = 0,5 → équilibre
+
+WITH q AS (
+  SELECT
+    :q_situation_embedding ::vector AS qs,
+    :q_juridique_embedding ::vector AS qj
+)
+SELECT jp.id,
+       :alpha       * (1 - (jp.embedding_situation <=> q.qs)) +
+       (1 - :alpha) * (1 - (jp.embedding_juridique <=> q.qj))
+       AS hybrid_score
+FROM jp_step1 jp, q
+WHERE jp.status = 'ok'
+  AND -- ... filtres relationnels (juris, themes, …)
+ORDER BY hybrid_score DESC
+LIMIT 50;
+```
+
+Note : on convertit la distance cosinus `<=>` ∈ [0,2] en similarité
+∈ [0,1] avec `1 - dist`. Pour de très grandes tables, faire **deux ANN
+searches séparées** (top-200 chacune) puis fusionner côté application est
+plus rapide qu'une combinaison monolithique scannée.
+
+#### Variante robuste : Reciprocal Rank Fusion (RRF)
+
+Si les deux embeddings ne sont pas sur la même échelle (ex. BGE-M3 pour
+situation et un modèle juridique-FR spécialisé pour juridique), la
+combinaison linéaire est biaisée par les distributions de scores. **RRF**
+fusionne par rangs plutôt que par scores :
+
+```
+score_RRF(jp) = Σ_axe  1 / (k + rang_axe(jp))         (k = 60 typique)
+```
+
+Implémenté en SQL : deux CTE `top-N` par axe, calcul de rang, jointure sur
+`jp_id`, somme des `1/(k+rang)`. Plus stable, moins sensible au calibrage
+α — recommandé si les modèles diffèrent.
+
+#### Coût et bénéfice
+
+- **Storage** : 2 × ~4,5 GB sur `jp_step1` ≈ **+9 GB**. Si on veut aussi
+  l'hybride au niveau argument (sur `jp_argument`), compter ~50–120 GB
+  pour les deux colonnes vectorielles × 5–15 M arguments. Reste OK pour
+  un Postgres sérieux.
+- **Calcul à l'ingestion** : 2 inférences BGE-M3 par JP (chaque texte ≤ 8k
+  tokens → 1 forward pass chacun), donc ~2× le coût d'embedding sans
+  fusion. Négligeable comparé au LLM Step 1.
+- **Bénéfice attendu** : grosse amélioration sur les requêtes où l'avocat
+  veut explicitement un précédent factuel OU un fondement juridique
+  identique (cas dominant en pratique).
+
+#### Combinaison avec stratégies B et C
+
+Compatible avec C : on peut avoir `embedding_situation` et
+`embedding_juridique` **par argument** (4 colonnes vectorielles sur
+`jp_argument`), ce qui donne la résolution la plus fine possible. Sans
+doute overkill pour démarrer — commencer par hybride sur `jp_step1` (B-like),
+mesurer le gain, étendre à `jp_argument` si payant.
+
+#### DDL pgvector pour cette approche
+
+```sql
+ALTER TABLE jp_step1
+  ADD COLUMN embedding_situation vector(1024),
+  ADD COLUMN embedding_juridique vector(1024);
+
+CREATE INDEX jp_step1_ann_situation_idx ON jp_step1
+  USING ivfflat (embedding_situation vector_cosine_ops) WITH (lists = 200);
+CREATE INDEX jp_step1_ann_juridique_idx ON jp_step1
+  USING ivfflat (embedding_juridique vector_cosine_ops) WITH (lists = 200);
+
+-- Optionnel : même chose au niveau argument (stratégie C × hybride)
+-- ALTER TABLE jp_argument
+--   ADD COLUMN embedding_situation vector(1024),
+--   ADD COLUMN embedding_juridique vector(1024);
+```
+
+### 7.7 Modèle d'embedding recommandé
 
 Cf. journal 2026-05-05 §7.1 et `Note-Optimisation-Embedding-Completion` :
 priorité **BGE-M3** (long contexte 8k, multilingue SOTA, dense+sparse+colbert),
