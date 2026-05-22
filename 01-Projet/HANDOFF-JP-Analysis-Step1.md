@@ -576,25 +576,124 @@ JSONB. Le coût de stockage est négligeable comparé aux embeddings eux-mêmes.
 3. Batch via BGE-M3 (8k context suffit largement, un argument fait quelques centaines de tokens).
 4. `UPDATE jp_argument SET embedding = … WHERE jp_id = … AND position = …`.
 
-### 6.4 Table N-N `jp_cited_article` (arêtes JP → Article)
+### 6.4 Table N-N `jp_cited_article` (arêtes JP → Article, **DOUBLE source**)
+
+**Deux sources de citation, complémentaires, dans la même table.** On stocke
+les deux pour exploiter leur différence de nature :
+
+| Source | Quoi | Couverture | Précision |
+|---|---|---|---|
+| `'llm'` (Step 1) | Champ `cited_articles` produit par le modèle | Articles **MOBILISÉS** par la juridiction (visa, motifs, raisonnement) | Sémantique : ce que la cour utilise réellement |
+| `'regex'` (regex V5) | Toutes les citations détectées dans le `text` brut par `iterate_regex.extract_pairs_v5()` | **Exhaustive** : toutes les mentions d'articles dans le texte, y compris conclusions des parties non retenues | F1 = 0,94 sur 100 arrêts annotés (precision 0,983, recall 0,900) |
+
+L'écart entre les deux sources est lui-même informatif (les articles cités
+par les parties mais non retenus par le juge sont souvent intéressants pour
+l'adversaire dans une autre affaire — la spec Hector §7d le souligne déjà).
 
 ```sql
 CREATE TABLE jp_cited_article (
   jp_id        TEXT NOT NULL REFERENCES jp_step1(id) ON DELETE CASCADE,
-  article_raw  TEXT NOT NULL,        -- "article 1240 code civil", "L. 145-14 code de commerce"
-  article_norm TEXT NOT NULL,        -- "code_civil:1240" (à produire par normalizer à l'ingestion)
-  position     INTEGER NOT NULL,     -- ordre dans cited_articles[]
-  PRIMARY KEY (jp_id, position)
+  article_norm TEXT NOT NULL,        -- "code_civil:1240" (forme canonique)
+  source       TEXT NOT NULL CHECK (source IN ('llm','regex')),
+  article_raw  TEXT,                 -- forme libre LLM ("article 1240 code civil"); NULL pour regex
+  position     INTEGER,              -- ordre dans cited_articles[] pour LLM; NULL pour regex (set non ordonné)
+  PRIMARY KEY (jp_id, article_norm, source)
 );
-CREATE INDEX jp_cited_article_norm_idx ON jp_cited_article(article_norm);
+CREATE INDEX jp_cited_article_norm_idx   ON jp_cited_article(article_norm);
+CREATE INDEX jp_cited_article_source_idx ON jp_cited_article(source);
+CREATE INDEX jp_cited_article_code_idx   ON jp_cited_article(split_part(article_norm, ':', 1));  -- filtre par code
 ```
 
-**Note normalisateur** : `cited_articles` arrive en chaîne libre. Un parser
-FR (regex) doit produire `article_norm` au format
-`<code_slug>:<numéro_canonique>` (ex : `code_penal:222-23`, `code_consom:L121-1`).
-Le projet `05-Technique/benchmark/iterate_regex.py` (regex v5 local)
-contient déjà l'essentiel de cette logique pour ~30 codes français — à
-brancher dans l'ingestion DB (`ingest_jsonl_to_db.py` à créer).
+#### Qu'est-ce que le regex V5 (rappel rapide)
+
+Voir `05-Technique/benchmark/HANDOFF-REGEX-V5.md` pour la note complète.
+En bref :
+
+- **Module** : `05-Technique/benchmark/iterate_regex.py` (~750 lignes,
+  autonome, stdlib uniquement — `re`, `json`, `unicodedata`).
+- **Point d'entrée** : `extract_pairs_v5(text) -> set[str]` renvoie un set
+  de clés au format **`<code_slug>:<article>`** (ex : `code_civil:1240`,
+  `code_de_procedure_civile:L743-7`, `code_penal:222-23`).
+- **Codes reconnus** : 52 codes officiels français + 11 acronymes
+  doctrinaux (CESEDA, CGI, CPC, COJ, CSS, CSP, CPP, CPCE, CR, CJPM…).
+  Définis dans `CODES_OFFICIELS` / `CODES_HISTORIQUES`.
+- **Logique** (5 patterns clés) : listings classiques (`articles X, Y, Z du
+  code civil`), forme inversée (`Vu le Code … notamment en ses articles
+  X et Y`), anaphore explicite (`articles X et Y du même code`), expansion
+  sémantique des ranges (`articles X à Y` → tous les intermédiaires,
+  borné à `max_span=50`), fix OCR (`R12121` → `R121-21` selon contexte).
+- **Filtres appliqués** : exclusion des lois nommées, décrets, conventions
+  collectives, règlements UE (≠ articles de code).
+- **Performance** : F1 = 0,94 (precision 0,983 / recall 0,900), médiane
+  ~266 ms/arrêt, **~40 arrêts/s sur 1 cœur**. Pour 1,12 M arrêts :
+  ~7-8 h en série, **~1 h sur 8 cœurs en parallèle**.
+- **Caveat connu** : ~1 % d'arrêts (très longs avec listings massifs
+  CESEDA/CPCEx) déclenchent un backtrack pathologique → encadrer chaque
+  appel par un timeout 15-30 s avec fallback `extract_pairs_v3` (la note
+  HANDOFF-REGEX-V5.md fournit le snippet `safe_extract`).
+
+#### Rôle dans le pipeline d'ingestion DB
+
+Le regex V5 tourne au moment de l'**ingestion JSONL → DB** (pas dans le
+pipeline LLM Step 1, qui n'a besoin que du `text`). Le script
+`ingest_jsonl_to_db.py` (à écrire) :
+
+1. Pour chaque shard `outputs/step1_shard_*/<juris>/part-*.jsonl` :
+   - Lit la ligne (record `ok` ou terminal).
+   - Insère dans `jp_step1` (avec ses champs LLM).
+   - Insère les paires `arguments_parties` → `jp_argument` (normalisé).
+   - Insère les `themes` → `jp_theme`.
+   - Pour les `cited_articles` (LLM) : normalise via `iterate_regex` →
+     insère dans `jp_cited_article` avec `source='llm'`.
+2. **En parallèle** : joindre le `text` original Judilibre (depuis le
+   JSONL source `/home/.../database-judilibre/<juris>`) → appliquer
+   `safe_extract(text)` → insérer les paires dans `jp_cited_article` avec
+   `source='regex'`. Possiblement en job séparé pour profiter du
+   parallélisme 8 cœurs (l'étape LLM est GPU-bound, le regex est
+   CPU-bound, indépendants).
+
+#### Usage pour le filtrage et le KG
+
+Ces paires `code_slug:article` sont les **ancres principales** pour filtrer
+le corpus par sujet juridique précis avant d'appliquer la similarité
+vectorielle (cf. §7) :
+
+```sql
+-- Trouve toutes les JP qui citent l'art. 1240 du Code civil
+-- (les deux sources combinées → recall maximum)
+SELECT DISTINCT jp_id FROM jp_cited_article
+ WHERE article_norm = 'code_civil:1240';
+
+-- Plus restrictif : seulement celles où la JURIDICTION a mobilisé cet
+-- article (pas seulement cité par une partie)
+SELECT DISTINCT jp_id FROM jp_cited_article
+ WHERE article_norm = 'code_civil:1240' AND source = 'llm';
+
+-- Tout le contentieux mobilisant un code (filtre haut-niveau)
+SELECT DISTINCT jp_id FROM jp_cited_article
+ WHERE split_part(article_norm, ':', 1) = 'code_penal';
+```
+
+À l'usage downstream :
+- **KG explicite** : `jp_cited_article` est la table des arêtes
+  JP → Article du knowledge graph. Combinée avec `jp_theme`, elle structure
+  la navigation par sujet juridique.
+- **Pre-filter pour recherche par similarité** : la Phase 1 du workflow §7.4
+  utilise `jp_cited_article` pour réduire à quelques milliers de candidats
+  avant l'ANN search.
+- **Mesure de l'écart `regex` vs `llm`** : sur un échantillon, comparer le
+  set par source donne un signal sur la qualité d'extraction du LLM
+  (rappel sur les visas formels notamment). Si le LLM rate
+  systématiquement certains codes, c'est un signal pour retoucher le bloc
+  `cited_articles` du prompt.
+
+#### Volumes attendus (post-run complet 1,12 M)
+
+- Citations source `'llm'` : ~5–15 par JP → **5–15 M lignes**
+- Citations source `'regex'` : exhaustif, ~15–50 par JP → **15–55 M lignes**
+- Total : **20–70 M lignes** sur la table `jp_cited_article`. Postgres
+  encaisse sans problème avec les index B-tree ci-dessus
+  (`article_norm` est très sélectif).
 
 ### 6.4 Table N-N `jp_theme` (arêtes JP → Thème)
 
@@ -634,10 +733,12 @@ canonique → bump `TAXONOMY_VERSION` → re-run ciblé sur les JP concernées.
 ### 6.6 Volumes attendus (run complet 1,12 M sur judiciaire)
 
 - `jp_step1` : 1,12 M lignes (~5–8 GB avec TEXT longs)
-- `jp_cited_article` : ~5–15 M lignes (5–15 articles/JP)
+- `jp_argument` : ~5–10 M lignes (3–10 arguments/JP) + embeddings (cf. §7)
+- `jp_cited_article` (LLM + regex confondus) : ~20–70 M lignes
 - `jp_theme` : ~2–4 M lignes (1–4 thèmes/JP)
 - `jp_theme_anomaly` : quelques milliers à dizaines de milliers
-- Total Postgres : ~10–20 GB index inclus.
+- Total Postgres sans embeddings : ~15–30 GB index inclus.
+- + embeddings (cf. §7.5/§7.6 selon stratégie retenue) : +10 à +130 GB.
 
 À l'ajout administratif/européen : multiplie grossièrement par 1,5 à 3×
 selon la taille des corpus rapatriés.
@@ -937,7 +1038,7 @@ priorité **BGE-M3** (long contexte 8k, multilingue SOTA, dense+sparse+colbert),
 | 3 | **Tuner `max_tokens`** (probable cut 4000 → 1500–2000) | Économies massives sur le run complet |
 | 4 | **Sharding multi-GPU data-parallel** : ajouter `--shard-idx K --shard-count N` à `run_step1.py`, runner SLURM templaté | Run complet faisable en temps raisonnable |
 | 5 | **Run complet** 1,12 M JP en N×L40S parallèles (~quelques jours) | Tout le downstream |
-| 6 | **Ingestion DB** : écrire `ingest_jsonl_to_db.py` qui consume `outputs/step1_shard_*/` et alimente les 4 tables, avec normalisateur articles | Recherche utilisable |
+| 6 | **Ingestion DB** : écrire `ingest_jsonl_to_db.py` qui consume `outputs/step1_shard_*/` et alimente les tables. Inclut : normalisation des `cited_articles` LLM, **passe regex V5** (`iterate_regex.extract_pairs_v5` avec timeout-fallback v3, ~1 h en parallèle 8 cœurs) → `jp_cited_article(source='regex')` | Recherche utilisable, KG explicite |
 | 7 | **Phase B embedding** : embedder les champs §7.1 avec BGE-M3, indexer (pgvector ou FAISS) | Recherche par similarité |
 | 8 | **Extension juridictions** : enrichir corpus CE/CAA/TA depuis Légifrance, étendre taxonomie v2 (admin + européen), router via mêmes 3 préambules (CJUE/CEDH → 4e à créer) | Périmètre cible final |
 
