@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Étape 1 — État des lieux</title>
+<style>
+  :root{
+    --ink:#1a1d24; --ink-soft:#3c4250; --paper:#faf8f3; --card:#ffffff;
+    --line:#e3ddd0; --accent:#7c2d2d; --accent-soft:#a8453f;
+    --ok:#2f6f4f; --ok-soft:#cce6d8;
+    --warn:#9a6b1e; --warn-soft:#f5e7c8;
+    --bad:#a8453f; --bad-soft:#f5d8d4;
+    --mute:#8a8474; --code-bg:#f3efe6; --tint:#fbf3ec;
+    --penal:#7c2d2d; --civil:#2f5b8a; --affaires:#8a6a2f;
+    --admin:#5a5a5a; --fiscal:#6a3f8a; --social:#2f7a6a; --inteu:#888;
+  }
+  *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:15.5px/1.55 ui-serif,"Iowan Old Style",Georgia,serif;padding:0 20px}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 0 96px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:20px}
+  .kicker{font:600 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+  h1{font-size:2.2rem;line-height:1.1;margin:0 0 12px;letter-spacing:-.012em}
+  .sub{font-size:1.02rem;color:var(--ink-soft);margin:0;max-width:70ch}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:7px;
+    font:500 12px/1 ui-sans-serif,system-ui,sans-serif}
+  .meta span{background:var(--card);border:1px solid var(--line);
+    padding:6px 10px;border-radius:999px;color:var(--ink-soft)}
+  h2{font-size:1.45rem;margin:48px 0 6px;letter-spacing:-.005em;
+    padding-bottom:6px;border-bottom:1px solid var(--line);font-weight:700}
+  h2 .num{font:800 .72em ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    margin-right:.5em;letter-spacing:.04em}
+  h3{font:600 1.04rem/1.4 ui-sans-serif,system-ui,sans-serif;margin:22px 0 6px}
+  p{margin:10px 0} .lead{font-size:1.04rem;color:var(--ink-soft);max-width:64ch}
+  code{font:13px/1.45 ui-monospace,"SF Mono",Menlo,monospace;
+    background:var(--code-bg);padding:1.5px 5px;border-radius:4px;color:var(--accent-soft)}
+  .tldr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:8px;padding:18px 22px;margin:20px 0}
+  .tldr h3{margin:0 0 6px;color:var(--accent);font-size:.74rem;
+    letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+  .tldr p{margin:0;font-size:1.04rem;line-height:1.5}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:11px;margin:18px 0}
+  .stat-cell{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .stat-cell .big{font:800 1.8rem/1 ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    letter-spacing:-.02em;display:block;margin-bottom:5px}
+  .stat-cell .cap{font:12.5px/1.4 ui-sans-serif,system-ui,sans-serif;color:var(--mute)}
+  figure{margin:18px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:18px 14px 12px;overflow-x:auto}
+  figcaption{font:500 12.5px/1.45 ui-sans-serif,system-ui,sans-serif;
+    color:var(--mute);text-align:center;margin-top:10px;max-width:72ch;
+    margin-left:auto;margin-right:auto;padding:0 10px}
+  svg{display:block;max-width:100%;height:auto;margin:0 auto}
+  table{border-collapse:collapse;width:100%;margin:14px 0;
+    font:13.5px/1.45 ui-sans-serif,system-ui,sans-serif}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);
+    border-bottom:1.5px solid var(--ink);font-weight:700}
+  td.r{text-align:right;font-variant-numeric:tabular-nums}
+  td.c{text-align:center;font-variant-numeric:tabular-nums}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;
+    font:600 11px/1.4 ui-sans-serif,system-ui,sans-serif}
+  .pill.good{background:var(--ok-soft);color:var(--ok)}
+  .pill.warn{background:var(--warn-soft);color:var(--warn)}
+  .pill.bad{background:var(--bad-soft);color:var(--bad)}
+  .pill.mute{background:#eee;color:var(--mute)}
+  .br-penal{color:var(--penal);font-weight:700}
+  .br-civil{color:var(--civil);font-weight:700}
+  .br-affaires{color:var(--affaires);font-weight:700}
+  .br-admin{color:var(--admin);font-weight:700}
+  .br-fiscal{color:var(--fiscal);font-weight:700}
+  .br-social{color:var(--social);font-weight:700}
+  .br-inteu{color:var(--inteu);font-weight:700}
+  .callout{margin:18px 0;padding:14px 18px;border-radius:8px;
+    background:var(--tint);border:1px solid #ecd9c4}
+  .callout b{font:700 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--warn);display:block;margin-bottom:6px}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+  @media (max-width: 760px){ .twocol{grid-template-columns:1fr} }
+  .twocol > div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 18px}
+  ul{margin:8px 0;padding-left:22px} li{margin:5px 0}
+  ul.tight li{margin:2px 0}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);
+    font:12.5px/1.55 ui-sans-serif,system-ui,sans-serif;color:var(--mute)}
+  .timeline{display:flex;gap:0;margin:18px 0;border:1px solid var(--line);
+    border-radius:8px;overflow:hidden;background:var(--card)}
+  .timeline div{flex:1;padding:12px 14px;font:500 12px/1.4 ui-sans-serif,system-ui,sans-serif;
+    color:var(--mute);border-right:1px solid var(--line)}
+  .timeline div:last-child{border-right:0}
+  .timeline div.done{background:#ebf3ec}
+  .timeline div.now{background:var(--ink);color:#fff}
+  .timeline b{display:block;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;margin-bottom:5px;opacity:.7}
+  .timeline div.now b{color:#e9b8b0;opacity:1}
+  .timeline div.done b{color:var(--ok)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Knowledge Graph juridique · Étape 1 · État des lieux</p>
+  <h1>Embedding articles-first BGE-M3 — benchmark CNB 2025 complet</h1>
+  <p class="sub">38 questions × 11 branches × 4 niveaux de gold × 2 stratégies de retrieval.
+  Plancher de performance, patterns d'échec, recommandations Étape 2.</p>
+  <div class="meta">
+    <span>2026-05-26</span>
+    <span>BGE-M3 · 1024 dim</span>
+    <span>31 357 articles pool</span>
+    <span>38 questions / 11 branches</span>
+    <span>Branche <code>etape1-embedding-pur</code></span>
+  </div>
+</header>
+
+<div class="tldr">
+  <h3>TL;DR</h3>
+  <p>L'article-first BGE-M3 sur LEGI atteint <strong>5/38 questions (13 %)</strong> sur le
+  critère dur côté <em>core</em>, et <strong>7/38 (18 %)</strong> côté obligatoires —
+  saut qualitatif vs 0/38 baseline 5 mai. Mais la performance est très inégale :
+  <span class="br-penal">pénal 50 %</span> ·
+  <span class="br-social">social 33 %</span> ·
+  <span class="br-affaires">affaires 25 %</span> ·
+  <span class="br-civil">civil 11 %</span> ·
+  <span class="br-admin">admin 0 %</span> ·
+  <span class="br-fiscal">fiscal 0 %</span>.
+  3 patterns d'échec dominent : <strong>compositionnel</strong>, <strong>couverture LEGI</strong>,
+  <strong>multi-sujets</strong> — chacun appelle un fix distinct.</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-cell">
+    <span class="big">38</span>
+    <span class="cap">questions CNB 2025 sur <strong>11 branches</strong></span>
+  </div>
+  <div class="stat-cell">
+    <span class="big">31 357</span>
+    <span class="cap">articles embeddés (BGE-M3, 122 MB)</span>
+  </div>
+  <div class="stat-cell">
+    <span class="big">5 / 38</span>
+    <span class="cap">passent critère dur <strong>CORE</strong> (filtered)</span>
+  </div>
+  <div class="stat-cell">
+    <span class="big">+1 / 38</span>
+    <span class="cap">gain du <strong>routing</strong> par branche (open → filtered)</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§1</span>Timeline — ce qui a été fait</h2>
+
+<div class="timeline">
+  <div class="done"><b>Week 4 — 5 mai</b>Baseline B2 : e5-base sur JP. Rang médian gold 76 782 / 118 112.</div>
+  <div class="done"><b>Week 5</b>Décision Phase D : pivoter article-first.</div>
+  <div class="done"><b>Week 6</b>Pipeline pénal (3 183 articles). 3/7 passent strict.</div>
+  <div class="now"><b>Week 7 — 26 mai (ici)</b>Full corpus 31 k + benchmark CNB complet 38 q.</div>
+  <div><b>Étape 2 (next)</b>Complétion JP (LLM ou laplacien) + réécriture compositions.</div>
+</div>
+
+<p class="lead">Le pipeline est <strong>code-complet et testé</strong> (26/26 unit tests, branche
+<code>etape1-embedding-pur</code> avec 9 commits). Les artefacts sont reproductibles
+end-to-end : <code>./scripts/_setup_legi.sh</code> + <code>./scripts/02b → 06</code>.</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§2</span>Métriques définies (critère dur / facile, par niveau)</h2>
+
+<div class="twocol">
+  <div>
+    <h3>Critère dur</h3>
+    <p>Top-K bornés sévèrement pour pénaliser la sur-extraction :</p>
+    <ul class="tight">
+      <li><code>recall@10 articles</code> ≥ 0,5</li>
+      <li>ET <code>recall@5 JP</code> via graphe ≥ 0,5 (si gold JP existant)</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Critère facile</h3>
+    <p>Budget de résultats doublé :</p>
+    <ul class="tight">
+      <li><code>recall@20 articles</code> ≥ 0,5</li>
+      <li>ET <code>recall@10 JP</code> via graphe ≥ 0,5 (si gold JP existant)</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Quatre niveaux de gold évalués</h3>
+
+<table>
+  <thead><tr><th>Niveau</th><th>Source</th><th>Sémantique</th><th>Difficulté</th></tr></thead>
+  <tbody>
+    <tr><td><code>obligatoires</code></td><td><code>articles_attendus.obligatoires</code></td>
+        <td>Articles que la copie <em>doit</em> citer</td><td>Strict (peu d'articles, focus)</td></tr>
+    <tr><td><code>core</code></td><td><code>rubric.core[].linked_article</code></td>
+        <td>Articles dans la grille de notation, niveau fondamental</td>
+        <td>Plus exigeant (souvent + d'articles que <code>oblig</code>)</td></tr>
+    <tr><td><code>expected</code></td><td><code>core ∪ rubric.expected[]</code></td>
+        <td>Niveau d'une bonne copie</td><td>Encore + dispersé</td></tr>
+    <tr><td><code>expert</code></td><td><code>expected ∪ rubric.expert[]</code></td>
+        <td>Copie d'excellence</td><td>Le plus exigeant</td></tr>
+  </tbody>
+</table>
+
+<p class="lead">Deux stratégies de retrieval évaluées en parallèle :
+<strong>open</strong> (cosine sur tout le pool 31 357 articles) vs
+<strong>filtered</strong> (pool restreint aux codes pertinents pour la branche de la question).</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§3</span>Résultats agrégés — pass criterion par branche</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Branche</th><th>#q</th>
+      <th>Oblig open</th><th>Oblig filt</th>
+      <th>Core open</th><th>Core filt</th>
+      <th>Expected open</th><th>Expected filt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="br-penal">pénal</span></td><td class="c">8</td>
+        <td class="c"><span class="pill good">3/8</span></td><td class="c"><span class="pill good">4/8</span></td>
+        <td class="c"><span class="pill good">2/8</span></td><td class="c"><span class="pill good">3/8</span></td>
+        <td class="c"><span class="pill warn">1/8</span></td><td class="c"><span class="pill warn">2/8</span></td></tr>
+    <tr><td><span class="br-social">social</span></td><td class="c">3</td>
+        <td class="c"><span class="pill good">1/3</span></td><td class="c"><span class="pill good">1/3</span></td>
+        <td class="c"><span class="pill good">1/3</span></td><td class="c"><span class="pill good">1/3</span></td>
+        <td class="c"><span class="pill good">1/3</span></td><td class="c"><span class="pill good">1/3</span></td></tr>
+    <tr><td><span class="br-affaires">affaires</span></td><td class="c">4</td>
+        <td class="c"><span class="pill warn">1/4</span></td><td class="c"><span class="pill warn">1/4</span></td>
+        <td class="c"><span class="pill warn">1/4</span></td><td class="c"><span class="pill warn">1/4</span></td>
+        <td class="c"><span class="pill bad">0/4</span></td><td class="c"><span class="pill bad">0/4</span></td></tr>
+    <tr><td><span class="br-civil">civil</span></td><td class="c">9</td>
+        <td class="c"><span class="pill warn">1/9</span></td><td class="c"><span class="pill warn">1/9</span></td>
+        <td class="c"><span class="pill bad">0/9</span></td><td class="c"><span class="pill bad">0/9</span></td>
+        <td class="c"><span class="pill bad">0/9</span></td><td class="c"><span class="pill bad">0/9</span></td></tr>
+    <tr><td><span class="br-admin">admin</span></td><td class="c">8</td>
+        <td class="c"><span class="pill bad">0/8</span></td><td class="c"><span class="pill bad">0/8</span></td>
+        <td class="c"><span class="pill bad">0/8</span></td><td class="c"><span class="pill bad">0/8</span></td>
+        <td class="c"><span class="pill bad">0/8</span></td><td class="c"><span class="pill bad">0/8</span></td></tr>
+    <tr><td><span class="br-fiscal">fiscal</span></td><td class="c">3</td>
+        <td class="c"><span class="pill bad">0/3</span></td><td class="c"><span class="pill bad">0/3</span></td>
+        <td class="c"><span class="pill bad">0/3</span></td><td class="c"><span class="pill bad">0/3</span></td>
+        <td class="c"><span class="pill bad">0/3</span></td><td class="c"><span class="pill warn">1/3</span></td></tr>
+    <tr><td><span class="br-inteu">inteu</span></td><td class="c">3</td>
+        <td class="c"><span class="pill mute">0/3 *</span></td><td class="c"><span class="pill mute">0/3 *</span></td>
+        <td class="c"><span class="pill mute">0/3</span></td><td class="c"><span class="pill mute">0/3</span></td>
+        <td class="c"><span class="pill mute">0/3</span></td><td class="c"><span class="pill mute">0/3</span></td></tr>
+    <tr><th>TOTAL</th><th class="c">38</th>
+        <th class="c">6/38 (16 %)</th><th class="c">7/38 (18 %)</th>
+        <th class="c">4/38 (11 %)</th><th class="c">5/38 (13 %)</th>
+        <th class="c">2/38 (5 %)</th><th class="c">4/38 (11 %)</th></tr>
+  </tbody>
+</table>
+<p style="font-size:11.5px;color:var(--mute)">* inteu : gold = règlements UE, absents du pool LEGI → 0 par construction.</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§4</span>Courbes recall@K moyennes par branche (core, open)</h2>
+
+<figure>
+<svg viewBox="0 0 920 420" role="img" aria-label="Recall@K core par branche">
+  <defs>
+    <style>
+      .ax{stroke:#1a1d24;stroke-width:1.2;fill:none}
+      .grid{stroke:#e3ddd0;stroke-width:1;fill:none}
+      .lbl{font:11.5px ui-sans-serif,system-ui,sans-serif;fill:#3c4250}
+      .tick{font:11px ui-sans-serif,system-ui,sans-serif;fill:#8a8474}
+      .thr{stroke:#9a6b1e;stroke-width:1.5;stroke-dasharray:4 3;fill:none}
+      .curve{stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+      .qlbl{font:11px ui-sans-serif,system-ui,sans-serif}
+    </style>
+  </defs>
+  <!-- Grille -->
+  <line class="grid" x1="80" y1="360" x2="880" y2="360"/>
+  <line class="grid" x1="80" y1="280" x2="880" y2="280"/>
+  <line class="grid" x1="80" y1="200" x2="880" y2="200"/>
+  <line class="grid" x1="80" y1="120" x2="880" y2="120"/>
+  <line class="grid" x1="80" y1="40"  x2="880" y2="40"/>
+  <!-- seuil 0.5 -->
+  <line class="thr" x1="80" y1="200" x2="880" y2="200"/>
+  <text class="tick" x="884" y="203" fill="#9a6b1e">seuil 0.5</text>
+  <!-- Axe X log: K=1..1000 (4 décades = 800px / 3 décades = 266.67/dec) -->
+  <line class="ax" x1="80" y1="360" x2="880" y2="360"/>
+  <text class="tick" x="80"  y="378" text-anchor="middle">1</text>
+  <text class="tick" x="207" y="378" text-anchor="middle">3</text>
+  <text class="tick" x="347" y="378" text-anchor="middle">10</text>
+  <text class="tick" x="474" y="378" text-anchor="middle">30</text>
+  <text class="tick" x="613" y="378" text-anchor="middle">100</text>
+  <text class="tick" x="740" y="378" text-anchor="middle">300</text>
+  <text class="tick" x="880" y="378" text-anchor="middle">1000</text>
+  <text class="lbl" x="480" y="402" text-anchor="middle">K (log)</text>
+  <!-- Axe Y: 0..1 -->
+  <line class="ax" x1="80" y1="40" x2="80" y2="360"/>
+  <text class="tick" x="74" y="363" text-anchor="end">0.0</text>
+  <text class="tick" x="74" y="283" text-anchor="end">0.25</text>
+  <text class="tick" x="74" y="203" text-anchor="end">0.50</text>
+  <text class="tick" x="74" y="123" text-anchor="end">0.75</text>
+  <text class="tick" x="74" y="43"  text-anchor="end">1.00</text>
+  <text class="lbl" x="30" y="200" text-anchor="middle" transform="rotate(-90 30 200)">recall@K (mean, core)</text>
+  <!--
+    K positions : 1→80, 3→207, 5→267, 10→347, 20→426, 30→474, 50→534, 100→613, 200→694, 500→794, 1000→880
+    y = 360 - 320*recall
+    Données : recall@K mean par branche (core, open)
+    branche      r1   r5   r10  r20  r50  r100  r1000
+    admin        0.00 0.00 0.00 0.00 0.00 0.06 0.12
+    affaires     0.12 0.19 0.19 0.19 0.25 0.44 0.58
+    civil        0.04 0.08 0.08 0.14 0.16 0.18 0.41
+    fiscal       0.03 0.11 0.14 0.17 0.28 0.32 0.84
+    inteu        0.00 ...
+    penal        0.19 0.46 0.50 0.50 0.53 0.53 0.72
+    social       0.33 0.33 0.33 0.33 0.42 0.42 0.75
+  -->
+  <!-- penal -->
+  <polyline class="curve" stroke="#7c2d2d" points="80,299 267,213 347,200 426,200 534,190 613,190 880,130"/>
+  <!-- social -->
+  <polyline class="curve" stroke="#2f7a6a" points="80,254 267,254 347,254 426,254 534,226 613,226 880,120"/>
+  <!-- affaires -->
+  <polyline class="curve" stroke="#8a6a2f" points="80,322 267,299 347,299 426,299 534,280 613,219 880,174"/>
+  <!-- civil -->
+  <polyline class="curve" stroke="#2f5b8a" points="80,347 267,334 347,334 426,315 534,309 613,302 880,229"/>
+  <!-- fiscal -->
+  <polyline class="curve" stroke="#6a3f8a" points="80,350 267,325 347,315 426,306 534,270 613,258 880,91"/>
+  <!-- admin -->
+  <polyline class="curve" stroke="#5a5a5a" points="80,360 267,360 347,360 426,360 534,360 613,341 880,322"/>
+  <!-- Labels droite -->
+  <text class="qlbl" x="884" y="125" fill="#7c2d2d">pénal 0.72</text>
+  <text class="qlbl" x="884" y="138" fill="#2f7a6a">social 0.75</text>
+  <text class="qlbl" x="884" y="178" fill="#8a6a2f">affaires 0.58</text>
+  <text class="qlbl" x="884" y="233" fill="#2f5b8a">civil 0.41</text>
+  <text class="qlbl" x="884" y="95"  fill="#6a3f8a">fiscal 0.84</text>
+  <text class="qlbl" x="884" y="326" fill="#5a5a5a">admin 0.12</text>
+</svg>
+<figcaption>Recall@K core moyen par branche (open, pool 31 357 articles). Au seuil
+50 % (pointillé), seul le pénal franchit à K=10. Les autres branches montent
+progressivement — fiscal saturé tardivement (K=1000 → 0.84) mais inutilisable en
+top-K court. <strong>Admin plafonne autour de 0.12</strong> : la branche est
+quasiment inopérable.</figcaption>
+</figure>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§5</span>Couverture du gold dans le pool LEGI</h2>
+
+<p class="lead">Un article gold absent du pool est inatteignable par construction.
+La couverture par branche révèle des trous structurels.</p>
+
+<table>
+  <thead><tr><th>Branche</th><th>Gold core total</th><th>Résolus dans pool</th><th>Couverture</th><th>Code(s) manquants</th></tr></thead>
+  <tbody>
+    <tr><td><span class="br-affaires">affaires</span></td><td class="c">13</td><td class="c">13</td>
+        <td class="c"><span class="pill good">100 %</span></td><td>—</td></tr>
+    <tr><td><span class="br-social">social</span></td><td class="c">7</td><td class="c">7</td>
+        <td class="c"><span class="pill good">100 %</span></td><td>—</td></tr>
+    <tr><td><span class="br-fiscal">fiscal</span></td><td class="c">19</td><td class="c">18</td>
+        <td class="c"><span class="pill good">95 %</span></td><td><code>CGI:293A</code></td></tr>
+    <tr><td><span class="br-penal">pénal</span></td><td class="c">20</td><td class="c">19</td>
+        <td class="c"><span class="pill good">95 %</span></td><td><code>code_penal:222-26-2</code></td></tr>
+    <tr><td><span class="br-civil">civil</span></td><td class="c">47</td><td class="c">43</td>
+        <td class="c"><span class="pill good">91 %</span></td><td>ARA décret 2025 (PROCCIV-Q1)</td></tr>
+    <tr><td><span class="br-admin">admin</span></td><td class="c">23</td><td class="c">16</td>
+        <td class="c"><span class="pill warn">70 %</span></td><td><code>CGFP</code>, <code>CRPA:L423-1</code>, <code>code_rural</code></td></tr>
+    <tr><td><span class="br-inteu">inteu</span></td><td class="c">13</td><td class="c">0</td>
+        <td class="c"><span class="pill bad">0 %</span></td><td>tous : règlements UE/CE hors LEGI</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <b>Constat couverture</b>
+  <p>Admin (70 %) et inteu (0 %) sont <em>structurellement</em> handicapées avant tout
+  travail sur l'encodeur. Pour admin, le diagnostic du subagent identifie le <strong>CGFP</strong>
+  comme priorité d'ingestion (4 gold manquants sur Q2). Pour inteu, il faut un dump LEGI-UE
+  séparé (CELEX) — hors scope Étape 1.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§6</span>Trois patterns d'échec dominants</h2>
+
+<p class="lead">Analyse qualitative des 30 questions non-pénales par les subagents
+(<a href="../../06-Analyses/syntheses/diagnostic-branche-civil.md">civil</a>,
+<a href="../../06-Analyses/syntheses/diagnostic-branche-affaires.md">affaires</a>,
+<a href="../../06-Analyses/syntheses/diagnostic-branche-administratif.md">admin</a>,
+<a href="../../06-Analyses/syntheses/diagnostic-branche-fiscal-social.md">fiscal-social</a>).
+Trois patterns émergent.</p>
+
+<div class="twocol">
+  <div style="border-left:4px solid var(--bad)">
+    <h3>Pattern A — Vocabulaire absent (compositionnel pur)</h3>
+    <p><strong>Touche : civil 6/9, affaires 3/4, fiscal 1/3, social 2/3</strong></p>
+    <p>La question CRFPA décrit un cas pratique (« Tania crée une SAS, Maria refuse
+    l'inscription en compte »). Le gold est constitué d'<em>articles-principes</em>
+    post-2016 (1112-1, 1170, 1217) ou techniques (CSS:L1132-1) dont le vocabulaire
+    juridique de qualification n'apparaît jamais dans la question.</p>
+    <p><strong>Fix Étape 2 :</strong> <em>réécriture LLM</em> (question → mots-clés
+    juridiques qualifiés) puis embedding sur la version réécrite.</p>
+  </div>
+  <div style="border-left:4px solid var(--warn)">
+    <h3>Pattern B — Couverture LEGI lacunaire</h3>
+    <p><strong>Touche : admin 3/8 (CGFP + CRPA + rural), civil 1/9, fiscal 1/3</strong></p>
+    <p>Le gold cite des articles non présents dans le pool — code abrogé ou
+    renuméroté (`code_d_instruction_criminelle`, `code_rural`), décret récent
+    (`ARA décret 2025`), règlement UE (`reglement_ce_139_2004`).</p>
+    <p><strong>Fix :</strong> compléter l'ingestion LEGI (CGFP en priorité,
+    +20 articles). Pour les règlements UE → corpus CELEX séparé.</p>
+  </div>
+</div>
+
+<div class="twocol">
+  <div style="border-left:4px solid var(--ink-soft)">
+    <h3>Pattern C — Trop d'articles gold / multi-sujets</h3>
+    <p><strong>Touche : admin (PROC-Q1, 7 art.), fiscal-Q2 (11 art.), civil-Q1 (8 art.)</strong></p>
+    <p>Quand le gold contient ≥ 7 articles obligatoires, recall@10 plafonne
+    mathématiquement à 10/N. La question elle-même mélange souvent 3-6 sous-sujets
+    juridiques (« 6 opérations TVA », « 3 sous-cas social »). Le vecteur question est
+    « moyenné » → cosine faible avec chaque article.</p>
+    <p><strong>Fix :</strong> <em>décomposition</em> de la question en sous-requêtes
+    via LLM, embedding de chacune, agrégation par union/max.</p>
+  </div>
+  <div style="border-left:4px solid var(--ok)">
+    <h3>Cas de réussite : 5 questions</h3>
+    <ul class="tight">
+      <li><span class="br-penal">PP-Q2/Q3</span> : garde à vue, mise en examen — vocabulaire identique à l'article codifié</li>
+      <li><span class="br-penal">PP-Q1</span> : balise GPS → CPP:230-32 rang 2 (filtered seul)</li>
+      <li><span class="br-penal">PP-Q5</span> : détention provisoire (gold JP absent → critère sans JP)</li>
+      <li><span class="br-social">SOCIAL-Q2</span> : « accident de trajet » → CSS:L411-2 rang 1 (mono-gold + lexical)</li>
+      <li><span class="br-affaires">AFFAIRES-Q1</span> : SAS → C.civ:1832 (article-définition rang 1)</li>
+    </ul>
+    <p>Trait commun : <strong>peu d'articles gold + recouvrement lexical fort</strong>.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§7</span>Matrice patterns → fixes</h2>
+
+<table>
+  <thead><tr><th>Pattern</th><th>Questions touchées</th><th>Fix Étape 2</th><th>Coût</th><th>Gain potentiel</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>A. Compositionnel</strong></td>
+      <td>~15 questions civil/affaires/fiscal/social</td>
+      <td>Réécriture LLM de la question + embedding sur version réécrite</td>
+      <td class="c"><span class="pill warn">moyen</span></td>
+      <td class="c"><span class="pill good">+ 5-8 q</span></td>
+    </tr>
+    <tr>
+      <td><strong>B. Couverture LEGI</strong></td>
+      <td>~5 questions admin/civil</td>
+      <td>Ingestion CGFP, CRPA L4xx, ARA décrets 2025</td>
+      <td class="c"><span class="pill good">faible</span></td>
+      <td class="c"><span class="pill warn">+ 2-3 q</span></td>
+    </tr>
+    <tr>
+      <td><strong>C. Multi-sujets</strong></td>
+      <td>~6 questions PROC-Q1, CIVIL-Q1, FISCAL-Q2, OBLIG-Q1…</td>
+      <td>Décomposition LLM en sous-questions, retrieval par sous-requête, agrégation</td>
+      <td class="c"><span class="pill warn">moyen</span></td>
+      <td class="c"><span class="pill good">+ 3-5 q</span></td>
+    </tr>
+    <tr>
+      <td>D. Hybridation lexicale</td>
+      <td>questions citant explicitement un numéro d'article dans l'énoncé (rares)</td>
+      <td>Retrieval BM25 en complément du dense</td>
+      <td class="c"><span class="pill good">faible</span></td>
+      <td class="c"><span class="pill mute">+ 1-2 q</span></td>
+    </tr>
+    <tr>
+      <td>E. Reranker cross-encoder</td>
+      <td>questions où le gold est dans le top-100 mais pas top-10</td>
+      <td>Rerank top-100 → top-10 par cross-encoder fine-tuné FR-juridique</td>
+      <td class="c"><span class="pill bad">élevé</span></td>
+      <td class="c"><span class="pill good">+ 3-5 q</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <b>Projection cumulée</b>
+  <p>Si les fixes A, B, C, D, E sont tous implémentés et que les gains se cumulent
+  partiellement (~70 % de cumul), on passe d'un plancher actuel de
+  <strong>5/38 (13 %)</strong> à un objectif réaliste de <strong>15-18/38 (40-47 %)</strong>
+  sur le critère dur core filtered. C'est l'horizon de l'Étape 2.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§8</span>Stratégie open vs filtered — finalement marginale</h2>
+
+<p class="lead">L'écart open → filtered apporte exactement <strong>+1 question</strong>
+sur 38 (PP-Q1, qui passe r@5_jp 0.33 → 0.67 en restreignant aux codes pénaux).
+Conclusion forte : <strong>BGE-M3 fait son routing implicite</strong> — il classe
+spontanément les articles non pertinents loin du top-K, sans besoin d'un classifieur
+de branche en amont.</p>
+
+<div class="callout">
+  <b>Implication production</b>
+  <p>Pas besoin d'un module « classifieur de branche » avant le retrieval. Le coût
+  de maintenance d'un tel classifieur (réentraînement, validation) ne se justifie pas
+  pour un gain de 2,6 %. C'est une bonne nouvelle pour la simplicité du système final.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§9</span>Limitations chiffrées</h2>
+
+<table>
+  <thead><tr><th>Limitation</th><th>Chiffre</th><th>Branche(s) impactée(s)</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr><td>Couverture LEGI globale</td><td class="c">36 %</td><td>tous codes anciens / abrogés</td>
+        <td>Gold à 91 %+ sur 6/7 branches actives</td></tr>
+    <tr><td>BATCH_MAX_LEN troncature</td><td class="c">2048 tok</td><td>articles civils longs</td>
+        <td>chunk + meanpool — 170 / 31 357 articles concernés</td></tr>
+    <tr><td>JP gold résolution</td><td class="c">CC-only</td><td>pénal (1 question sans gold)</td>
+        <td><code>jp_attendues.ref</code> est <code>null</code> dans les rubrics</td></tr>
+    <tr><td>Règlements UE absents</td><td class="c">3 questions</td><td>international-europeen</td>
+        <td>Hors scope Étape 1 (corpus CELEX séparé)</td></tr>
+    <tr><td>CGFP non ingéré</td><td class="c">7 / 30 articles</td><td>admin-Q2</td>
+        <td>Priorité ingestion Étape 2</td></tr>
+    <tr><td>Échantillon par branche</td><td class="c">3-9 q</td><td>fiscal (3), social (3)</td>
+        <td>Variance statistique forte → Étape 3 (doctrine)</td></tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§10</span>Recommandations actionnables</h2>
+
+<div class="twocol">
+  <div>
+    <h3>Court terme (jours)</h3>
+    <ul>
+      <li><strong>Ingérer CGFP</strong> dans LEGI pool → débloque admin-Q2</li>
+      <li><strong>Mesurer recall@50 filtered</strong> comme métrique secondaire pour les questions à 7+ articles gold (PROC-Q1, FISCAL-Q2)</li>
+      <li>Documenter <strong>les 2 cas inévaluables</strong> (ADMIN-Q1C, PROC-Q3 gold core vide)</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Étape 2 (semaines)</h3>
+    <ul>
+      <li>Prototyper la <strong>réécriture LLM</strong> de question pour pattern A</li>
+      <li>Tester la <strong>décomposition en sous-questions</strong> pour pattern C</li>
+      <li>Implémenter la <strong>complétion JP via laplacien</strong> (cf. note du 5 mai)</li>
+      <li>Mesurer l'objectif : passer de 5/38 → 15-18/38 sur critère dur core</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§11</span>Artefacts reproductibles</h2>
+
+<table>
+  <thead><tr><th>Fichier</th><th>Taille</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>data/emb_articles_all.npy</code></td><td class="r">122 MB</td>
+        <td>(31 357, 1024) fp32 L2-normalisé · pivot central</td></tr>
+    <tr><td><code>data/articles_all.parquet</code></td><td class="r">14 MB</td>
+        <td>pair_key + texte LEGI (31 357 articles tous codes)</td></tr>
+    <tr><td><code>data/articles_all_coverage.json</code></td><td class="r">12 KB</td>
+        <td>diagnostic résolution par code</td></tr>
+    <tr><td><code>data/branch_diagnostics.json</code></td><td class="r">590 KB</td>
+        <td>K*, top-10, rangs gold par question × 4 niveaux × 2 stratégies</td></tr>
+    <tr><td><code>data/recall_dual_strategy.csv</code></td><td class="r">~15 KB</td>
+        <td>38 questions × 2 stratégies × 11 K = 836 lignes</td></tr>
+    <tr><td><code>06-Analyses/syntheses/diagnostic-branche-*.md</code></td><td class="r">~10 KB ×4</td>
+        <td>diagnostics qualitatifs par branche</td></tr>
+  </tbody>
+</table>
+
+<p class="lead">Reproduction end-to-end :</p>
+<pre style="background:var(--code-bg);padding:14px 18px;border-radius:8px;
+            font:13px/1.5 ui-monospace,monospace;overflow-x:auto;color:var(--ink)">cd 05-Technique/benchmark/etape1_embedding_pur
+source .venv/bin/activate
+./scripts/_setup_legi.sh                       # ~30-60 min (one-shot)
+PYTHONPATH=. python scripts/02b_fetch_articles_all.py  # ~1 min
+PYTHONPATH=. python scripts/03b_embed_all.py --device mps --batch 8  # ~3 h MPS
+PYTHONPATH=. python scripts/05_eval_dual_strategy.py    # ~1 min
+PYTHONPATH=. python scripts/06_inspect_branches.py      # ~1 min</pre>
+
+<footer>
+  Étape 1/3 de la roadmap Johnny · Branche <code>etape1-embedding-pur</code> ·
+  Synthèses : <code>06-Analyses/syntheses/Experience-Etape1-Articles-First-2026-05-26.md</code>
+  et <code>diagnostic-branche-{civil,affaires,administratif,fiscal-social}.md</code> ·
+  Présentation Beamer : <code>Week-7-2026-05-26-Presentation-Superviseur.tex</code>
+</footer>
+
+</div>
+</body>
+</html>
