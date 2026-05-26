@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Étape 1 — Résultats articles-first</title>
+<style>
+  :root{
+    --ink:#1a1d24; --ink-soft:#3c4250; --paper:#faf8f3; --card:#ffffff;
+    --line:#e3ddd0; --accent:#7c2d2d; --accent-soft:#a8453f;
+    --ok:#2f6f4f; --ok-soft:#5a9577;
+    --warn:#9a6b1e; --mute:#8a8474;
+    --code-bg:#f3efe6; --tint:#fbf3ec;
+    --pp-color:#2f6f4f;       /* vert procédure pénale */
+    --penal-color:#7c2d2d;    /* rouge droit pénal */
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:16px/1.6 ui-serif,"Iowan Old Style",Georgia,"Times New Roman",serif;
+    padding:0 24px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:56px 0 96px}
+
+  header{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:24px}
+  .kicker{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-size:2.45rem;line-height:1.12;margin:0 0 14px;letter-spacing:-.012em}
+  .sub{font-size:1.05rem;color:var(--ink-soft);margin:0;max-width:64ch}
+  .meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px;
+    font:500 12.5px/1 ui-sans-serif,system-ui,sans-serif}
+  .meta span{background:var(--card);border:1px solid var(--line);
+    padding:7px 11px;border-radius:999px;color:var(--ink-soft)}
+
+  h2{font-size:1.55rem;margin:60px 0 8px;letter-spacing:-.008em;
+    padding-bottom:8px;border-bottom:1px solid var(--line);font-weight:700}
+  h2 .num{font:800 .75em ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    margin-right:.55em;letter-spacing:.04em}
+  h3{font:600 1.04rem/1.4 ui-sans-serif,system-ui,sans-serif;margin:24px 0 6px;color:var(--ink)}
+  p{margin:12px 0}
+  .lead{font-size:1.08rem;color:var(--ink-soft);max-width:62ch}
+
+  code{font:13.5px/1.5 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    background:var(--code-bg);padding:1.5px 6px;border-radius:5px;color:var(--accent-soft)}
+
+  .tldr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:22px 26px;margin:28px 0}
+  .tldr h3{margin:0 0 8px;color:var(--accent);font-size:.78rem;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:800}
+  .tldr p{margin:0;font-size:1.08rem;line-height:1.55}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:22px 0}
+  .stat-cell{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px}
+  .stat-cell .big{font:800 2.1rem/1 ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    letter-spacing:-.02em;display:block;margin-bottom:6px}
+  .stat-cell .cap{font:13px/1.45 ui-sans-serif,system-ui,sans-serif;color:var(--mute)}
+
+  figure{margin:24px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:22px 18px 14px;overflow-x:auto}
+  figcaption{font:500 13px/1.55 ui-sans-serif,system-ui,sans-serif;
+    color:var(--mute);text-align:center;margin-top:14px;max-width:74ch;
+    margin-left:auto;margin-right:auto;padding:0 12px}
+  svg{display:block;max-width:100%;height:auto;margin:0 auto}
+
+  table{border-collapse:collapse;width:100%;margin:18px 0;
+    font:14px/1.5 ui-sans-serif,system-ui,sans-serif}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);
+    border-bottom:1.5px solid var(--ink)}
+  tr.pp td:first-child{color:var(--pp-color);font-weight:700}
+  tr.penal td:first-child{color:var(--penal-color);font-weight:700}
+  td.r{text-align:right;font-variant-numeric:tabular-nums}
+  td.good{color:var(--ok);font-weight:700}
+  td.ok{color:var(--ink)}
+  td.bad{color:var(--accent);font-weight:700}
+
+  .callout{margin:24px 0;padding:18px 22px;border-radius:10px;
+    background:var(--tint);border:1px solid #ecd9c4}
+  .callout b{font:700 11.5px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--warn);display:block;margin-bottom:8px}
+  .callout p{margin:6px 0}
+
+  .top10{font:13px/1.45 ui-monospace,Menlo,monospace;background:var(--code-bg);
+    border-radius:8px;padding:14px 18px;overflow-x:auto;margin:14px 0}
+  .top10 .hit{color:var(--ok);font-weight:700}
+  .top10 .miss{color:var(--mute)}
+  .top10 .target{color:var(--accent);font-weight:700}
+
+  .legend{display:flex;gap:18px;justify-content:center;
+    font:12px ui-sans-serif,system-ui,sans-serif;color:var(--ink-soft);margin-top:10px}
+  .legend span::before{content:"";display:inline-block;width:18px;height:3px;
+    margin-right:6px;vertical-align:middle;border-radius:2px}
+  .legend .pp::before{background:var(--pp-color)}
+  .legend .penal::before{background:var(--penal-color)}
+
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);
+    font:13px/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--mute)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Étape 1 · Résultats · Expérience articles-first</p>
+  <h1>Embedding LEGI des articles pénaux comme point d'entrée</h1>
+  <p class="sub">Saut qualitatif vs baseline B2 du 5 mai. Limites claires sur les questions
+  compositionnelles de fond. Plancher reproductible pour Étapes 2 et 3.</p>
+  <div class="meta">
+    <span>2026-05-26</span>
+    <span>BGE-M3 · 1 024 dim</span>
+    <span>3 183 articles LEGI</span>
+    <span>8 questions CRFPA</span>
+    <span>Branche <code>etape1-embedding-pur</code></span>
+  </div>
+</header>
+
+<div class="tldr">
+  <h3>Résultat principal</h3>
+  <p>L'article obligatoire est en <strong>top-3 pour 3 questions sur 8</strong> (procédure
+  pénale) ; les <strong>arrêts gold sont récupérables via le graphe de citation dans
+  4 questions sur 8</strong> en regardant seulement le top-5 article. C'est de l'<em>utilisable</em>,
+  pas du « ça marche un peu mieux ».</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-cell">
+    <span class="big">3 / 8</span>
+    <span class="cap">questions résolues en <strong>top-3</strong> article (toutes procédure pénale)</span>
+  </div>
+  <div class="stat-cell">
+    <span class="big">5</span>
+    <span class="cap">questions atteignent <strong>recall ≥ 50 %</strong> à K ≤ 50</span>
+  </div>
+  <div class="stat-cell">
+    <span class="big">50 / 50</span>
+    <span class="cap">gold obligatoires <strong>résolus dans LEGI</strong> (100 %)</span>
+  </div>
+  <div class="stat-cell">
+    <span class="big">∞ → ≤ 5</span>
+    <span class="cap">bond du K\*<sub>JP</sub> vs baseline 5 mai (3 questions)</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§1</span>Le résultat par question — K\* à l'échelle log</h2>
+
+<p class="lead">K\* est le plus petit K tel que <code>recall@K ≥ 50 %</code>.
+Plus c'est à gauche, mieux c'est. Échelle log de 1 à 1 000.</p>
+
+<figure>
+<svg viewBox="0 0 920 460" role="img" aria-label="K* par question, échelle log">
+  <defs>
+    <style>
+      .ax{stroke:#1a1d24;stroke-width:1.2;fill:none}
+      .grid{stroke:#e3ddd0;stroke-width:1;fill:none}
+      .lbl{font:11.5px ui-sans-serif,system-ui,sans-serif;fill:#3c4250}
+      .tick{font:11px ui-sans-serif,system-ui,sans-serif;fill:#8a8474}
+      .qid{font:12.5px ui-sans-serif,system-ui,sans-serif;fill:#1a1d24}
+      .bar-art-pp{fill:#5a9577}
+      .bar-art-penal{fill:#a8453f}
+      .bar-jp{fill:#1a1d24;fill-opacity:.5}
+      .val{font:11px ui-monospace,monospace;fill:#1a1d24}
+      .legend-lbl{font:12px ui-sans-serif,system-ui,sans-serif;fill:#3c4250}
+    </style>
+  </defs>
+
+  <!-- Plot area : x = [80, 880], y = [40, 400] -->
+  <!-- Log X scale : log10(K) maps K=[1, 1000] to x=[80, 880]. width per decade = (880-80)/3 = 266.67 -->
+  <!-- formula : x = 80 + 266.67 * log10(K) -->
+
+  <!-- Grille verticale aux ticks K = 1, 3, 10, 30, 100, 300, 1000 -->
+  <!-- log10 values : 0, 0.477, 1, 1.477, 2, 2.477, 3 -->
+  <line class="grid" x1="80"  y1="40" x2="80"  y2="400"/>
+  <line class="grid" x1="207" y1="40" x2="207" y2="400"/>
+  <line class="grid" x1="347" y1="40" x2="347" y2="400"/>
+  <line class="grid" x1="474" y1="40" x2="474" y2="400"/>
+  <line class="grid" x1="613" y1="40" x2="613" y2="400"/>
+  <line class="grid" x1="740" y1="40" x2="740" y2="400"/>
+  <line class="grid" x1="880" y1="40" x2="880" y2="400"/>
+
+  <!-- Axe X -->
+  <line class="ax" x1="80" y1="400" x2="880" y2="400"/>
+  <text class="tick" x="80"  y="418" text-anchor="middle">1</text>
+  <text class="tick" x="207" y="418" text-anchor="middle">3</text>
+  <text class="tick" x="347" y="418" text-anchor="middle">10</text>
+  <text class="tick" x="474" y="418" text-anchor="middle">30</text>
+  <text class="tick" x="613" y="418" text-anchor="middle">100</text>
+  <text class="tick" x="740" y="418" text-anchor="middle">300</text>
+  <text class="tick" x="880" y="418" text-anchor="middle">1000</text>
+  <text class="lbl" x="480" y="442" text-anchor="middle">K* — plus petit K tel que recall@K ≥ 0.5 (échelle log)</text>
+
+  <!-- 8 lignes, h=40 chacune, début y=50 -->
+  <!-- Ordre : PP-Q2(1), PP-Q3(1), PP-Q1(3), PP-Q4(3), PP-Q5(10), PENAL-Q3(50), PENAL-Q1(200), PENAL-Q2(1000) -->
+  <!-- Pour chaque : barre article (en haut) + barre JP-via-graph (en bas) -->
+
+  <!-- PP-Q2  K_art=1, K_jp=1 -->
+  <text class="qid" x="78" y="62" text-anchor="end">CNB-PP-Q2</text>
+  <rect class="bar-art-pp"   x="80" y="50"  width="2"   height="11"/>
+  <rect class="bar-jp"       x="80" y="63"  width="2"   height="11"/>
+  <text class="val" x="86" y="60">K*art=1 · K*jp=1</text>
+
+  <!-- PP-Q3  K_art=1, K_jp=1 -->
+  <text class="qid" x="78" y="102" text-anchor="end">CNB-PP-Q3</text>
+  <rect class="bar-art-pp"   x="80" y="90"  width="2"   height="11"/>
+  <rect class="bar-jp"       x="80" y="103" width="2"   height="11"/>
+  <text class="val" x="86" y="100">K*art=1 · K*jp=1</text>
+
+  <!-- PP-Q1  K_art=3, K_jp=5 -->
+  <!-- log10(3)=0.477 -> x=207, log10(5)=0.699 -> x=80+266.67*0.699=267 -->
+  <text class="qid" x="78" y="142" text-anchor="end">CNB-PP-Q1</text>
+  <rect class="bar-art-pp"   x="80" y="130" width="127" height="11"/>
+  <rect class="bar-jp"       x="80" y="143" width="187" height="11"/>
+  <text class="val" x="213" y="140">K*art=3</text>
+  <text class="val" x="273" y="153">K*jp=5</text>
+
+  <!-- PP-Q4  K_art=3, K_jp=30 -->
+  <!-- log10(30)=1.477 -> x=474 -->
+  <text class="qid" x="78" y="182" text-anchor="end">CNB-PP-Q4</text>
+  <rect class="bar-art-pp"   x="80" y="170" width="127" height="11"/>
+  <rect class="bar-jp"       x="80" y="183" width="394" height="11"/>
+  <text class="val" x="213" y="180">K*art=3</text>
+  <text class="val" x="480" y="193">K*jp=30</text>
+
+  <!-- PP-Q5  K_art=10, K_jp=— (gold absent) -->
+  <!-- log10(10)=1 -> x=347 -->
+  <text class="qid" x="78" y="222" text-anchor="end">CNB-PP-Q5</text>
+  <rect class="bar-art-pp"   x="80" y="210" width="267" height="11"/>
+  <text class="val" x="353" y="220">K*art=10</text>
+  <text class="val" x="80"  y="233" fill="#8a8474" font-style="italic">JP gold non extractible (0 pourvoi CC)</text>
+
+  <!-- PENAL-Q3  K_art=50, K_jp=50 -->
+  <!-- log10(50)=1.699 -> x=80+266.67*1.699 = 533 -->
+  <text class="qid" x="78" y="262" text-anchor="end">CNB-PENAL-Q3</text>
+  <rect class="bar-art-penal" x="80" y="250" width="453" height="11"/>
+  <rect class="bar-jp"        x="80" y="263" width="453" height="11"/>
+  <text class="val" x="539" y="260">K*art=50</text>
+  <text class="val" x="539" y="273">K*jp=50</text>
+
+  <!-- PENAL-Q1  K_art=200, K_jp=100 -->
+  <!-- log10(200)=2.301 -> x=80+266.67*2.301 = 694 ; log10(100)=2 -> x=613 -->
+  <text class="qid" x="78" y="302" text-anchor="end">CNB-PENAL-Q1</text>
+  <rect class="bar-art-penal" x="80" y="290" width="614" height="11"/>
+  <rect class="bar-jp"        x="80" y="303" width="533" height="11"/>
+  <text class="val" x="700" y="300">K*art=200</text>
+  <text class="val" x="619" y="313">K*jp=100</text>
+
+  <!-- PENAL-Q2  K_art=1000, K_jp=1000 -->
+  <text class="qid" x="78" y="342" text-anchor="end">CNB-PENAL-Q2</text>
+  <rect class="bar-art-penal" x="80" y="330" width="800" height="11"/>
+  <rect class="bar-jp"        x="80" y="343" width="800" height="11"/>
+  <text class="val" x="80"  y="367" fill="#7c2d2d">K*art=1000, K*jp=1000 — convergence catastrophique</text>
+
+  <!-- Légende -->
+  <rect x="80"  y="425" width="14" height="8" fill="#5a9577"/>
+  <text class="legend-lbl" x="100" y="432">Article (procédure pénale)</text>
+  <rect x="280" y="425" width="14" height="8" fill="#a8453f"/>
+  <text class="legend-lbl" x="300" y="432">Article (droit pénal de fond)</text>
+  <rect x="490" y="425" width="14" height="8" fill="#1a1d24" fill-opacity=".5"/>
+  <text class="legend-lbl" x="510" y="432">JP via graphe (back-edge)</text>
+</svg>
+<figcaption>Les 5 questions de procédure (vert) plafonnent à K\* = 10. Les 3 questions
+de droit pénal (rouge) explosent à K\* = 50, 100/200, 1 000. La barre noire (JP) suit
+quasi-toujours la barre article — c'est le signe que le back-edge graphe fonctionne.</figcaption>
+</figure>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§2</span>Les courbes recall@K complètes</h2>
+
+<p class="lead">Une question = une courbe. À gauche on lit le recall pour chaque K
+testé (1, 3, 5, 10, 20, 30, 50, 100, 200, 500, 1 000). La ligne pointillée à 0.5
+marque le seuil de K\*.</p>
+
+<figure>
+<svg viewBox="0 0 920 460" role="img" aria-label="Courbes recall@K">
+  <defs>
+    <style>
+      .ax{stroke:#1a1d24;stroke-width:1.2;fill:none}
+      .grid{stroke:#e3ddd0;stroke-width:1;fill:none}
+      .lbl{font:11.5px ui-sans-serif,system-ui,sans-serif;fill:#3c4250}
+      .tick{font:11px ui-sans-serif,system-ui,sans-serif;fill:#8a8474}
+      .thr{stroke:#9a6b1e;stroke-width:1.5;stroke-dasharray:4 3;fill:none}
+      .curve-pp{stroke:#2f6f4f;stroke-width:1.8;fill:none;stroke-linejoin:round;opacity:.85}
+      .curve-penal{stroke:#7c2d2d;stroke-width:1.8;fill:none;stroke-linejoin:round;opacity:.85}
+      .pt-pp{fill:#2f6f4f}
+      .pt-penal{fill:#7c2d2d}
+      .qlbl{font:11px ui-sans-serif,system-ui,sans-serif;fill:#1a1d24}
+    </style>
+  </defs>
+
+  <!-- Plot : x=[80, 880] log, y=[400, 40] (recall 0 à 1) -->
+  <!-- y: recall * 360 from y=400 (recall=0) up to y=40 (recall=1) -->
+
+  <!-- Grille horizontale -->
+  <line class="grid" x1="80" y1="400" x2="880" y2="400"/>
+  <line class="grid" x1="80" y1="310" x2="880" y2="310"/>
+  <line class="grid" x1="80" y1="220" x2="880" y2="220"/>
+  <line class="grid" x1="80" y1="130" x2="880" y2="130"/>
+  <line class="grid" x1="80" y1="40"  x2="880" y2="40"/>
+
+  <!-- Ligne seuil 0.5 -->
+  <line class="thr" x1="80" y1="220" x2="880" y2="220"/>
+  <text class="tick" x="884" y="223" fill="#9a6b1e">seuil K* (0.5)</text>
+
+  <!-- Axe X -->
+  <line class="ax" x1="80" y1="400" x2="880" y2="400"/>
+  <text class="tick" x="80"  y="418" text-anchor="middle">1</text>
+  <text class="tick" x="207" y="418" text-anchor="middle">3</text>
+  <text class="tick" x="347" y="418" text-anchor="middle">10</text>
+  <text class="tick" x="474" y="418" text-anchor="middle">30</text>
+  <text class="tick" x="613" y="418" text-anchor="middle">100</text>
+  <text class="tick" x="740" y="418" text-anchor="middle">300</text>
+  <text class="tick" x="880" y="418" text-anchor="middle">1000</text>
+  <text class="lbl" x="480" y="442" text-anchor="middle">K (log)</text>
+
+  <!-- Axe Y -->
+  <line class="ax" x1="80" y1="40" x2="80" y2="400"/>
+  <text class="tick" x="74" y="403" text-anchor="end">0.0</text>
+  <text class="tick" x="74" y="313" text-anchor="end">0.25</text>
+  <text class="tick" x="74" y="223" text-anchor="end">0.50</text>
+  <text class="tick" x="74" y="133" text-anchor="end">0.75</text>
+  <text class="tick" x="74" y="43"  text-anchor="end">1.00</text>
+  <text class="lbl" x="32" y="220" text-anchor="middle" transform="rotate(-90 32 220)">recall@K (oblig)</text>
+
+  <!--
+    Coords K-pos : K=1→80, K=3→207, K=5→267, K=10→347, K=20→426, K=30→474, K=50→534, K=100→613, K=200→694, K=500→794, K=1000→880
+    recall→y : y = 400 - 360*r
+    Pour chaque question, K=[1,3,5,10,20,30,50,100,200,500,1000]
+  -->
+
+  <!-- PP-Q2 (1,1,1,1,1,1,1,1,1,1,1) -->
+  <polyline class="curve-pp" points="80,40 207,40 267,40 347,40 426,40 474,40 534,40 613,40 694,40 794,40 880,40"/>
+
+  <!-- PP-Q3 (0.5,1,1,1,...) -->
+  <polyline class="curve-pp" points="80,220 207,40 267,40 347,40 426,40 474,40 534,40 613,40 694,40 794,40 880,40"/>
+
+  <!-- PP-Q4 (0,1,1,1,...) -->
+  <polyline class="curve-pp" points="80,400 207,40 267,40 347,40 426,40 474,40 534,40 613,40 694,40 794,40 880,40"/>
+
+  <!-- PP-Q1 (0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,1,1,1) -->
+  <polyline class="curve-pp" points="80,400 207,220 267,220 347,220 426,220 474,220 534,220 613,220 694,40 794,40 880,40"/>
+
+  <!-- PP-Q5 (0,0,0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5) -->
+  <polyline class="curve-pp" points="80,400 207,400 267,400 347,220 426,220 474,220 534,220 613,220 694,220 794,220 880,220"/>
+
+  <!-- PENAL-Q1 (0,0,0.14,0.14,0.29,0.43,0.43,0.43,0.57,0.71,0.86) -->
+  <polyline class="curve-penal" points="80,400 207,400 267,349.6 347,349.6 426,295.6 474,245.2 534,245.2 613,245.2 694,194.8 794,144.4 880,90.4"/>
+
+  <!-- PENAL-Q2 (0,0,0,0,0,0,0,0,0,0,1.0) -->
+  <polyline class="curve-penal" points="80,400 207,400 267,400 347,400 426,400 474,400 534,400 613,400 694,400 794,400 880,40"/>
+
+  <!-- PENAL-Q3 (0,0,0,0,0,0,0.5,0.5,0.5,0.5,1) -->
+  <polyline class="curve-penal" points="80,400 207,400 267,400 347,400 426,400 474,400 534,220 613,220 694,220 794,220 880,40"/>
+
+  <!-- Annotations à droite -->
+  <text class="qlbl" x="884" y="44" fill="#2f6f4f">PP-Q2/3/4 (recall=1 à K≤3)</text>
+  <text class="qlbl" x="884" y="58" fill="#2f6f4f">PP-Q1 (1.0 à K=200)</text>
+  <text class="qlbl" x="884" y="224" fill="#2f6f4f">PP-Q5 plafond 0.5</text>
+  <text class="qlbl" x="884" y="94" fill="#7c2d2d">PENAL-Q1 (montée linéaire)</text>
+  <text class="qlbl" x="884" y="248" fill="#7c2d2d">PENAL-Q3 (saut à K=50)</text>
+  <text class="qlbl" x="884" y="404" fill="#7c2d2d">PENAL-Q2 (saut à K=1000)</text>
+</svg>
+<div class="legend">
+  <span class="pp">Procédure pénale (5 questions)</span>
+  <span class="penal">Droit pénal de fond (3 questions)</span>
+</div>
+<figcaption>Trois courbes vertes saturent à <code>recall=1</code> dès K=3 (PP-Q2/Q3/Q4).
+Les courbes rouges restent au plancher jusqu'à K=50-1 000, puis remontent brutalement.
+PP-Q5 (vert) plafonne à 0.5 — manque la moitié de son gold à tout K, hérité d'une
+question avec gold limité dans le corpus.</figcaption>
+</figure>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§3</span>Le pattern central — procédure pénale ≫ droit pénal</h2>
+
+<div class="stat-grid">
+  <div class="stat-cell" style="border-left:4px solid var(--pp-color)">
+    <span class="big" style="color:var(--pp-color)">3</span>
+    <span class="cap"><strong>K* médian articles</strong> sur les 5 questions de procédure pénale</span>
+  </div>
+  <div class="stat-cell" style="border-left:4px solid var(--penal-color)">
+    <span class="big" style="color:var(--penal-color)">200</span>
+    <span class="cap"><strong>K* médian articles</strong> sur les 3 questions de droit pénal de fond</span>
+  </div>
+  <div class="stat-cell" style="border-left:4px solid var(--ink)">
+    <span class="big">≈ 65×</span>
+    <span class="cap">facteur d'écart entre les deux branches</span>
+  </div>
+</div>
+
+<h3>Hypothèse explicative</h3>
+<p>Les questions de <strong>procédure pénale</strong> ressemblent à des requêtes lexicales
+sur des articles bien identifiés :</p>
+<ul>
+  <li>« garde à vue » → <code>code_de_procedure_penale:63</code></li>
+  <li>« nullités après IPC » → <code>code_de_procedure_penale:173-1</code></li>
+  <li>« détention provisoire JLD » → <code>code_de_procedure_penale:144</code></li>
+</ul>
+<p>Le vocabulaire de la question matche celui de l'article. <em>L'embedding est dans son
+terrain idéal.</em></p>
+
+<p>Les questions de <strong>droit pénal de fond</strong> sont des <strong>cas pratiques
+compositionnels</strong> : un récit factuel (« dirigeant, médicament, retard d'alerte »)
+qui exige une qualification juridique (« blessures involontaires + manquement de prudence »)
+mobilisant des articles-principes abstraits (<code>121-3</code>, <code>121-1</code>) jamais
+nommés dans la question.</p>
+
+<div class="callout">
+  <b>Conclusion partielle</b>
+  <p>L'article-first est <em>borné par la nature compositionnelle</em> des questions de
+  fond. Aucun encodeur plus gros ne résoudra Q2 PENAL sans soit (a) réécriture de la
+  question par LLM (« informé d'effets indésirables, n'agit pas » → « imprudence du
+  dirigeant »), soit (b) modèle entraîné au raisonnement juridique, soit (c) atteindre
+  l'article via les JP qui le citent (Étape 2).</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§4</span>Inspection top-10 — comprendre les échecs</h2>
+
+<h3>PENAL-Q2 — l'échec instructif</h3>
+
+<p><strong>Question.</strong> <em>Thierry, dirigeant du laboratoire Medica SA fabricant le
+médicament prescrit à Romuald, a été informé des effets indésirables dès fin 2023 mais
+n'a alerté les médecins et patients qu'en…</em></p>
+
+<p><strong>Gold OBLIG.</strong> <code>code_penal:222-19</code> (blessures involontaires) +
+<code>code_penal:121-3</code> (intention / imprudence / négligence).</p>
+
+<p><strong>Rangs des gold dans le classement BGE-M3.</strong></p>
+<ul>
+  <li><code>code_penal:222-19</code> &mdash; rang <strong>836</strong></li>
+  <li><code>code_penal:121-3</code> &mdash; rang <strong>971</strong></li>
+</ul>
+
+<p><strong>Top-10 retourné par BGE-M3</strong> (les chiffres en tête = score cosinus) :</p>
+
+<div class="top10">
+<span class="miss"> 1.</span> 0.525  CPP:706-47-1   suivi des condamnés pour infractions sexuelles
+<span class="miss"> 2.</span> 0.514  CPP:D47-27     troubles mentaux / détention
+<span class="miss"> 3.</span> 0.510  CPP:706-136    chambre instruction, décision
+<span class="miss"> 4.</span> 0.510  CP :222-33     harcèlement sexuel
+<span class="miss"> 5.</span> 0.508  CP :222-28     agression sexuelle
+<span class="miss"> 6.</span> 0.506  CP :131-36-4   suivi socio-judiciaire
+<span class="miss"> 7.</span> 0.504  CPP:706-115    expertise psychiatrique
+<span class="miss"> 8.</span> 0.502  CPP:706-119    information psychiatrique
+<span class="miss"> 9.</span> 0.497  CP :222-24     viol aggravé
+<span class="miss">10.</span> 0.496  CPP:495-7      ordonnance pénale (délits)
+</div>
+
+<p>Aucun des articles attendus n'apparaît avant le rang 836. Le top-10 est
+<strong>totalement off-topic</strong> : l'encodeur croise « médicament + patient » →
+psychiatrie, et « dirigeant + responsabilité » → infractions sexuelles. C'est un
+artefact lexical : aucun de ces articles ne devrait être proche.</p>
+
+<p>Le mot-clé décisif (« blessures involontaires » ou « élément moral ») n'apparaît
+nulle part dans la question ; il est dans la <em>qualification juridique</em> qu'un
+correcteur applique sur le cas pratique. <strong>L'embedding ne fait pas ce raisonnement.</strong></p>
+
+<h3>PP-Q4 — bon mais imparfait</h3>
+
+<p><strong>Question.</strong> <em>Vincent, qui a gardé le silence pendant sa GAV et son
+IPC, peut-il encore soulever la nullité de la mesure de géolocalisation, de sa garde à
+vue et de son interrogatoire de première comparution…</em></p>
+
+<p><strong>Gold OBLIG.</strong> <code>code_de_procedure_penale:173-1</code> (forclusion
+des nullités après IPC).</p>
+
+<p><strong>Top-10 retourné</strong> :</p>
+
+<div class="top10">
+<span class="miss"> 1.</span> 0.547  CPP:230-41   nullité des interceptions
+<span class="hit"> 2.</span> 0.521  <span class="target">CPP:173-1     ← OBLIG ✓ nullités après IPC</span>
+<span class="miss"> 3.</span> 0.519  CPP:706-100  nullité activation à distance
+<span class="miss"> 4.</span> 0.512  CPP:230-35   urgence dépérissement preuves
+<span class="miss"> 5.</span> 0.507  CPP:78-3     contrôle d'identité
+<span class="miss"> 6.</span> 0.502  CPP:64-1     audition GAV pour crime
+<span class="miss"> 7.</span> 0.496  CPP:77-2     enquête préliminaire
+<span class="miss"> 8.</span> 0.492  CPP:706-95-14 techniques spéciales d'enquête
+<span class="miss"> 9.</span> 0.492  CPP:145-4    détention provisoire JI
+<span class="miss">10.</span> 0.490  CPP:706-58   protection témoins
+</div>
+
+<p>173-1 sort en <strong>rang 2</strong>, devancé par 230-41 (sujet voisin mais hors
+gold). Le top-10 est <em>thématiquement cohérent</em> (nullités, géolocalisation,
+écoutes) — l'encodeur a parfaitement saisi le thème de la nullité de procédure.</p>
+
+<p>C'est la <strong>limite haute</strong> du retrieval par embedding : le bon thème,
+parfois pas le bon article exact.</p>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§5</span>Comparaison vs baseline B2 (5 mai)</h2>
+
+<table>
+  <thead>
+    <tr><th>Métrique</th><th>Baseline B2 (e5-base, JP-first)</th><th>Étape 1 (BGE-M3, articles-first)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Modèle</td><td>multilingual-e5-base, 512 tok</td><td class="good">BAAI/bge-m3, 2 048 tok</td></tr>
+    <tr><td>Entrée encodée</td><td>Texte arrêt brut</td><td class="good">Texte article LEGI</td></tr>
+    <tr><td>Pool de candidats</td><td>118 112 JP</td><td class="good">3 183 articles (× 37 plus petit)</td></tr>
+    <tr><td>Recall articles top-10</td><td>31 % (best stratégie, K=10)</td><td class="good">50–100 % pour 5/8 questions</td></tr>
+    <tr><td>K*<sub>JP</sub> (50 % recall)</td><td class="bad">∞ (jamais atteint)</td><td class="good">≤ 5 pour 3/8 questions</td></tr>
+    <tr><td>Rang médian gold</td><td class="bad">76 782 / 118 112</td><td class="good">≤ top-100 pour la majorité des oblig</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <b>Lecture comparative</b>
+  <p>On ne « gagne pas un peu » : on <strong>change de régime</strong>. La baseline B2
+  était dans un régime où aucune information utile ne sortait du top-K. Étape 1 est
+  dans un régime où le top-3 est exploitable pour la moitié des questions et le
+  top-100 pour les trois quarts.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§6</span>Limitations chiffrées</h2>
+
+<table>
+  <thead>
+    <tr><th>Limitation</th><th>Chiffre</th><th>Impact</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Couverture LEGI</td>
+      <td class="r">39 %</td>
+      <td>Anciens articles pré-1994 renumérotés. Gold à 100 % donc l'éval reste valide.</td>
+    </tr>
+    <tr>
+      <td>Échantillon questions</td>
+      <td class="r">8</td>
+      <td>Trop peu pour distinguer signal/bruit sur le pattern PP vs PENAL — corrigé par l'Étape 3.</td>
+    </tr>
+    <tr>
+      <td>Politique troncature</td>
+      <td class="r">2 048 tok</td>
+      <td>5 articles (sur 3 183, 0.16 %) chunkés. Décision pragmatique pour éviter l'OOM MPS.</td>
+    </tr>
+    <tr>
+      <td>JP gold extractibles</td>
+      <td class="r">CC-only</td>
+      <td><code>jp_attendues.ref = null</code> → regex pourvoi → 1/8 questions (PP-Q5) sans gold JP.</td>
+    </tr>
+    <tr>
+      <td>Article gold orphelin</td>
+      <td class="r">1 / 51</td>
+      <td><code>code_penal:222-26-2</code> n'est pas un nœud du graphe (cité par aucune JP du corpus).</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§7</span>Implications pour la suite</h2>
+
+<ul>
+  <li><strong>Étape 2 doit prouver que les JP comblent ce que les articles ratent.</strong>
+  Pour PENAL-Q2, est-ce que la JP qui qualifie « dirigeant non-alerté → blessures
+  involontaires » remonte mieux que les articles abstraits ? Si oui, la stratégie
+  JP-first récupère ce que article-first rate. Les deux approches sont <em>complémentaires</em>,
+  pas substituables.</li>
+
+  <li><strong>Étape 3 a besoin de plus de questions, surtout de fond.</strong> Stratifier
+  par type (lexical vs compositionnel, fond vs procédure) permettra de mesurer
+  séparément les progrès d'un GNN sur graphe enrichi.</li>
+
+  <li><strong>L'article-first est un plancher reproductible.</strong> 12 MB d'embeddings,
+  back-edge gratuit, code testé. C'est la baseline contre laquelle toute amélioration
+  future doit se mesurer.</li>
+
+  <li><strong>Ne plus tenter d'embed JP sur Mac MPS.</strong> Confirmé empiriquement
+  (batch 1 en 18 min). Cluster L40S ou CPU long quand l'expérience le justifie.</li>
+</ul>
+
+<footer>
+  Étape 1/3 de la roadmap Johnny ·
+  Synthèse complète : <code>06-Analyses/syntheses/Experience-Etape1-Articles-First-2026-05-26.md</code> ·
+  Branche <code>etape1-embedding-pur</code> · commit <code>fa7dcb0</code>
+</footer>
+
+</div>
+</body>
+</html>
