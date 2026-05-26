@@ -24,16 +24,18 @@ def main() -> int:
           f"p99={s_arts['p99']} p100={s_arts['p100']} "
           f"over={s_arts['n_over_ctx']} ({100*s_arts['pct_over_ctx']:.2f}%)")
 
-    jp = pq.read_table(config.JP_INDEX, columns=["id", "juris", "summary"]).to_pandas()
-    jp = jp.dropna(subset=["summary"])
-    jp = jp[jp["summary"].str.len() > 0]
-    print(f"JP avec summary : {len(jp)}")
-    s_jp = compute_token_stats(jp["summary"].tolist(), tok, max_ctx=config.MAX_CTX)
-    print(f"  jp_summary p50={s_jp['p50']} p90={s_jp['p90']} "
+    # Le bundle pénal du 5 mai ne contient pas `summary`, seulement `text`.
+    # On filtre sur juris=CC (esprit "JP de cassation" du design Johnny).
+    jp = pq.read_table(config.JP_INDEX, columns=["id", "juris", "text"]).to_pandas()
+    jp = jp[jp["juris"] == "CC"].dropna(subset=["text"])
+    jp = jp[jp["text"].str.len() > 0]
+    print(f"JP CC avec texte : {len(jp)}")
+    s_jp = compute_token_stats(jp["text"].tolist(), tok, max_ctx=config.MAX_CTX)
+    print(f"  jp_text   p50={s_jp['p50']} p90={s_jp['p90']} "
           f"p99={s_jp['p99']} p100={s_jp['p100']} "
           f"over={s_jp['n_over_ctx']} ({100*s_jp['pct_over_ctx']:.2f}%)")
 
-    payload = {"articles": s_arts, "jp_summary": s_jp}
+    payload = {"articles": s_arts, "jp_text_cc": s_jp}
     if max(s_arts["n_over_ctx"], s_jp["n_over_ctx"]) == 0:
         payload["truncation_policy"] = "none"
         payload["note"] = "p100 < max_ctx pour les deux corpus → embedding direct sans troncature."

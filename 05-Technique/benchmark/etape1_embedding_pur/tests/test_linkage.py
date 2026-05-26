@@ -25,10 +25,21 @@ def test_articles_linkage_skips_unresolved():
     assert p2col.tolist() == [0]
 
 
-def test_jp_linkage_filters_no_summary():
+def test_jp_linkage_filters_no_text():
     jp_ids = np.array(["a", "b", "c", "d"], dtype=object)
-    df = pd.DataFrame({"id": ["a", "b", "c", "d"],
-                       "summary": ["x", None, "y", ""]})
+    df = pd.DataFrame({"id":    ["a", "b", "c", "d"],
+                       "juris": ["CC", "CC", "CC", "CC"],
+                       "text":  ["x", None, "y", ""]})
     order, j2row = build_jp_linkage(jp_ids, df)
+    assert order.tolist() == ["a", "c"]
+    assert j2row.tolist() == [0, 2]
+
+
+def test_jp_linkage_filters_juris_cc():
+    jp_ids = np.array(["a", "b", "c", "d"], dtype=object)
+    df = pd.DataFrame({"id":    ["a", "b", "c", "d"],
+                       "juris": ["CC", "CA", "CC", "TJ"],
+                       "text":  ["x", "y", "z", "w"]})
+    order, j2row = build_jp_linkage(jp_ids, df, juris_filter="CC")
     assert order.tolist() == ["a", "c"]
     assert j2row.tolist() == [0, 2]

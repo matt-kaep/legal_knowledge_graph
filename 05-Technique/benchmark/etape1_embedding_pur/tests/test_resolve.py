@@ -8,18 +8,18 @@ def mini_db(tmp_path):
     """Mini SQLite avec 3 articles factices, schéma proche de legi.py."""
     db = tmp_path / "mini.sqlite"
     with sqlite3.connect(db) as cx:
+        # Schéma simplifié mais fidèle au vrai legi.py :
+        #   articles(id, num, bloc_textuel, etat, cid)
+        #   textes_versions(id, titre, etat, cid)
+        # Jointure : articles.cid = textes_versions.id
         cx.executescript("""
         CREATE TABLE articles(id TEXT PRIMARY KEY, num TEXT,
-                              bloc_textuel TEXT, etat TEXT);
-        CREATE TABLE sommaires(element TEXT, cid_parent TEXT);
-        CREATE TABLE textes_versions(id TEXT, titre_court TEXT);
-        INSERT INTO textes_versions VALUES ('T1', 'Code pénal');
-        INSERT INTO articles VALUES ('A1', '222-23', 'Acte de pénétration…', 'VIGUEUR');
-        INSERT INTO articles VALUES ('A2', 'L. 743-7', 'Procédure spéciale…', 'VIGUEUR');
-        INSERT INTO articles VALUES ('A3', '1649 quinquies B', 'Disposition fiscale…', 'VIGUEUR');
-        INSERT INTO sommaires VALUES ('A1', 'T1');
-        INSERT INTO sommaires VALUES ('A2', 'T1');
-        INSERT INTO sommaires VALUES ('A3', 'T1');
+                              bloc_textuel TEXT, etat TEXT, cid TEXT);
+        CREATE TABLE textes_versions(id TEXT, titre TEXT, etat TEXT, cid TEXT);
+        INSERT INTO textes_versions VALUES ('T1', 'Code pénal', 'VIGUEUR', 'T1');
+        INSERT INTO articles VALUES ('A1', '222-23',           'Acte de pénétration…',  'VIGUEUR', 'T1');
+        INSERT INTO articles VALUES ('A2', 'L. 743-7',         'Procédure spéciale…',   'VIGUEUR', 'T1');
+        INSERT INTO articles VALUES ('A3', '1649 quinquies B', 'Disposition fiscale…',  'VIGUEUR', 'T1');
         """)
     return db
 

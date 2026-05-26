@@ -30,9 +30,9 @@ def resolve_pair_keys(
     sql = """
     SELECT a.num, a.bloc_textuel
     FROM articles a
-    JOIN sommaires s ON s.element = a.id
-    JOIN textes_versions tv ON tv.id = s.cid_parent
-    WHERE tv.titre_court = ? AND a.num = ? AND a.etat = 'VIGUEUR'
+    JOIN textes_versions tv ON tv.id = a.cid
+    WHERE tv.titre = ? AND tv.etat = 'VIGUEUR'
+      AND a.num = ? AND a.etat = 'VIGUEUR'
     LIMIT 1
     """
     with sqlite3.connect(legi_db) as cx:

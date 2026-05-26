@@ -39,9 +39,11 @@ def embed_corpus(texts: Sequence[str], device: str | None = None,
                  batch: int = 32) -> np.ndarray:
     """Renvoie (len(texts), EMB_DIM) float32 L2-normalisé, dans l'ordre d'entrée."""
     dev = _detect_device(device)
-    print(f"  device={dev}, batch={batch}")
+    print(f"  device={dev}, batch={batch}, max_len={config.BATCH_MAX_LEN}")
     model = SentenceTransformer(config.MODEL_ID, device=dev)
-    model.max_seq_length = config.MAX_CTX
+    # Sur MPS, on plafonne à BATCH_MAX_LEN pour éviter l'OOM (attention quadratique
+    # sans Flash-Attention). Les textes plus longs sont gérés via _chunk_and_mean.
+    model.max_seq_length = config.BATCH_MAX_LEN
     tokenizer = AutoTokenizer.from_pretrained(config.MODEL_ID)
 
     over_idx: list[int] = []
@@ -51,10 +53,10 @@ def embed_corpus(texts: Sequence[str], device: str | None = None,
                         add_special_tokens=False, truncation=False,
                         return_attention_mask=False)["input_ids"]
         for j, ids in enumerate(enc):
-            if len(ids) > config.MAX_CTX:
+            if len(ids) > config.BATCH_MAX_LEN:
                 over_idx.append(i + j)
     if over_idx:
-        print(f"  {len(over_idx)} textes > {config.MAX_CTX} tokens → chunk+mean-pool sur ceux-là")
+        print(f"  {len(over_idx)} textes > {config.BATCH_MAX_LEN} tokens → chunk+mean-pool sur ceux-là")
 
     out = np.zeros((len(texts), config.EMB_DIM), dtype=np.float32)
     over_set = set(over_idx)
@@ -66,5 +68,5 @@ def embed_corpus(texts: Sequence[str], device: str | None = None,
         out[i] = embs[k]
     for i in over_idx:
         out[i] = _chunk_and_mean(model, tokenizer, texts[i],
-                                  max_ctx=config.MAX_CTX, batch=batch)
+                                  max_ctx=config.BATCH_MAX_LEN, batch=batch)
     return out

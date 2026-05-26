@@ -34,7 +34,10 @@ RECALL_KSTAR = DATA / "recall_kstar.json"
 # Modèle
 MODEL_ID = "BAAI/bge-m3"
 EMB_DIM = 1024
-MAX_CTX = 8192
+MAX_CTX = 8192          # contexte théorique du modèle (8k)
+# Seuil pratique sur Mac MPS : au-delà, l'attention quadratique fait OOM.
+# Les textes plus longs sont chunkés+mean-poolés (préservation, pas troncature).
+BATCH_MAX_LEN = 2048
 
 # 4 codes pénaux : code_slug → nom officiel LEGI
 PENAL_CODES: dict[str, str] = {

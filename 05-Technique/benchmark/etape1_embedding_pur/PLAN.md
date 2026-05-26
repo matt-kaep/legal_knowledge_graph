@@ -1,5 +1,27 @@
 # Étape 1 — Embedding pur (articles + JP) Implementation Plan
 
+## Statut d'exécution (2026-05-26)
+
+| Task | Code | Exécution | Notes |
+|---|---|---|---|
+| 1. Scaffold | ✅ | ✅ | 26 tests pass |
+| 2. Normalize TDD | ✅ | ✅ | 8 tests, candidats LEGI multiples |
+| 3. LEGI ingest | ✅ | ✅ | DL via HTTPS (FTP DILA bloqué VPN) ; patches `assert→skip` ; indexes ajoutés post-build |
+| 4. Resolve + couverture | ✅ | ✅ | Gold 50/50 (100 %), global 39 % (anciens articles pré-1994 renumérotés) |
+| 5. Token-stats | ✅ | ✅ | articles p100=5214, JP CC p99=7586, p100=110489 (politique chunk-overflow) |
+| 6. Linkage TDD | ✅ | ✅ | pivot `text`+`juris=CC` (bundle pénal n'a pas `summary`) |
+| 7. Embedding | ✅ | 🔄 | Articles ✅ 5 min ; JP en cours (batch=8, BATCH_MAX_LEN=2048 pour éviter OOM MPS) |
+| 8. Eval recall@K | ✅ | ⏳ | À lancer après JP. Variante `articles-only` lancée en parallèle. |
+| 9. run_all.sh | ✅ | ⏳ | OK pour next-time replays |
+
+**Décisions de pivot** (cf. README pour détails) :
+- Schéma SQL réel ≠ design : join `articles.cid = textes_versions.id` (pas `sommaires.cid_parent`)
+- `MAX_CTX 8192 → BATCH_MAX_LEN 2048` sur MPS (OOM attention quadratique sans Flash-Attention)
+- Pivot `summary → text` + `juris=CC` (bundle pénal sans `summary`)
+- Stack Python rebootée : `torch 2.3 → 2.12`, `transformers 4.x → 5.9` (chaîne CVE)
+
+---
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** établir le plancher de retrieval question↔article et question↔JP, sans graphe,

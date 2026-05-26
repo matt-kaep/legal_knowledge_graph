@@ -32,15 +32,15 @@ def main() -> int:
     text_by_pk = dict(zip(arts_df["pair_key"], arts_df["texte"]))
     art_texts = [text_by_pk[pk] for pk in art_order]
 
-    # 2. Linkage JP
-    jp_df = pq.read_table(config.JP_INDEX, columns=["id", "juris", "summary"]).to_pandas()
-    jp_order, j2row = build_jp_linkage(z["jp_ids"], jp_df)
+    # 2. Linkage JP (bundle pénal n'a pas de summary → on prend text, juris=CC)
+    jp_df = pq.read_table(config.JP_INDEX, columns=["id", "juris", "text"]).to_pandas()
+    jp_order, j2row = build_jp_linkage(z["jp_ids"], jp_df, text_col="text", juris_filter="CC")
     np.save(config.JP_ORDER, jp_order)
     np.save(config.JP_TO_GRAPHROW, j2row)
-    print(f"JP à embedder       : {len(jp_order)}")
+    print(f"JP à embedder (CC, text) : {len(jp_order)}")
 
-    sum_by_id = dict(zip(jp_df["id"], jp_df["summary"]))
-    jp_texts = [sum_by_id[jpid] for jpid in jp_order]
+    text_by_id = dict(zip(jp_df["id"], jp_df["text"]))
+    jp_texts = [text_by_id[jpid] for jpid in jp_order]
 
     if args.smoke:
         art_texts = art_texts[:10]

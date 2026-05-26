@@ -36,15 +36,27 @@ def build_articles_linkage(
 def build_jp_linkage(
     jp_ids: np.ndarray,
     jp_index_df: pd.DataFrame,
+    text_col: str = "text",
+    juris_filter: str | None = "CC",
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Filtre les lignes JP : garde uniquement celles avec summary non-vide.
-    Préserve l'ordre original de `jp_ids`.
+    """Filtre les lignes JP : garde celles avec `text_col` non-vide et,
+    optionnellement, dont `juris == juris_filter`. Préserve l'ordre original
+    de `jp_ids`.
+
+    Le bundle pénal préparé le 5 mai ne contient que `text` (pas `summary`).
+    On filtre sur juris=CC pour rester dans l'esprit du design Johnny
+    (~95 % de couverture summary = les CC).
 
     Retour : (jp_order, jp_to_graphrow).
     """
-    has_sum = {row.id for row in jp_index_df.itertuples()
-               if isinstance(row.summary, str) and row.summary.strip()}
-    rows_keep = [i for i, jpid in enumerate(jp_ids) if jpid in has_sum]
+    keepers: set = set()
+    for row in jp_index_df.itertuples():
+        if juris_filter is not None and getattr(row, "juris", None) != juris_filter:
+            continue
+        txt = getattr(row, text_col, None)
+        if isinstance(txt, str) and txt.strip():
+            keepers.add(row.id)
+    rows_keep = [i for i, jpid in enumerate(jp_ids) if jpid in keepers]
     j2row = np.array(rows_keep, dtype=np.int32)
     order = jp_ids[j2row].astype(object)
     return order, j2row
