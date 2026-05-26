@@ -225,6 +225,97 @@ Décision pragmatique (OOM MPS au-delà). Affecte **5 articles** (sur 3 183, 0.1
 
 ---
 
+## 6.bis Métrique stricte adoptée (2026-05-26)
+
+Le critère retenu pour pénaliser la sur-extraction est :
+
+- **Critère dur** : `recall@10 articles (oblig) ≥ 0.5` ET `recall@5 JP ≥ 0.5`
+- **Critère facile** : `recall@20 articles (oblig) ≥ 0.5` ET `recall@10 JP ≥ 0.5`
+
+C'est l'équivalent d'un budget de 10/5 (resp. 20/10) résultats affichables à l'utilisateur final.
+
+### Résultats sur le critère dur
+
+| Question | r@10 art | r@5 JP | Passe critère dur ? |
+|---|---|---|---|
+| CNB-PP-Q2 | 1.00 | 0.50 | ✅ |
+| CNB-PP-Q3 | 1.00 | 1.00 | ✅ |
+| CNB-PP-Q1 | 0.50 | 0.67 | ✅ |
+| CNB-PP-Q4 | 1.00 | 0.00 | ❌ JP graphe défaillant |
+| CNB-PP-Q5 | 0.50 | n/a | ⚪ gold JP absent du corpus |
+| CNB-PENAL-Q1 | 0.14 | 0.12 | ❌ |
+| CNB-PENAL-Q3 | 0.00 | 0.00 | ❌ |
+| CNB-PENAL-Q2 | 0.00 | 0.00 | ❌ |
+
+**→ 3 / 7 questions évaluables passent le critère dur.** (Baseline 5 mai : **0 / 7**.)
+
+Les moyennes agrégées : `mean r@10_art = 0.518`, `mean r@5_jp = 0.286`. Au 5 mai : `mean r@10_art ≈ 0.16`, `mean r@5_jp = 0.00`.
+
+## 6.ter Diagnostic par question — pourquoi ça réussit ou échoue
+
+### Questions qui passent (3) — anatomie du succès
+
+#### CNB-PP-2025-Q2 — `r@10=1.00, r@5_jp=0.50` ✅
+- **Question** : garde à vue, droits notifiés.
+- **Top-1** : `CPP:63` (gold OBLIG). Match parfait : la question contient « garde à vue », l'article 63 *définit* la garde à vue.
+- **JP via top-5** : 1 107 JP candidates, 1/2 gold récupérés. Le 2e gold est dans un pourvoi 16-80.564 qui cite probablement CPP:63 mais avec un pattern différent.
+- **Verdict** : cas idéal. Question lexicale + article codifié. Aucun problème.
+
+#### CNB-PP-2025-Q3 — `r@10=1.00, r@5_jp=1.00` ✅
+- **Question** : interrogatoire de première comparution.
+- **Top-1** : `CPP:116-1` (gold OBLIG, criminel), top-3 : `CPP:116` (gold OBLIG, général). Les deux gold dans top-3.
+- **JP via top-5** : 1/1 gold récupéré (parfait).
+- **Verdict** : cas idéal, même structure que PP-Q2.
+
+#### CNB-PP-2025-Q1 — `r@10=0.50, r@5_jp=0.67` ✅
+- **Question** : balise GPS, trafic de stupéfiants en bande organisée.
+- **Top-1** : `CPP:78-2-4` (atteinte grave à la sécurité — pertinent mais hors gold). **Top-2** : `CPP:230-32` (gold OBLIG, géolocalisation).
+- **Gold non récupéré** : `CPP:230-33` au rang 163 (1 article gold sur 2 trouvé → recall@10 = 0.5).
+- **JP via top-5** : 1 822 JP candidates, 2/3 gold récupérés.
+- **Verdict** : succès partiel. Le sujet (géolocalisation) est trouvé ; un des deux articles spécifiques (230-33) est manqué.
+
+### Questions qui échouent (4) — diagnostics distincts
+
+#### CNB-PP-2025-Q4 — `r@10=1.00, r@5_jp=0.00` ❌ « back-edge graphe défaillant »
+- **Question** : nullité après IPC.
+- **Top-2** : `CPP:173-1` (gold OBLIG) — article trouvé.
+- **JP via top-5** : 462 JP candidates, **0/2** gold récupérés. Le pourvoi gold (`23-84.957`) **n'est pas cité par CPP:173-1** dans le graphe.
+- **Verdict** : article ✅, JP via graphe ❌. Cause : la JP attendue ne cite probablement pas 173-1 mais des articles voisins (170, 174). C'est une limite du **back-edge graphe** : il dépend de la *fidélité des citations* dans le corpus.
+- **Fix possible** : enrichir le top-K avec les articles voisins (CPP:170, 174, 802 — qui sont dans les optionnels mais aux rangs 132, 938, 1061).
+
+#### CNB-PP-2025-Q5 — gold JP absent ⚪
+- **Question** : placement en détention provisoire sans avocat.
+- **Article gold** : `CPP:145` (rang 10), `CPP:186` (rang 1229).
+- **JP gold extractibles** : 0 (aucun pourvoi CC dans `short_ref`).
+- **Verdict** : non évaluable côté JP. Article-side reste évaluable (recall@10 = 0.5).
+
+#### CNB-PENAL-2025-Q1 — `r@10=0.14, r@5_jp=0.12` ❌ « contamination thématique »
+- **Question** : viol par cunnilingus, trouble mental, intoxication médicamenteuse (cas Romuald).
+- **Top-1** : `CPP:706-47-1` (suivi condamnés sexuels), top-3 mêle suivi pénal et chambre d'instruction.
+- **Gold trouvé top-10** : 1/7 (`code_penal:122-1`, irresponsabilité psy, rang 4). Reste dispersé : `222-23` rang 110, `222-22` rang 368, `121-3` rang 613.
+- **Verdict** : 7 articles à mobiliser → l'encodeur en attrape 1 dans le top-10 (122-1, le plus « marquant » thématiquement), mais rate les articles centraux (222-23 viol, 121-3 élément moral). **Contamination par les articles de suivi** (706-47-1, 131-36-4) qui partagent du vocabulaire sans être pertinents.
+- **Fix possible** : reformuler la question via LLM (« qualifications applicables → infractions sexuelles + irresponsabilité ») ; ou requête multi-vecteur (un par chef de qualification attendu).
+
+#### CNB-PENAL-2025-Q2 — `r@10=0.00, r@5_jp=0.00` ❌ « compositionnel pur »
+- **Question** : dirigeant labo informé d'effets indésirables, retard d'alerte.
+- **Top-10** : *aucun article gold*. Top-1 = 706-47-1 (suivi sexuel — même artefact que Q1). Articles gold à 836 et 971.
+- **Verdict** : échec total. Question 100 % compositionnelle (« non-acte → imprudence → blessures involontaires »). Aucun mot du gold (« blessures », « involontaires », « élément moral », « imprudence ») n'est dans la question.
+- **Fix possible** : impossible à résoudre par embedding seul. Réécriture LLM nécessaire, ou modèle spécialisé droit pénal.
+
+#### CNB-PENAL-2025-Q3 — `r@10=0.00, r@5_jp=0.00` ❌ « article-principe abstrait raté »
+- **Question** : fusion-absorption, responsabilité PM.
+- **Gold rang** : `121-2` (responsabilité PM) **rang 31** ✓, `121-1` (responsabilité personnelle) **rang 968** ✗.
+- **Verdict** : 1/2 gold trouvable seulement à K=50. L'article 121-1 est un principe abstrait (« nul n'est responsable pénalement que de son propre fait ») trop générique pour matcher une question concrète sur la fusion-absorption.
+- **Fix possible** : ajouter au top-K les articles « principes » connus pour chaque domaine, ou matcher contre une formulation paraphrasée (LLM).
+
+### Trois patterns d'échec, trois fixes différents
+
+| Pattern | Questions | Diagnostic | Fix Étape 2 plausible |
+|---|---|---|---|
+| **A** Compositionnel pur | PENAL-Q2, partiel Q1 | Aucun mot-clé gold dans la question | Réécriture LLM de la question, ou JP-first si JP cite article |
+| **B** Article-principe abstrait raté | PENAL-Q3 (121-1) | Article trop générique, non thématique | Liste d'articles-principes par domaine, ou multi-vecteur |
+| **C** Back-edge graphe défaillant | PP-Q4 | Article trouvé mais JP gold ne le cite pas | Élargir top-K par articles voisins (citation graph 2-hop) |
+
 ## 7. Implications pour Étapes 2 et 3
 
 ### 7.1 Étape 2 — Complétion d'embeddings JP via le graphe

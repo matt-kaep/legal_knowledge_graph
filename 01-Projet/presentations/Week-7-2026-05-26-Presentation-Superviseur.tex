@@ -1,0 +1,523 @@
+% !TEX program = pdflatex
+% Presentation superviseur -- Week 7 -- 2026-05-26
+% Étape 1 : embedding articles-first + résultats comparés vs baseline 5 mai
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, fit, backgrounds}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{footnote}{size=\tiny}
+
+\definecolor{accent}{RGB}{41, 92, 155}
+\definecolor{accentsoft}{RGB}{230, 238, 247}
+\definecolor{warn}{RGB}{200, 80, 40}
+\definecolor{ok}{RGB}{30, 130, 70}
+\definecolor{ppcol}{RGB}{47, 111, 79}
+\definecolor{penalcol}{RGB}{124, 45, 45}
+
+\newcommand{\keybox}[1]{%
+  \begin{center}
+  \colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\warnbox}[1]{%
+  \begin{center}
+  \colorbox{red!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\okbox}[1]{%
+  \begin{center}
+  \colorbox{green!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+
+\title[KG juridique FR --- Week 7]{Construction d'un Knowledge Graph juridique français}
+\subtitle{Point d'avancement --- Week 7 : Étape 1, embedding articles-first}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{26 mai 2026}
+
+\begin{document}
+
+% ============================================================
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ============================================================
+\begin{frame}{Plan de la séance}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Rappel : de Week 4 à Week 7}
+
+\begin{frame}{Où en étions-nous à Week 4 (5 mai) ?}
+  \small
+  \textbf{Constat principal de Week 4} :
+
+  \keybox{La baseline B2 (embedding \texttt{multilingual-e5-base} sur les arrêts) ne
+  ressort \emph{aucune} référence pertinente avant le top-1000. Le bottleneck est
+  l'\textbf{encodeur}, pas le retrieval.}
+
+  \vspace{0.5em}
+  \textbf{Chiffres clés du 5 mai} :
+  \begin{itemize}\setlength\itemsep{0.2em}
+    \item Rang médian des arrêts gold : \textcolor{warn}{\textbf{76 782 / 118 112}}
+    \item Recall JP top-10 (toutes stratégies) : \textcolor{warn}{\textbf{0 / 16}}
+    \item Couverture gold dans le corpus : \textcolor{ok}{100 \%} (donc problème de retrieval, pas de données)
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Roadmap actée avec Johnny} (point S4 §7) :
+  \begin{itemize}\setlength\itemsep{0.2em}
+    \item \textbf{Étape 1} : embedding pur sans graphe (articles + JP), mesurer recall@K
+    \item Étape 2 : combler les JP sans summary (LLM ou laplacien)
+    \item Étape 3 : benchmark étendu via doctrine + GNN link prediction
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Roadmap actualisée}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.15}
+  \begin{tabular}{@{}c p{4.4cm} p{5.6cm} l@{}}
+    \toprule
+    \textbf{\#} & \textbf{Palier} & \textbf{Question scientifique} & \textbf{État} \\
+    \midrule
+    P1 & Extraction d'articles       & Sait-on identifier les articles cités ?              & \textcolor{ok}{\textbf{Validé S3}} \\
+    P2 & Robustesse extraction       & LLMs vs regex symbolique ?                            & \textcolor{ok}{\textbf{Validé S3}} \\
+    P3 & Construction graphe complet & Pipeline tient-il sur 1,13 M arrêts ?                & \textcolor{ok}{\textbf{Validé S3}} \\
+    P4 & Analyse macro du graphe     & Quelle structure émerge ?                             & \textcolor{ok}{\textbf{Validé S3}} \\
+    \rowcolor{accentsoft}
+    P5 & Embedding articles (LEGI)   & BGE-M3 sur articles bat-il e5-base sur JP ?           & \textcolor{accent}{\textbf{Validé S7}} \\
+    \rowcolor{accentsoft}
+    P6 & Évaluation recall@K         & Quel régime de performance atteint-on ?               & \textcolor{accent}{\textbf{Validé S7}} \\
+    P7 & Complétion JP (Étape 2)     & LLM ou laplacien complète-t-il le signal ?            & \textcolor{warn}{\textbf{Next}} \\
+    P8 & GNN link prediction         & Le graphe enrichi bat-il le retrieval pur ?           & Étape 3 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.8em}
+  \keybox{\textbf{Cette session} : présenter les résultats P5+P6 et leur diagnostic.}
+\end{frame}
+
+% ============================================================
+\section{Étape 1 : design et pipeline}
+
+\begin{frame}{Le pivot stratégique de l'Étape 1}
+  \small
+  \textbf{Phase D du journal 5 mai} : \emph{« et si on embeddait les \textbf{articles},
+  pas les arrêts ? »}
+
+  \vspace{0.5em}
+  \textbf{Justification a priori} :
+  \begin{itemize}\setlength\itemsep{0.2em}
+    \item Une question CRFPA cible un \emph{point de droit codifié} (article), pas un narratif d'arrêt
+    \item Articles = textes courts, denses, structurés sémantiquement
+    \item Arrêts = textes longs, narratifs, mêlent faits + procédure + motifs + dispositif (bruit)
+    \item Mapping question $\to$ article \emph{plus direct} que question $\to$ arrêt
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Objection à lever} : on n'a pas le texte des articles -- juste les
+  \texttt{pair\_key} (\texttt{code\_penal:222-23}) extraits par regex V5.
+
+  \vspace{0.5em}
+  \okbox{\textbf{Solution} : ingestion du dump LEGI ouvert (DILA) via \texttt{legi.py}.
+  Résolution \texttt{pair\_key} $\to$ texte intégral.}
+\end{frame}
+
+\begin{frame}{Pipeline en 4 étages}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.8cm and 1.6cm,
+    box/.style={draw, rectangle, rounded corners=4pt, minimum width=2.8cm, minimum height=1cm, align=center, font=\scriptsize},
+    accentbox/.style={box, fill=accentsoft, draw=accent},
+    arrow/.style={-{Stealth[length=2.5mm]}, thick}]
+
+    \node[accentbox] (s1) {\textbf{1. Diagnostic}\\Token-stats\\(p100 articles + JP)};
+    \node[accentbox, right=of s1] (s2) {\textbf{2. Ingestion LEGI}\\Dump DILA $\to$ SQLite\\\texttt{pair\_key} $\to$ texte};
+    \node[accentbox, right=of s2] (s3) {\textbf{3. Embedding}\\BGE-M3 1024d\\(articles)};
+    \node[accentbox, below=of s3] (s4) {\textbf{4. Évaluation}\\recall@K\\question $\to$ articles};
+    \node[box, dashed, draw=warn, below=of s1, font=\tiny] (linkage) {Linkage \\\texttt{pair\_key} $\leftrightarrow$ graphe};
+    \node[box, dashed, draw=warn, below=of s2, font=\tiny] (jpgraph) {Back-edge graphe\\top-K art $\to$ JP citantes};
+
+    \draw[arrow] (s1) -- (s2);
+    \draw[arrow] (s2) -- (s3);
+    \draw[arrow] (s3) -- (s4);
+    \draw[arrow] (s2) -- (linkage);
+    \draw[arrow] (linkage) -- (s4);
+    \draw[arrow] (s4) -- (jpgraph);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.3em}
+  \footnotesize
+  \textbf{Invariant central} : la clé \texttt{pair\_key} relie nœud du graphe, texte LEGI
+  et ligne d'embedding. Alignement positionnel \emph{lossless} $\to$ l'Étape 2 (laplacien
+  sur le graphe) récupère les embeddings sans jointure a posteriori.
+\end{frame}
+
+\begin{frame}{Paramètres expérimentaux}
+  \footnotesize
+  \begin{tabular}{@{}p{4cm} p{8cm}@{}}
+    \toprule
+    \textbf{Composant} & \textbf{Configuration} \\
+    \midrule
+    Modèle d'embedding & \texttt{BAAI/bge-m3} (1024d, 8k tok théoriques, multilingue) \\
+    Contexte effectif & 2 048 tok (limite pratique MPS, chunk+meanpool au-delà) \\
+    Source des articles & Dump DILA LEGI, snapshot 13 juillet 2025 (1,73 M articles tous codes) \\
+    Pool candidat & 3 183 articles pénaux résolus (subset des 8 085 nœuds du graphe) \\
+    Couverture LEGI & 39 \% globale, \textbf{100 \% sur le gold} obligatoire (50/50) \\
+    Hardware & Mac MPS, batch 8, $L_2$ normalisation \\
+    Questions & 8 CRFPA pénales (3 droit pénal + 5 procédure pénale) \\
+    Métrique principale & recall@K, $K^* = $ plus petit $K$ tel que recall $\geq 0,5$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+  \keybox{Le pool candidat (3 183 vs 118 112) est \emph{37$\times$ plus petit} que la
+  baseline B2 -- l'éval mécaniquement plus indulgente.}
+\end{frame}
+
+% ============================================================
+\section{Résultats : critère strict article-first}
+
+\begin{frame}{Métrique adoptée pour pénaliser la sur-extraction}
+  \small
+  \textbf{Problème de la métrique recall@1000} : on peut « gagner » en remontant tout le
+  pool, donc trop laxiste pour mesurer une exploitation réelle.
+
+  \vspace{0.5em}
+  \textbf{Métriques bornées top-K adoptées} :
+
+  \vspace{0.3em}
+  \begin{tabular}{@{}p{3cm} p{4.5cm} p{4cm}@{}}
+    \toprule
+    & \textbf{Articles} & \textbf{JP via graphe} \\
+    \midrule
+    Critère \textbf{dur} & recall@10 $\geq$ 0,5 & recall@5 $\geq$ 0,5 \\
+    Critère \textbf{facile} & recall@20 $\geq$ 0,5 & recall@10 $\geq$ 0,5 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \keybox{Question passe le critère $\Longleftrightarrow$ les \emph{deux} conditions
+  simultanément. Équivalent d'un budget de 10/5 résultats affichables.}
+
+  \vspace{0.5em}
+  \textbf{Bornage implicite de la précision} :
+  pour 1 article gold, recall@10 = 1 $\to$ précision max 10 \%.
+  Pour 7 articles gold, recall@10 = 1 $\to$ précision max 70 \%.
+  Donc la métrique mesure aussi le \emph{non-noyage du gold dans le bruit}.
+\end{frame}
+
+\begin{frame}{Résultats par question (critère dur)}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{@{}l c c c c c c c@{}}
+    \toprule
+    \textbf{Question} & \textbf{Branche} & \textbf{gold o} & \textbf{gold JP} &
+    \textbf{r@10 art} & \textbf{r@5 JP} & \textbf{Passe ?} & \textbf{Diagnostic} \\
+    \midrule
+    PP-Q2 & \textcolor{ppcol}{PP} & 1 & 2 & \textbf{1.00} & \textbf{0.50} & \textcolor{ok}{\textbf{Oui}} & idéal \\
+    PP-Q3 & \textcolor{ppcol}{PP} & 2 & 1 & \textbf{1.00} & \textbf{1.00} & \textcolor{ok}{\textbf{Oui}} & idéal \\
+    PP-Q1 & \textcolor{ppcol}{PP} & 2 & 3 & \textbf{0.50} & \textbf{0.67} & \textcolor{ok}{\textbf{Oui}} & 1 art/2 trouvé \\
+    PP-Q4 & \textcolor{ppcol}{PP} & 1 & 1 & \textbf{1.00} & 0.00 & \textcolor{warn}{\textbf{Non}} & art OK, graphe JP fail \\
+    PP-Q5 & \textcolor{ppcol}{PP} & 2 & 0 & \textbf{0.50} & n/a & \textcolor{warn}{$\circ$} & gold JP absent \\
+    PENAL-Q1 & \textcolor{penalcol}{PEN} & 7 & 8 & 0.14 & 0.12 & \textcolor{warn}{\textbf{Non}} & contamination thématique \\
+    PENAL-Q3 & \textcolor{penalcol}{PEN} & 2 & 2 & 0.00 & 0.00 & \textcolor{warn}{\textbf{Non}} & principe abstrait raté \\
+    PENAL-Q2 & \textcolor{penalcol}{PEN} & 2 & 2 & 0.00 & 0.00 & \textcolor{warn}{\textbf{Non}} & compositionnel pur \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.8em}
+  \okbox{\textbf{3 / 7 questions évaluables passent le critère dur.}
+  Baseline 5 mai : \textbf{0 / 7}. PP-Q5 est exclue (gold JP absent du corpus).}
+\end{frame}
+
+\begin{frame}{Comparaison vs baseline B2 (5 mai)}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.25}
+  \begin{tabular}{@{}p{4cm} p{3.6cm} p{3.6cm} l@{}}
+    \toprule
+    \textbf{Métrique} & \textbf{B2 -- 5 mai} & \textbf{Étape 1 -- 26 mai} & $\Delta$ \\
+    \midrule
+    Modèle & e5-base 512 tok & \textbf{BGE-M3 2k tok} & + 4$\times$ contexte \\
+    Entrée encodée & texte JP & \textbf{texte article LEGI} & inversion \\
+    Pool candidat & 118 112 JP & 3 183 articles & $\times$ 37 plus petit \\
+    \midrule
+    mean recall@10 art (oblig) & 0,158 & \textbf{0,518} & $\times$ 3,3 \\
+    mean recall@5 JP & \textcolor{warn}{\textbf{0,000}} & \textbf{0,286} & $\infty$ \\
+    mean recall@1000 JP & 0,12 (12 \%) & 0,94 & $\times$ 7,8 \\
+    Rang médian gold JP & 76 782 / 118 112 & $\leq$ 100 (majorité) & -- \\
+    \midrule
+    \textbf{Questions passant critère dur} & \textcolor{warn}{\textbf{0 / 7}} & \textbf{3 / 7} & saut qualitatif \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5em}
+  \keybox{Pas un gain quantitatif (\og un peu mieux \fg{}) mais un \textbf{changement de
+  régime} : de \og rien ne sort \fg{} à \og 3 questions utilisables sur 7 \fg{}.}
+\end{frame}
+
+% ============================================================
+\section{Diagnostic par question}
+
+\begin{frame}{Le pattern central : PP $\gg$ PENAL}
+  \footnotesize
+  \begin{tabular}{@{}l c c c@{}}
+    \toprule
+    & \textbf{$K^*$ médian articles} & \textbf{questions critère dur} & \textbf{interprétation} \\
+    \midrule
+    \textcolor{ppcol}{\textbf{Procédure pénale}} (5 questions) & \textbf{3} & 3/4 évaluables & \textcolor{ok}{lexical} \\
+    \textcolor{penalcol}{\textbf{Droit pénal de fond}} (3 questions) & \textbf{200} & 0/3 & \textcolor{warn}{compositionnel} \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.8em}
+  \textbf{Hypothèse explicative} :
+
+  \begin{itemize}\setlength\itemsep{0.3em}
+    \item \textbf{Procédure pénale} = requêtes lexicales sur articles bien identifiés.
+    \og garde à vue \fg{} $\to$ CPP:63. \og IPC + nullité \fg{} $\to$ CPP:173-1. Le
+    vocabulaire de la question matche celui de l'article -- \emph{terrain idéal pour
+    l'embedding}.
+    \item \textbf{Droit pénal de fond} = cas pratiques compositionnels. Un récit
+    factuel (\og dirigeant, médicament, retard d'alerte \fg{}) qui exige une
+    \emph{qualification juridique} (\og blessures involontaires + manquement de
+    prudence \fg{}) mobilisant des articles-principes abstraits (\texttt{121-3},
+    \texttt{121-1}) jamais nommés dans la question.
+  \end{itemize}
+
+  \vspace{0.3em}
+  \warnbox{\textbf{L'embedding lexico-sémantique ne raisonne pas.} Il matche
+  thématiquement, mais ne fait pas d'inférence de qualification.}
+\end{frame}
+
+\begin{frame}{Trois patterns d'échec, trois fixes différents}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{@{}p{2.6cm} p{2.4cm} p{4.2cm} p{4cm}@{}}
+    \toprule
+    \textbf{Pattern} & \textbf{Questions} & \textbf{Diagnostic} & \textbf{Fix plausible} \\
+    \midrule
+    \textbf{A.} Compositionnel pur & PENAL-Q2 (partiel Q1) & Aucun mot-clé gold dans la question
+    & Réécriture LLM (\og dirigeant non-alerté \fg{} $\to$ \og imprudence \fg{}) \\
+    \textbf{B.} Article-principe raté & PENAL-Q3 (\texttt{121-1}) & Article trop générique,
+    non thématique & Multi-vecteur (un par qualification attendue) \\
+    \textbf{C.} Back-edge graphe & PP-Q4 (article OK, JP fail) & Article gold trouvé mais
+    pourvoi gold ne cite pas cet article & Élargir top-K par articles voisins (2-hop) \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+  \keybox{Les 3 patterns appellent des \textbf{fixes différents}. L'Étape 2 (complétion JP) ne résoudra
+  que A et indirectement C. B nécessite une stratégie distincte (multi-vecteur ou liste
+  d'articles-principes).}
+\end{frame}
+
+\begin{frame}{Anatomie d'un échec : PENAL-Q2}
+  \footnotesize
+  \textbf{Question} : \emph{Thierry, dirigeant du laboratoire 'Medica SA' fabricant le
+  médicament prescrit à Romuald, a été informé des effets indésirables dès fin 2023
+  mais n'a alerté les médecins et patients qu'en...}
+
+  \textbf{Gold OBLIG} : \texttt{code\_penal:222-19} (blessures involontaires),
+  \texttt{code\_penal:121-3} (intention / imprudence).
+
+  \vspace{0.4em}
+  \textbf{Rangs des gold dans le classement} :
+  \begin{itemize}\setlength\itemsep{0em}
+    \item \texttt{code\_penal:222-19} -- rang \textcolor{warn}{\textbf{836}} / 3 183
+    \item \texttt{code\_penal:121-3} -- rang \textcolor{warn}{\textbf{971}} / 3 183
+  \end{itemize}
+
+  \vspace{0.3em}
+  \textbf{Top-5 retourné par BGE-M3} :
+  \begin{enumerate}\setlength\itemsep{0em}
+    \item \texttt{CPP:706-47-1} -- suivi des condamnés pour infractions sexuelles
+    \item \texttt{CPP:D47-27} -- troubles mentaux / détention
+    \item \texttt{CPP:706-136} -- chambre instruction, décision
+    \item \texttt{CP:222-33} -- harcèlement sexuel
+    \item \texttt{CP:222-28} -- agression sexuelle
+  \end{enumerate}
+
+  \vspace{0.3em}
+  \warnbox{Le mot-clé décisif (\og blessures involontaires \fg{} ou \og élément moral \fg{})
+  n'est nulle part dans la question. Il est dans la \emph{qualification juridique} qu'un
+  correcteur applique sur le cas pratique. \textbf{L'embedding ne fait pas ce raisonnement}.}
+\end{frame}
+
+\begin{frame}{Anatomie d'une réussite : PP-Q3}
+  \footnotesize
+  \textbf{Question} : \emph{À la suite de leur interrogatoire de première comparution
+  le 3 mars 2025, le juge d'instruction a mis en examen les trois suspects y compris
+  ...}
+
+  \textbf{Gold OBLIG} : \texttt{CPP:116-1}, \texttt{CPP:116}.
+
+  \vspace{0.4em}
+  \textbf{Top-5 retourné par BGE-M3} :
+  \begin{enumerate}\setlength\itemsep{0em}
+    \item \texttt{CPP:116-1} -- interrogatoires criminels (\textcolor{ok}{\textbf{OBLIG}})
+    \item \texttt{CPP:80-1} -- mise en examen
+    \item \texttt{CPP:116} -- interrogatoire IPC (\textcolor{ok}{\textbf{OBLIG}})
+    \item \texttt{CPP:176} -- examen du juge d'instruction
+    \item \texttt{CPP:113-8} -- mise en examen, statut témoin assisté
+  \end{enumerate}
+
+  \vspace{0.3em}
+  \okbox{Les 2 articles gold sont en rangs 1 et 3. Recall@10 articles = 1.00.
+  Recall@5 JP via graphe = 1.00. Cas idéal : question lexicale, articles codifiés,
+  citations JP nettes.}
+\end{frame}
+
+% ============================================================
+\section{Limitations et travail en cours}
+
+\begin{frame}{Limitations chiffrées}
+  \footnotesize
+  \begin{tabular}{@{}p{3.8cm} p{2cm} p{7cm}@{}}
+    \toprule
+    \textbf{Limitation} & \textbf{Chiffre} & \textbf{Impact} \\
+    \midrule
+    Couverture LEGI globale & 39 \% & Articles pré-1994 renumérotés. Gold à 100 \%, éval valide. \\
+    Échantillon questions & 8 & Trop peu pour stat fiable sur PP vs PENAL. Étape 3. \\
+    Politique troncature & 2 048 tok & 5 articles (0,16 \%) chunkés. Décision pragmatique OOM MPS. \\
+    JP gold extractibles & CC-only & \texttt{ref:null} dans rubrics. 1/8 questions sans gold JP. \\
+    Gold orphelin graphe & 1/51 & \texttt{code\_penal:222-26-2} non cité par aucune JP. \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+  \keybox{\textbf{Aucune limitation n'invalide la conclusion principale} (changement de
+  régime). Elles définissent le \emph{plafond} de l'approche, pas son existence.}
+\end{frame}
+
+\begin{frame}{En cours : élargissement au full corpus}
+  \small
+  \textbf{Question naturelle} : et si on embeddait les \textbf{87 821} articles du graphe
+  (tous codes, pas juste les 4 pénaux) ?
+
+  \vspace{0.5em}
+  \textbf{Pourquoi} :
+  \begin{itemize}\setlength\itemsep{0.2em}
+    \item Tester si les questions pénales \emph{tirent} des articles non-pénaux pertinents (code civil pour les questions de fond, par exemple).
+    \item Mesurer la robustesse du classement quand le pool est $\times$ 27 plus grand.
+    \item Vérifier si le critère dur tient sur 87 k candidats.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Estimation} : embedding $\approx$ 2-3 h sur Mac MPS, à $\sim$ 12 MB pour 3 183 articles $\to$ $\sim$ 360 MB pour 87 k.
+
+  \vspace{0.4em}
+  \keybox{\textbf{Lancé en background pendant cette présentation.} Résultats disponibles
+  pour la prochaine session.}
+\end{frame}
+
+% ============================================================
+\section{Prochaines étapes}
+
+\begin{frame}{Étape 2 : complétion JP via le graphe}
+  \small
+  \textbf{Objectif} : produire des embeddings JP exploitables pour les questions
+  compositionnelles (patterns A et C).
+
+  \vspace{0.4em}
+  \textbf{Deux méthodes en parallèle} (cf. note du 5 mai sur la complétion par
+  optimisation laplacienne) :
+  \begin{itemize}\setlength\itemsep{0.3em}
+    \item \textbf{Méthode (A)} -- batch LLM : générer un summary synthétique pour
+    chaque JP sans summary, embedder ce summary.
+    \item \textbf{Méthode (B)} -- complétion laplacienne :
+    $H^\star = \arg\min_H \lVert \widetilde{H} - H \odot J \rVert_F^2 + \lambda \cdot \mathrm{tr}(H^\top L H)$,
+    propage l'info des JP avec summary vers les JP sans, via le graphe.
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Diagnostic préalable obligatoire} : énergie de Dirichlet
+  $\rho(\widetilde{H}_o) = \mathrm{tr}(\widetilde{H}_o^\top L_{\mathrm{sym}}^{(o)} \widetilde{H}_o) / \lVert \widetilde{H}_o \rVert_F^2$
+  + test de permutation. \textbf{Si le graphe ne porte pas de signal, repli sur (A).}
+
+  \vspace{0.4em}
+  \keybox{\textbf{Critère d'acceptation Étape 2} : passer de \textbf{3/7} à
+  $\geq$ \textbf{5/7} questions sur le critère dur, en particulier sur PENAL-Q1 et
+  PENAL-Q2.}
+\end{frame}
+
+\begin{frame}{Étape 3 : benchmark étendu via doctrine}
+  \small
+  \textbf{Problème} : 8 questions = échantillon trop faible pour distinguer
+  fiablement le signal du bruit, surtout sur le pattern PENAL.
+
+  \vspace{0.4em}
+  \textbf{Pipeline proposé (cf. roadmap Johnny)} :
+  \begin{enumerate}\setlength\itemsep{0.2em}
+    \item Collecte de doctrine pénale (manuels, revues juridiques)
+    \item Extraction de questions par LLM avec validation croisée 2 LLM locaux \emph{(déjà en cours côté
+    pipeline \texttt{doctrine\_qgen}, S5--S6)}
+    \item Cible : 100--500 questions étiquetées avec articles + JP de référence
+    \item \textbf{Stratification} par type (lexical vs compositionnel) -- alignée sur le
+    pattern PP/PENAL identifié à S7
+    \item Intégration au KG comme nouveau type de nœud \texttt{Question}
+    \item Entraînement GNN (GraphSAGE / R-GCN) en link prediction
+  \end{enumerate}
+
+  \vspace{0.4em}
+  \keybox{Le \textbf{plancher} étape 1 servira de baseline contre laquelle mesurer le
+  GNN. Si le GNN ne bat pas 3/7 sur le critère dur, ce n'est pas un succès.}
+\end{frame}
+
+\begin{frame}{Récapitulatif et décisions à arbitrer}
+  \small
+  \textbf{Acquis de l'Étape 1} :
+  \begin{itemize}\setlength\itemsep{0.2em}
+    \item Pipeline reproductible, code testé (26/26 tests), 6 commits sur \texttt{etape1-embedding-pur}
+    \item 12 MB d'embeddings articles (\texttt{emb\_articles.npy}) -- réutilisable pour les Étapes 2/3
+    \item \textbf{3/7 questions} passent le critère dur (recall@10 art $\geq$ 0,5 ET recall@5 JP $\geq$ 0,5)
+    \item Diagnostic par question avec 3 patterns d'échec distincts
+    \item Documentation à 3 niveaux : pédagogique HTML, technique \texttt{PLAN.md}, synthèse expérimentale
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Décisions à arbitrer} :
+  \begin{enumerate}\setlength\itemsep{0.2em}
+    \item \textbf{Priorité Étape 2 (A) ou (B)} ? La méthode laplacienne est mathématiquement élégante
+    mais demande le diagnostic préalable.
+    \item \textbf{Multi-vecteur pour les questions compositionnelles} (pattern A/B) -- avant ou après Étape 2 ?
+    \item \textbf{Réécriture LLM des questions} comme étape intermédiaire \emph{quasi gratuite} -- à tester en
+    parallèle de l'Étape 2 ?
+  \end{enumerate}
+
+  \vspace{0.4em}
+  \okbox{\textbf{Le plancher est solide. Le travail est sur la trajectoire prévue.}
+  Reste à choisir l'angle d'attaque pour faire passer PENAL.}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \vspace{2em}
+    {\Large\textbf{Merci.}}
+    \vspace{2em}
+
+    \textit{Discussion / questions}
+
+    \vspace{2em}
+    \footnotesize
+    Branche : \texttt{etape1-embedding-pur} (6 commits)\\
+    Synthèse complète : \texttt{06-Analyses/syntheses/Experience-Etape1-Articles-First-2026-05-26.md}\\
+    Page résultats HTML : \texttt{01-Projet/presentations/Resultats-Etape1-Articles-First-2026-05-26.html}
+  \end{center}
+\end{frame}
+
+\end{document}
