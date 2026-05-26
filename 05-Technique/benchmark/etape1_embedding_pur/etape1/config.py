@@ -40,6 +40,16 @@ EMB_ARTICLES_ALL        = DATA / "emb_articles_all.npy"
 RECALL_CURVES_ALL       = DATA / "recall_curves_articles_all.csv"
 RECALL_KSTAR_ALL        = DATA / "recall_kstar_articles_all.json"
 
+# Sorties — JP summaries (depuis OVH PostgreSQL, step1_raw.synthese_pour_avocat)
+JP_SUMMARIES_PARQUET    = DATA / "jp_summaries_penal.parquet"
+JP_SUMMARY_ORDER        = DATA / "jp_summary_order.npy"
+JP_SUMMARY_TO_GRAPHROW  = DATA / "jp_summary_to_graphrow.npy"
+EMB_JP_SYNTHESE         = DATA / "emb_jp_synthese.npy"
+JP_SUMMARIES_COVERAGE   = DATA / "jp_summaries_coverage.json"
+
+# Credentials DB OVH (.env.local racine 05-Technique/)
+ENV_LOCAL = BENCH.parent / ".env.local"
+
 # Modèle
 MODEL_ID = "BAAI/bge-m3"
 EMB_DIM = 1024
