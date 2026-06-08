@@ -78,7 +78,7 @@
   \begin{tabular}{@{}l l c | r r | r r@{}}
     \toprule
     & & & \multicolumn{2}{c|}{\textbf{GT strict}} & \multicolumn{2}{c}{\textbf{GT étendu}} \\
-    \textbf{Var.} & \textbf{Méthode} & $K_{\text{in}}$
+    \textbf{Var.} & \textbf{Méthode} & $s$
     & \textbf{M1} & \textbf{M2} & \textbf{M1} & \textbf{M2} \\
     \midrule
     B2-a & cosine art. open pool       & --     & 0,459 & 0,369 & 0,185 & 0,172 \\
@@ -97,7 +97,7 @@
   \begin{center}
   \begin{tabular}{@{}l l c | r r@{}}
     \toprule
-    \textbf{Var.} & \textbf{Méthode} & $K_{\text{in}}$ & \textbf{M1} & \textbf{M2} \\
+    \textbf{Var.} & \textbf{Méthode} & $s$ & \textbf{M1} & \textbf{M2} \\
     \midrule
     B3-a & cosine direct synthèses JP   & --   & 0,408 & 0,338 \\
     \rowcolor{accentsoft}
@@ -171,7 +171,7 @@
   Le pivot est instrumental, pas conceptuel.}
 \end{frame}
 
-\begin{frame}{Roadmap actualisée -- 18 paliers, état au 9 juin}
+\begin{frame}{Roadmap actualisée -- 21 paliers, état au 9 juin}
   \scriptsize
   \renewcommand{\arraystretch}{1.05}
   \begin{center}
@@ -201,14 +201,21 @@
     \rowcolor{accentsoft}
     14 & PPR naïf -- baseline graphe non-apprise                                     & \textcolor{ok}{\textbf{Validé S9}} \\
     \midrule
+    \rowcolor{accentsoft}
+    15 & \textbf{Panel métriques complet} (Hit@K, MRR, NDCG)                         & \textcolor{ok}{\textbf{Validé S10}} \\
+    \rowcolor{accentsoft}
+    16 & \textbf{Grand tableau global} (cosine / PPR / GNN $\times$ panel + M3)     & \textcolor{ok}{\textbf{Validé S10}} \\
+    \rowcolor{accentsoft}
+    17 & \textbf{M3 LLM-judge} (Gemma 4 26B, 9 méthodes, run cluster)               & \textcolor{ok}{\textbf{Validé S10}} \\
+    \rowcolor{accentsoft}
+    18 & \textbf{LightGCN sur G0} (design A, cosine BPR + ancrage)                   & \textcolor{ok}{\textbf{Validé S10}} \\
+    \midrule
     \rowcolor{green!10}
-    15 & \textbf{Panel métriques complet} (Hit@K, MRR, NDCG)                         & \textcolor{accent}{\textbf{S10 -- en cours}} \\
+    19 & \textbf{LightGCN multi-seed} + régime D (supervision JP) + $G_0 \to V_1$    & \textcolor{accent}{\textbf{S11--S12}} \\
     \rowcolor{green!10}
-    16 & \textbf{Grand tableau global} LLM / RAG / cosine / PPR / GNN $\times$ M3   & \textcolor{accent}{\textbf{S10--S11}} \\
+    20 & \textbf{Enrichissement du bench} (visa, reverse-eng décisions, CRFPA)       & \textcolor{accent}{\textbf{S11--S13}} \\
     \rowcolor{green!10}
-    17 & \textbf{Enrichissement du bench} (visa, reverse-eng décisions, CRFPA)       & \textcolor{accent}{\textbf{S10--S12}} \\
-    \rowcolor{green!10}
-    18 & \textbf{LightGCN} + variantes GNN (R-GCN, HGT, GraphSAGE)                   & \textcolor{accent}{\textbf{S11--S14}} \\
+    21 & \textbf{Variantes GNN} (R-GCN, HGT, GraphSAGE) + LLM seul / LLM+RAG         & \textcolor{accent}{\textbf{S12--S14}} \\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -428,7 +435,7 @@
      & 0,459 & 0,503 & 0,302 & 0,325 & 0,369
      & 0,185 & 0,639 & 0,391 & 0,195 & 0,172 \\
     \rowcolor{accentsoft}
-    B3-e -- JP $\to$ Art ($K_{\text{in}}{=}10$)
+    B3-e -- JP $\to$ Art ($s{=}10$)
      & \textbf{0,711} & \textbf{0,745} & \textbf{0,473} & \textbf{0,518} & \textbf{0,593}
      & 0,399 & 0,897 & 0,622 & 0,400 & 0,355 \\
     \rowcolor{green!10}
@@ -439,8 +446,16 @@
      & 0,571 & 0,616 & 0,149 & 0,246 & 0,333
      & \textbf{0,440} & 0,925 & 0,600 & 0,413 & 0,388 \\
     \midrule
+    \rowcolor{green!10}
+    LightGCN $K{=}2$ (BGE propagé)
+     & 0,653 & 0,687 & 0,432 & 0,472 & 0,533
+     & 0,296 & 0,819 & 0,558 & 0,317 & 0,279 \\
+    \rowcolor{green!10}
+    \textbf{LightGCN $K{=}2$ entraîné}
+     & 0,705 & 0,739 & \textbf{0,496} & \textbf{0,533} & 0,592
+     & 0,324 & 0,861 & 0,623 & 0,356 & 0,314 \\
+    \midrule
     LLM seul / LLM+RAG (à venir)        & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
-    LightGCN (à venir)                  & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -464,34 +479,30 @@
     \toprule
     \textbf{Méthode} & M1 & Hit & MRR & NDCG & M2 \\
     \midrule
-    \rowcolor{accentsoft}
-    B3-a (cosine JP)                          & 0,408 & 0,427 & \textbf{0,272} & \textbf{0,304} & \textbf{0,338} \\
-    B4-d -- intersection ($K_{\text{in}}{=}50$) & 0,348 & 0,364 & 0,236 & 0,259 & 0,293 \\
-    \rowcolor{accentsoft}
-    B4-e -- RRF ($K_{\text{in}}{=}20$)         & \textbf{0,416} & \textbf{0,436} & 0,192 & 0,241 & 0,303 \\
-    B4-f -- citation-weighted ($K_{\text{in}}{=}10$) & 0,154 & 0,163 & 0,066 & 0,085 & 0,103 \\
+    B3-a (cosine JP)                          & 0,408 & 0,427 & 0,272 & 0,304 & 0,338 \\
+    B4-d -- intersection ($s{=}50$) & 0,348 & 0,364 & 0,236 & 0,259 & 0,293 \\
+    B4-e -- RRF ($s{=}20$)         & 0,416 & 0,436 & 0,192 & 0,241 & 0,303 \\
+    B4-f -- citation-weighted ($s{=}10$) & 0,154 & 0,163 & 0,066 & 0,085 & 0,103 \\
     PPR row-norm $\alpha=0{,}95$ (côté JP)    & 0,407 & 0,426 & 0,184 & 0,236 & 0,301 \\
     \midrule
-    LightGCN JP (à venir)                     & --- & --- & --- & --- & --- \\
+    \rowcolor{green!10}
+    \textbf{LightGCN $K{=}2$ (BGE propagé)}   & \textbf{0,437} & \textbf{0,457} & \textbf{0,284} & \textbf{0,318} & \textbf{0,353} \\
+    \rowcolor{green!10}
+    LightGCN $K{=}2$ entraîné                 & 0,426 & 0,446 & 0,278 & 0,311 & 0,341 \\
     \bottomrule
   \end{tabular}
   \end{center}
 
   \vspace{0.5em}
-  \warnbox{\scriptsize \textbf{Tension B4-e RRF vs B3-a cosine.}
-  RRF gagne sur \emph{couverture} (M1 $0{,}416$ vs $0{,}408$, Hit $0{,}436$ vs $0{,}427$),
-  cosine gagne sur \emph{ordre} (MRR $0{,}272$ vs $0{,}192$, NDCG $0{,}304$ vs $0{,}241$,
-  M2 $0{,}338$ vs $0{,}303$). RRF capte plus mais classe moins bien.}
-
-  \vspace{0.3em}
-  \okbox{\scriptsize \textbf{PPR saturée côté JP : $0{,}407 \approx$ B3-a $0{,}408$ sur les 5 métriques}
-  $\Rightarrow$ confirmation finale du Jaccard $1{,}00$ noté Week-9, le graphe n'ajoute
-  aucun signal côté JP.}
+  \okbox{\scriptsize \textbf{LightGCN nouveau champion JP toutes méthodes confondues}
+  (M1 $0{,}437 >$ B4-e $0{,}416$). C'est la \textbf{victoire la plus claire} du graphe appris
+  -- la propagation lisse les hubs là où PPR est saturée (Jaccard $1{,}00$ vs cosine).
+  L'entraînement (positifs articles, zéro JP) érode légèrement le JP : on garde \emph{untrained}.}
 \end{frame}
 
-\begin{frame}{PPR -- sweep $\alpha$ (norm row, $K_{\text{in}}{=}10$)}
+\begin{frame}{PPR -- sweep $\alpha$ (norm row, $s{=}10$)}
   \scriptsize
-  \textbf{4 valeurs de $\alpha$ testées} (et $K_{\text{in}}$ figé à 10) -- vue panel complet sur articles :
+  \textbf{4 valeurs de $\alpha$ testées} (et $s$ figé à 10) -- vue panel complet sur articles :
 
   \vspace{0.3em}
   \renewcommand{\arraystretch}{1.15}
@@ -529,12 +540,139 @@
 
     \column{0.38\textwidth}
     \warnbox{\scriptsize \textbf{Pas encore testé :} \\[0.2em]
-    $K_{\text{in}} \in \{5, 10, 20, 50\}$ \\
+    $s \in \{5, 10, 20, 50\}$ \\
     seeds Art-seul / JP-seul / Art$+$JP \\[0.3em]
     Sweep $\alpha$ fin (script 21 Week-9) faisait \\
     $\{0{,}1; 0{,}3; 0{,}5; 0{,}7; 0{,}85; 0{,}95\}$ \\
     avec mêmes tendances. \\[0.3em]
     \textbf{Sym-norm :} swept et collapsée à cosine sur tous les $\alpha$ $\to$ droppée.}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{M3 -- LLM-as-judge sur les 9 méthodes}
+
+\begin{frame}{M3 sur les 9 méthodes -- tableau global (Gemma 4 26B, prompt v2)}
+  \scriptsize
+  Cohorte 971, $K{=}10$, dénominateur \texttt{k\_fixed} ($2K{=}20$). 46\,633 jugements bruts, run cluster $\sim$40 min.
+  Tri par M3 décroissant (panel élargi).
+
+  \vspace{0.3em}
+  \renewcommand{\arraystretch}{1.1}
+  \setlength{\tabcolsep}{4pt}
+  \begin{center}
+  \begin{tabular}{@{}l l r r r r | r r@{}}
+    \toprule
+    \textbf{Méthode} & \textbf{modal} & \textbf{n\_q} & \textbf{M3} & $\#n_2$ & $\#n_0$ & \textbf{M1 strict} & \textbf{M1 étendu} \\
+    \midrule
+    \rowcolor{green!10}
+    B3-a (cosine JP)              & jp  & 962 & \textbf{0,672} & 4809 & 1396 & 0,408 & --- \\
+    B4-d (intersection $s{=}50$)   & jp  & 956 & 0,644 & 4489 & 1308 & 0,348 & --- \\
+    PPR row $\alpha=0{,}95$        & jp  & 969 & 0,632 & 4575 & 1906 & 0,407 & --- \\
+    \rowcolor{accentsoft}
+    B4-e (RRF $s{=}20$, \emph{champ. M1 JP}) & jp  & 962 & 0,589 & 4145 & 2434 & \textbf{0,416} & --- \\
+    B4-f (citation-w $s{=}10$)    & jp  & 962 & 0,424 & 2415 & 3874 & 0,154 & --- \\
+    \midrule
+    \rowcolor{green!10}
+    B2-a (cosine art)             & art & 969 & \textbf{0,325} & 2132 & 5527 & 0,459 & 0,185 \\
+    \rowcolor{accentsoft}
+    B3-e (JP$\to$Art $s{=}10$, \emph{champ. M1 strict}) & art & 969 & 0,317 & 2113 & 5510 & \textbf{0,711} & 0,399 \\
+    PPR row $\alpha=0{,}85$        & art & 969 & 0,296 & 2052 & 6000 & 0,601 & 0,421 \\
+    \rowcolor{red!10}
+    PPR row $\alpha=0{,}95$ (\emph{champ. M1 étendu}) & art & 969 & 0,214 & 1516 & 7062 & 0,571 & \textbf{0,440} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \warnbox{\scriptsize \textbf{M3 réordonne complètement le classement vs M1.}
+  Côté articles : \textbf{B2-a cosine} (M1 0,459, \emph{pas} champion) gagne en M3 (0,325).
+  B3-e champion M1 strict tombe à $\approx$~B2-a. PPR $\alpha=0{,}95$, \emph{champion M1 étendu},
+  est le \textbf{pire en M3} (0,214). Côté JP : cosine pur B3-a domine ; B4-e RRF
+  champion M1 chute 4\textsuperscript{e} ; B4-f « désastre M1 » (0,154) \textbf{remonte} à 0,424.}
+\end{frame}
+
+\begin{frame}{M3 -- validité de la métrique (3 contrôles)}
+  \footnotesize
+  Avant d'agir sur M3, on a vérifié qu'elle mesure bien ce qu'on prétend :
+
+  \vspace{0.4em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \setlength{\tabcolsep}{6pt}
+  \begin{tabular}{@{}p{4.0cm} p{5.5cm} r@{}}
+    \toprule
+    \textbf{Contrôle} & \textbf{Méthode} & \textbf{Résultat} \\
+    \midrule
+    SANITY GT-singleton & Les articles GT retrouvés dans un ranking
+    sont-ils notés $n_2$ ? (sur 1864 cas, run complet) & \textbf{78~\% $n_2$} \\
+    Test discriminant & 20 q $\times$ 3 catégories : GT vs hard\_neg (top
+    cosine hors-GT) vs random (article au hasard) & GT $\to$ 55~\% $n_2$ \\
+    & & hard\_neg $\to$ 18~\% $n_2$ \\
+    & & \textcolor{ok}{\textbf{random $\to$ 0~\% $n_2$}} \\
+    Audit croisé inter-juges & 36 items stratifiés, Gemma local vs Opus en
+    aveugle, kappa pondéré quadratique & $\kappa = 0{,}64$ \\
+    & & exact 61~\%, $\pm 1$ niveau \textbf{97~\%}, 1 désaccord fort/36 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \okbox{\scriptsize \textbf{Métrique calibrée et discriminante.}
+  Random $\to$ 0~\% $n_2$ : le juge ne dit \emph{jamais} pertinent à un article au hasard.
+  Le 41~\% GT$\to$$n_0$ révèle la GT \texttt{doctrine\_qgen} \textbf{bruitée} (ex. \texttt{cpp:6}
+  extinction action $\to$ question sur droits de la défense). M3 voit à travers ce bruit
+  -- c'est sa valeur ajoutée vs M1/M2.}
+
+  \vspace{0.3em}
+  \keybox{\scriptsize \textbf{Calibration prompt :} v1 trop strict (GT $\to$ 45~\% $n_2$). v2 retenu :
+  $n_2$ = « ce qu'un juriste \emph{citerait}, même s'il faut interpréter / transposer ».
+  Règle « doute $\to$ bas » supprimée, exemple few-shot interprétation ajouté.}
+\end{frame}
+
+\begin{frame}{M3 -- interprétation, enjeux, questions à Johnny}
+  \footnotesize
+
+  \textbf{Pourquoi B2-a cosine bat les méthodes graphe/fusion sur M3 ?}
+  \begin{itemize}\setlength{\itemsep}{0.05em}
+    \item Les méthodes graphe (B3-e, PPR, B4-e RRF) tirent des voisins par citation
+    \emph{pour gonfler le recall-GT}. Ces voisins augmentent la couverture mais
+    \textbf{introduisent des items moins pertinents sémantiquement}.
+    \item PPR $\alpha=0{,}95$ (diffusion forte) maximise M1 étendu (0,440) au prix
+    d'un top-K saturé de noeuds populaires \emph{peu pertinents pour la question}
+    (M3 = 0,214, plancher).
+    \item \textbf{Optimiser le recall-GT ne gagne pas la pertinence.} M3 mesure ce
+    que M1 ne voit pas : la précision sémantique hors-GT.
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Côté JP : B4-f remonte (0,154 $\to$ 0,424) -- pourquoi ?}
+  \begin{itemize}\setlength{\itemsep}{0.05em}
+    \item B4-f cite-pondéré ramène les \emph{grands arrêts populaires} sur le thème.
+    Pas les pourvois exacts de la GT (d'où le M1 désastreux) mais des JP
+    \textbf{réellement pertinentes au juge LLM}.
+    \item C'est \textbf{exactement le biais GT-sparse que M3 doit corriger} :
+    quand la GT JP = pourvois CC précis, on rate la pertinence sémantique.
+  \end{itemize}
+
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \warnbox{\scriptsize \textbf{Question à Johnny -- dénominateur M3.}
+    Actuellement \texttt{k\_fixed} ($2K{=}20$ items théoriques). Alternative :
+    \texttt{k\_ranking} (taille réelle du ranking). N'impacte que B3-e (~9,86) et
+    B4-d (~9,57). \textbf{Switch = re-agrégation seule, zéro re-jugement} : choix
+    à trancher avant figeage des chiffres.}
+
+    \column{0.43\textwidth}
+    \keybox{\scriptsize \textbf{Implications stratégiques :}
+    \begin{enumerate}\setlength{\itemsep}{0.05em}
+      \item Cosine pur n'est pas qu'un baseline -- il est \textbf{champion M3}
+      des deux côtés.
+      \item B3-e domine M1 strict mais \textbf{n'est pas mieux que B2-a sur M3}.
+      \item PPR à explorer avec $\alpha$ plus bas (M3 récompense la précision).
+      \item LightGCN devra battre B2-a et B3-a sur M3, pas juste sur M1.
+    \end{enumerate}}
   \end{columns}
 \end{frame}
 
@@ -608,69 +746,108 @@
 \end{frame}
 
 % ============================================================
-\section{Chantier 4 -- LightGCN et méthodes GNN}
+\section{Chantier 4 -- LightGCN (résultats sur G0 brut)}
 
-\begin{frame}{Chantier 4 -- pourquoi LightGCN d'abord}
+\begin{frame}{LightGCN -- en une diapo}
   \footnotesize
-  \textbf{LightGCN (He et al. 2020)} : modèle de référence en \emph{collaborative filtering},
-  baseline incontournable de tout système de recommandation moderne.
+  \okbox{\textbf{LightGCN bat PPR sur 2 régimes sur 3} -- sur le graphe \textbf{G0 brut},
+  sans nettoyage. \textbf{Critère du handoff atteint $\times 2$.}}
 
   \vspace{0.4em}
-  \begin{columns}[T]
-    \column{0.55\textwidth}
-    \textbf{Principe} :
-    \begin{itemize}\setlength{\itemsep}{0.1em}
-      \item Embeddings appris pour chaque nœud (Article, JP).
-      \item Propagation linéaire sans transformation non-linéaire.
-      \item Score $(u,i)$ $=$ produit scalaire des embeddings.
-      \item Loss BPR sur paires positives/négatives.
-    \end{itemize}
+  \begin{itemize}\setlength{\itemsep}{0.15em}
+    \item \textbf{Design A} : on propage les embeddings BGE-M3 sur le graphe de citations
+    Art$\leftrightarrow$JP ; les questions sont des « users » BGE-M3 \emph{figés},
+    scorés en \textbf{cosinus}.
+    \item \textcolor{ok}{\textbf{$\uparrow$}}~\textbf{Articles strict} : bat PPR
+    (NDCG $0{,}533$ vs $0{,}334$), \textbf{égale} le champion B3-e ($0{,}711$) et gagne
+    NDCG/MRR.
+    \item \textcolor{ok}{\textbf{$\uparrow$}}~\textbf{JP} : \textbf{nouveau champion}
+    toutes méthodes (M1 $0{,}437 >$ B4-e $0{,}416 >$ PPR $0{,}407$).
+    \item PPR garde l'avantage en \textbf{articles étendu} (diffusion large $\to$ rappel).
+  \end{itemize}
 
-    \vspace{0.4em}
-    \textbf{Lien avec ce qu'on a déjà} :
-    \begin{itemize}\setlength{\itemsep}{0.1em}
-      \item Propagation = \textbf{mécanique PPR apprise}.
-      \item Notre PPR naïf = sa version non-paramétrique.
-      \item Transition conceptuelle directe.
-    \end{itemize}
-
-    \column{0.45\textwidth}
-    \crossbox{\scriptsize \textbf{Suite envisagée} :
-    \begin{enumerate}\setlength{\itemsep}{0.1em}
-      \item \textbf{LightGCN} (baseline GNN).
-      \item \textbf{R-GCN} inductif (types d'arêtes).
-      \item \textbf{HGT} (hétérogène + attention).
-      \item \textbf{GraphSAGE} (inductif, scalable).
-    \end{enumerate}}
-
-    \vspace{0.4em}
-    \warnbox{\scriptsize \textbf{Pré-requis bloquant} : récupérer le fichier
-    Mattermost envoyé par Johnny avant d'attaquer l'implémentation.}
-  \end{columns}
+  \vspace{0.4em}
+  \keybox{\scriptsize \textbf{Caveat} : la victoire vs PPR (untrained $K{=}2$) est
+  \textbf{déterministe} (aucun apprentissage). Le gain de l'entraînement ($+0{,}052$
+  sur M1 strict) est \textbf{single-seed, hyperparams non tunés} $\to$ à valider multi-seed.}
 \end{frame}
 
-\begin{frame}{Chantier 4 -- plan d'attaque LightGCN}
+\begin{frame}{LightGCN -- décomposition de l'ablation (M1 strict articles)}
   \footnotesize
-  \textbf{Setup} : graphe biparti existant Art $\leftrightarrow$ JP
-  ($118\,112$ articles $\times$ $87\,821$ JP, $\sim 2$M citations).
+  L'ablation $K{=}0$ ($\equiv$ cosine BGE) sépare proprement chaque contribution :
+
+  \vspace{0.5em}
+  \begin{center}\scriptsize
+  \renewcommand{\arraystretch}{1.5}
+  \setlength{\tabcolsep}{8pt}
+  \begin{tabular}{@{}l c l@{}}
+    \toprule
+    \textbf{Méthode} & \textbf{M1 strict} & \textbf{Ce que ça isole} \\
+    \midrule
+    Texte seul (cosine BGE-M3) & $0{,}459$ & le sémantique pur \\
+    \;\; + propagation graphe ($K{=}2$, figé) & $\mathbf{0{,}653}$
+    & \textcolor{ok}{\textbf{$+0{,}194$ = apport du GRAPHE}} \\
+    \;\;\;\; + apprentissage (BPR cosinus) & $\mathbf{0{,}705}$
+    & \textcolor{ok}{\textbf{$+0{,}052$ = apport de l'APPRENTISSAGE}} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \keybox{Chaque étage \textbf{ajoute}. Le graphe de citations
+  apporte massivement au sémantique pur ; l'apprentissage ajoute encore par-dessus.}
 
   \vspace{0.4em}
-  \textbf{Étapes (3-4 semaines)} :
-  \begin{enumerate}\setlength{\itemsep}{0.15em}
-    \item \textbf{S11 -- Lecture} : fichier Mattermost + papier LightGCN original + revue
-    benchmarks SOTA (Movielens, Amazon, OAG). Fiche de lecture.
-    \item \textbf{S11--S12 -- Setup data} : conversion du graphe biparti en
-    \texttt{torch\_geometric.data.HeteroData}. Split train/val/test temporel.
-    Question $\to$ « utilisateur virtuel » avec embedding initialisé par BGE-M3.
-    \item \textbf{S12--S13 -- Train LightGCN} : hyperparams (couches, dim, $\lambda$).
-    Évaluation sur le panel complet (Chantier 1).
-    \item \textbf{S13--S14 -- Variantes} : R-GCN si types d'arêtes utiles, HGT
-    pour attention hétérogène.
+  \textbf{Over-smoothing} visible : $K_0 < K_1 < \mathbf{K_2} > K_3$.
+  $K{=}2$ optimal $\Rightarrow$ conforme à la théorie LightGCN.
+\end{frame}
+
+\begin{frame}{LightGCN -- trois leçons techniques}
+  \footnotesize
+  \begin{enumerate}\setlength{\itemsep}{0.5em}
+    \item \textbf{Scoring cosinus obligatoire.} En produit scalaire, la propagation
+    \textbf{gonfle la norme des hubs} $\Rightarrow$ biais de popularité qui
+    \textbf{effondre} strict + JP (M1 $\approx 0{,}02$).
+    La L2-normalisation retire ce biais.
+    \item \textbf{Entraînement BPR cosinus + ancrage anti-drift.}
+    Loss = $\mathrm{BPR}_{\cos}(\tau{=}0{,}1)$ + $\lambda \lVert E_0 - \mathrm{BGE} \rVert^2$
+    (ancrage à l'init BGE pour éviter le drift sur seulement 840 paires d'entraînement).
+    Sans ces 2 corrections, l'entraînement naïf s'effondre.
+    \item \textbf{Pas de PyG nécessaire.} Propagation pure PyTorch sur la matrice de citations
+    sparse (CPU+MPS, $\sim 5$ min). L'écosystème \texttt{torch\_geometric} aurait été du surplus.
   \end{enumerate}
 
   \vspace{0.4em}
-  \keybox{\textbf{Critère de succès} : LightGCN ligne dans le grand tableau,
-  battant PPR sur au moins un régime (singleton ou multi-GT, côté articles ou JP).}
+  \warnbox{\scriptsize \textbf{Tradeoff entraînement} : à $K{=}2$ fixé, l'entraînement
+  \textbf{échange un peu de JP} ($0{,}437 \to 0{,}426$, perte $-0{,}011$) \textbf{contre
+  beaucoup de précision articles} ($0{,}653 \to 0{,}705$, gain $+0{,}052$).
+  Les 840 paires de train sont des positifs \emph{articles} -- \textbf{zéro supervision JP}.
+  D'où le choix : \emph{trained} pour les articles, \emph{untrained} pour le JP.}
+\end{frame}
+
+\begin{frame}{LightGCN -- limites honnêtes \& suite}
+  \footnotesize
+  \warnbox{\scriptsize Tout ceci sur le graphe \textbf{G0 brut} : 36~\% d'articles résolus,
+  48~\% de nœuds morts, graphe binaire. Le nettoyage $G_0 \to V_n$ est de
+  \textbf{l'upside non exploité}.}
+
+  \vspace{0.4em}
+  \textbf{Autres limites} :
+  \begin{itemize}\setlength{\itemsep}{0.05em}
+    \item $840$ paires d'entraînement seulement (732 q hors cohorte) $\to$ apprentissage = calibration, pas un gros gain.
+    \item \textbf{JP non supervisé} (zéro paire positive côté JP).
+    \item PPR garde l'avantage en étendu (diffusion plus large).
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Prochaines étapes priorisées} :
+  \begin{enumerate}\setlength{\itemsep}{0.1em}
+    \item Valider l'entraînement \textbf{multi-seed} (3 seeds, mean$\pm$range) -- en cours.
+    \item \textbf{Régime D} : injecter la supervision JP$+$article (cf. ADR-001).
+    \item $G_0 \to V_1$ : retirer les 41\,824 nœuds morts, re-mesurer.
+    \item Combler l'\textbf{étendu} (variante C : questions dans le graphe).
+    \item Tuning $(\tau, \lambda, \mathrm{lr})$ + grille $K$ autour de 2.
+  \end{enumerate}
 \end{frame}
 
 % ============================================================
@@ -678,19 +855,19 @@
 
 \begin{frame}{Questions à arbitrer avec Johnny}
   \footnotesize
-  \begin{enumerate}\setlength{\itemsep}{0.4em}
+  \begin{enumerate}\setlength{\itemsep}{0.3em}
     \item \textbf{Validation panel métriques} : OK pour Hit@K + MRR@K cappé + NDCG@K binaire ?
     NDCG multi-niveau plus tard si on a une GT graduée (Chantier 3) ?
+    \item \textbf{Lecture M3} : OK pour acter que \textbf{cosine pur est champion M3} et que
+    « optimiser M1 ne gagne pas M3 » ? Implication forte sur la stratégie GNN.
+    \item \textbf{Dénominateur M3} : \texttt{k\_fixed} ($2K{=}20$, actuel) vs \texttt{k\_ranking}
+    (taille réelle). N'impacte que B3-e/B4-d (~9,6 items). Switch = re-agrégation seule.
     \item \textbf{Périmètre du tableau global} : faut-il inclure dès maintenant LLM seul
-    et LLM-RAG (coût compute non-négligeable), ou se concentrer d'abord sur
-    cosine + PPR + LightGCN ?
-    \item \textbf{Enrichissement bench -- arbitrage} : feu vert sur le reverse-engineering
-    de décisions (chantier moyen, plusieurs semaines) ou rester sur les enrichissements
-    gratuits (visa + Légifrance) en priorité ?
-    \item \textbf{Fichier Mattermost} : peux-tu me le repointer ? Bloque le démarrage
-    de l'implémentation LightGCN.
-    \item \textbf{Cible Étape 1 vs Étape 2} : où place-t-on la frontière ? Étape 1
-    = embeddings + PPR (clôture rapport), Étape 2 = GNN ?
+    et LLM-RAG (coût compute non-négligeable), ou se concentrer sur cosine + PPR + LightGCN ?
+    \item \textbf{Enrichissement bench} : feu vert sur le reverse-engineering de décisions
+    (chantier moyen, plusieurs semaines) ou rester sur visa + Légifrance ?
+    \item \textbf{Fichier Mattermost} : peux-tu me le repointer ? Bloque LightGCN.
+    \item \textbf{Cible Étape 1 vs Étape 2} : où place-t-on la frontière ?
   \end{enumerate}
 \end{frame}
 
