@@ -80,7 +80,7 @@ Objectif : *quantifier le gain apporté par la donnée de qualité (JP+article),
 - **Garde-fou 1 — Harnais gelé** : même cohorte, même `metrics.py`, même split, figés dès G0. Seul le graphe change entre Vn.
 - **Garde-fou 2 — Anti *scope reduction*** (surtout V3) : mesurer sur un **dénominateur GT figé** (les GT de G0) et **reporter la couverture** (% GT atteignables) à côté de chaque métrique. Une version n'est « meilleure » qu'à **couverture ≥**. Sinon retirer des GT durs flatte la Recall sans progrès réel.
 - **Garde-fou 3 — Anti-fuite** (expérience D) : toute question d'éval doit être hors de son train.
-- **Dépendance** : nécessite le panel `metrics.py` (Hit/MRR/NDCG) — non encore implémenté (cf. `sota-gnn-reco-2026` §4).
+- **Harnais d'éval disponible** : `metrics.py` (M1/M2/Hit/MRR/NDCG + `panel_strict_ext`) et `24_build_global_table.py` existent (Week-10, branche `etat-lieux-johnny-2026-05-28`) ; le script 31 (LightGCN) y est déjà prévu. Réutiliser tel quel. → **Implication pratique** : construire le pipeline LightGCN (scripts 30/31/32) **sur cette branche**, qui porte aussi le graphe et la cohorte.
 - **À valider avec Johnny** : (a) le principe G0→Vn ; (b) le choix D-simple vs k-fold ; (c) la définition de V1 (liste des nœuds morts à retirer).
 
 ## Sources

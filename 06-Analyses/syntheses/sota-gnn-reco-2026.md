@@ -80,7 +80,7 @@ C'est l'expérience qui isole « apport du graphe vs apport du texte » — argu
 ## 4. Dépendances ouvertes (à lever avant Sessions 2–3)
 
 - [ ] **#32 — Fichier Mattermost de Johnny** : non récupérable par l'agent → à fournir par l'utilisateur. Bloque **une fiche** (`02-Etat-de-l-art/recommandation/`), pas le train. Stub parking créé.
-- [ ] **Chantier 1 — panel métriques Hit/MRR/NDCG** : `eval_m1_m2.csv` ne couvre que **M1/M2**. Aucune fonction `ndcg/mrr/hit` trouvée dans le code projet. → **À implémenter** (`metrics.py` partagé) avant d'évaluer LightGCN proprement, sinon pas de ligne complète dans le tableau global.
+- [x] **Chantier 1 — panel métriques : FAIT** (Week-10, branche `etat-lieux-johnny-2026-05-28`). `scripts/metrics.py` expose M1 (Recall@K), M2 (rang custom), Hit@K, MRR@K (cappé à K), NDCG@K (rel binaire) + `all_metrics` / `panel_strict_ext`. Docstring : « Importé par 18 (B*), 20 (PPR), 23 (M3, futur), **31 (LightGCN, futur)** ». L'éval va jusqu'à `24_build_global_table.py`. → LightGCN doit **réutiliser ce `metrics.py` tel quel** (script 31), aucune métrique custom.
 - [ ] **PyTorch Geometric** : `pip install torch_geometric` dans le `.venv` (pas l'env `--user` cluster, cf. mémoire `cluster-user-env-fragile.md`) → confirmation utilisateur requise (Session 2).
 - [ ] **Décision init BGE-M3** : freeze N epochs puis fine-tune, vs fine-tune dès le départ avec `lr` réduit.
 
