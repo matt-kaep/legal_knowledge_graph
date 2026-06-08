@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Éval embedding articles + JP — Benchmark doctrine_qgen pénal (1707 q)</title>
+<style>
+  :root {
+    --c-bg: #fafaf7;
+    --c-fg: #1a1a1a;
+    --c-muted: #666;
+    --c-accent: #355c7d;
+    --c-accent-light: #e4ecf3;
+    --c-success: #2d5d3a;
+    --c-success-light: #e6efe7;
+    --c-warn: #8b5a2b;
+    --c-warn-light: #f4ebe0;
+    --c-border: #d9d4c8;
+    --c-table-stripe: #f2efe8;
+    --c-code-bg: #ecebe5;
+  }
+  body {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    background: var(--c-bg); color: var(--c-fg);
+    max-width: 1100px; margin: 2rem auto; padding: 0 2rem 4rem;
+    line-height: 1.55; font-size: 16px;
+  }
+  h1 { font-size: 2rem; border-bottom: 3px solid var(--c-accent); padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+  h1 + p.lede { color: var(--c-muted); font-style: italic; margin-top: 0; margin-bottom: 2rem; }
+  h2 { font-size: 1.5rem; color: var(--c-accent); margin-top: 3rem; border-bottom: 1px solid var(--c-border); padding-bottom: 0.3rem; }
+  h3 { font-size: 1.2rem; margin-top: 2rem; }
+  h4 { font-size: 1rem; margin-top: 1.5rem; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; background: white; }
+  th, td { border: 1px solid var(--c-border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--c-accent); color: white; font-weight: 600; }
+  tbody tr:nth-child(even) { background: var(--c-table-stripe); }
+  code { font-family: "SF Mono", Monaco, Consolas, monospace; background: var(--c-code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+  pre { background: var(--c-code-bg); padding: 0.9rem 1.1rem; border-radius: 5px; overflow-x: auto; font-size: 0.85rem; border-left: 3px solid var(--c-accent); }
+  blockquote { border-left: 4px solid var(--c-accent); margin: 1rem 0; padding: 0.5rem 1.2rem; background: var(--c-accent-light); border-radius: 0 5px 5px 0; }
+  .box { border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem 1.3rem; margin: 1rem 0; background: white; }
+  .box.success { border-left: 5px solid var(--c-success); background: var(--c-success-light); }
+  .box.warn    { border-left: 5px solid var(--c-warn);    background: var(--c-warn-light); }
+  .box.accent  { border-left: 5px solid var(--c-accent);  background: var(--c-accent-light); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1.2rem 0 2rem; }
+  .kpi { background: white; border-radius: 6px; border: 1px solid var(--c-border); padding: 0.9rem 1rem; text-align: center; }
+  .kpi .value { font-size: 1.6rem; font-weight: 600; color: var(--c-accent); font-variant-numeric: tabular-nums; }
+  .kpi .label { font-size: 0.78rem; color: var(--c-muted); margin-top: 0.2rem; }
+  .small { font-size: 0.85rem; color: var(--c-muted); }
+  .delta-pos { color: var(--c-success); font-weight: 600; }
+  .delta-neg { color: #b34a3a; font-weight: 600; }
+  .num { font-variant-numeric: tabular-nums; }
+  .bar { background: var(--c-border); height: 14px; border-radius: 3px; overflow: hidden; min-width: 80px; }
+  .bar > div { background: var(--c-accent); height: 100%; }
+  hr { border: none; border-top: 1px dashed var(--c-border); margin: 2.5rem 0; }
+</style>
+</head>
+<body>
+
+<h1>Éval embeddings articles + JP sur benchmark étendu doctrine_qgen (1707 questions pénal)</h1>
+<p class="lede">Run 28 mai 2026 · BGE-M3 1024d · pool articles 31 357 (tous codes) · pool JP synthèses 116 755 (DB OVH)</p>
+
+<div class="box success">
+  <p><strong>Saut de régime confirmé sur un volume × 213.</strong> Sur 1707 questions générées par doctrine_qgen (vs 8 q CNB pénal qui servaient de proxy au point Johnny du 26/05) :</p>
+  <ul>
+    <li><strong>692 / 1707 questions passent le critère DUR</strong> (recall@10 articles ≥ 0,5 ET recall@5 JP via graphe ≥ 0,5) = <strong>40,5 %</strong></li>
+    <li>837 / 1707 passent le critère FACILE = 49,0 %</li>
+    <li>971 / 1707 questions sont évaluables JP-side (gold pourvoi résolu en jp_id) = <strong>56,9 %</strong> vs 7/38 = 18 % sur CNB</li>
+    <li>96 % des questions ont 100 % de leurs articles gold dans le pool LEGI</li>
+  </ul>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi"><div class="value">1 707</div><div class="label">questions évaluées</div></div>
+  <div class="kpi"><div class="value">40,5 %</div><div class="label">pass DUR</div></div>
+  <div class="kpi"><div class="value">0,490</div><div class="label">mean r@10 articles (filtered pénal strict)</div></div>
+  <div class="kpi"><div class="value">0,547</div><div class="label">mean r@10 JP via_graph open</div></div>
+</div>
+
+<h2>1. Cadre de l'expérience</h2>
+
+<h3>1.1 Pourquoi ce run</h3>
+<p>Le benchmark CNB 2025 ne contient que <strong>8 questions en pénal</strong> (3 droit pénal + 5 procédure pénale) et 38 toutes branches. Trop peu pour stratifier statistiquement les patterns d'échec ou valider la robustesse du pipeline. Le pipeline <code>doctrine_qgen</code> (livré le 24/05) a produit <strong>3 421 questions clean</strong> à partir de 230 Jurisclasseurs de procédure pénale, dont <strong>1 707 « strict »</strong> ont à la fois un article ET une JP comme gold — c'est ce sous-ensemble qu'on évalue ici.</p>
+
+<h3>1.2 Pipeline d'évaluation</h3>
+<pre>1. fetch corpus_strict_gemma4-26B-A4B.json (1707 questions)
+2. conversion gold articles → set("code_slug:article_num")
+3. conversion gold JP → set(pourvoi CC) via regex \d{2}-\d{2}\.\d{3}
+4. encode questions avec BGE-M3 (MPS, batch=32, ~53s)
+5. cosine question × emb_articles_all (31 357) → top-K articles
+6. cosine question × emb_jp_synthese (116 755) → top-K JP direct
+7. back-edge graphe : G[:, top_K_cols].sum > 0 → JP via graphe
+8. hybrid_max : union top-K direct + via_graph, ordre direct</pre>
+
+<h3>1.3 Stratégies testées</h3>
+<table>
+  <thead><tr><th>Côté</th><th>Stratégie</th><th>Pool</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="3">Articles</td><td><code>open</code></td><td>31 357 articles tous codes</td></tr>
+    <tr><td><code>filtered_strict</code></td><td>3 603 articles (4 codes pénal officiels)</td></tr>
+    <tr><td><code>filtered_ext</code></td><td>11 466 articles (10 codes effectivement cités par doctrine_qgen)</td></tr>
+    <tr><td rowspan="3">JP</td><td><code>jp_direct</code></td><td>cosine sur 116 755 synthèses LLM Hector (DB OVH)</td></tr>
+    <tr><td><code>jp_via_graph</code></td><td>back-edge depuis top-K articles via le graphe biparti</td></tr>
+    <tr><td><code>jp_hybrid_max</code></td><td>union des deux top-K, ordre direct préservé (naïf)</td></tr>
+  </tbody>
+</table>
+
+<h2>2. Résultats — vue d'ensemble</h2>
+
+<h3>2.1 Articles — recall@K moyen par stratégie</h3>
+<table>
+  <thead><tr><th>Stratégie</th><th>mean r@10</th><th>mean r@20</th><th>Pool effectif</th></tr></thead>
+  <tbody>
+    <tr><td><code>open</code> (31 k articles)</td><td>0,450</td><td>0,538</td><td>31 357</td></tr>
+    <tr><td><code>filtered_strict</code> (4 codes pénal)</td><td><strong>0,490</strong></td><td>—</td><td>3 603</td></tr>
+    <tr><td><code>filtered_ext</code> (10 codes)</td><td>0,464</td><td>—</td><td>11 466</td></tr>
+  </tbody>
+</table>
+
+<div class="box accent">
+  <p><strong>Changement vs CNB :</strong> sur les 38 questions CNB, open ≈ filtered (+1 q sur 38 seulement). Ici, <strong>filtered_strict bat open de +0,04 points</strong> et bat aussi filtered_ext. Lecture : sur un benchmark <em>spécialisé pénal</em>, restreindre au pool des 4 codes pénal aide à éliminer le bruit issu des codes non pertinents (code civil, douanes, etc. inclus dans filtered_ext).</p>
+  <p>→ Implication : dès qu'on a un classifieur de branche fiable (même grossier), on peut espérer un gain de 4-8 points sur le recall@10.</p>
+</div>
+
+<h3>2.2 JP — comparaison des 3 méthodes (sur 971 questions évaluables)</h3>
+<table>
+  <thead><tr><th>Méthode</th><th>mean r@5</th><th>mean r@10</th><th>pass DUR (r@5 ≥ 0,5)</th><th>pass FACILE (r@10 ≥ 0,5)</th></tr></thead>
+  <tbody>
+    <tr><td><code>jp_direct</code></td><td>0,352</td><td>0,415</td><td>347 / 971 (35,7 %)</td><td>409 / 971 (42,1 %)</td></tr>
+    <tr><td><code>jp_via_graph</code> (open)</td><td><strong>0,458</strong></td><td><strong>0,547</strong></td><td><strong>455 / 971 (46,9 %)</strong></td><td><strong>543 / 971 (55,9 %)</strong></td></tr>
+    <tr><td><code>jp_hybrid_max</code></td><td>0,345</td><td>0,406</td><td>347 / 971 (35,7 %)</td><td>409 / 971 (42,1 %)</td></tr>
+  </tbody>
+</table>
+
+<div class="box warn">
+  <p><strong>Confirmation du résultat CNB :</strong> <code>hybrid_max</code> sous-performe systématiquement ses composants (ici, identique à <code>jp_direct</code> seul). L'ordre du direct écrase les hits via_graph rangés plus loin. <strong>Le besoin de RRF (Reciprocal Rank Fusion) est confirmé sur un volume 138× plus grand</strong>.</p>
+  <p>Sur ce benchmark, <code>jp_via_graph</code> domine <code>jp_direct</code> (+0,1 point en r@5). Logique : doctrine_qgen produit beaucoup de questions qui mentionnent explicitement les articles fondateurs (« art. 222-23 », « CPP:63 »), donc le back-edge graphe est particulièrement efficace — la JP citante est trivialement rappelable. Sur CNB, le ratio était plus équilibré car les questions CRFPA sont plus narratives.</p>
+</div>
+
+<h3>2.3 Critères composites globaux</h3>
+<table>
+  <thead><tr><th>Critère</th><th>Définition</th><th>n</th><th>%</th></tr></thead>
+  <tbody>
+    <tr><td><strong>DUR</strong></td><td>r@10 articles ≥ 0,5 ET r@5 JP via_graph ≥ 0,5</td><td><strong>692 / 1707</strong></td><td><strong>40,5 %</strong></td></tr>
+    <tr><td><strong>FACILE</strong></td><td>r@20 articles ≥ 0,5 ET r@10 JP via_graph ≥ 0,5</td><td>837 / 1707</td><td>49,0 %</td></tr>
+  </tbody>
+</table>
+
+<h2>3. Comparaison frontale CNB 2025 vs doctrine_qgen 1707</h2>
+
+<table>
+  <thead><tr><th>Métrique</th><th>CNB pénal 2025 (8 q)</th><th>CNB total 2025 (38 q)</th><th>doctrine_qgen strict (1707 q)</th><th>Lecture</th></tr></thead>
+  <tbody>
+    <tr><td>Volume</td><td>8</td><td>38</td><td><strong>1 707</strong></td><td>×213 vs CNB pénal</td></tr>
+    <tr><td>Questions évaluables JP-side</td><td>7 / 8 (88 %)</td><td>7 / 38 (18 %)</td><td><strong>971 / 1707 (57 %)</strong></td><td>Doctrine cite des pourvois CC standard, regex matche</td></tr>
+    <tr><td>Articles gold dans pool</td><td>~91 %</td><td>91 %+ sur 6 branches</td><td><strong>96 %</strong></td><td>Doctrine = articles encore en vigueur, peu d'abrogés</td></tr>
+    <tr><td>mean r@10 articles (open)</td><td>0,50 (pénal)</td><td>0,518</td><td>0,450</td><td>Léger recul attendu (vocabulaire moins direct)</td></tr>
+    <tr><td>mean r@10 articles (filtered)</td><td>0,50</td><td>0,518 (~même)</td><td><strong>0,490</strong></td><td>Filtré aide ici (+0,04 vs open)</td></tr>
+    <tr><td>jp_direct mean r@5</td><td>—</td><td>2/7 (CNB) = 0,29</td><td>0,352</td><td>Similaire</td></tr>
+    <tr><td>jp_via_graph mean r@5</td><td>—</td><td>2/7 = 0,29</td><td><strong>0,458</strong></td><td>Via_graph remonte fortement (vocabulaire article direct)</td></tr>
+    <tr><td><strong>pass DUR</strong></td><td>3 / 8 (38 %)</td><td>5–7 / 38 (13–18 %)</td><td><strong>692 / 1707 (41 %)</strong></td><td>Au même régime que pénal CNB, sur ×213 de volume</td></tr>
+  </tbody>
+</table>
+
+<div class="box success">
+  <p>Le taux de réussite <strong>passe à 40,5 % sur doctrine_qgen</strong>, soit le même ordre de grandeur que les 38 % observés sur CNB pénal — mais avec une statistique fiable (1707 questions vs 8). On peut donc considérer que <strong>le « plancher pénal » de l'Étape 1 est de l'ordre de 38–41 %</strong> de questions passant le critère dur — vs ~0 % au point Johnny du 5 mai.</p>
+</div>
+
+<h2>4. Stratification par taille du gold</h2>
+
+<table>
+  <thead><tr><th>n articles gold</th><th>n questions</th><th>pass DUR</th><th>%</th><th>Visualisation</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>1 429</td><td>566</td><td>39,6 %</td><td><div class="bar"><div style="width:39.6%"></div></div></td></tr>
+    <tr><td>2</td><td>243</td><td>122</td><td><strong>50,2 %</strong></td><td><div class="bar"><div style="width:50.2%"></div></div></td></tr>
+    <tr><td>3</td><td>32</td><td>3</td><td><span class="delta-neg">9,4 %</span></td><td><div class="bar"><div style="width:9.4%"></div></div></td></tr>
+    <tr><td>4</td><td>3</td><td>1</td><td>33,3 %</td><td><div class="bar"><div style="width:33.3%"></div></div></td></tr>
+  </tbody>
+</table>
+
+<p class="small">Lecture : le sweet spot est <strong>2 articles gold</strong> (50 %). À 1 article, recall@10 est trivial à atteindre (1 hit dans le top-10), mais le critère dur exige aussi r@5 JP ≥ 0,5. À 3 articles, on retrouve le <strong>pattern C identifié sur CNB</strong> (« trop d'articles gold ») : recall@10 plafonne à 10/3 ≈ 3,33 maximum donc 100 % atteignable, mais en pratique le vecteur question est dilué.</p>
+
+<h2>5. Stratification par thématique (top 15 Jurisclasseurs)</h2>
+
+<table>
+  <thead><tr><th>doc_id (tronqué)</th><th>n q</th><th>pass DUR</th><th>%</th><th>Visualisation</th></tr></thead>
+  <tbody>
+    <tr><td>art_729_a_733_fasc_20 — libération conditionnelle</td><td>27</td><td>18</td><td><strong>67 %</strong></td><td><div class="bar"><div style="width:67%"></div></div></td></tr>
+    <tr><td>art_288_a_305_1 — cour d'assises ouverture sessions</td><td>23</td><td>14</td><td>61 %</td><td><div class="bar"><div style="width:61%"></div></div></td></tr>
+    <tr><td>art_567_a_575_fasc_30 — pourvoi en cassation décisions</td><td>20</td><td>12</td><td>60 %</td><td><div class="bar"><div style="width:60%"></div></div></td></tr>
+    <tr><td>art_323_a_346_fasc_20 — cour d'assises débats</td><td>39</td><td>23</td><td>59 %</td><td><div class="bar"><div style="width:59%"></div></div></td></tr>
+    <tr><td>art_380_1_a_380_15 — cour d'assises appel</td><td>22</td><td>13</td><td>59 %</td><td><div class="bar"><div style="width:59%"></div></div></td></tr>
+    <tr><td>art_137_a_150_fasc_20 — contrôle judiciaire</td><td>32</td><td>18</td><td>56 %</td><td><div class="bar"><div style="width:56%"></div></div></td></tr>
+    <tr><td>art_268_a_287 — cour d'assises procédure prép.</td><td>29</td><td>15</td><td>52 %</td><td><div class="bar"><div style="width:52%"></div></div></td></tr>
+    <tr><td>art_137_a_150_fasc_30 — contrôle judiciaire / assignation</td><td>34</td><td>17</td><td>50 %</td><td><div class="bar"><div style="width:50%"></div></div></td></tr>
+    <tr><td>art_156_a_169_1 — expertise</td><td>36</td><td>15</td><td>42 %</td><td><div class="bar"><div style="width:42%"></div></div></td></tr>
+    <tr><td>art_306_a_316_1 fasc_20_40 — cour d'assises débats</td><td>20</td><td>7</td><td>35 %</td><td><div class="bar"><div style="width:35%"></div></div></td></tr>
+    <tr><td>art_11_fasc_20 — secret de l'instruction</td><td>24</td><td>8</td><td>33 %</td><td><div class="bar"><div style="width:33%"></div></div></td></tr>
+    <tr><td>art_306_a_316_1 fasc_20_30 — cour d'assises dispos.</td><td>28</td><td>9</td><td>32 %</td><td><div class="bar"><div style="width:32%"></div></div></td></tr>
+    <tr><td>art_393_a_397_7 — comparution immédiate</td><td>30</td><td>9</td><td>30 %</td><td><div class="bar"><div style="width:30%"></div></div></td></tr>
+    <tr><td>art_préliminaire fasc_30 — principes directeurs</td><td>41</td><td>11</td><td>27 %</td><td><div class="bar"><div style="width:27%"></div></div></td></tr>
+    <tr><td>art_323_a_346_fasc_30 — cour d'assises débats production</td><td>44</td><td>9</td><td><span class="delta-neg">20 %</span></td><td><div class="bar"><div style="width:20%"></div></div></td></tr>
+  </tbody>
+</table>
+
+<p class="small">Variabilité 20 % → 67 % entre thématiques. Hypothèses : les thématiques avec des <em>articles-piliers identifiables</em> (libération conditionnelle = art 729 ; pourvoi en cassation = série 567-575 ; ouverture session = art 288+) sont mieux servies que celles à <em>articles dispersés et procéduraux</em> (principes directeurs, débats production = articles divers). On retrouve un proxy du pattern A (compositionnel) du 26 mai à cette échelle.</p>
+
+<h2>6. Complémentarité direct vs via_graph — illustrée</h2>
+
+<p>Sur les 971 questions évaluables JP-side, l'intersection et l'union des deux méthodes donne :</p>
+<table>
+  <thead><tr><th>Configuration</th><th>n_pass DUR (r@5 ≥ 0,5)</th><th>%</th></tr></thead>
+  <tbody>
+    <tr><td>jp_direct seul</td><td>347</td><td>35,7 %</td></tr>
+    <tr><td>jp_via_graph seul</td><td>455</td><td>46,9 %</td></tr>
+    <tr><td>jp_hybrid_max (union naïve)</td><td>347</td><td>35,7 % <span class="delta-neg">— union ratée</span></td></tr>
+    <tr><td><em>Borne supérieure théorique</em> (OR logique)</td><td><em>~600-650 estimé</em></td><td><em>~62-67 %</em></td></tr>
+  </tbody>
+</table>
+
+<div class="box accent">
+  <p><strong>RRF (Reciprocal Rank Fusion)</strong> devrait viser le haut de la borne supérieure. Hypothèse : passer de 455/971 (via_graph seul) → 550-600/971 en r@5 DUR. Implémentation à faire dans <code>10_eval_doctrine_qgen.py</code> ou un script jumeau <code>11_eval_rrf.py</code>.</p>
+</div>
+
+<h3>6.1 Exemples concrets</h3>
+
+<h4>Cas DUR ✓ : multi-articles + back-edge parfait</h4>
+<table>
+  <thead><tr><th>qid</th><th>n_art</th><th>r@10 art (open)</th><th>r@5 JP via_graph</th></tr></thead>
+  <tbody>
+    <tr><td><code>q_saisie_meubles_corporels_94_97</code></td><td>4</td><td>0,50</td><td><strong>1,00</strong></td></tr>
+    <tr><td><code>q_expertise_scelles_10_cpp</code></td><td>3</td><td>0,67</td><td><strong>1,00</strong></td></tr>
+  </tbody>
+</table>
+
+<h4>Cas DUR ✗ illustrant la complémentarité : direct seul aurait sauvé</h4>
+<table>
+  <thead><tr><th>qid</th><th>r@10 art</th><th>r@5 JP direct</th><th>r@5 JP via_graph</th><th>Lecture</th></tr></thead>
+  <tbody>
+    <tr><td><code>q_provocation_preuve_2014</code></td><td>0,00</td><td><strong>1,00</strong></td><td>0,00</td><td>L'embedding article rate, mais la synthèse JP « raconte » la question → direct trouve seul</td></tr>
+    <tr><td><code>q_preuve_particulier_vol_2020</code></td><td>0,00</td><td><strong>1,00</strong></td><td>0,00</td><td>Idem — pattern A (vocabulaire absent côté article)</td></tr>
+  </tbody>
+</table>
+
+<p class="small">Ces cas sont la matérialisation, à l'échelle de 1707 questions, du constat fait sur CNB-PENAL-Q3 vs CNB-PP-Q2 le 26/05. Avec une fusion RRF correcte, on devrait récupérer ces ~200-300 questions supplémentaires.</p>
+
+<h2>7. Limites et points à approfondir</h2>
+
+<ul>
+  <li><strong>736 / 1707 questions non-évaluables JP-side</strong> (gold pourvoi non au format CC, ou <code>pourvoi: "n/a"</code> dans doctrine_qgen). Comme pour CNB, étendre la résolution via DB OVH (<code>source_id</code> + <code>numero</code> + <code>court</code>) débloquerait probablement 200-400 questions supplémentaires.</li>
+  <li><strong>doctrine_qgen est 100 % procédure pénale</strong> (Jurisclasseurs procédure pénale uniquement) — on n'a aucune mesure sur le droit pénal de fond ni hors-pénal. Étendre le pipeline doctrine_qgen aux autres branches (civil, admin, social) est la prochaine extension.</li>
+  <li><strong>Biais de génération :</strong> 230 fascicules, qualité dépendante du modèle Gemma 4 26B-A4B. Le sample review 20-q du 24/05 ne montrait aucune hallucination, mais les <em>questions</em> peuvent être systématiquement plus directes (citent l'article par numéro) qu'une question CRFPA réelle qui décrit un cas factuel.</li>
+  <li><strong>Recall biaisé vers les articles-piliers</strong> : la doctrine cite typiquement les articles fondateurs (art. 137, 156, 729…) qui sont aussi les nœuds les plus citants du graphe — biais favorable à <code>jp_via_graph</code>.</li>
+</ul>
+
+<h2>8. Prochaines actions</h2>
+
+<ol>
+  <li><strong>Implémenter RRF</strong> dans <code>10_eval_doctrine_qgen.py</code> → mesurer le gain attendu (455 → 550-600 pass DUR JP)</li>
+  <li><strong>Étendre la résolution gold JP</strong> via DB OVH pour les 736 questions non-évaluables actuellement → tester si le pattern de complémentarité se maintient</li>
+  <li><strong>Stratifier les questions par <code>doc_id</code></strong> pour identifier les thématiques systématiquement difficiles (≤ 30 %) et chercher s'il s'agit d'un biais de génération ou d'un vrai blocage embedding</li>
+  <li><strong>Comparer avec un re-embed multi-vecteur</strong> sur les 32 questions à 3 articles gold (pattern C — sweet spot pour la décomposition LLM)</li>
+  <li><strong>Lancer le même pipeline sur <code>corpus_clean</code> (3 421 q)</strong> pour avoir une borne ROC : les questions sans gold JP (1 714 q) testent <em>uniquement</em> le côté articles</li>
+</ol>
+
+<hr>
+<p class="small">Produit le 28 mai 2026 — script <code>10_eval_doctrine_qgen.py</code>, runtime 230s sur MacBook Pro M-series (encoding MPS + boucle 1707 q × 11 K × 3 strats).  Artéfacts : <code>data/doctrine_qgen/{recall_articles.csv, recall_jp.csv, summary.json}</code>.</p>
+
+</body>
+</html>

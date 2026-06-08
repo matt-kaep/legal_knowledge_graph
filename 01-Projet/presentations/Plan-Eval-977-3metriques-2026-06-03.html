@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Plan d'évaluation — Cohorte 977 × 3 métriques — 2026-06-03</title>
+<style>
+  :root {
+    --accent: #295c9b;
+    --accent-soft: #e8eef7;
+    --warn: #b8860b;
+    --warn-soft: #fdf6e3;
+    --ok: #2f7a3a;
+    --ok-soft: #ecf6ec;
+    --muted: #6a6a6a;
+    --border: #d8d8d8;
+    --bg: #fafafa;
+    --card: #ffffff;
+  }
+  body {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    max-width: 1100px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    color: #222;
+    background: var(--bg);
+    line-height: 1.55;
+  }
+  h1 {
+    color: var(--accent);
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.3em;
+    margin-bottom: 0.2em;
+  }
+  h1 + .subtitle {
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2em;
+  }
+  h2 {
+    color: var(--accent);
+    margin-top: 2em;
+    border-left: 4px solid var(--accent);
+    padding-left: 0.6em;
+  }
+  h3 {
+    color: #1a3d6b;
+    margin-top: 1.6em;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.3em;
+    margin: 1em 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .key {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 0.6em 1em;
+    margin: 1em 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .warn {
+    background: var(--warn-soft);
+    border-left: 4px solid var(--warn);
+    padding: 0.6em 1em;
+    margin: 1em 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .ok {
+    background: var(--ok-soft);
+    border-left: 4px solid var(--ok);
+    padding: 0.6em 1em;
+    margin: 1em 0;
+    border-radius: 0 4px 4px 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    background: white;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.8em;
+    text-align: left;
+  }
+  th {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  code {
+    background: #f0f0f0;
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.92em;
+  }
+  pre {
+    background: #1f2733;
+    color: #e8e8e8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.88em;
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+  .formula {
+    text-align: center;
+    background: #f7f7f7;
+    padding: 0.8em;
+    margin: 0.6em 0;
+    border-radius: 4px;
+    font-family: "Latin Modern Math", "STIX Two Math", serif;
+    font-size: 1.05em;
+  }
+  .step {
+    display: flex;
+    gap: 1em;
+    margin: 0.8em 0;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex: 0 0 2.2em;
+    height: 2.2em;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .step-body { flex: 1; }
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 0.1em 0.6em;
+    border-radius: 10px;
+    font-size: 0.85em;
+    margin-right: 0.4em;
+  }
+  .badge.warn { background: var(--warn); }
+  .badge.ok { background: var(--ok); }
+  .footer {
+    margin-top: 3em;
+    padding-top: 1em;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9em;
+    text-align: center;
+  }
+  ul { padding-left: 1.4em; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<h1>Plan d'évaluation — Cohorte 977 × 3 métriques</h1>
+<div class="subtitle">2026-06-03 • Préparation point Johnny du 04/06 à 13 h</div>
+
+<div class="key">
+  <strong>TL;DR.</strong> On bascule l'éval sur une cohorte unifiée de
+  <strong>977 questions</strong> (970 doctrine_qgen + 7 CRFPA pénal), filtrées
+  sur « ≥ 1 article ET ≥ 1 pourvoi CC bien formé ». On évalue les 5 baselines
+  avec <strong>M1 (recall@10 sur la ground truth)</strong> et
+  <strong>M2 (rang moyen normalisé)</strong> sur articles et JP.
+  La métrique <strong>M3 (LLM-as-judge Gemma 4 26B)</strong> arrive après,
+  reportée en <strong>triplet (#2, #1, #0)</strong> et non en moyenne, pour
+  préserver toute la distribution.
+</div>
+
+<h2>1. Décision de direction (option A)</h2>
+
+<div class="card">
+  <h3>Pourquoi changer de cohorte ?</h3>
+  <p>
+    Jusqu'à Week-8, on travaillait sur les <strong>1 707 questions</strong> du
+    <code>corpus_strict_gemma4-26B-A4B.json</code> — pré-filtré « ≥ 1 article
+    ET champ <code>jp_attendues</code> non vide » mais sans contrainte sur
+    le format de la JP. Résultat : sur ces 1 707, seulement 1 107 (65 %) avaient
+    un pourvoi CC valide, le reste avait des références JP en texte libre
+    inexploitable pour le retrieval JP.
+  </p>
+  <p>
+    En repartant du corpus complet (3 421 doctrine_qgen + 8 CRFPA = 3 429) et en
+    appliquant un critère plus strict, on obtient une cohorte
+    <strong>plus petite mais propre sur les deux modalités</strong> — ce qui
+    nous permet d'évaluer M1, M2 et M3 de façon comparable.
+  </p>
+</div>
+
+<h3>Définition formelle de la cohorte</h3>
+<div class="key">
+  <strong>Cohorte d'éval = 977 questions</strong> telles que :
+  <ul>
+    <li><strong>articles_attendus</strong> ≠ ∅ (au moins 1 article ground truth)</li>
+    <li><strong>pourvois_cc</strong> ≠ ∅ — au moins 1 pourvoi CC respectant la
+        regex <code>\d{2}-\d{2}\.\d{3}</code></li>
+  </ul>
+  Composition : 970 doctrine_qgen + 7 CRFPA pénal.
+</div>
+
+<h3>Tableau d'éclaircissement (3 421 → 977)</h3>
+<table>
+  <thead>
+    <tr><th>Filtre cumulé</th><th class="num">Compte</th><th>Commentaire</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Total clean doctrine_qgen</td><td class="num">3 421</td><td>Sortie pipeline doctrine_qgen propre</td></tr>
+    <tr><td>≥ 1 article</td><td class="num">2 658</td><td>= bench_article doctrine</td></tr>
+    <tr><td>≥ 1 pourvoi CC formaté</td><td class="num">1 252</td><td>= bench_jp doctrine</td></tr>
+    <tr><td>≥ 1 article <strong>ET</strong> ≥ 1 pourvoi CC</td><td class="num">970</td><td>cohorte doctrine_qgen</td></tr>
+    <tr><td>+ 7 CRFPA pénal qui satisfont les deux</td><td class="num"><strong>977</strong></td><td>cohorte finale</td></tr>
+  </tbody>
+</table>
+
+<h2>2. Les trois métriques</h2>
+
+<p>
+  Pour toutes les métriques : <code>k = 10</code> articles et <code>k = 10</code> JP.
+  Évaluation séparée sur ground truth <strong>strict</strong> et ground truth <strong>étendu</strong>
+  (étendu = strict ∪ articles cités par les JP ground truth via le graphe bipartite v5).
+</p>
+
+<h3 id="m1"><span class="badge ok">M1</span> Recall @ k</h3>
+<div class="card">
+  <p><strong>Définition.</strong> Proportion de la <strong>ground truth</strong>
+  retrouvée dans le top-k de la réponse retournée.</p>
+  <div class="formula">
+    Recall@k = | R<sub>1..k</sub> ∩ GT | / | GT |
+  </div>
+  <p>où <em>GT</em> = ground truth (articles attendus, ou JP attendues selon
+  la modalité), <em>R<sub>1..k</sub></em> = les k premières réponses du retriever
+  après re-rank cosinus.</p>
+  <p><strong>Borne haute</strong> = <em>oracle plafond</em>
+  (déjà calculé : 96–99 % strict, ≈ 100 % étendu à K=10).</p>
+</div>
+
+<h3 id="m2"><span class="badge ok">M2</span> Rang moyen normalisé</h3>
+<div class="card">
+  <p>Pour chaque réponse attendue <em>a</em> ∈ ground truth :</p>
+  <div class="formula">
+    rank(a) = position de <em>a</em> dans <em>R</em>, si ≤ k <br>
+    rank(a) = k + 1, sinon
+  </div>
+  <p>Soit <em>b</em> = |ground truth|, on <strong>clip</strong> <em>b</em> ← min(<em>b</em>, <em>k</em>)
+  (sinon optimum inatteignable quand b &gt; k). Puis :</p>
+  <div class="formula">
+    x = (1 / b) × Σ<sub>a ∈ ground truth</sub> rank(a) <br><br>
+    f(x) = (x − (k + 1)) / ((b + 1)/2 − (k + 1))
+  </div>
+  <p><strong>Bornes :</strong></p>
+  <ul>
+    <li><code>f(k+1) = 0</code> — pire score, aucun ground truth n'apparaît</li>
+    <li><code>f((b+1)/2) = 1</code> — meilleur score, tout le ground truth est rangé optimalement (1..b)</li>
+  </ul>
+  <p><strong>Interprétation :</strong> M1 dit « combien de ground truth retrouvés » ; M2 dit
+  « <em>à quelle place</em> ils ont été retrouvés ». Sensible à l'ordre du re-rank cosinus.</p>
+</div>
+
+<h3 id="m3"><span class="badge warn">M3</span> LLM-as-judge (Gemma 4 26B) — triplet, phase 2</h3>
+<div class="card">
+  <p>Pour chacun des <em>k</em> articles retournés, le LLM note la pertinence
+  sémantique <strong>indépendamment de la ground truth</strong> :</p>
+  <ul>
+    <li><strong>2</strong> — ultra-pertinent (cœur de la réponse)</li>
+    <li><strong>1</strong> — lié au sujet (contexte, fondement)</li>
+    <li><strong>0</strong> — hors sujet</li>
+  </ul>
+  <p><strong>Agrégation par question — triplet, pas moyenne :</strong></p>
+  <div class="formula">
+    M3(q) = ( n<sub>2</sub>(q), n<sub>1</sub>(q), n<sub>0</sub>(q) )
+    &nbsp; avec &nbsp; n<sub>2</sub> + n<sub>1</sub> + n<sub>0</sub> = k
+  </div>
+  <p>Une moyenne (1/k)·Σs<sub>i</sub> écraserait des comportements
+  qualitativement très différents : par exemple, (5, 0, 5) et (0, 10, 0)
+  donnent tous deux <em>moyenne = 1.0</em> alors qu'ils signifient des choses
+  radicalement différentes (« moitié excellente, moitié déchet » vs « tout est
+  tiède »). Le triplet préserve toute la distribution.</p>
+
+  <p><strong>Agrégation sur la cohorte :</strong> on rapporte les
+  <strong>moyennes des trois compteurs</strong> séparément :</p>
+  <div class="formula">
+    ⟨ n<sub>2</sub> ⟩, ⟨ n<sub>1</sub> ⟩, ⟨ n<sub>0</sub> ⟩
+    &nbsp; sur les 977 questions
+  </div>
+  <p>… et on visualise la distribution complète des triplets par un
+  <strong>histogramme empilé</strong> ou un <strong>scatter n<sub>2</sub> vs n<sub>0</sub></strong>
+  (chaque point = une question, taille = n<sub>1</sub>).</p>
+
+  <p><strong>Modèle juge :</strong> Gemma 4 26B (local cluster).</p>
+  <p><strong>Pourquoi reporter :</strong> coût élevé (≈ 20 k appels par baseline),
+  on ne lance que sur les championnes après lecture de M1/M2.</p>
+</div>
+
+<h2>3. Plan d'exécution</h2>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body">
+    <strong>Documentation</strong> — Mettre à jour
+    <code>01-Projet/journal/2026-05-28.md</code> avec §12.12 (décision cohorte 977,
+    3 métriques, K=10, ground truth strict + étendu). Ajouter mémoire structurelle.
+    <br><em>Sortie :</em> journal à jour, MEMORY.md ligne ajoutée si pertinent.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <strong>Script <code>18_eval_m1_m2.py</code></strong> — Implémenter le calcul
+    M1 + M2 sur les 977 questions, pour les 5 baselines :
+    <ul>
+      <li>B2-a : top-cosinus sur articles</li>
+      <li>B3-a : retrieval JP → articles cités</li>
+      <li>B3-e : champion actuel (B3-a + re-rank)</li>
+      <li>B4-a : hybride article + JP</li>
+      <li>B4-c : variante B4</li>
+    </ul>
+    Pour chaque (baseline, modalité ∈ {articles, JP}, ground truth ∈ {strict, étendu}) →
+    moyenne M1 et M2 sur les 977 questions.
+    <br><em>Sortie :</em> <code>data/global_bench/eval_m1_m2.json</code> +
+    table console formatée.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <strong>Mise à jour Week-9</strong> — Réécrire la slide 5 (cohorte = 977)
+    et la slide 9 (résultats M1 + M2). Recompiler le PDF.
+    <br><em>Sortie :</em> <code>Week-9-2026-06-04-Presentation-Superviseur.pdf</code>
+    à jour pour le point du 04/06.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <span class="badge warn">Phase 2</span>
+    <strong>LLM-judge Gemma 4 26B</strong> sur les 2 meilleures baselines, sous-échantillon
+    ≈ 200 questions au premier tour pour valider le prompt template avant scale-up.
+    <br><em>Sortie :</em> script <code>19_llm_judge.py</code> + résultats.
+  </div>
+</div>
+
+<h2>4. Résultats attendus / surface de comparaison</h2>
+
+<h3>Tableau slide 9 (cible)</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Baseline</th>
+      <th>K</th>
+      <th>M1 strict</th>
+      <th>M1 étendu</th>
+      <th>M2 strict</th>
+      <th>M2 étendu</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>B2-a</td><td class="num">10</td><td colspan="4" style="text-align:center; color:#999;">à recalculer sur 977</td></tr>
+    <tr><td>B3-a</td><td class="num">10</td><td colspan="4" style="text-align:center; color:#999;">à recalculer sur 977</td></tr>
+    <tr><td>B3-e</td><td class="num">10</td><td colspan="4" style="text-align:center; color:#999;">à recalculer sur 977</td></tr>
+    <tr><td>B4-a</td><td class="num">10</td><td colspan="4" style="text-align:center; color:#999;">à recalculer sur 977</td></tr>
+    <tr><td>B4-c</td><td class="num">10</td><td colspan="4" style="text-align:center; color:#999;">à recalculer sur 977</td></tr>
+  </tbody>
+</table>
+
+<h3>Hypothèses à vérifier</h3>
+<div class="ok">
+  <ul>
+    <li>B3-e reste champion en M1 (probable — c'était le cas sur 1 707)</li>
+    <li>M2 peut <strong>réordonner</strong> le classement : une baseline qui ramène
+        peu mais aux bons rangs (M1 moyen, M2 élevé) peut battre une baseline qui
+        ramène beaucoup mais mal classé (M1 haut, M2 bas)</li>
+    <li>L'écart strict ↔ étendu se rétrécit sur 977 (cohorte filtrée a un ground truth étendu
+        mieux défini par construction)</li>
+  </ul>
+</div>
+
+<h2>5. Risques et points d'attention</h2>
+
+<div class="warn">
+  <strong>R1 — Régression apparente sur M1.</strong> 977 &lt; 1 707 : si une
+  baseline avait un score gonflé par les questions « faciles » des 1 707, elle
+  peut baisser sur les 977. À expliciter dans la présentation.
+</div>
+
+<div class="warn">
+  <strong>R2 — M2 dépend du nombre de réponses retournées.</strong> Pour une
+  baseline qui ne retourne pas exactement <em>k</em> articles (ex. B3-a qui peut
+  retourner &lt; k via les citations), il faut soit padding, soit ajuster
+  <em>k</em> à la longueur effective. <em>À trancher dans le script.</em>
+</div>
+
+<div class="warn">
+  <strong>R3 — Gold étendu et regex v5.</strong> Le ground truth étendu hérite des ~6 %
+  de faux négatifs de la regex v5 (rappel ≈ 94 %). Le « ground truth étendu »
+  est donc une <strong>borne inférieure</strong> de la pertinence réelle.
+</div>
+
+<h2>6. Calendrier court</h2>
+
+<table>
+  <thead>
+    <tr><th>Date</th><th>Action</th><th>Livrable</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>03/06 (aujourd'hui)</td><td>Étapes 1 + 2</td><td>Journal + <code>eval_m1_m2.json</code></td></tr>
+    <tr><td>03/06 soir / 04/06 matin</td><td>Étape 3</td><td>Week-9 PDF à jour</td></tr>
+    <tr><td>04/06 13 h</td><td>Point Johnny</td><td>Présentation</td></tr>
+    <tr><td>Semaine 10</td><td>Étape 4 (LLM-judge) + GNN phase 2</td><td>scripts 19 + cours théorique</td></tr>
+  </tbody>
+</table>
+
+<div class="footer">
+  Plan rédigé le 2026-06-03 — Stage Hector / FE Recherche · Legal Knowledge Graph FR
+</div>
+
+</body>
+</html>

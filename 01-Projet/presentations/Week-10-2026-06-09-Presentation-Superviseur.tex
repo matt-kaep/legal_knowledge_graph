@@ -1,0 +1,707 @@
+% !TEX program = pdflatex
+% Presentation superviseur -- Week 10 -- 2026-06-09
+% Feuille de route post-Week-9 : 5 chantiers ordonnés vers Étape 2
+% Objectif : valider avec Johnny le plan d'attaque des 4-5 prochaines semaines.
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, fit, backgrounds, calc}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{footnote}{size=\tiny}
+
+\definecolor{accent}{RGB}{41, 92, 155}
+\definecolor{accentsoft}{RGB}{230, 238, 247}
+\definecolor{warn}{RGB}{200, 80, 40}
+\definecolor{ok}{RGB}{30, 130, 70}
+\definecolor{artcol}{RGB}{41, 92, 155}
+\definecolor{jpcol}{RGB}{47, 111, 79}
+\definecolor{crosscol}{RGB}{110, 60, 130}
+
+\newcommand{\keybox}[1]{%
+  \begin{center}
+  \colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\warnbox}[1]{%
+  \begin{center}
+  \colorbox{red!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\okbox}[1]{%
+  \begin{center}
+  \colorbox{green!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\crossbox}[1]{%
+  \begin{center}
+  \colorbox{violet!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+
+\title[KG juridique FR --- Week 10]{Construction d'un Knowledge Graph juridique français}
+\subtitle{Point d'avancement --- Week 10 : feuille de route post Week-9 et plan vers l'Étape 2}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{9 juin 2026}
+
+\begin{document}
+
+% ============================================================
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Plan de la séance}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Où on en est}
+
+\begin{frame}{Récap Week-9 -- baselines actuelles (cohorte 971, $K{=}10$)}
+  \scriptsize
+  \textbf{Côté ARTICLES} \hfill \textit{GT strict $|\mathrm{GT}|$ moy = 1,23 \quad // \quad GT étendu = 7,39}
+
+  \vspace{0.2em}
+  \renewcommand{\arraystretch}{1.05}
+  \setlength{\tabcolsep}{4pt}
+  \begin{center}
+  \begin{tabular}{@{}l l c | r r | r r@{}}
+    \toprule
+    & & & \multicolumn{2}{c|}{\textbf{GT strict}} & \multicolumn{2}{c}{\textbf{GT étendu}} \\
+    \textbf{Var.} & \textbf{Méthode} & $K_{\text{in}}$
+    & \textbf{M1} & \textbf{M2} & \textbf{M1} & \textbf{M2} \\
+    \midrule
+    B2-a & cosine art. open pool       & --     & 0,459 & 0,369 & 0,185 & 0,172 \\
+    \rowcolor{accentsoft}
+    B3-e & JP $\to$ Art via graphe     & 10     & \textbf{0,711} & \textbf{0,593} & 0,399 & 0,355 \\
+    \rowcolor{green!8}
+    PPR  & row-norm, $\alpha = 0{,}95$ & seed cosine & 0,60 & 0,50 & \textbf{0,441} & \textbf{0,39} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \textbf{Côté JP} \hfill \textit{$|\mathrm{GT}|$ moy = 1,13}
+
+  \vspace{0.2em}
+  \begin{center}
+  \begin{tabular}{@{}l l c | r r@{}}
+    \toprule
+    \textbf{Var.} & \textbf{Méthode} & $K_{\text{in}}$ & \textbf{M1} & \textbf{M2} \\
+    \midrule
+    B3-a & cosine direct synthèses JP   & --   & 0,408 & 0,338 \\
+    \rowcolor{accentsoft}
+    B4-e & RRF (B3-a + B3-b)            & 20   & \textbf{0,416} & 0,303 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize \textbf{Trois champions distincts selon le régime} :
+  B3-e pour le strict articles, PPR pour l'étendu, B4-e RRF pour les JP.
+  \emph{Mais} : panel métriques limité (M1/M2), pas encore de M3, pas de Hit@K / MRR / NDCG.}
+\end{frame}
+
+\begin{frame}{Constat structurant -- la GT est sparse}
+  \footnotesize
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \textbf{Distribution de la \emph{ground truth}} sur la cohorte 971 :
+    \vspace{0.4em}
+
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}l r r r@{}}
+      \toprule
+      \textbf{Modalité} & \textbf{moy} & \textbf{méd} & \textbf{max} \\
+      \midrule
+      Articles strict & \textbf{1,23} & 1 & 16 \\
+      Articles étendu & 7,39 & 5 & 49 \\
+      JP CC résolu    & \textbf{1,13} & 1 & 8 \\
+      \bottomrule
+    \end{tabular}
+
+    \vspace{0.8em}
+    \textbf{Conséquence} : avec $|\mathrm{GT}|=1$, \textbf{M1 = Hit@K} à un epsilon près.
+    M1 et M2 deviennent quasi-binaires sur le régime singleton.
+
+    \column{0.45\textwidth}
+    \warnbox{\scriptsize \textbf{Métriques range inadaptées}
+    pour la majorité de nos questions. Il faut \textbf{des métriques de rang}
+    (MRR) et \textbf{d'ordre} (NDCG) pour mesurer la qualité fine du retrieval.}
+
+    \vspace{0.4em}
+    \keybox{\scriptsize Analogie reco system : \\
+    \textbf{light user} (1 item attendu) $\to$ Hit@K, MRR \\
+    \textbf{heavy user} ($N$ items attendus) $\to$ NDCG, MAP \\
+    \emph{Mappe directement sur} strict vs étendu.}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Décisions du point Week-9 et roadmap actualisée}
+
+\begin{frame}{Les 4 décisions prises ensemble Week-9}
+  \footnotesize
+  \vspace{0.3em}
+  \begin{enumerate}
+    \item \textbf{Panel métriques complet} : M1 + M2 + M3 + \textbf{Hit@K} (et ajouts).
+    \item \textbf{Métriques adaptées à la sparsité GT} : MRR, NDCG@K. Reporter
+    séparément régimes \textit{singleton} (Hit, MRR) et \textit{multi-GT} (M1, NDCG, MAP).
+    \item \textbf{Grand tableau de synthèse global} : LLM seul $+$ LLM-RAG $+$
+    similarité cosine $+$ PPR $+$ GNN, sur \textbf{toutes les métriques},
+    avec \textbf{M3 LLM-judge appliqué à toutes les lignes}.
+    \item \textbf{Méthodes graphe avancées} : commencer par \textbf{LightGCN}
+    (baseline incontournable reco system), puis variantes (R-GCN, HGT, GraphSAGE).
+    Lecture obligatoire : fichier Mattermost.
+  \end{enumerate}
+
+  \vspace{0.6em}
+  \keybox{\textbf{Lecture} : on ne change pas de cap, on \textbf{élargit le panel
+  d'évaluation} et on \textbf{monte d'un cran} sur les méthodes graphe.
+  Le pivot est instrumental, pas conceptuel.}
+\end{frame}
+
+\begin{frame}{Roadmap actualisée -- 18 paliers, état au 9 juin}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.05}
+  \begin{center}
+  \begin{tabular}{@{}c p{8.8cm} l@{}}
+    \toprule
+    \textbf{\#} & \textbf{Palier} & \textbf{État} \\
+    \midrule
+    1  & Étude SOTA, fiches de lecture                                                & \textcolor{ok}{\textbf{Validé S1--S2}} \\
+    2  & Téléchargement décisions Judilibre + analyse donnée                         & \textcolor{ok}{\textbf{Validé S1--S2}} \\
+    3  & Extraction articles (regex V5)                                              & \textcolor{ok}{\textbf{Validé S3}} \\
+    4  & Graphe biparti JP $\leftrightarrow$ Art + analyse macro                     & \textcolor{ok}{\textbf{Validé S3}} \\
+    5  & Premier benchmark CRFPA 8 q                                                 & \textcolor{ok}{\textbf{Validé S3--S4}} \\
+    6  & Métriques d'évaluation M1 + M2                                              & \textcolor{ok}{\textbf{Validé S4 / raffiné S7}} \\
+    7  & Baseline 1 (embedding JP naïf)                                              & \textcolor{warn}{\textbf{Échec démasqué S4}} \\
+    \rowcolor{accentsoft}
+    8  & Pivot articles-first -- Baseline 2 (embedding articles)                     & \textcolor{ok}{\textbf{Validé S5--S7}} \\
+    \rowcolor{accentsoft}
+    9  & Synthèses JP (DB OVH Hector)                                                & \textcolor{ok}{\textbf{Validé S7}} \\
+    \rowcolor{accentsoft}
+    10 & Baseline 3 (embedding synthèses JP)                                         & \textcolor{ok}{\textbf{Validé S7--S8}} \\
+    \rowcolor{accentsoft}
+    11 & Agrandissement bench (doctrine\_qgen 1707 q)                                & \textcolor{ok}{\textbf{Validé S8}} \\
+    \rowcolor{accentsoft}
+    12 & Évaluation comparée gros bench                                              & \textcolor{ok}{\textbf{Validé S8}} \\
+    \rowcolor{accentsoft}
+    13 & Baseline 4 -- stratégies cross-modales (B4-a/c/d/e/f)                       & \textcolor{ok}{\textbf{Validé S8--S9}} \\
+    \rowcolor{accentsoft}
+    14 & PPR naïf -- baseline graphe non-apprise                                     & \textcolor{ok}{\textbf{Validé S9}} \\
+    \midrule
+    \rowcolor{green!10}
+    15 & \textbf{Panel métriques complet} (Hit@K, MRR, NDCG)                         & \textcolor{accent}{\textbf{S10 -- en cours}} \\
+    \rowcolor{green!10}
+    16 & \textbf{Grand tableau global} LLM / RAG / cosine / PPR / GNN $\times$ M3   & \textcolor{accent}{\textbf{S10--S11}} \\
+    \rowcolor{green!10}
+    17 & \textbf{Enrichissement du bench} (visa, reverse-eng décisions, CRFPA)       & \textcolor{accent}{\textbf{S10--S12}} \\
+    \rowcolor{green!10}
+    18 & \textbf{LightGCN} + variantes GNN (R-GCN, HGT, GraphSAGE)                   & \textcolor{accent}{\textbf{S11--S14}} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+% ============================================================
+\section{Plan d'action ordonné -- 4 chantiers}
+
+\begin{frame}{Plan d'attaque Week-10 $\to$ Étape 2}
+  \footnotesize
+  \begin{center}
+  \begin{tikzpicture}[
+      chantier/.style={rectangle, rounded corners, draw=accent, fill=accentsoft, very thick,
+                       minimum width=3.3cm, minimum height=1.0cm, font=\footnotesize, align=center},
+      blocker/.style={rectangle, rounded corners, draw=warn, fill=red!10, thick,
+                      minimum width=3.0cm, minimum height=0.7cm, font=\scriptsize, align=center},
+      arr/.style={-{Stealth[length=2.5mm]}, thick, accent}
+    ]
+    \node[chantier] (c1) at (0, 2.5)  {\textbf{Chantier 1}\\Panel métriques};
+    \node[chantier] (c2) at (5, 2.5)  {\textbf{Chantier 2}\\Tableau global};
+    \node[chantier] (c3) at (0, 0)    {\textbf{Chantier 3}\\Enrichir bench};
+    \node[chantier] (c4) at (10, 2.5) {\textbf{Chantier 4}\\LightGCN / GNN};
+    \node[blocker]  (b1) at (10, 0.2) {Récup fichier\\Mattermost};
+
+    \draw[arr] (c1) -- (c2) node[midway, above, font=\scriptsize] {débloque};
+    \draw[arr] (c2) -- (c4) node[midway, above, font=\scriptsize] {alimente};
+    \draw[arr] (b1) -- (c4);
+    \draw[arr, dashed] (c3.east) -- ++(0.7,0) |- (c2.south west) node[pos=0.3, right, font=\scriptsize] {densifie};
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.5em}
+  \begin{itemize}\setlength{\itemsep}{0.15em}
+    \item \textbf{Chantier 1 (S10)} -- \textit{2-3 jours} -- pré-requis transverse : sans
+    Hit@K / MRR / NDCG, on ne peut pas remplir le tableau global ni juger LightGCN.
+    \item \textbf{Chantier 2 (S10--S11)} -- \textit{1 semaine} -- consolidation. Inclut
+    LLM seul, LLM+RAG, M3 LLM-judge sur \emph{toutes} les lignes.
+    \item \textbf{Chantier 3 (S10--S12, parallèle)} -- \textit{2-3 semaines} -- visa des
+    arrêts + reverse-engineering décisions + annales CRFPA.
+    \item \textbf{Chantier 4 (S11--S14)} -- \textit{3-4 semaines} -- LightGCN d'abord,
+    puis R-GCN inductif, HGT.
+  \end{itemize}
+\end{frame}
+
+% ============================================================
+\section{Chantier 1 -- Panel métriques complet}
+
+\begin{frame}{Chantier 1 -- pourquoi maintenant}
+  \footnotesize
+  \textbf{Problème} : M1 et M2 \emph{seuls} ne couvrent pas tous les angles de qualité d'un retrieval,
+  et dégénèrent sur le régime $|\mathrm{GT}|=1$ qui représente la majorité de notre cohorte.
+
+  \vspace{0.6em}
+  \renewcommand{\arraystretch}{1.25}
+  \setlength{\tabcolsep}{6pt}
+  \begin{center}
+  \begin{tabular}{@{}l p{5.5cm} p{4.5cm}@{}}
+    \toprule
+    \textbf{Métrique} & \textbf{Ce qu'elle évalue} & \textbf{Régime cible} \\
+    \midrule
+    M1 -- Recall@K & Couverture brute de la GT & multi-GT (étendu) \\
+    M2 -- Rang moyen normalisé & Qualité du re-rank sur GT trouvée & multi-GT \\
+    \rowcolor{green!10}
+    \textbf{Hit@K} & $\ge 1$ GT dans le top-$K$ (binaire) & \textbf{singleton} (strict) \\
+    \rowcolor{green!10}
+    \textbf{MRR@K} & Rang du \emph{premier} GT trouvé & \textbf{singleton} \\
+    \rowcolor{green!10}
+    \textbf{NDCG@K} & Qualité du ranking pondérée par log-décrue & multi-GT, ordre fin \\
+    M3 -- LLM-as-judge & Pertinence sémantique hors-GT & toutes -- \textbf{prochaine étape} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \keybox{\textbf{Lecture cible} : reporter \emph{séparément} les scores sur le régime singleton
+  et le régime multi-GT pour ne plus confondre « modèle parfait » avec « bench dégénéré ».}
+\end{frame}
+
+\begin{frame}{Détail des métriques (1/2) -- M1, M2, Hit@K}
+  \footnotesize
+
+  \textbf{\color{accent}M1 -- Recall@K \ (régime multi-GT)}
+  \vspace{-0.2em}
+  \[
+    M1(q) = \frac{|\,\mathrm{GT}_q \cap R_q[{:}K]\,|}{|\,\mathrm{GT}_q\,|}
+    \qquad
+    \overline{M1} = \frac{1}{|Q|}\sum_q M1(q)
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : fraction de la GT retrouvée dans le top-$K$ \ (range $[0,1]$). \\
+  \textbf{Limite} : aveugle au rang ; dégénère en Hit@K quand $|\mathrm{GT}|{=}1$.
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{accent}M2 -- Rang moyen normalisé \ (régime multi-GT, custom)}
+  \vspace{-0.2em}
+  \[
+    M2(q) = \frac{x - (K{+}1)}{\frac{b'+1}{2} - (K{+}1)}
+    \quad
+    x = \tfrac{1}{|\mathrm{GT}|}\!\!\sum_{a\in\mathrm{GT}}\!\!\mathrm{rang}(a),\
+    b' = \min(|\mathrm{GT}|, K)
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : qualité du re-rank \emph{interne} à la GT trouvée \ (range $[0,1]$). \\
+  \textbf{Limite} : couplée à M1 (dégénérée si $M1{=}0$), formulation non-standard.
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{ok}Hit@K \ (régime singleton)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{Hit@K}(q) =
+    \begin{cases}
+      1 & \text{si } |\,\mathrm{GT}_q \cap R_q[{:}K]\,| \ge 1 \\
+      0 & \text{sinon}
+    \end{cases}
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : présence d'au moins un bon résultat dans le top-$K$ (binaire par question). \\
+  \textbf{Pertinence} : métrique naturelle du régime singleton (light user) ; sur strict on aura $\mathrm{Hit@K} \approx M1$ par construction.
+\end{frame}
+
+\begin{frame}{Détail des métriques (2/2) -- MRR@K, NDCG@K, M3}
+  \footnotesize
+
+  \textbf{\color{ok}MRR@K -- Mean Reciprocal Rank \ (régime singleton)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{RR}(q) =
+    \begin{cases}
+      \dfrac{1}{\mathrm{rang}(a^*)} & \text{si } \exists\, a^* \in \mathrm{GT}_q \cap R_q[{:}K] \\[0.3em]
+      0 & \text{sinon}
+    \end{cases}
+    \quad a^* = \text{premier GT par rang}
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : à quel rang apparaît le premier GT trouvé (rang 1 $\to$ 1 ; rang 2 $\to$ 0,5 ; rang 10 $\to$ 0,1). \\
+  \textbf{Convention} : cappé à $K{=}10$ (rang $>K \to 0$) ; référence reco system pour le régime singleton.
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{ok}NDCG@K -- Normalized Discounted Cumulative Gain \ (régime multi-GT)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{NDCG@K}(q) = \frac{\sum_{i=1}^{K} \mathrm{rel}_i \,/\, \log_2(i{+}1)}
+                              {\sum_{i=1}^{\min(|\mathrm{GT}|,K)} 1 \,/\, \log_2(i{+}1)}
+    \quad \mathrm{rel}_i =
+    \begin{cases} 1 & R_q[i]\in\mathrm{GT}_q \\ 0 & \text{sinon} \end{cases}
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : ranking pondéré par décrue logarithmique -- récompense couverture ET ordre. Hit en rang 1 vaut $1$, en rang 2 vaut $0{,}63$, en rang 10 vaut $0{,}29$. \\
+  \textbf{Convention} : rel binaire pour l'instant ; multi-niveau après enrichissement GT (Chantier 3).
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{crosscol}M3 -- LLM-as-judge \ (qualité hors-GT)}
+  \vspace{-0.2em}
+  \[
+    M3(q) = \frac{2\cdot \#n_2 + \#n_1}{2K}
+    \quad\text{avec } n_2 / n_1 / n_0 = \text{pertinent} \,/\, \text{proche} \,/\, \text{non pertinent}
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : pertinence sémantique du top-$K$ indépendamment de la GT ; capte les vrais positifs absents de la GT. \\
+  \textbf{Coût} : $|Q|\!\times\!K\approx 10\mathrm{k}$ appels Gemma 4 26B.
+\end{frame}
+
+\begin{frame}{Chantier 1 -- conventions retenues et plan d'impl.}
+  \footnotesize
+  \textbf{Conventions à valider} :
+  \begin{itemize}\setlength{\itemsep}{0.1em}
+    \item MRR \textbf{cappé @ K=10} (pas de ranking full) -- aligné avec le reste du panel.
+    \item NDCG \textbf{binaire} : $\mathrm{rel}_i = 1$ si $a_i \in \mathrm{GT}$ sinon $0$.
+    Calculé séparément pour strict et étendu (cohérent avec M1).
+    \item \textbf{Success@K droppé} (redondant avec Hit@K).
+    \item Toutes métriques calculées \textbf{par question} puis \textbf{moyennées} sur 971 q.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Architecture} : module \texttt{metrics.py} factorisé, importé par les scripts
+  \texttt{18\_eval\_m1\_m2.py} (baselines B2--B4) et \texttt{20\_ppr\_naive.py} (PPR).
+  Une seule passe d'éval, panel complet en sortie.
+
+  \vspace{0.5em}
+  \textbf{Étapes (1 jour)} :
+  \begin{enumerate}\setlength{\itemsep}{0.1em}
+    \item Écrire \texttt{metrics.py} -- 5 fonctions + \texttt{all\_metrics()}.
+    \item Modifier scripts 18 et 20 pour produire le panel complet.
+    \item Re-lancer les deux scripts sur la cohorte 971.
+    \item Sanity-check : Hit@K = M1 sur les questions singleton, PPR sym collapse $\approx$ B2-a.
+  \end{enumerate}
+
+  \vspace{0.4em}
+  \okbox{\scriptsize \textbf{Livrable} : CSV consolidé \texttt{eval\_panel\_complet.csv} et tableau
+  méthode $\times$ métrique $\times$ régime, prêt à alimenter le grand tableau global du chantier 2.}
+\end{frame}
+
+% ============================================================
+\section{Chantier 2 -- Grand tableau global}
+
+\begin{frame}{Tableau global -- ARTICLES (cohorte 971, $K{=}10$)}
+  \scriptsize
+  \textit{Panel complet sur baselines actuelles. M3 LLM-judge à compléter sur cluster Gemma.}
+
+  \vspace{0.3em}
+  \renewcommand{\arraystretch}{1.15}
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{center}
+  \begin{tabular}{@{}l | r r r r r | r r r r r@{}}
+    \toprule
+     & \multicolumn{5}{c|}{\textbf{Articles strict ($|\mathrm{GT}|$ moy 1,23)}}
+     & \multicolumn{5}{c}{\textbf{Articles étendu ($|\mathrm{GT}|$ moy 7,39)}} \\
+    \textbf{Méthode}
+     & M1 & Hit & MRR & NDCG & M2
+     & M1 & Hit & MRR & NDCG & M2 \\
+    \midrule
+    B2-a cosine articles
+     & 0,459 & 0,503 & 0,302 & 0,325 & 0,369
+     & 0,185 & 0,639 & 0,391 & 0,195 & 0,172 \\
+    \rowcolor{accentsoft}
+    B3-e -- JP $\to$ Art ($K_{\text{in}}{=}10$)
+     & \textbf{0,711} & \textbf{0,745} & \textbf{0,473} & \textbf{0,518} & \textbf{0,593}
+     & 0,399 & 0,897 & 0,622 & 0,400 & 0,355 \\
+    \rowcolor{green!10}
+    PPR row-norm $\alpha=0{,}85$
+     & 0,601 & 0,647 & 0,257 & 0,334 & 0,445
+     & 0,421 & \textbf{0,926} & \textbf{0,666} & \textbf{0,435} & \textbf{0,412} \\
+    PPR row-norm $\alpha=0{,}95$
+     & 0,571 & 0,616 & 0,149 & 0,246 & 0,333
+     & \textbf{0,440} & 0,925 & 0,600 & 0,413 & 0,388 \\
+    \midrule
+    LLM seul / LLM+RAG (à venir)        & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+    LightGCN (à venir)                  & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize \textbf{B3-e domine le strict sur 5/5 métriques.}
+  Sur l'étendu : \textbf{PPR $\alpha=0{,}85$ gagne sur 4/5 métriques} -- M1 seul cachait son
+  avantage MRR/NDCG/M2. Le panel complet retire à $\alpha=0{,}95$ son statut de champion
+  étendu (qu'il ne garde que sur M1).}
+\end{frame}
+
+\begin{frame}{Tableau global -- JP (cohorte 964, $K{=}10$)}
+  \scriptsize
+  \textit{Modalité unique pour JP : strict $=$ étendu (gold JP non étendue).}
+
+  \vspace{0.4em}
+  \renewcommand{\arraystretch}{1.2}
+  \setlength{\tabcolsep}{6pt}
+  \begin{center}
+  \begin{tabular}{@{}l | r r r r r@{}}
+    \toprule
+    \textbf{Méthode} & M1 & Hit & MRR & NDCG & M2 \\
+    \midrule
+    \rowcolor{accentsoft}
+    B3-a (cosine JP)                          & 0,408 & 0,427 & \textbf{0,272} & \textbf{0,304} & \textbf{0,338} \\
+    B4-d -- intersection ($K_{\text{in}}{=}50$) & 0,348 & 0,364 & 0,236 & 0,259 & 0,293 \\
+    \rowcolor{accentsoft}
+    B4-e -- RRF ($K_{\text{in}}{=}20$)         & \textbf{0,416} & \textbf{0,436} & 0,192 & 0,241 & 0,303 \\
+    B4-f -- citation-weighted ($K_{\text{in}}{=}10$) & 0,154 & 0,163 & 0,066 & 0,085 & 0,103 \\
+    PPR row-norm $\alpha=0{,}95$ (côté JP)    & 0,407 & 0,426 & 0,184 & 0,236 & 0,301 \\
+    \midrule
+    LightGCN JP (à venir)                     & --- & --- & --- & --- & --- \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \warnbox{\scriptsize \textbf{Tension B4-e RRF vs B3-a cosine.}
+  RRF gagne sur \emph{couverture} (M1 $0{,}416$ vs $0{,}408$, Hit $0{,}436$ vs $0{,}427$),
+  cosine gagne sur \emph{ordre} (MRR $0{,}272$ vs $0{,}192$, NDCG $0{,}304$ vs $0{,}241$,
+  M2 $0{,}338$ vs $0{,}303$). RRF capte plus mais classe moins bien.}
+
+  \vspace{0.3em}
+  \okbox{\scriptsize \textbf{PPR saturée côté JP : $0{,}407 \approx$ B3-a $0{,}408$ sur les 5 métriques}
+  $\Rightarrow$ confirmation finale du Jaccard $1{,}00$ noté Week-9, le graphe n'ajoute
+  aucun signal côté JP.}
+\end{frame}
+
+\begin{frame}{PPR -- sweep $\alpha$ (norm row, $K_{\text{in}}{=}10$)}
+  \scriptsize
+  \textbf{4 valeurs de $\alpha$ testées} (et $K_{\text{in}}$ figé à 10) -- vue panel complet sur articles :
+
+  \vspace{0.3em}
+  \renewcommand{\arraystretch}{1.15}
+  \setlength{\tabcolsep}{4pt}
+  \begin{center}
+  \begin{tabular}{@{}c | r r | r r | r r | r r | r r@{}}
+    \toprule
+     & \multicolumn{2}{c|}{\textbf{M1}} & \multicolumn{2}{c|}{\textbf{Hit}}
+     & \multicolumn{2}{c|}{\textbf{MRR}} & \multicolumn{2}{c|}{\textbf{NDCG}}
+     & \multicolumn{2}{c}{\textbf{M2}} \\
+    $\alpha$ & strict & ét. & strict & ét. & strict & ét. & strict & ét. & strict & ét. \\
+    \midrule
+    0,50 & 0,514 & 0,246 & 0,558 & 0,732 & \textbf{0,418} & 0,602 & \textbf{0,424} & 0,304 & 0,471 & 0,269 \\
+    0,70 & 0,563 & 0,348 & 0,604 & 0,875 & 0,369 & \textbf{0,685} & 0,404 & 0,396 & \textbf{0,484} & 0,363 \\
+    \rowcolor{green!10}
+    \textbf{0,85} & \textbf{0,601} & 0,421 & \textbf{0,647} & \textbf{0,926}
+    & 0,257 & 0,666 & 0,334 & \textbf{0,435} & 0,445 & \textbf{0,412} \\
+    \rowcolor{accentsoft}
+    0,95 & 0,571 & \textbf{0,440} & 0,616 & 0,925
+    & 0,149 & 0,600 & 0,246 & 0,413 & 0,333 & 0,388 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.6\textwidth}
+    \keybox{\scriptsize \textbf{$\alpha$ optimal $\neq$ unique :} chaque métrique a son maximum.
+    \begin{itemize}\setlength{\itemsep}{0.05em}
+      \item $\alpha=0{,}85$ : champion sur Hit, NDCG, M2 étendus + M1, Hit stricts (5 victoires)
+      \item $\alpha=0{,}70$ : meilleur MRR étendu (premier hit précoce), meilleur M2 strict
+      \item $\alpha=0{,}95$ : seul à gagner sur M1 étendu (couverture brute)
+      \item $\alpha=0{,}50$ : meilleur MRR + NDCG stricts (faible diffusion = précision)
+    \end{itemize}}
+
+    \column{0.38\textwidth}
+    \warnbox{\scriptsize \textbf{Pas encore testé :} \\[0.2em]
+    $K_{\text{in}} \in \{5, 10, 20, 50\}$ \\
+    seeds Art-seul / JP-seul / Art$+$JP \\[0.3em]
+    Sweep $\alpha$ fin (script 21 Week-9) faisait \\
+    $\{0{,}1; 0{,}3; 0{,}5; 0{,}7; 0{,}85; 0{,}95\}$ \\
+    avec mêmes tendances. \\[0.3em]
+    \textbf{Sym-norm :} swept et collapsée à cosine sur tous les $\alpha$ $\to$ droppée.}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Chantier 3 -- Enrichir le benchmark}
+
+\begin{frame}{Chantier 3 -- pistes pour enrichir le bench}
+  \footnotesize
+  \textbf{Problème structurel} : GT moyenne $\approx 1$ article et $\approx 1$ JP par question.
+  La taille de la GT limite mécaniquement la richesse de l'évaluation.
+
+  \vspace{0.4em}
+  \renewcommand{\arraystretch}{1.2}
+  \setlength{\tabcolsep}{5pt}
+  \begin{center}
+  \begin{tabular}{@{}p{4.6cm} c c p{5.0cm}@{}}
+    \toprule
+    \textbf{Piste} & \textbf{Coût} & \textbf{Qualité} & \textbf{Effet attendu} \\
+    \midrule
+    \rowcolor{green!10}
+    Expansion GT par \textbf{visa des arrêts} & faible & forte & GT articles enrichie, ancrée juridiquement \\
+    \rowcolor{green!10}
+    Citation transitive Légifrance (1-hop) & faible & moyenne & Densifie GT strict $\to$ étendu \\
+    \rowcolor{green!10}
+    GT multi-niveau (central / support / contextuel) & faible & forte & Débloque NDCG multi-niveau \\
+    \midrule
+    \rowcolor{accentsoft}
+    \textbf{Reverse-engineering décisions} CA/Cass & moyen & \textbf{très forte} & Bench scalable, GT = visa du juge \\
+    \rowcolor{accentsoft}
+    Annales CRFPA + sujets partiels & moyen & forte & Questions réelles annotées \\
+    \midrule
+    Annotation humaine ciblée (200 q) & fort & top & Gold standard de calibration \\
+    \midrule
+    Paraphrase LLM doctrine\_qgen & faible & \textcolor{warn}{faible} & Amplifie les biais auto-référentiels \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize \textbf{Recommandation} : combiner (1) visa des arrêts + citation Légifrance
+  (gratuit, juridiquement défendable) avec (2) reverse-engineering de décisions CA/Cass
+  (scalable, gold humain via visa). Annotation humaine ciblée en validation croisée.}
+\end{frame}
+
+\begin{frame}{Chantier 3 -- pivot conceptuel}
+  \footnotesize
+  \textbf{Plutôt que} :
+  \vspace{0.2em}
+  \begin{center}
+  \emph{« GT extraite du texte de la question »}\\
+  $\to$ singletons mécaniques, métriques range dégénérées
+  \end{center}
+
+  \vspace{0.5em}
+  \textbf{Adopter} :
+  \begin{center}
+  \emph{« GT ancrée dans des décisions réelles »}\\
+  $\to$ visa du juge $\Rightarrow$ 3-8 articles par question naturellement
+  \end{center}
+
+  \vspace{0.8em}
+  \keybox{Le pivot résout structurellement le problème du singleton.
+  Une métrique différente ne suffit pas -- il faut une GT structurellement plus riche.
+  \textbf{Reverse-engineering :} pour un arrêt CA/Cass dont on connaît le visa, formuler
+  la question « quels articles s'appliquent à [résumé des faits] ? ».
+  GT = visa de l'arrêt. Scalable à milliers de questions, gold humain.}
+
+  \vspace{0.5em}
+  \textbf{À arbitrer avec Johnny} : valider l'investissement reverse-engineering vs purs
+  enrichissements gratuits (visa + Légifrance).
+\end{frame}
+
+% ============================================================
+\section{Chantier 4 -- LightGCN et méthodes GNN}
+
+\begin{frame}{Chantier 4 -- pourquoi LightGCN d'abord}
+  \footnotesize
+  \textbf{LightGCN (He et al. 2020)} : modèle de référence en \emph{collaborative filtering},
+  baseline incontournable de tout système de recommandation moderne.
+
+  \vspace{0.4em}
+  \begin{columns}[T]
+    \column{0.55\textwidth}
+    \textbf{Principe} :
+    \begin{itemize}\setlength{\itemsep}{0.1em}
+      \item Embeddings appris pour chaque nœud (Article, JP).
+      \item Propagation linéaire sans transformation non-linéaire.
+      \item Score $(u,i)$ $=$ produit scalaire des embeddings.
+      \item Loss BPR sur paires positives/négatives.
+    \end{itemize}
+
+    \vspace{0.4em}
+    \textbf{Lien avec ce qu'on a déjà} :
+    \begin{itemize}\setlength{\itemsep}{0.1em}
+      \item Propagation = \textbf{mécanique PPR apprise}.
+      \item Notre PPR naïf = sa version non-paramétrique.
+      \item Transition conceptuelle directe.
+    \end{itemize}
+
+    \column{0.45\textwidth}
+    \crossbox{\scriptsize \textbf{Suite envisagée} :
+    \begin{enumerate}\setlength{\itemsep}{0.1em}
+      \item \textbf{LightGCN} (baseline GNN).
+      \item \textbf{R-GCN} inductif (types d'arêtes).
+      \item \textbf{HGT} (hétérogène + attention).
+      \item \textbf{GraphSAGE} (inductif, scalable).
+    \end{enumerate}}
+
+    \vspace{0.4em}
+    \warnbox{\scriptsize \textbf{Pré-requis bloquant} : récupérer le fichier
+    Mattermost envoyé par Johnny avant d'attaquer l'implémentation.}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Chantier 4 -- plan d'attaque LightGCN}
+  \footnotesize
+  \textbf{Setup} : graphe biparti existant Art $\leftrightarrow$ JP
+  ($118\,112$ articles $\times$ $87\,821$ JP, $\sim 2$M citations).
+
+  \vspace{0.4em}
+  \textbf{Étapes (3-4 semaines)} :
+  \begin{enumerate}\setlength{\itemsep}{0.15em}
+    \item \textbf{S11 -- Lecture} : fichier Mattermost + papier LightGCN original + revue
+    benchmarks SOTA (Movielens, Amazon, OAG). Fiche de lecture.
+    \item \textbf{S11--S12 -- Setup data} : conversion du graphe biparti en
+    \texttt{torch\_geometric.data.HeteroData}. Split train/val/test temporel.
+    Question $\to$ « utilisateur virtuel » avec embedding initialisé par BGE-M3.
+    \item \textbf{S12--S13 -- Train LightGCN} : hyperparams (couches, dim, $\lambda$).
+    Évaluation sur le panel complet (Chantier 1).
+    \item \textbf{S13--S14 -- Variantes} : R-GCN si types d'arêtes utiles, HGT
+    pour attention hétérogène.
+  \end{enumerate}
+
+  \vspace{0.4em}
+  \keybox{\textbf{Critère de succès} : LightGCN ligne dans le grand tableau,
+  battant PPR sur au moins un régime (singleton ou multi-GT, côté articles ou JP).}
+\end{frame}
+
+% ============================================================
+\section{Discussion}
+
+\begin{frame}{Questions à arbitrer avec Johnny}
+  \footnotesize
+  \begin{enumerate}\setlength{\itemsep}{0.4em}
+    \item \textbf{Validation panel métriques} : OK pour Hit@K + MRR@K cappé + NDCG@K binaire ?
+    NDCG multi-niveau plus tard si on a une GT graduée (Chantier 3) ?
+    \item \textbf{Périmètre du tableau global} : faut-il inclure dès maintenant LLM seul
+    et LLM-RAG (coût compute non-négligeable), ou se concentrer d'abord sur
+    cosine + PPR + LightGCN ?
+    \item \textbf{Enrichissement bench -- arbitrage} : feu vert sur le reverse-engineering
+    de décisions (chantier moyen, plusieurs semaines) ou rester sur les enrichissements
+    gratuits (visa + Légifrance) en priorité ?
+    \item \textbf{Fichier Mattermost} : peux-tu me le repointer ? Bloque le démarrage
+    de l'implémentation LightGCN.
+    \item \textbf{Cible Étape 1 vs Étape 2} : où place-t-on la frontière ? Étape 1
+    = embeddings + PPR (clôture rapport), Étape 2 = GNN ?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+  \vspace{2em}
+  \Huge\textcolor{accent}{\textbf{Merci}}
+
+  \vspace{2em}
+  \large Questions / arbitrages
+  \end{center}
+\end{frame}
+
+\end{document}

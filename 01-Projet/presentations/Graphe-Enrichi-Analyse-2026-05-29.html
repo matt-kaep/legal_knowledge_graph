@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Graphe enrichi question x article x JP — analyse structurelle</title>
+<style>
+  :root {
+    --c-bg: #fafaf7; --c-fg: #1a1a1a; --c-muted: #666;
+    --c-accent: #355c7d; --c-accent-light: #dde7f0;
+    --c-success: #2d5d3a; --c-success-light: #e6efe7;
+    --c-warn: #8b5a2b; --c-warn-light: #f4ebe0;
+    --c-fail: #8b3a3a; --c-fail-light: #f4e6e6;
+    --c-border: #d9d4c8; --c-table-stripe: #f2efe8;
+    --c-code-bg: #ecebe5;
+  }
+  body { font-family: "Iowan Old Style", Palatino, Georgia, serif; background: var(--c-bg); color: var(--c-fg); max-width: 1180px; margin: 2rem auto; padding: 0 2rem 4rem; line-height: 1.55; font-size: 16px; }
+  h1 { font-size: 2rem; border-bottom: 3px solid var(--c-accent); padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+  h1 + p.lede { color: var(--c-muted); font-style: italic; margin-top: 0; margin-bottom: 2rem; }
+  h2 { font-size: 1.5rem; color: var(--c-accent); margin-top: 3rem; border-bottom: 1px solid var(--c-border); padding-bottom: 0.3rem; }
+  h3 { font-size: 1.2rem; margin-top: 2rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; background: white; }
+  th, td { border: 1px solid var(--c-border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--c-accent); color: white; font-weight: 600; }
+  tbody tr:nth-child(even) { background: var(--c-table-stripe); }
+  code { font-family: "SF Mono", Monaco, Consolas, monospace; background: var(--c-code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+  pre { background: var(--c-code-bg); padding: 0.9rem 1.1rem; border-radius: 5px; overflow-x: auto; font-size: 0.85rem; border-left: 3px solid var(--c-accent); }
+  .box { border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem 1.3rem; margin: 1rem 0; background: white; }
+  .box.success { border-left: 5px solid var(--c-success); background: var(--c-success-light); }
+  .box.warn    { border-left: 5px solid var(--c-warn);    background: var(--c-warn-light); }
+  .box.fail    { border-left: 5px solid var(--c-fail);    background: var(--c-fail-light); }
+  .box.accent  { border-left: 5px solid var(--c-accent);  background: var(--c-accent-light); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1.2rem 0 2rem; }
+  .kpi { background: white; border-radius: 6px; border: 1px solid var(--c-border); padding: 0.9rem 1rem; text-align: center; }
+  .kpi .value { font-size: 1.55rem; font-weight: 600; color: var(--c-accent); font-variant-numeric: tabular-nums; }
+  .kpi .label { font-size: 0.78rem; color: var(--c-muted); margin-top: 0.2rem; }
+  img.fig { max-width: 100%; border: 1px solid var(--c-border); border-radius: 4px; margin: 1rem 0; background: white; }
+  .small { font-size: 0.85rem; color: var(--c-muted); }
+</style>
+</head>
+<body>
+
+<h1>Graphe enrichi question x article x JP — analyse structurelle</h1>
+<p class="lede">Run 29 mai 2026, script <code>12_build_question_enriched_graph.py</code> — tripartite construit sur 1 707 questions doctrine_qgen + bipartite article x JP pénal</p>
+
+<div class="box accent">
+  <p><strong>Idée :</strong> superposer les 1 707 questions du benchmark (corpus_strict gemma4-26B) au graphe biparti article x JP. On obtient un graphe tripartite où chaque question est ancrée à ses articles gold (arête <em>gold_art</em>) et à ses JP gold (arête <em>gold_jp</em>). On regarde où tombent les questions dans la structure, et si elles forment des clusters thématiques cohérents.</p>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi"><div class="value">207 634</div><div class="label">nœuds (3 types)</div></div>
+  <div class="kpi"><div class="value">645 483</div><div class="label">arêtes (3 types)</div></div>
+  <div class="kpi"><div class="value">99,0 %</div><div class="label">articles gold résolus</div></div>
+  <div class="kpi"><div class="value">54,6 %</div><div class="label">JP gold résolues (CC seul)</div></div>
+</div>
+
+<h2>1. Construction du graphe enrichi</h2>
+
+<table>
+  <thead><tr><th>Type de nœud</th><th>n</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>article</td><td>87 821</td><td><code>graph_penal.npz / article_ids</code></td></tr>
+    <tr><td>JP (pénal)</td><td>118 112</td><td><code>graph_penal.npz / jp_ids</code></td></tr>
+    <tr><td>question</td><td>1 707</td><td><code>corpus_strict_gemma4-26B-A4B.json</code></td></tr>
+  </tbody>
+</table>
+
+<table>
+  <thead><tr><th>Type d'arête</th><th>n</th><th>Définition</th></tr></thead>
+  <tbody>
+    <tr><td><code>JP → article</code></td><td>642 450</td><td>citation extraite du bipartite (binarisé, donc nnz = arêtes)</td></tr>
+    <tr><td><code>question → article</code> (gold_art)</td><td>2 003</td><td><code>articles_attendus</code> résolus dans le pool</td></tr>
+    <tr><td><code>question → JP</code> (gold_jp)</td><td>1 033</td><td><code>jp_attendues</code> mappées par pourvoi CC → jp_id</td></tr>
+  </tbody>
+</table>
+
+<p class="small">Note : le total d'arêtes JP→article du bundle est 2 026 258 (avec multiplicités) ; ici la matrice sparse stockée est binarisée et l'index <code>data</code> contient 642 450 entrées non nulles. C'est le « squelette » non pondéré, suffisant pour la topologie.</p>
+
+<h2>2. Couverture du gold dans le pool</h2>
+
+<table>
+  <thead><tr><th>Élément</th><th>Total demandé</th><th>Résolu</th><th>%</th></tr></thead>
+  <tbody>
+    <tr><td>articles attendus</td><td>2 023</td><td>2 003</td><td><strong>99,01 %</strong></td></tr>
+    <tr><td>JP attendues (toutes juridictions)</td><td>1 891</td><td>1 033</td><td><strong>54,63 %</strong></td></tr>
+    <tr><td>questions avec ≥ 1 article gold résolu</td><td>1 707</td><td>1 694</td><td>99,2 %</td></tr>
+    <tr><td>questions avec ≥ 1 JP gold résolue</td><td>1 707</td><td>971</td><td>56,9 %</td></tr>
+  </tbody>
+</table>
+
+<div class="box warn">
+  <p><strong>Trou côté JP gold</strong> : seuls 54,6 % des pourvois attendus sont mappables au pool. Cause : le pool ne contient que les JP <em>pénales</em> (juris=CC pénal essentiellement), or les questions <code>doctrine_qgen</code> citent aussi des arrêts civils, sociaux ou des CA / TJ qui ne sont pas dans <code>jp_index_penal.parquet</code>. Pas une régression — c'est conforme au scope « pénal ».</p>
+  <p>→ 736 questions n'ont aucune JP gold dans le pool ; elles ne peuvent pas être évaluées sur la branche JP. Côté article, 99 % de couverture : la branche article reste solide.</p>
+</div>
+
+<h3>Distribution du degré des questions</h3>
+<img class="fig" src="../../05-Technique/benchmark/etape1_embedding_pur/data/fig_question_degree.png" alt="Distribution n_gold_art et n_gold_jp">
+
+<h2>3. Connectivité du graphe enrichi</h2>
+
+<table>
+  <thead><tr><th>Métrique</th><th>Valeur</th></tr></thead>
+  <tbody>
+    <tr><td>nb composantes (graphe entier)</td><td>59 981</td></tr>
+    <tr><td>taille composante principale</td><td>147 609 nœuds (71,1 %)</td></tr>
+    <tr><td>questions dans la composante principale</td><td><strong>1 699 / 1 707 (99,5 %)</strong></td></tr>
+    <tr><td>questions isolées (aucun voisin gold résolu)</td><td>7</td></tr>
+  </tbody>
+</table>
+
+<div class="box success">
+  <p><strong>Surprise positive</strong> : seules 7 questions sont topologiquement orphelines, et 1 699 / 1 707 sont dans la composante géante. Le graphe biparti article x JP a beau être lourdement fragmenté (59 981 composantes — la moitié des JP sont quasi-isolées), <em>les questions atterrissent presque toutes dans le cœur connexe</em>. C'est cohérent avec le Gini 0,953 du graphe : les questions ciblent des articles fréquemment cités, donc bien intégrés.</p>
+</div>
+
+<h2>4. Position des questions dans le graphe</h2>
+
+<h3>k-core des cibles gold</h3>
+
+<table>
+  <thead><tr><th>Statistique</th><th>Valeur</th></tr></thead>
+  <tbody>
+    <tr><td>k-core max observé (graphe biparti)</td><td>32</td></tr>
+    <tr><td>core moyen des cibles d'une question — médiane</td><td><strong>10</strong></td></tr>
+    <tr><td>core moyen — P25 / P75</td><td>7 / 12</td></tr>
+    <tr><td>core max — médiane</td><td>12</td></tr>
+  </tbody>
+</table>
+
+<div class="box accent">
+  <p>La cible médiane d'une question vit dans le <strong>10-core</strong> (sur un max de 32). Les questions visent des zones structurellement denses du graphe, pas la périphérie. C'est important pour un GNN : le voisinage à 1-hop d'une cible typique contient déjà ≥ 10 JP et articles, donc une vraie information de message-passing.</p>
+</div>
+
+<h3>Centralité (citations) des articles ciblés</h3>
+<img class="fig" src="../../05-Technique/benchmark/etape1_embedding_pur/data/fig_target_centrality.png" alt="log10 citations des articles gold">
+
+<table>
+  <thead><tr><th>Bucket (nb JP citant l'article gold, moyenne par question)</th><th>n_questions</th><th>%</th></tr></thead>
+  <tbody>
+    <tr><td>&lt; 10 citations (articles très spécifiques)</td><td>140</td><td>8 %</td></tr>
+    <tr><td>10 – 100</td><td>585</td><td>35 %</td></tr>
+    <tr><td>100 – 1 000</td><td>806</td><td>48 %</td></tr>
+    <tr><td>&gt; 1 000 (articles « stars »)</td><td>161</td><td>10 %</td></tr>
+  </tbody>
+</table>
+<p class="small">Médiane = 134 citations / article gold. Distribution roughly log-normale.</p>
+
+<div class="box warn">
+  <p><strong>Biais doctrine_qgen</strong> : le corpus survisite les articles moyennement à fortement cités. Seules 8 % des questions ciblent des articles &lt; 10 citations (le « tail spécifique »). Pour un GNN, c'est confortable (signal disponible) mais ça veut dire qu'on n'évalue pas la capacité à retrouver des articles rares.</p>
+</div>
+
+<h2>5. Réseau question ↔ question induit (via articles partagés)</h2>
+
+<p>Deux questions sont voisines ssi elles partagent ≥ 1 article gold.</p>
+
+<table>
+  <thead><tr><th>Métrique</th><th>Valeur</th></tr></thead>
+  <tbody>
+    <tr><td>nb paires (q, q) liées</td><td>4 412</td></tr>
+    <tr><td>nb composantes</td><td>550</td></tr>
+    <tr><td>plus grande composante</td><td>143 questions</td></tr>
+    <tr><td>questions totalement isolées (aucune voisine)</td><td>305 (18 %)</td></tr>
+    <tr><td>plus grande clique</td><td><strong>38 questions</strong></td></tr>
+    <tr><td>cliques de taille ≥ 3</td><td>240</td></tr>
+  </tbody>
+</table>
+
+<div class="box accent">
+  <p><strong>Chiffre frappant</strong> : il existe une clique de 38 questions partageant toutes le même article (sans doute un article « hub » du Code de procédure pénale type art. 593 ou art. préliminaire). Ces 38 questions sont structurellement redondantes du point de vue gold-article — un système qui réussit l'une devrait réussir les autres.</p>
+  <p>305 questions (18 %) sont totalement déconnectées de toute autre via partage d'article : elles testent un signal unique. Ce sont les cas où la généralisation est vraiment évaluée.</p>
+</div>
+
+<h2>6. Clusters thématiques (par <code>doc_id</code>)</h2>
+
+<img class="fig" src="../../05-Technique/benchmark/etape1_embedding_pur/data/fig_theme_cohesion.png" alt="Cohésion par doc_id">
+
+<table>
+  <thead><tr><th>Métrique</th><th>Valeur</th></tr></thead>
+  <tbody>
+    <tr><td>nb doc_id avec ≥ 2 questions</td><td>178</td></tr>
+    <tr><td>cohésion moyenne (% paires intra-doc liées via article partagé)</td><td><strong>16,8 %</strong></td></tr>
+    <tr><td>cohésion médiane</td><td>9,5 %</td></tr>
+  </tbody>
+</table>
+
+<div class="box warn">
+  <p><strong>Cohésion thématique faible</strong> : en moyenne, dans un même fascicule de doctrine (doc_id), seules ~17 % des paires de questions partagent au moins un article gold. Le doc_id n'est <em>pas</em> un proxy fiable du voisinage article-graphe. Beaucoup de fascicules ont une cohésion de 0 % (les questions parlent du même thème doctrinal mais sur des articles disjoints).</p>
+  <p>Implication : si on cherche à structurer des « groupes thématiques » pour un GNN, il faudra utiliser le clustering structurel (composantes du QQ-network) plutôt que le doc_id.</p>
+</div>
+
+<h3>Top 5 doc_id les plus cohésifs (cohesion = 1,0)</h3>
+<ul>
+  <li><code>art_376_a_380_fasc_20_cour_d_assises</code> — 3 q</li>
+  <li><code>art_53_a_73_fasc_20_crimes_et_delits_flagrants</code> — 3 q</li>
+  <li><code>art_601_a_604_fasc_20_pourvoi_en_cassation</code> — 2 q</li>
+  <li><code>art_11_fasc_30_revelation_d_informations</code> — 2 q</li>
+  <li><code>art_689_a_696_fasc_unique_decisions_repressives_etrangeres</code> — 2 q</li>
+</ul>
+
+<h3>Bottom 5 (cohesion = 0,0)</h3>
+<ul>
+  <li><code>art_preliminaire_fasc_40_droits_des_victimes</code> — 4 q</li>
+  <li><code>art_lo_630_fasc_20_QPC</code> — 4 q</li>
+  <li><code>art_75_a_78_fasc_20_enquete_preliminaire</code> — 5 q</li>
+  <li><code>art_802_fasc_20_nullite</code> — 3 q</li>
+  <li><code>art_75_a_78_fasc_15_enquete_preliminaire_post_2021</code> — 2 q</li>
+</ul>
+
+<h2>7. Implications pour le GNN</h2>
+
+<div class="box success">
+  <ul style="margin:0.4rem 0;">
+    <li><strong>Topologie favorable</strong> : 99,5 % des questions dans la composante géante, cible médiane dans le 10-core → message-passing 1-hop suffit pour atteindre un voisinage informatif.</li>
+    <li><strong>Branche article = solide</strong> (99 % gold résolu) ; <strong>branche JP = partielle</strong> (54 % seulement, scope pénal strict) → garder l'évaluation principale sur le DUR article.</li>
+    <li><strong>Redondance gold</strong> : clique de 38 questions sur un article hub, 18 % de questions isolées au sens QQ → stratifier les splits train/val/test sur composantes QQ, pas sur doc_id (cohésion 17 % seulement).</li>
+    <li><strong>Biais distributionnel</strong> : 58 % des questions ciblent des articles 100-1000+ citations → le benchmark teste peu la généralisation aux articles rares.</li>
+  </ul>
+</div>
+
+</body>
+</html>
