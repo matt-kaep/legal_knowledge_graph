@@ -51,9 +51,9 @@ statut: Sessions 1-3 FAITES — LightGCN opérationnel, bat PPR sur 2 régimes
 
 **Lecture** : bat **PPR** sur strict + JP ; **égale** B3-e sur strict (gagne NDCG/MRR) ; **champion JP**. PPR garde l'**étendu**. Tradeoff entraînement : échange un peu de JP (0,437→0,426, pas de supervision JP) contre de la précision articles (0,653→0,705).
 
-> [!warning] Fiabilité des claims
+> [!check] Fiabilité des claims (validée)
 > - Victoire **vs PPR** (untrained K=2) = **déterministe** (aucun entraînement) → imprenable.
-> - Gain **entraînement** (+0,052) = **1 seed, hyperparams non tunés** → à valider multi-seed.
+> - Gain **entraînement** = **validé sur 3 seeds** : M1 strict **0,704 ± 0,007** (seeds 1/2/42 : 0,698/0,712/0,701), Δ vs untrained **+0,051** ∈ [+0,045 ; +0,059], **toujours positif**. untrained_K2 identique (0,653) sur les 3 → déterministe. Hyperparams non encore tunés.
 
 ---
 
@@ -107,7 +107,7 @@ $PY $S/24_build_global_table.py       # reconstruit le grand tableau
 
 ## 6. Prochaines étapes (par priorité)
 
-1. **Valider l'entraînement multi-seed** (3 seeds, mean±range) + ablation init (zéro vs aléatoire) — durcit le +0,052 avant publication. `SEED=n` prêt.
+1. ✅ ~~Valider l'entraînement multi-seed~~ **FAIT** (3 seeds : 0,704 ± 0,007, Δ toujours +). Reste l'**ablation init** (zéro vs aléatoire) pour isoler apprentissage pur du changement d'init.
 2. **Régime D (supervision JP)** : injecter les questions cohorte JP+article au train (k-fold ou +50 %, table séparée, cf. [[ADR-001-Versionnage-Graphe-G0-Vn]]) → débloquer l'apprentissage JP (actuellement érodé).
 3. **G0 → V1** : retirer les 41 824 nœuds morts du pool, re-mesurer (programme ADR-001). Quantifie l'apport du nettoyage.
 4. **Combler l'étendu** : tester la **variante C** (questions dans le graphe) ou un α-mix style PPR ; PPR garde l'avantage en rappel large.

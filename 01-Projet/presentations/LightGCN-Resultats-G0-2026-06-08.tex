@@ -62,7 +62,7 @@
     \midrule
     Texte seul (cosine BGE-M3) & 0,459 & le sémantique pur \\
     \;\; + propagation graphe ($K{=}2$, figé) & \textbf{0,653} & \textcolor{ok}{\textbf{+0,194} = apport du GRAPHE} \\
-    \;\;\;\; + apprentissage (BPR cosinus) & \textbf{0,705} & \textcolor{ok}{\textbf{+0,052} = apport de l'APPRENTISSAGE} \\
+    \;\;\;\; + apprentissage (BPR cosinus) & \textbf{0,704} & \textcolor{ok}{\textbf{+0,051} = apport de l'APPRENTISSAGE} \\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -73,7 +73,7 @@
 
   \footnotesize
   \vspace{0.3em}
-  \textit{Le } $+0{,}052$ \textit{ de l'apprentissage : run unique, hyperparams non tunés — à valider multi-seed. La victoire vs PPR (ligne } $K{=}2$ \textit{ figé) est, elle, déterministe.}
+  \textit{Apprentissage \textbf{validé sur 3 seeds} : $0{,}704 \pm 0{,}007$, $\Delta$ toujours positif ($+0{,}045$ à $+0{,}059$). La victoire vs PPR (ligne } $K{=}2$ \textit{ figé, 0,653) est déterministe.}
 \end{frame}
 
 % ============================================================
@@ -92,7 +92,7 @@
     PPR row $\alpha{=}0{,}85$         & 0,601 & 0,334 & 0,421 & 0,435 \\
     PPR row $\alpha{=}0{,}95$         & 0,571 & 0,246 & \textbf{0,440} & \textbf{0,413} \\
     \rowcolor{accentsoft} LightGCN $K{=}2$ (BGE propagé) & 0,653 & 0,472 & 0,296 & 0,317 \\
-    \rowcolor{accentsoft} \textbf{LightGCN $K{=}2$ entraîné} & 0,705 & \textbf{0,533} & 0,324 & 0,356 \\
+    \rowcolor{accentsoft} \textbf{LightGCN $K{=}2$ entraîné} & 0,704 & \textbf{0,532} & 0,326 & 0,356 \\
     \bottomrule
   \end{tabular}
   \end{center}
@@ -114,7 +114,7 @@
     B4-e (RRF $k_{in}{=}20$)      & 0,416 & 0,436 & 0,241 \\
     PPR row $\alpha{=}0{,}95$     & 0,407 & 0,426 & 0,236 \\
     \rowcolor{accentsoft} \textbf{LightGCN $K{=}2$ (BGE propagé)} & \textbf{0,437} & \textbf{0,457} & \textbf{0,318} \\
-    \rowcolor{accentsoft} LightGCN $K{=}2$ entraîné & 0,426 & 0,446 & 0,311 \\
+    \rowcolor{accentsoft} LightGCN $K{=}2$ entraîné & 0,429 & 0,446 & 0,309 \\
     \bottomrule
   \end{tabular}
   \end{center}

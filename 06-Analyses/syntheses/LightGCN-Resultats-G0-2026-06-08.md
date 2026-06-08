@@ -12,17 +12,17 @@ sujet: Résultats LightGCN (design A) sur graphe G0 — point Johnny
 > [!success] TL;DR
 > LightGCN (design A : propagation sur le graphe de citations Art↔JP, questions = users BGE-M3, scoring **cosinus**) **bat PPR** (la baseline graphe *non apprise*) sur articles-strict ET JP, **égale** le champion strict B3-e (lui-même graph-based ; LightGCN gagne même NDCG/MRR strict), et devient le **champion JP** toutes méthodes confondues. Critère du handoff (« battre PPR sur ≥1 régime ») **atteint sur 2 régimes**. Sur le graphe **G0 brut** — avant tout nettoyage.
 >
-> ⚠️ La victoire **vs PPR** (untrained K=2 : strict 0,653 / JP 0,437) est **déterministe** (aucun entraînement) — imprenable. Le gain de l'**entraînement** (+0,052) est un **run unique, hyperparams non tunés (τ, λ, lr, epochs)** → à valider multi-seed avant publication.
+> ⚠️ La victoire **vs PPR** (untrained K=2 : strict 0,653 / JP 0,437) est **déterministe** (aucun entraînement) — imprenable. Le gain de l'**entraînement** est **validé sur 3 seeds** : M1 strict **0,704 ± 0,007** (Δ vs untrained **+0,051**, toujours positif, ∈ [+0,045 ; +0,059]). Hyperparams (τ, λ, lr, epochs) non encore tunés.
 
 ## 1. La décomposition qui raconte l'histoire (M1 strict, articles)
 
 ```
 texte seul (cosine BGE-M3)            0,459
   + propagation graphe (K=2, figé)    0,653   (+0,194  ← apport du GRAPHE)
-  + apprentissage (BPR cosinus K=2)   0,705   (+0,052  ← apport de l'APPRENTISSAGE)
+  + apprentissage (BPR cosinus K=2)   0,704   (+0,051  ← apport de l'APPRENTISSAGE, 3 seeds)
 ```
 
-Chaque étage ajoute. C'est l'argument central : **le graphe de citations ajoute massivement au sémantique pur, et l'apprentissage ajoute encore par-dessus.** L'ablation K=0 (= cosine) isole proprement chaque contribution.
+Chaque étage ajoute (le dernier validé sur 3 seeds : 0,704 ± 0,007). C'est l'argument central : **le graphe de citations ajoute massivement au sémantique pur, et l'apprentissage ajoute encore par-dessus.** L'ablation K=0 (= cosine) isole proprement chaque contribution.
 
 ## 2. Tableau global (cohorte 971, K=10, même pool/métriques pour tous)
 
@@ -51,8 +51,8 @@ Chaque étage ajoute. C'est l'argument central : **le graphe de citations ajoute
 - **JP** : **LightGCN est le nouveau champion** (untrained 0,437 > B4-e 0,416 > tous).
 - **Tradeoff entraînement (à K=2 fixé)** : l'entraînement **échange un peu de JP** (0,437→0,426) **contre beaucoup de précision articles** (strict 0,653→0,705) — logique : les 840 paires d'entraînement sont des positifs *articles*, **zéro supervision JP**. D'où le choix : pour les articles on prend `trained`, pour le JP on prend `untrained`.
 
-> [!caution] Caveat sur le +0,052 de l'entraînement
-> Le gain `untrained_K2 → trained_K2` (0,653→0,705) **conflate** deux changements : l'apprentissage *et* un changement d'init des nœuds non-embeddés (untrained=zéro, trained=aléatoire). C'est un **run unique**, τ/λ/lr/epochs **non tunés**. La victoire vs PPR ne dépend **pas** de ce point (untrained gagne déjà). À durcir : 3 seeds (mean±range) + ablation init, via `SEED=n python 31_lightgcn.py`.
+> [!check] Gain de l'entraînement — validé multi-seed (3 seeds)
+> trained_K2 M1 strict = **0,704 ± 0,007** (seeds 1/2/42 : 0,698 / 0,712 / 0,701), Δ vs untrained **+0,051** (∈ [+0,045 ; +0,059], **toujours positif**). NDCG strict 0,532 ± 0,003. untrained_K2 identique (0,653) sur les 3 → déterministe. **Reste** : (a) le gain conflate apprentissage + changement d'init des non-embeddés (zéro→aléatoire) → ablation init à faire ; (b) τ/λ/lr/epochs non tunés. La victoire vs PPR ne dépend pas de ce point (untrained gagne déjà).
 
 ## 3. Points de méthode (pour ne pas se faire piéger)
 
