@@ -67,7 +67,15 @@ C'est l'expérience qui isole « apport du graphe vs apport du texte » — argu
 - GT **étendu** : 2553 uniques → 2415 dans le graphe, **1966 embeddés**, 449 dans-graphe-sans-emb, 138 hors-graphe.
 - Questions avec ≥1 GT non-embeddé : **101/2674 (strict)**, **385/2674 (étendu)**.
 
-**Verdict** : la couverture partielle n'est **pas bloquante** pour LightGCN. Un article non-init récupère un embedding **via la propagation** sur ses citations (degré ≥ 1 par construction) ; l'init BGE-M3 n'accélère que la convergence. Les 138 articles hors-graphe sont un **plafond partagé avec PPR** (aucune méthode graphe ne les atteint), pas une faiblesse spécifique LightGCN.
+**Verdict** (corrigé) : la couverture partielle n'est **pas bloquante** pour les **GT** (seulement 9 articles GT morts, 7 questions strictes perdues sur la cohorte), mais le graphe G0 est **très bruité** — voir cartographie ci-dessous. Un nœud non-embeddé n'apprend par propagation **que s'il est cité** ; **41 824 articles (48 %) sont « doublement morts »** (ni texte ni citation) et restent inertes. Les 138 articles hors-graphe sont un **plafond partagé avec PPR**. → Traité comme **version G0** à nettoyer (cf. [[ADR-001-Versionnage-Graphe-G0-Vn]]).
+
+#### Cartographie des 87 821 articles (axes texte × citation)
+| | Embeddé | Non embeddé |
+|---|---|---|
+| **Cité** (degré ≥ 1) | 13 236 — signal max | 14 640 — apprend via propagation |
+| **Jamais cité** (degré 0) | 18 121 — texte seul (= cosine) | **41 824 — doublement morts** |
+
+**Autres constats qualité** : graphe **binaire** (`data` = 1, fréquence de citation perdue) ; degré article médiane 0, max 35 502 (très déséquilibré) ; sous-graphe vivant sain (JP→art moy 5,4). **Supervision JP** : ~7 questions seulement au train (971/978 questions à GT-JP sont dans la cohorte) → JP **non entraînable directement**, retrieval par transfert via les arêtes Art↔JP. Voir l'expérience d'augmentation (régime D) dans l'ADR.
 
 ## 4. Dépendances ouvertes (à lever avant Sessions 2–3)
 

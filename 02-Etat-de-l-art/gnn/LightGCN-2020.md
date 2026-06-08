@@ -122,7 +122,12 @@ Pour chaque positif `(u,i)` observé, on échantillonne un négatif `j` non obse
 ### Ce que je dois adapter
 - **Init BGE-M3 au lieu d'aléatoire** : innovation non triviale (freeze vs fine-tune ; lr plus faible sur les embeddings init). Le papier init aléatoire → on exploite le signal sémantique pré-existant pour accélérer la convergence et secourir les nœuds faiblement connectés.
 - **Question = user virtuel** : nos « users » sont des questions juridiques (cohorte 971), initialisées par leur embedding BGE-M3, jamais vues à l'entraînement (split sans leak).
-- **Contrainte de couverture embeddings** (mesurée le 2026-06-08) : sur les **87 821 articles** du graphe, seuls **31 357** ont un embedding BGE-M3 ; **56 464 articles n'en ont aucun**. Côté GT (pool 2674 questions) : **59** articles GT strict et **449** GT étendu sont dans le graphe sans embedding. → Pas bloquant pour LightGCN : ces nœuds récupèrent un embedding **via la propagation** sur leurs citations (degré ≥ 1 par construction) ; l'init BGE-M3 n'accélère que la convergence, elle n'est pas une condition de retrievabilité. À documenter comme limite, pas comme blocage.
+- **Contrainte de couverture & cartographie des nœuds** (mesurée le 2026-06-08) : sur les **87 821 articles** du graphe, seuls **31 357** sont embeddés (texte résolu) **et 59 945 ne sont jamais cités** (degré 0). Croisement des deux axes :
+  | | Embeddé | Non embeddé |
+  |---|---|---|
+  | **Cité** (degré ≥ 1) | 13 236 (signal max) | 14 640 (init aléatoire, **apprend via propagation**) |
+  | **Jamais cité** (degré 0) | 18 121 (texte seul = cosine) | **41 824 doublement morts** (inertes) |
+  → Correction d'une assertion antérieure : un nœud non-embeddé n'« apprend par propagation » **que s'il est cité** ; les 41 824 doublement morts restent figés aléatoires et ne sont jamais retrouvables. **Mitigation** : restreindre le pool de candidats aux ~46 000 articles vivants (cités ∪ embeddés). **Impact GT cohorte minuscule** : seulement 9 articles GT morts, 7 questions strictes 100 % perdues. Voir [[ADR-001-Versionnage-Graphe-G0-Vn]] (retrait des nœuds morts = V1).
 - **Dim 1024** (vs 64 papier) pour préserver l'init BGE-M3 — coût mémoire ~800 Mo d'embeddings, OK GPU 16 Go.
 
 ## Connexions
