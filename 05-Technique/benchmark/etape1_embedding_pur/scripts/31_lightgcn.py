@@ -21,6 +21,7 @@ Sortie : lightgcn_eval.csv (mêmes colonnes panel que ppr_naive_eval.csv).
 from __future__ import annotations
 import importlib.util
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -56,7 +57,7 @@ EPOCHS = 30
 TAU = 0.1                  # température du cosine-BPR (cosine ∈ [-1,1] → logits)
 LAMBDA_ANCHOR = 1.0        # ancrage ‖E0 − BGE‖² sur les nœuds embeddés (anti-drift)
 DEVICE = "cpu"             # spmm sparse fiable sur CPU (MPS souvent non supporté)
-SEED = 42
+SEED = int(os.environ.get("SEED", 42))   # SEED=n pour la validation multi-seed
 
 
 def sparse_scipy_to_torch(A: sp.csr_matrix) -> torch.Tensor:
@@ -276,7 +277,6 @@ def main() -> int:
         with torch.no_grad():
             return model.propagate(adj)
 
-    import os
     all_rows = []
     print("\n══ cosine_raw (non entraîné, K=0) = B2-a ──────────────────")
     all_rows += evaluate(e0_t, "cosine_raw")

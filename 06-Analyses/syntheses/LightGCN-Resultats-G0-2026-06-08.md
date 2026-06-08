@@ -10,7 +10,9 @@ sujet: Résultats LightGCN (design A) sur graphe G0 — point Johnny
 # LightGCN sur G0 — résultats (point Johnny, 2026-06-08)
 
 > [!success] TL;DR
-> LightGCN (design A : propagation sur le graphe de citations Art↔JP, questions = users BGE-M3, scoring **cosinus**) **bat PPR** sur articles-strict ET JP, **égale** le champion strict B3-e (gagne même NDCG/MRR), et devient le **champion JP** toutes méthodes confondues. Critère du handoff (« battre PPR sur ≥1 régime ») **atteint sur 2 régimes**. Sur le graphe **G0 brut** — avant tout nettoyage.
+> LightGCN (design A : propagation sur le graphe de citations Art↔JP, questions = users BGE-M3, scoring **cosinus**) **bat PPR** (la baseline graphe *non apprise*) sur articles-strict ET JP, **égale** le champion strict B3-e (lui-même graph-based ; LightGCN gagne même NDCG/MRR strict), et devient le **champion JP** toutes méthodes confondues. Critère du handoff (« battre PPR sur ≥1 régime ») **atteint sur 2 régimes**. Sur le graphe **G0 brut** — avant tout nettoyage.
+>
+> ⚠️ La victoire **vs PPR** (untrained K=2 : strict 0,653 / JP 0,437) est **déterministe** (aucun entraînement) — imprenable. Le gain de l'**entraînement** (+0,052) est un **run unique, hyperparams non tunés (τ, λ, lr, epochs)** → à valider multi-seed avant publication.
 
 ## 1. La décomposition qui raconte l'histoire (M1 strict, articles)
 
@@ -47,6 +49,10 @@ Chaque étage ajoute. C'est l'argument central : **le graphe de citations ajoute
 - **Articles strict** : LightGCN entraîné (0,705) ≈ champion B3-e (0,711) — et **gagne le NDCG** (0,533 vs 0,518) et le MRR. **Bat PPR** largement (NDCG 0,533 vs 0,334).
 - **Articles étendu** : **PPR garde l'avantage** (M1 0,440, sa diffusion α=0,95 ratisse large). LightGCN plus précis mais moins exhaustif.
 - **JP** : **LightGCN est le nouveau champion** (untrained 0,437 > B4-e 0,416 > tous).
+- **Tradeoff entraînement (à K=2 fixé)** : l'entraînement **échange un peu de JP** (0,437→0,426) **contre beaucoup de précision articles** (strict 0,653→0,705) — logique : les 840 paires d'entraînement sont des positifs *articles*, **zéro supervision JP**. D'où le choix : pour les articles on prend `trained`, pour le JP on prend `untrained`.
+
+> [!caution] Caveat sur le +0,052 de l'entraînement
+> Le gain `untrained_K2 → trained_K2` (0,653→0,705) **conflate** deux changements : l'apprentissage *et* un changement d'init des nœuds non-embeddés (untrained=zéro, trained=aléatoire). C'est un **run unique**, τ/λ/lr/epochs **non tunés**. La victoire vs PPR ne dépend **pas** de ce point (untrained gagne déjà). À durcir : 3 seeds (mean±range) + ablation init, via `SEED=n python 31_lightgcn.py`.
 
 ## 3. Points de méthode (pour ne pas se faire piéger)
 
