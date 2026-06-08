@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Bench global pénal — récap (2026-06-01)</title>
+<style>
+  :root {
+    --c-bg: #fafaf7;
+    --c-fg: #1a1a1a;
+    --c-muted: #666;
+    --c-accent: #295c9b;
+    --c-accent-light: #e6eef7;
+    --c-success: #2d5d3a;
+    --c-success-light: #e6efe7;
+    --c-warn: #8b5a2b;
+    --c-warn-light: #f4ebe0;
+    --c-border: #d9d4c8;
+    --c-table-stripe: #f2efe8;
+    --c-code-bg: #ecebe5;
+    --c-doctrine: #3b6ea5;
+    --c-crfpa: #c0392b;
+  }
+  body {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    background: var(--c-bg);
+    color: var(--c-fg);
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 2rem 4rem;
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  h1 { font-size: 2rem; border-bottom: 3px solid var(--c-accent); padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+  h1 + p.lede { color: var(--c-muted); font-style: italic; margin-top: 0; margin-bottom: 2rem; }
+  h2 { font-size: 1.5rem; color: var(--c-accent); margin-top: 2.5rem; border-bottom: 1px solid var(--c-border); padding-bottom: 0.3rem; }
+  h3 { font-size: 1.15rem; margin-top: 1.8rem; color: var(--c-fg); }
+  h4 { font-size: 1rem; margin-top: 1.2rem; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; background: white; }
+  th, td { border: 1px solid var(--c-border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--c-accent); color: white; font-weight: 600; }
+  tbody tr:nth-child(even) { background: var(--c-table-stripe); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  code { font-family: "SF Mono", Monaco, Consolas, monospace; background: var(--c-code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+  .box { border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem 1.3rem; margin: 1rem 0; background: white; }
+  .box.success { border-left: 5px solid var(--c-success); background: var(--c-success-light); }
+  .box.warn    { border-left: 5px solid var(--c-warn);    background: var(--c-warn-light); }
+  .box.accent  { border-left: 5px solid var(--c-accent);  background: var(--c-accent-light); }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; vertical-align: middle; margin-left: 0.4rem; }
+  .badge.doc   { background: var(--c-doctrine); color: white; }
+  .badge.crfpa { background: var(--c-crfpa); color: white; }
+  img.fig { max-width: 100%; display: block; margin: 1rem auto; border: 1px solid var(--c-border); border-radius: 4px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .card { border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem; background: white; }
+  .card h4 { margin-top: 0; }
+  .stat { font-size: 2rem; font-weight: 700; color: var(--c-accent); display: block; line-height: 1; }
+  .stat-label { font-size: 0.85rem; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  ul.tight { margin: 0.3rem 0; padding-left: 1.4rem; }
+  ul.tight li { margin: 0.15rem 0; }
+</style>
+</head>
+<body>
+<h1>Bench global pénal — récap</h1>
+<p class="lede">Fusion <code>doctrine_qgen</code> clean + CRFPA pénal — splits article / JP, version strict + étendu. Sorti le 01/06/2026, préparation point Johnny du 04/06/2026.</p>
+
+<!-- =============================================== -->
+<h2>1. Vue d'ensemble</h2>
+
+<div class="grid2">
+  <div class="card">
+    <span class="stat-label">Questions totales</span>
+    <span class="stat">3 429</span>
+    <p style="margin: 0.3rem 0 0; font-size: 0.9rem;">
+      <span class="badge doc">doctrine_qgen</span> 3 421 questions générées par LLM (Gemma 4 26B) à partir de 230 fascicules Jurisclasseurs Procédure Pénale.<br/>
+      <span class="badge crfpa">CRFPA</span> 8 questions humaines officielles (3 penal-2025 + 5 procédure-pénale-2025).
+    </p>
+  </div>
+  <div class="card">
+    <span class="stat-label">Splits produits</span>
+    <ul class="tight" style="font-size: 0.92rem;">
+      <li><code>bench_global</code> — 3 429 q (tout, y compris questions sans aucun gold)</li>
+      <li><code>bench_article</code> — 2 674 q (≥1 article strict)</li>
+      <li><code>bench_article_etendu</code> — 2 955 q (≥1 article étendu)</li>
+      <li><code>bench_jp</code> — 1 259 q (≥1 JP résolue CC)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="box accent">
+  <strong>Note sur les doublons</strong> : une question doctrine_qgen peut être dans <code>bench_article</code> ET dans <code>bench_jp</code> (cas typique : elle a 1 article + 1 JP gold). C'est attendu — les splits sont des <em>filtres de pertinence</em>, pas des partitions disjointes.
+</div>
+
+<h3>1.1 Comparaison vs prez précédente (1 707 strict)</h3>
+<table>
+  <thead>
+    <tr><th>Critère</th><th class="num">Avant (strict)</th><th class="num">Après (clean + CRFPA)</th><th class="num">Évolution</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Questions totales</td><td class="num">1 707</td><td class="num">3 429</td><td class="num">×2,0</td></tr>
+    <tr><td>Article + JP simultanément (= ancien strict)</td><td class="num">1 707</td><td class="num">~983</td><td class="num">selon filtre</td></tr>
+    <tr><td>≥1 article gold</td><td class="num">1 707 (100 %)</td><td class="num">2 674 (78 %)</td><td class="num">+57 %</td></tr>
+    <tr><td>≥1 JP résolue CC</td><td class="num">971 (57 %)</td><td class="num">1 259 (37 %)</td><td class="num">+30 %</td></tr>
+    <tr><td>Sources humaines (CRFPA)</td><td class="num">0</td><td class="num">8</td><td class="num">+8</td></tr>
+  </tbody>
+</table>
+
+<!-- =============================================== -->
+<h2>2. Statistiques par split</h2>
+
+<h3>2.1 <code>bench_global</code> — 3 429 questions</h3>
+<table>
+  <thead><tr><th>Modalité</th><th class="num">moyenne</th><th class="num">médiane</th><th class="num">max</th><th class="num">p95</th><th class="num">% à 0</th></tr></thead>
+  <tbody>
+    <tr><td>Articles strict</td><td class="num">0,98</td><td class="num">1</td><td class="num">17</td><td class="num">2</td><td class="num">22,0 %</td></tr>
+    <tr><td><strong>Articles étendu</strong></td><td class="num"><strong>3,57</strong></td><td class="num"><strong>1</strong></td><td class="num"><strong>57</strong></td><td class="num">14</td><td class="num">13,8 %</td></tr>
+    <tr><td>JP résolues CC</td><td class="num">0,41</td><td class="num">0</td><td class="num">8</td><td class="num">1</td><td class="num">63,3 %</td></tr>
+  </tbody>
+</table>
+
+<h3>2.2 <code>bench_article</code> — 2 674 questions (≥1 article strict)</h3>
+<table>
+  <thead><tr><th>Modalité</th><th class="num">moyenne</th><th class="num">médiane</th><th class="num">max</th><th class="num">p95</th><th class="num">% à 0</th></tr></thead>
+  <tbody>
+    <tr><td>Articles strict</td><td class="num">1,26</td><td class="num">1</td><td class="num">17</td><td class="num">2</td><td class="num">0 %</td></tr>
+    <tr><td>Articles étendu</td><td class="num">3,78</td><td class="num">1</td><td class="num">57</td><td class="num">14</td><td class="num">0 %</td></tr>
+    <tr><td>JP résolues CC</td><td class="num">0,41</td><td class="num">0</td><td class="num">8</td><td class="num">1</td><td class="num">63,4 %</td></tr>
+  </tbody>
+</table>
+
+<h3>2.3 <code>bench_article_etendu</code> — 2 955 questions (≥1 article étendu)</h3>
+<table>
+  <thead><tr><th>Modalité</th><th class="num">moyenne</th><th class="num">médiane</th><th class="num">max</th><th class="num">p95</th><th class="num">% à 0</th></tr></thead>
+  <tbody>
+    <tr><td>Articles strict</td><td class="num">1,14</td><td class="num">1</td><td class="num">17</td><td class="num">2</td><td class="num">9,5 %</td></tr>
+    <tr><td>Articles étendu</td><td class="num">4,14</td><td class="num">2</td><td class="num">57</td><td class="num">14</td><td class="num">0 %</td></tr>
+    <tr><td>JP résolues CC</td><td class="num">0,48</td><td class="num">0</td><td class="num">8</td><td class="num">2</td><td class="num">57,4 %</td></tr>
+  </tbody>
+</table>
+<p style="font-size: 0.9rem; color: var(--c-muted);">
+  <em>9,5 % des questions de ce split n'ont pas d'article strict mais en gagnent au moins 1 via les JP citantes — ces 281 questions étaient invisibles à l'éval précédente.</em>
+</p>
+
+<h3>2.4 <code>bench_jp</code> — 1 259 questions (≥1 JP résolue)</h3>
+<table>
+  <thead><tr><th>Modalité</th><th class="num">moyenne</th><th class="num">médiane</th><th class="num">max</th><th class="num">p95</th><th class="num">% à 0</th></tr></thead>
+  <tbody>
+    <tr><td>Articles strict</td><td class="num">0,96</td><td class="num">1</td><td class="num">17</td><td class="num">2</td><td class="num">22,3 %</td></tr>
+    <tr><td><strong>Articles étendu</strong></td><td class="num"><strong>7,99</strong></td><td class="num"><strong>6</strong></td><td class="num">57</td><td class="num">25</td><td class="num">5,7 %</td></tr>
+    <tr><td>JP résolues CC</td><td class="num">1,13</td><td class="num">1</td><td class="num">8</td><td class="num">2</td><td class="num">0 %</td></tr>
+  </tbody>
+</table>
+<p style="font-size: 0.9rem; color: var(--c-muted);">
+  <em>Sur ce split, médiane d'articles étendu = <strong>6</strong> (vs 1 sur le global) parce qu'on ne garde que les questions où l'extension via JP est possible. Conséquence directe : <strong>précision plafond articles K=10 passe de 11,9 % (strict) à ~50 % (étendu)</strong> sur ce sous-ensemble.</em>
+</p>
+
+<!-- =============================================== -->
+<h2>3. Histogrammes globaux</h2>
+
+<h3>3.1 Articles attendus — strict vs étendu</h3>
+<img class="fig" src="../../05-Technique/benchmark/etape1_embedding_pur/data/global_bench/fig_hist_articles_global.png" alt="Histogramme articles strict vs étendu">
+
+<div class="box accent">
+  <strong>Lecture</strong> :
+  <ul class="tight">
+    <li><strong>Strict</strong> — 2 129 questions avec exactement 1 article gold (médiane), <strong>755 sans aucun</strong> (22 %, principalement questions générales). Max 17 — queue très courte.</li>
+    <li><strong>Étendu</strong> — distribution beaucoup plus étalée (médiane 1, moyenne 3,57, max 57). La barre « 30 » regroupe les ≥30 cas. <strong>Queue lourde</strong> à cause de quelques sections Jurisclasseurs très denses en JP citantes.</li>
+  </ul>
+</div>
+
+<h3>3.2 JP attendues (résolues CC)</h3>
+<img class="fig" src="../../05-Technique/benchmark/etape1_embedding_pur/data/global_bench/fig_hist_jp_global.png" alt="Histogramme JP">
+
+<div class="box warn">
+  <strong>63 % des questions n'ont aucune JP résolue côté Cour de cassation</strong>. C'est la limite actuelle du benchmark JP — la regex pourvoi CC <code>\d{2}-\d{2}\.\d{3}</code> ne couvre que les arrêts de la Cour de cassation, pas les CA / TJ / décisions étrangères. <strong>Amélioration prévue S10</strong> : étendre via ECLI + numéros de rôle CA/TJ pour atteindre ~80 % de couverture.
+</div>
+
+<!-- =============================================== -->
+<h2>4. Comparaison doctrine_qgen vs CRFPA</h2>
+
+<h3>4.1 Articles strict</h3>
+<img class="fig" src="../../05-Technique/benchmark/etape1_embedding_pur/data/global_bench/fig_hist_articles_per_source.png" alt="Articles par source">
+
+<h3>4.2 JP résolues</h3>
+<img class="fig" src="../../05-Technique/benchmark/etape1_embedding_pur/data/global_bench/fig_hist_jp_per_source.png" alt="JP par source">
+
+<div class="box accent">
+  <strong>Différences structurelles à noter</strong> :
+  <ul class="tight">
+    <li><strong>doctrine_qgen</strong> est généré par LLM contraint à <code>articles_attendus ⊆ whitelist_section</code> → granularité d'écriture serrée (médiane 1). 22 % de questions sans article gold = questions trop générales que le LLM n'a pas voulu ancrer.</li>
+    <li><strong>CRFPA</strong> est annoté humainement à partir de la rubrique CNB <code>obligatoires ∪ optionnels</code> → médiane <strong>4-5 articles</strong> par question. Plus large parce que pensée pour le scoring d'un avocat en formation.</li>
+    <li>Côté JP, CRFPA va jusqu'à 8 JP par question (jurisprudence dense) alors que doctrine_qgen plafonne à 3.</li>
+  </ul>
+  <p><strong>Conclusion méthodo</strong> : les deux corpus ne mesurent pas exactement la même chose. doctrine_qgen = <em>retrieval ciblé sur 1 texte central</em> ; CRFPA = <em>retrieval exhaustif de tous les textes pertinents pour une consultation</em>. À discuter avec Johnny — on peut soit les évaluer ensemble (faible biais vu le ratio 3 421:8), soit reporter séparément comme deux barres dans nos tableaux.</p>
+</div>
+
+<!-- =============================================== -->
+<h2>5. Implications pour l'évaluation</h2>
+
+<h3>5.1 Quels splits utiliser pour quel score ?</h3>
+<table>
+  <thead><tr><th>Score à mesurer</th><th>Split recommandé</th><th class="num">N</th><th>Rationale</th></tr></thead>
+  <tbody>
+    <tr><td>recall@K / précision@K articles strict</td><td><code>bench_article</code></td><td class="num">2 674</td><td>Évite de fausser la moyenne avec les 22 % de questions sans gold article.</td></tr>
+    <tr><td>recall@K / précision@K articles étendu</td><td><code>bench_article_etendu</code></td><td class="num">2 955</td><td>Inclut les 281 questions qui ne sont visibles qu'avec l'extension.</td></tr>
+    <tr><td>recall@K / précision@K JP CC</td><td><code>bench_jp</code></td><td class="num">1 259</td><td>Seules les questions avec JP gold résolue sont évaluables.</td></tr>
+    <tr><td>Composite (bench complet)</td><td><code>bench_global</code></td><td class="num">3 429</td><td>Sert de référence du périmètre total ; le score moyen sera artificiellement bas à cause des questions sans gold.</td></tr>
+  </tbody>
+</table>
+
+<h3>5.2 Recalcul des plafonds attendus sur les nouveaux splits</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Split</th><th class="num">|R| moyen</th>
+      <th class="num">Plafond précision K=10</th>
+      <th class="num">Plafond précision K=20</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>bench_article (strict)</td><td class="num">1,26</td><td class="num">~12,6 %</td><td class="num">~6,3 %</td></tr>
+    <tr><td>bench_article_etendu (étendu)</td><td class="num">4,14</td><td class="num">~33 %</td><td class="num">~19 %</td></tr>
+    <tr><td>bench_jp (strict)</td><td class="num">1,13</td><td class="num">~11,3 % à K=10</td><td class="num">~22,6 % à K=5</td></tr>
+  </tbody>
+</table>
+<p style="font-size: 0.9rem; color: var(--c-muted);">
+  <em>Le plafond <strong>articles étendu</strong> chute de 40,1 % (sur 1 707 strict) à ~33 % (sur 2 955) — la dilution vient des nouvelles questions sans JP qui n'apportent que le strict.</em>
+</p>
+
+<h3>5.3 Différentiel attendu vs Week 9 actuel</h3>
+<div class="box warn">
+  <strong>Si on remet l'éval sur ces splits</strong> (bench_article 2 674 vs ancien strict 1 707), il faudra ré-exécuter <code>13_eval_recall_at_k.py</code> en pointant sur les nouveaux JSON. <strong>Effort</strong> : ~30 lignes à modifier, ~1 min de run (cache embedding hit).
+  Faut-il refaire ? À discuter — l'avantage est de présenter des chiffres sur 56 % plus de questions, donc plus robustes statistiquement.
+</div>
+
+<!-- =============================================== -->
+<h2>6. Artefacts produits</h2>
+<ul class="tight">
+  <li><code>scripts/17_build_global_bench.py</code> — 280 lignes, construction + stats + figures, 5 s de run</li>
+  <li><code>data/global_bench/bench_global.json</code> — 3 429 questions au format normalisé</li>
+  <li><code>data/global_bench/bench_article.json</code> — 2 674 questions</li>
+  <li><code>data/global_bench/bench_article_etendu.json</code> — 2 955 questions</li>
+  <li><code>data/global_bench/bench_jp.json</code> — 1 259 questions</li>
+  <li><code>data/global_bench/stats.json</code> — métriques détaillées par split</li>
+  <li><code>data/global_bench/fig_hist_*.png</code> — 4 histogrammes</li>
+</ul>
+
+</body>
+</html>

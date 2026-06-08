@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Week 8 — Point Johnny 29/05/2026</title>
+<style>
+  :root {
+    --c-bg: #f8f7f2;
+    --c-fg: #1a1a1a;
+    --c-muted: #555;
+    --c-accent: #2d4a6b;
+    --c-accent-light: #dde7f0;
+    --c-success: #2d5d3a;
+    --c-success-light: #e6efe7;
+    --c-warn: #8b5a2b;
+    --c-fail: #8b3a3a;
+    --c-border: #c8c2b3;
+    --c-stripe: #efece4;
+    --c-code-bg: #e8e6df;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #2a2a2a; font-family: "Iowan Old Style", Palatino, Georgia, serif;
+    color: var(--c-fg); line-height: 1.5;
+  }
+  .slide {
+    width: 100%; min-height: 100vh; background: var(--c-bg);
+    padding: 3rem 5rem; display: flex; flex-direction: column;
+    page-break-after: always; border-bottom: 8px solid #2a2a2a;
+  }
+  .slide-number { position: absolute; top: 1.2rem; right: 1.5rem; color: var(--c-muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+  h1.title { font-size: 2.8rem; margin: 0 0 0.5rem 0; color: var(--c-accent); }
+  h1.title + .subtitle { font-size: 1.3rem; color: var(--c-muted); font-style: italic; margin-bottom: 2rem; }
+  h2 { font-size: 1.9rem; color: var(--c-accent); margin: 0 0 1.2rem 0; padding-bottom: 0.4rem; border-bottom: 2px solid var(--c-accent); }
+  h3 { font-size: 1.3rem; margin: 1rem 0 0.5rem 0; color: var(--c-accent); }
+  ul, ol { font-size: 1.05rem; }
+  li { margin: 0.4rem 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.95rem; background: white; }
+  th, td { border: 1px solid var(--c-border); padding: 0.5rem 0.7rem; text-align: left; }
+  th { background: var(--c-accent); color: white; }
+  tbody tr:nth-child(even) { background: var(--c-stripe); }
+  code { font-family: "SF Mono", Monaco, Consolas, monospace; background: var(--c-code-bg); padding: 1px 6px; border-radius: 3px; font-size: 0.9em; }
+  pre { background: var(--c-code-bg); padding: 1rem 1.2rem; border-radius: 5px; font-size: 0.95rem; border-left: 4px solid var(--c-accent); }
+  blockquote { border-left: 5px solid var(--c-accent); background: var(--c-accent-light); margin: 1.2rem 0; padding: 0.8rem 1.5rem; border-radius: 0 6px 6px 0; font-size: 1.1rem; }
+  .box { background: white; border: 1px solid var(--c-border); border-radius: 8px; padding: 1rem 1.5rem; margin: 0.8rem 0; }
+  .box.success { border-left: 6px solid var(--c-success); background: var(--c-success-light); }
+  .box.fail    { border-left: 6px solid var(--c-fail);    background: #f4e6e6; }
+  .box.warn    { border-left: 6px solid var(--c-warn);    background: #f4ebe0; }
+  .box.accent  { border-left: 6px solid var(--c-accent);  background: var(--c-accent-light); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1rem 0; }
+  .kpi { background: white; border-radius: 8px; border: 1px solid var(--c-border); padding: 1rem; text-align: center; }
+  .kpi .v { font-size: 2rem; font-weight: 700; color: var(--c-accent); font-variant-numeric: tabular-nums; }
+  .kpi .l { font-size: 0.85rem; color: var(--c-muted); margin-top: 0.25rem; }
+  .delta-pos { color: var(--c-success); font-weight: 600; }
+  .delta-neg { color: var(--c-fail); font-weight: 600; }
+  .footer { margin-top: auto; padding-top: 1.5rem; font-size: 0.85rem; color: var(--c-muted); font-style: italic; }
+  .winner { background: #d8f0db !important; font-weight: 600; }
+  .dead { color: var(--c-muted); font-style: italic; }
+  @media print {
+    body { background: white; }
+    .slide { min-height: auto; border-bottom: none; page-break-after: always; }
+    .slide-number { position: absolute; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ───────────── SLIDE 1 — TITRE ───────────── -->
+<section class="slide">
+  <div class="slide-number">1 / 15</div>
+  <div style="margin-top: 25vh;">
+    <h1 class="title">Week 8 — Point superviseur</h1>
+    <p class="subtitle">29 mai 2026 · Étape 1 sur benchmark étendu + variantes graphe + cross-modal</p>
+    <hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--c-accent);">
+    <ul style="font-size: 1.2rem; list-style: none; padding: 0;">
+      <li>📊 <strong>Éval Étape 1 sur 1707 questions doctrine_qgen</strong> — confirme le plancher pénal</li>
+      <li>🔀 <strong>Matrice complète des variantes 1-hop</strong> — 6 stratégies graphe</li>
+      <li>⚡ <strong>Découverte cross-modale</strong> — +35 points vs baseline cosine</li>
+      <li>🎯 <strong>Reconsidérer JP-first ?</strong></li>
+    </ul>
+  </div>
+  <div class="footer">Matthieu Kaeppelin · Hector / FE recherche · stage knowledge graph juridique FR</div>
+</section>
+
+<!-- ───────────── SLIDE 2 — RAPPEL POINT PRÉCÉDENT ───────────── -->
+<section class="slide">
+  <div class="slide-number">2 / 15</div>
+  <h2>Rappel du point Johnny du 26/05</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="v">38</div><div class="l">questions CNB testées</div></div>
+    <div class="kpi"><div class="v">5–7</div><div class="l">passent critère DUR</div></div>
+    <div class="kpi"><div class="v">13–18 %</div><div class="l">taux de succès</div></div>
+    <div class="kpi"><div class="v">8</div><div class="l">questions en pénal CNB</div></div>
+  </div>
+
+  <h3>3 limites identifiées</h3>
+  <ul>
+    <li><strong>Volume insuffisant</strong> : 8 q pénal, 38 q total — pas de quoi stratifier les patterns</li>
+    <li><strong>Évaluabilité JP-side limitée</strong> : 7/38 (18 %) seulement à cause de la regex pourvoi CC</li>
+    <li><strong>3 pistes Étape 2 en suspens</strong> : (A) réécriture LLM des questions, (B) laplacien, (C) JP-summary direct via OVH</li>
+  </ul>
+
+  <h3>Et 4 TODO concrètes</h3>
+  <ul>
+    <li>Implémenter <code>hybrid_rrf</code> (Reciprocal Rank Fusion)</li>
+    <li>Étendre résolution gold JP via DB OVH (CA/TJ par n° rôle)</li>
+    <li>Variantes 1-hop expansion (<code>09_eval_jp_expansion.py</code>)</li>
+    <li>Ingestion CGFP pour débloquer ADMIN-Q2</li>
+  </ul>
+</section>
+
+<!-- ───────────── SLIDE 3 — CE QU'ON A FAIT CETTE SEMAINE ───────────── -->
+<section class="slide">
+  <div class="slide-number">3 / 15</div>
+  <h2>Cette semaine, on a fait 2 choses</h2>
+
+  <div class="box accent">
+    <h3 style="margin-top: 0;">① Relancer l'éval Étape 1 sur 1707 questions doctrine_qgen</h3>
+    <p>Le corpus <code>doctrine_qgen</code> strict livré le 24/05 (3 421 questions LLM-générées depuis 230 fascicules Jurisclasseurs procédure pénale) contient <strong>1 707 questions avec article ET JP comme gold</strong>. C'est le matériau idéal pour stratifier les patterns d'échec à grande échelle.</p>
+  </div>
+
+  <div class="box accent">
+    <h3 style="margin-top: 0;">② Élargir la matrice des stratégies graphe</h3>
+    <p>Sur question forte de Matthieu : <em>on n'avait testé que articles → JP par <strong>union</strong> 1-hop</em>. On élargit aux 6 directions × variantes : articles → JP {union, intersection, majority}, JP → articles {union, intersection, majority}.</p>
+    <p>Et idée additionnelle de Matthieu : <strong>combiner les deux espaces d'embedding indépendants</strong> (articles + synthèses JP) en mode set → 4 stratégies cross-modales.</p>
+  </div>
+
+  <p><strong>10 stratégies au total, 1 707 questions × 4 valeurs de K_in = 68 280 cellules de recall</strong></p>
+</section>
+
+<!-- ───────────── SLIDE 4 — DOCTRINE_QGEN : LE BENCHMARK ───────────── -->
+<section class="slide">
+  <div class="slide-number">4 / 15</div>
+  <h2>Le nouveau benchmark : doctrine_qgen strict</h2>
+
+  <table>
+    <thead><tr><th>Caractéristique</th><th>CNB 2025</th><th>doctrine_qgen strict</th></tr></thead>
+    <tbody>
+      <tr><td>Volume total</td><td>38</td><td><strong>1 707</strong> (× 45 vs CNB total)</td></tr>
+      <tr><td>Volume pénal</td><td>8</td><td>1 707 (× 213)</td></tr>
+      <tr><td>Source</td><td>Grilles CRFPA 2025</td><td>LLM Gemma 4 26B-A4B sur 230 fascicules Jurisclasseurs PP</td></tr>
+      <tr><td>Mode génération</td><td>Annotation humaine</td><td>Extraction-only strict (whitelists par sous-section)</td></tr>
+      <tr><td>Questions évaluables JP-side</td><td>7 / 38 (18 %)</td><td><strong>971 / 1707 (57 %)</strong></td></tr>
+      <tr><td>Articles gold dans pool LEGI</td><td>~91 %</td><td><strong>96 %</strong></td></tr>
+      <tr><td>n_gold articles médian</td><td>2-3</td><td>1-2</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box success">
+    <p>doctrine_qgen est un benchmark <strong>statistiquement fiable</strong> (×213 volume) avec une <strong>évaluabilité JP × 3</strong> (les pourvois sont au format CC standard car extraits de doctrine récente).</p>
+    <p>→ <strong>Sortie du régime « trop peu pour conclure ». On peut maintenant mesurer.</strong></p>
+  </div>
+</section>
+
+<!-- ───────────── SLIDE 5 — RÉSULTATS ÉTAPE 1 ───────────── -->
+<section class="slide">
+  <div class="slide-number">5 / 15</div>
+  <h2>Résultats Étape 1 sur 1707 q — vue d'ensemble</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="v">692</div><div class="l">/ 1707 pass DUR</div></div>
+    <div class="kpi"><div class="v">40,5 %</div><div class="l">taux global</div></div>
+    <div class="kpi"><div class="v">0,490</div><div class="l">mean r@10 art (filtered_strict)</div></div>
+    <div class="kpi"><div class="v">0,547</div><div class="l">mean r@10 JP via_graph</div></div>
+  </div>
+
+  <h3>Comparaison frontale</h3>
+  <table>
+    <thead><tr><th>Métrique</th><th>CNB pénal (8 q)</th><th>doctrine_qgen (1707 q)</th></tr></thead>
+    <tbody>
+      <tr><td>pass DUR</td><td>3/8 = 38 %</td><td>692/1707 = <strong>40,5 %</strong></td></tr>
+      <tr><td>mean r@10 articles (open)</td><td>0,50</td><td>0,45</td></tr>
+      <tr><td>mean r@10 articles (filtered)</td><td>0,50</td><td>0,49 <span class="delta-pos">← bat open</span></td></tr>
+      <tr><td>mean r@5 JP direct</td><td>0,29</td><td>0,35</td></tr>
+      <tr><td>mean r@5 JP via_graph</td><td>0,29</td><td><strong>0,46</strong></td></tr>
+      <tr><td>jp_hybrid_max</td><td>≈ direct</td><td>≈ direct <span class="delta-neg">(toujours cassé)</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box success">
+    <p><strong>Le plancher pénal de l'Étape 1 est confirmé à ~40 %</strong>. C'est désormais une statistique fiable, pas une intuition.</p>
+  </div>
+</section>
+
+<!-- ───────────── SLIDE 6 — DÉCOUVERTES 2 ───────────── -->
+<section class="slide">
+  <div class="slide-number">6 / 15</div>
+  <h2>2 découvertes inattendues sur le bench étendu</h2>
+
+  <div class="box success">
+    <h3 style="margin-top: 0;">① filtered_strict > open <small>(+0,04 r@10)</small></h3>
+    <p>Sur CNB on disait : BGE-M3 fait son routing implicite, filtrer par branche n'apporte rien (+1 q sur 38). <strong>Faux à grande échelle.</strong></p>
+    <p>Restreindre au pool des 4 codes pénal officiels (3 603 articles) bat l'open (31 357 articles). Un classifieur de branche, même grossier, aurait un ROI mesurable.</p>
+  </div>
+
+  <div class="box success">
+    <h3 style="margin-top: 0;">② via_graph > direct côté JP <small>(+0,11 r@5)</small></h3>
+    <p>Sur CNB, jp_direct et jp_via_graph étaient à égalité (2/7 chacun). Sur 1707 q, <strong>via_graph (46 %) bat direct (35 %)</strong>.</p>
+    <p>Logique : doctrine_qgen génère des questions qui mentionnent souvent l'article par numéro → le back-edge graphe est trivial à atteindre.</p>
+  </div>
+
+  <div class="box warn">
+    <h3 style="margin-top: 0;">⚠ jp_hybrid_max strictement = jp_direct</h3>
+    <p>L'union naïve écrase l'ordre. <strong>RRF reste indispensable</strong> si on garde une stratégie ranking-based.</p>
+  </div>
+</section>
+
+<!-- ───────────── SLIDE 7 — LA QUESTION ───────────── -->
+<section class="slide">
+  <div class="slide-number">7 / 15</div>
+  <h2>La question qu'on n'avait pas posée</h2>
+
+  <blockquote style="font-size: 1.4rem; font-style: italic;">
+    « On a testé articles → JP par <strong>union</strong>. Mais on n'a pas testé l'<strong>intersection</strong>. Ni le sens symétrique <strong>JP → articles</strong>. »
+  </blockquote>
+
+  <p style="margin-top: 2rem;">C'était dans la TODO §11.5 du 26/05 (<code>09_eval_jp_expansion.py</code>) — mais pas implémenté, RRF étant prioritaire.</p>
+
+  <h3>La matrice complète qu'on aurait dû couvrir</h3>
+  <table>
+    <thead><tr><th>Sens</th><th>Union</th><th>Intersection</th><th>Majority</th></tr></thead>
+    <tbody>
+      <tr><td>Articles → JP</td><td>✅ (= jp_via_graph)</td><td>❌</td><td>❌</td></tr>
+      <tr><td>JP → Articles</td><td>❌</td><td>❌</td><td>❌</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box accent">
+    <p>+ idée additionnelle : <strong>combiner les deux espaces d'embedding indépendants</strong> (articles + synthèses JP) comme deux vues filtrantes → 4 variantes cross-modales (union / intersection × articles / JP).</p>
+  </div>
+</section>
+
+<!-- ───────────── SLIDE 8 — RÉSULTATS VARIANTES (Articles → JP) ───────────── -->
+<section class="slide">
+  <div class="slide-number">8 / 15</div>
+  <h2>Articles → JP (point d'entrée articles)</h2>
+
+  <table>
+    <thead><tr><th>K_in</th><th>Variante</th><th>Pass DUR</th><th>%</th><th>n_returned moyen</th></tr></thead>
+    <tbody>
+      <tr><td>5</td><td>union</td><td>455</td><td>47 %</td><td>736 JP</td></tr>
+      <tr><td>5</td><td class="dead">intersection</td><td class="dead">2</td><td class="dead">0 %</td><td class="dead">0</td></tr>
+      <tr><td>5</td><td class="dead">majority</td><td class="dead">16</td><td class="dead">2 %</td><td class="dead">4</td></tr>
+      <tr><td>10</td><td>union</td><td>543</td><td>56 %</td><td>1 440 JP</td></tr>
+      <tr><td>20</td><td>union</td><td>634</td><td>65 %</td><td>2 530 JP</td></tr>
+      <tr><td>50</td><td>union</td><td>728</td><td>75 %</td><td>5 817 JP</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box fail">
+    <p><strong>Intersection morte-née.</strong> À K=5 c'est déjà rarissime qu'une JP cite à la fois 5 articles spécifiques. Majority à 1-2 % suit la même logique.</p>
+    <p>→ Cette branche n'est <strong>pas exploitable</strong>. Confirmé sur 1707 questions.</p>
+  </div>
+
+  <p>L'union scale avec K mais retourne énormément de candidats. Bon pour le rappel théorique, mauvais pour la précision implicite.</p>
+</section>
+
+<!-- ───────────── SLIDE 9 — RÉSULTATS JP → ARTICLES ───────────── -->
+<section class="slide">
+  <div class="slide-number">9 / 15</div>
+  <h2>JP → Articles (point d'entrée JP) — surprise</h2>
+
+  <table>
+    <thead><tr><th>K_in</th><th>Variante</th><th>Pass DUR</th><th>%</th><th>n_returned moyen</th></tr></thead>
+    <tbody>
+      <tr class="winner"><td>5</td><td>union</td><td>1 182</td><td><strong>69 %</strong></td><td><strong>21 articles</strong></td></tr>
+      <tr><td>5</td><td>majority</td><td>517</td><td>30 %</td><td>2</td></tr>
+      <tr><td>10</td><td>union</td><td>1 312</td><td>77 %</td><td>35</td></tr>
+      <tr><td>20</td><td>union</td><td>1 399</td><td>82 %</td><td>60</td></tr>
+      <tr><td>50</td><td>union</td><td>1 498</td><td>88 %</td><td>119</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box success">
+    <p><code>JP → Articles union K=5</code> donne <strong>69 % de pass DUR avec seulement 21 articles retournés</strong>.</p>
+    <p>→ Mieux que <code>filtered_strict</code> cosine direct (<strong>49 %</strong> pass) ET avec moins d'articles à examiner.</p>
+  </div>
+
+  <h3>Hypothèse explicative</h3>
+  <p>Les synthèses LLM Hector sont en registre <strong>narratif descriptif</strong>, plus proches sémantiquement d'une question CRFPA que les textes d'articles <strong>normatifs abstraits</strong>. Le top-K JP est donc de meilleure qualité comme point d'entrée. Quand on remonte au graphe, on attrape les bons articles.</p>
+</section>
+
+<!-- ───────────── SLIDE 10 — CROSS-MODAL ARTICLES ───────────── -->
+<section class="slide">
+  <div class="slide-number">10 / 15</div>
+  <h2>Cross-modal articles — champion absolu</h2>
+
+  <p><strong>Idée Matthieu</strong> : <code>A_art = top-K cosine articles</code> + <code>B_art = articles cités par top-K JP-cosine</code></p>
+  <ul>
+    <li><code>cross_art_union = A_art ∪ B_art</code> → max rappel</li>
+    <li><code>cross_art_intersection = A_art ∩ B_art</code> → max précision (double validation)</li>
+  </ul>
+
+  <table>
+    <thead><tr><th>K_in</th><th>Variante</th><th>Pass DUR</th><th>%</th><th>n_returned</th></tr></thead>
+    <tbody>
+      <tr><td>5</td><td>art_union</td><td>1 329</td><td>78 %</td><td>25</td></tr>
+      <tr class="winner"><td>10</td><td>art_union</td><td>1 437</td><td><strong>84 %</strong></td><td><strong>43</strong></td></tr>
+      <tr><td>20</td><td>art_union</td><td>1 520</td><td>89 %</td><td>76</td></tr>
+      <tr><td>50</td><td>art_union</td><td>1 591</td><td>93 %</td><td>161</td></tr>
+      <tr><td>20</td><td>art_intersection</td><td>850</td><td>50 %</td><td><strong>4 articles</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box success">
+    <p><code>cross_art_union K=10</code> = <strong>84 % pass DUR</strong> avec <strong>43 articles retournés</strong>.</p>
+    <p>→ <strong>Saut de +35 points</strong> vs baseline cosine direct (49 %).</p>
+    <p>L'union de deux signaux indépendants couvre des questions que ni l'un ni l'autre ne capture seul. C'est l'analogue propre de <code>jp_hybrid_max</code> qui était cassé.</p>
+  </div>
+</section>
+
+<!-- ───────────── SLIDE 11 — RECAP STRATEGIES ───────────── -->
+<section class="slide">
+  <div class="slide-number">11 / 15</div>
+  <h2>Recap — top stratégies par usage</h2>
+
+  <table>
+    <thead><tr><th>Usage</th><th>Stratégie</th><th>Pass DUR</th><th>n_returned</th></tr></thead>
+    <tbody>
+      <tr><td>Articles, <strong>rappel max</strong></td><td><code>cross_art_union K=50</code></td><td>93 %</td><td>161</td></tr>
+      <tr class="winner"><td>Articles, <strong>équilibré</strong></td><td><code>cross_art_union K=10</code></td><td><strong>84 %</strong></td><td>43</td></tr>
+      <tr><td>Articles, <strong>précision max</strong></td><td><code>cross_art_intersection K=20</code></td><td>50 %</td><td>4</td></tr>
+      <tr><td>Articles, <strong>précision-rappel</strong></td><td><code>JP → Articles union K=5</code></td><td>69 %</td><td>21</td></tr>
+      <tr class="winner"><td>JP, <strong>équilibré</strong></td><td><code>cross_jp_union K=10</code></td><td>71 %</td><td>1 424</td></tr>
+      <tr><td>JP, <strong>précision max</strong></td><td><code>cross_jp_intersection K=10</code></td><td>27 %</td><td>4</td></tr>
+      <tr><td>Baseline (script 10)</td><td><code>jp_via_graph open</code> K=5</td><td>47 %</td><td>top-5</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box accent">
+    <p><strong>Pour un système RAG juridique en production</strong>, on peut imaginer :</p>
+    <ol>
+      <li>Articles : <code>cross_art_union K=10</code> → ~43 candidats à scorer</li>
+      <li>JP : <code>cross_jp_intersection K=10</code> → 4 JP haute confiance</li>
+      <li>Re-rank dans le set via cross-encoder léger</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ───────────── SLIDE 12 — IMPLICATIONS ───────────── -->
+<section class="slide">
+  <div class="slide-number">12 / 15</div>
+  <h2>3 implications architecturales</h2>
+
+  <div class="box success">
+    <h3 style="margin-top: 0;">① Reconsidérer JP-first ?</h3>
+    <p>Le 5 mai, on a pivoté <strong>articles-first</strong> car les embeddings JP brut étaient cassés. Avec les <strong>synthèses LLM Hector</strong> (DB OVH), les embeddings JP sont maintenant <strong>plus pertinents pour les questions CRFPA</strong> que les embeddings articles.</p>
+    <p>→ JP-first revient en jeu, mais avec une raison empirique solide.</p>
+  </div>
+
+  <div class="box success">
+    <h3 style="margin-top: 0;">② Les cross-modales sont une vraie famille à exploiter</h3>
+    <p>Combiner deux espaces d'embedding indépendants via opérations ensemblistes donne le saut de performance le plus net observé (+35 pts).</p>
+    <p>→ À étendre aux autres branches une fois doctrine_qgen pivoté civil/admin.</p>
+  </div>
+
+  <div class="box warn">
+    <h3 style="margin-top: 0;">③ La métrique « pass DUR » ne suffit plus</h3>
+    <p>On compare maintenant des stratégies qui retournent 4 articles vs 161 vs un top-10 strict. La distinction <strong>set-based vs ranking-based</strong> devient critique.</p>
+    <p>→ Introduire <strong>F1 ou MAP</strong> comme métrique unique de comparaison.</p>
+  </div>
+</section>
+
+<!-- ───────────── SLIDE 13 — NEXT STEPS ───────────── -->
+<section class="slide">
+  <div class="slide-number">13 / 15</div>
+  <h2>Prochaines étapes — proposition</h2>
+
+  <h3>Reclassement des priorités</h3>
+  <table>
+    <thead><tr><th>Priorité</th><th>Avant aujourd'hui</th><th>Après aujourd'hui</th></tr></thead>
+    <tbody>
+      <tr><td>P0</td><td>RRF</td><td><strong>Confirmer cross-modales sur autres branches</strong> + métrique F1</td></tr>
+      <tr><td>P1</td><td>Variantes 1-hop</td><td><strong>Re-ranker dans le set</strong> (cross-encoder léger)</td></tr>
+      <tr><td>P2</td><td>Réécriture LLM questions</td><td>RRF (alternative ranking-based)</td></tr>
+      <tr><td>P3</td><td>Laplacien JP</td><td>Réécriture LLM (pattern A)</td></tr>
+      <tr><td>P4</td><td>Ingestion CGFP</td><td>Ingestion CGFP (inchangé)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tests concrets à faire</h3>
+  <ul>
+    <li><strong>Rang du premier gold</strong> côté cosine art vs cosine JP — pour valider l'hypothèse sur la qualité du signal d'entrée JP</li>
+    <li><strong>Étendre doctrine_qgen à civil / admin / social</strong> pour confirmer la généralisation des cross-modales hors pénal</li>
+    <li><strong>Tester corpus_clean (3 421 q)</strong> dont 1 714 n'ont qu'un gold article → isoler le côté articles</li>
+    <li><strong>Re-ranker</strong> les 43 articles de <code>cross_art_union K=10</code> via un cross-encoder pour produit final top-10</li>
+  </ul>
+</section>
+
+<!-- ───────────── SLIDE 14 — QUESTIONS JOHNNY ───────────── -->
+<section class="slide">
+  <div class="slide-number">14 / 15</div>
+  <h2>Questions à arbitrer</h2>
+
+  <ol style="font-size: 1.1rem;">
+    <li style="margin-bottom: 1rem;"><strong>Cross-modal vs RRF</strong> : on garde les deux comme stratégies haute-précision (set vs ranking) ou la cross-modale suffit ?</li>
+
+    <li style="margin-bottom: 1rem;"><strong>Pivot JP-first revisité</strong> : si <code>JP → Articles union</code> confirme ~69 % de pass à grande échelle, on accepte une architecture <strong>JP-first avec embeddings synthèses</strong> comme baseline ?</li>
+
+    <li style="margin-bottom: 1rem;"><strong>Métrique unique</strong> : F1 ou MAP ? Sur quelle borne de K_returned compare-t-on ?</li>
+
+    <li style="margin-bottom: 1rem;"><strong>Extension benchmark</strong> : doctrine_qgen sur autres branches (civil/admin/social) en priorité, ou doctrine_qgen full corpus pénal (3 421 q clean) d'abord ?</li>
+
+    <li style="margin-bottom: 1rem;"><strong>Risque de cherry-picking</strong> : 4 valeurs K_in × 10 variantes = 40 cellules testées. Comment éviter de retenir le meilleur par hasard ?</li>
+
+    <li style="margin-bottom: 1rem;"><strong>Étape 3 GNN link prediction</strong> : on commence à scaffolder avec les 1707 q comme supervised set, ou on attend la stabilisation de l'Étape 2 ?</li>
+  </ol>
+</section>
+
+<!-- ───────────── SLIDE 15 — ANNEXE / CHIFFRES ───────────── -->
+<section class="slide">
+  <div class="slide-number">15 / 15</div>
+  <h2>Annexe — chiffres et artefacts</h2>
+
+  <h3>Chiffres clés à mémoriser</h3>
+  <table>
+    <thead><tr><th>Métrique</th><th>Valeur</th></tr></thead>
+    <tbody>
+      <tr><td>Questions évaluées</td><td>1 707 (doctrine_qgen strict, 100 % pénal)</td></tr>
+      <tr><td>Pass DUR baseline (cosine direct)</td><td>49 % articles, 47 % JP</td></tr>
+      <tr><td>Pass DUR champion (cross_art_union K=10)</td><td><strong>84 %</strong></td></tr>
+      <tr><td>Articles retournés moyen (champion)</td><td>43</td></tr>
+      <tr><td>Variantes intersection même-type</td><td><span class="delta-neg">0–8 % (mortes-nées)</span></td></tr>
+      <tr><td>Total cellules calculées</td><td>68 280 (1707 × 4 × 10)</td></tr>
+      <tr><td>Temps total des deux runs</td><td>320 s sur MacBook M-series MPS</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Artefacts produits aujourd'hui</h3>
+  <ul>
+    <li><code>scripts/10_eval_doctrine_qgen.py</code> — éval Étape 1 sur doctrine_qgen</li>
+    <li><code>scripts/11_eval_graph_variants.py</code> — variantes 1-hop + cross-modal</li>
+    <li><code>data/doctrine_qgen/{recall_articles,recall_jp,recall_graph_variants}.csv</code> + summaries</li>
+    <li><code>01-Projet/journal/2026-05-28.md</code> — journal détaillé</li>
+    <li><code>01-Projet/presentations/Eval-Doctrine-QGen-Penal-2026-05-28.html</code> — HTML éval Étape 1</li>
+    <li><code>01-Projet/presentations/Eval-Variantes-Graphe-2026-05-28.html</code> — HTML variantes</li>
+  </ul>
+
+  <div class="footer">Slides composées le 28 mai 2026 — point superviseur prévu 29/05 matin</div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>État des lieux — Point Johnny 05/05 → Point Johnny 26/05</title>
+<style>
+  :root {
+    --c-bg: #fafaf7;
+    --c-fg: #1a1a1a;
+    --c-muted: #666;
+    --c-accent: #8b3a3a;
+    --c-accent-light: #f4e6e6;
+    --c-success: #2d5d3a;
+    --c-success-light: #e6efe7;
+    --c-warn: #8b5a2b;
+    --c-warn-light: #f4ebe0;
+    --c-border: #d9d4c8;
+    --c-table-stripe: #f2efe8;
+    --c-code-bg: #ecebe5;
+  }
+  body {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    background: var(--c-bg);
+    color: var(--c-fg);
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 2rem 4rem;
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  h1 { font-size: 2rem; border-bottom: 3px solid var(--c-accent); padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+  h1 + p.lede { color: var(--c-muted); font-style: italic; margin-top: 0; margin-bottom: 2rem; }
+  h2 { font-size: 1.5rem; color: var(--c-accent); margin-top: 3rem; border-bottom: 1px solid var(--c-border); padding-bottom: 0.3rem; }
+  h3 { font-size: 1.2rem; margin-top: 2rem; color: var(--c-fg); }
+  h4 { font-size: 1rem; margin-top: 1.5rem; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; background: white; }
+  th, td { border: 1px solid var(--c-border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--c-accent); color: white; font-weight: 600; }
+  tbody tr:nth-child(even) { background: var(--c-table-stripe); }
+  code { font-family: "SF Mono", Monaco, Consolas, monospace; background: var(--c-code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+  pre { background: var(--c-code-bg); padding: 0.9rem 1.1rem; border-radius: 5px; overflow-x: auto; font-size: 0.85rem; border-left: 3px solid var(--c-accent); }
+  blockquote { border-left: 4px solid var(--c-accent); margin: 1rem 0; padding: 0.5rem 1.2rem; background: var(--c-accent-light); color: var(--c-fg); border-radius: 0 5px 5px 0; }
+  .box { border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem 1.3rem; margin: 1rem 0; background: white; }
+  .box.success { border-left: 5px solid var(--c-success); background: var(--c-success-light); }
+  .box.warn    { border-left: 5px solid var(--c-warn);    background: var(--c-warn-light); }
+  .box.accent  { border-left: 5px solid var(--c-accent);  background: var(--c-accent-light); }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; vertical-align: middle; margin-left: 0.4rem; }
+  .badge.ok    { background: var(--c-success); color: white; }
+  .badge.todo  { background: var(--c-warn);    color: white; }
+  .badge.fail  { background: var(--c-accent);  color: white; }
+  .badge.info  { background: #4a6d8c;          color: white; }
+  .toc { background: white; border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem 1.5rem; margin: 1.5rem 0 3rem; columns: 2; column-gap: 2rem; }
+  .toc ol { padding-left: 1.2rem; margin: 0; }
+  .toc a { color: var(--c-fg); text-decoration: none; }
+  .toc a:hover { color: var(--c-accent); text-decoration: underline; }
+  .num { font-variant-numeric: tabular-nums; }
+  .small { font-size: 0.85rem; color: var(--c-muted); }
+  .delta-pos { color: var(--c-success); font-weight: 600; }
+  .delta-neg { color: var(--c-accent); font-weight: 600; }
+  .legend { font-size: 0.82rem; color: var(--c-muted); font-style: italic; }
+  hr { border: none; border-top: 1px dashed var(--c-border); margin: 2.5rem 0; }
+</style>
+</head>
+<body>
+
+<h1>État des lieux — Point Johnny du 05/05 → Point Johnny du 26/05</h1>
+<p class="lede">Rédigé le 28 mai 2026 · matériel de préparation pour la discussion superviseur</p>
+
+<div class="toc">
+<ol>
+  <li><a href="#point-avant">Point Johnny du 05/05 — où on en était</a></li>
+  <li><a href="#point-apres">Point Johnny du 26/05 — où on est arrivé</a></li>
+  <li><a href="#embedding-articles">Travail #1 — Pivot JP-first → article-first</a></li>
+  <li><a href="#extension-corpus">Travail #2 — Extension benchmark : 8 q pénal → 38 q full corpus</a></li>
+  <li><a href="#doctrine-qgen">Travail #3 — Génération de nouvelles questions (doctrine_qgen)</a></li>
+  <li><a href="#methode-jp-summary">Travail #4 — DB OVH + embedding JP-summary</a></li>
+  <li><a href="#next-steps">Prochaines étapes</a></li>
+  <li><a href="#chiffres">Annexe — Chiffres clés à mémoriser</a></li>
+</ol>
+</div>
+
+<h2 id="point-avant">1. Point Johnny du 05/05 — où on en était</h2>
+
+<p>Au point superviseur du 5 mai (Week 4), trois sujets majeurs étaient sur la table.</p>
+
+<h3>Sujet 1 — Échec retentissant de la baseline B2 (embedding JP)</h3>
+<div class="box warn">
+  <p><strong>Setup :</strong> embedder les 118 112 jurisprudences pénales (CC + CA + TJ) avec <code>multilingual-e5-base</code> (768 dim, contexte 512 tok), embedder les 8 questions CRFPA pénal, retrouver les JP par cosine, puis remonter aux articles via le graphe biparti.</p>
+  <p><strong>Résultat affiché :</strong> S<sub>retrieval</sub> = 0,158 (au-dessus du plafond LLM 0,095). En apparence : OK.</p>
+  <p><strong>Diagnostic profond :</strong></p>
+  <ul>
+    <li><span class="delta-neg">Rang médian gold JP : 76 782 / 118 112</span> — les arrêts gold n'apparaissent <em>jamais</em> dans le top-10 ni même top-1000.</li>
+    <li>S̄<sub>jp</sub> = <strong>0,000 sur toutes les 160 combinaisons</strong> (4 stratégies × 5 K × 8 questions).</li>
+    <li>Le score "positif" venait uniquement du recall articles (0,315), gonflé par over-retrieval (precision = 3,67 %).</li>
+  </ul>
+  <p><strong>Conclusion :</strong> le bottleneck n'est <em>pas</em> la stratégie d'agrégation (union/intersection/majority/weighted), c'est l'<strong>encodeur lui-même</strong>. <code>multilingual-e5-base</code> n'est pas entraîné sur du juridique français ; les JP sont longues (10-50k caractères), narratives, hétérogènes (CC summary 150 tok vs CA/TJ texte brut). Le mean-pooling sur chunks dilue le signal dans le boilerplate procédural.</p>
+</div>
+
+<h3>Sujet 2 — Idée Phase D : embedder les articles, pas les arrêts</h3>
+<div class="box accent">
+  <p><strong>Intuition :</strong> une question CRFPA cible un <em>point de droit codifié</em> (article LEGI), pas un récit factuel. Les articles sont courts (~500 chars médian), juridiquement structurés, ~87k vs 118k+. On inverse le pipeline :</p>
+  <pre>Question → embed → top-K articles → JP qui citent ces articles (back-edge graphe)</pre>
+  <p><strong>Prérequis :</strong> récupérer le texte intégral des articles via Légifrance / dump LEGI DILA. Cela devient la <em>Priorité 2</em> de la roadmap.</p>
+</div>
+
+<h3>Sujet 3 — Roadmap à 3 étapes consolidée</h3>
+<table>
+  <thead><tr><th>Étape</th><th>Objectif</th><th>Critère d'acceptation</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Étape 1</strong></td><td>Embedding pur, sans graphe, pour fixer un plancher propre</td><td>S<sub>retrieval</sub> &gt; plafond LLM (0,095)</td></tr>
+    <tr><td><strong>Étape 2</strong></td><td>Combler les JP sans summary (LLM ou laplacien)</td><td>Gain mesurable sur recall@K</td></tr>
+    <tr><td><strong>Étape 3</strong></td><td>Benchmark étendu via doctrine + GNN (R-GCN / GraphSAGE)</td><td>Stratification par pattern d'échec</td></tr>
+  </tbody>
+</table>
+
+<h3>Doutes / questions ouvertes mentionnés</h3>
+<ul>
+  <li>Faut-il tester d'autres encodeurs (BGE-M3 contexte 8k, Jina v3 late chunking) avant le GNN ?</li>
+  <li>Le mean-pooling sur 8+ chunks casse-t-il la représentation ?</li>
+  <li>L'hétérogénéité CC summary vs CA/TJ texte brut est-elle un blocage structurel ?</li>
+  <li>Phase B (4 modèles en parallèle) ou pivot Phase D (articles-first) ?</li>
+</ul>
+
+<h2 id="point-apres">2. Point Johnny du 26/05 — où on est arrivé</h2>
+
+<p>Trois semaines plus tard (Week 7), la situation a changé de régime.</p>
+
+<div class="box success">
+  <p><strong>Changement qualitatif, pas quantitatif</strong> : le 5 mai, <em>aucune</em> information utile ne sortait du top-K. Le 26 mai, <strong>5 à 7 questions sur 38 sont exploitables au critère dur</strong> (recall@10 articles ≥ 0,5 ET recall@5 JP via graphe ≥ 0,5).</p>
+</div>
+
+<h3>Sujet 1 — Étape 1 livrée et concluante</h3>
+<ul>
+  <li>Pivot Phase D validé empiriquement : embedding BGE-M3 (1024 dim, contexte 8k) sur articles LEGI.</li>
+  <li>31 357 articles résolus dans LEGI (36 % du pool graphe ; mais 91 %+ sur le gold des 6/7 branches actives).</li>
+  <li><span class="delta-pos">mean recall@10 articles : 0,158 → 0,518 (×3,3)</span>.</li>
+  <li><span class="delta-pos">mean recall@5 JP : 0 → 0,286</span> (saut qualitatif depuis le néant).</li>
+</ul>
+
+<h3>Sujet 2 — Pattern PP ≫ PENAL et 3 patterns d'échec</h3>
+<table>
+  <thead><tr><th>Pattern</th><th>Description</th><th>Branches touchées</th><th>Fix proposé</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A — Vocabulaire absent</strong></td><td>Question = cas factuel narratif ; gold = articles-principes dont le vocabulaire de <em>qualification</em> n'apparaît jamais</td><td>civil 6/9, affaires 3/4, pénal 2/8</td><td>Réécriture LLM de la question avant embedding</td></tr>
+    <tr><td><strong>B — Couverture LEGI lacunaire</strong></td><td>Articles abrogés, codes renumérotés, décrets récents, règlements UE</td><td>admin 3/8, civil 1/9, fiscal 1/3</td><td>Compléter ingestion LEGI (priorité CGFP)</td></tr>
+    <tr><td><strong>C — Trop d'articles gold</strong></td><td>Quand |gold| ≥ 7, recall@10 plafonne à min(1, 10/N)</td><td>PROC-Q1 (7 art.), FISCAL-Q2 (11 art.), CIVIL-Q1 (8 art.)</td><td>Décomposition LLM en sous-questions</td></tr>
+  </tbody>
+</table>
+
+<h3>Sujet 3 — Trois pistes pour l'Étape 2</h3>
+<ol>
+  <li><strong>(A) Réécriture LLM des questions</strong> — quick-win, ROI élevé, gain estimé +5-8 questions</li>
+  <li><strong>(B) Complétion JP via laplacien</strong> — élégant mais lourd (diagnostic Dirichlet, choix de λ)</li>
+  <li><strong>(C) JP-summary direct via DB OVH</strong> — nouvelle voie ouverte fin de journée du 26/05 (cf. §6)</li>
+</ol>
+
+<h3>Décisions arbitrées avec Johnny</h3>
+<ul>
+  <li><strong>Métrique adoptée :</strong> critère dur = <code>recall@10 articles ≥ 0,5</code> ET <code>recall@5 JP ≥ 0,5</code> ; critère facile = recall@20/10. Justification : borner la précision implicitement (recall@1000 c'est trop facile).</li>
+  <li><strong>Évaluation sur 4 niveaux de gold</strong> : <code>obligatoires</code> &lt; <code>core</code> &lt; <code>expected</code> &lt; <code>expert</code>.</li>
+  <li><strong>Pas de classifieur de branche</strong> : filtered vs open n'apporte que +1 question sur 38 → BGE-M3 fait son routing implicite.</li>
+</ul>
+
+<h3>Questions / arbitrages en suspens à ce point</h3>
+<ol>
+  <li>Priorité Étape 2 : (A) réécriture LLM, (B) laplacien, ou (C) JP-summary direct ?</li>
+  <li>Multi-vecteur pour questions compositionnelles : avant ou après Étape 2 ?</li>
+  <li>Ingestion CGFP / CRPA L4xx : à faire avant tout travail encodeur ?</li>
+</ol>
+
+<h2 id="embedding-articles">3. Travail #1 — Pivot JP-first → article-first</h2>
+
+<h3>3.1 Architecture du pipeline (4 étages)</h3>
+<pre>1. Diagnostic longueurs (token-stats BGE-M3 p99/p100)
+2. Ingestion LEGI (dump DILA → SQLite 1,7 M articles)
+3. Embedding articles (BGE-M3 1024 dim, L2-normalisé)
+4. Évaluation recall@K + back-edge JP via graphe</pre>
+
+<p><strong>Invariant central :</strong> la clé <code>pair_key</code> (ex. <code>code_penal:222-23</code>) relie nœud du graphe, texte LEGI, et ligne d'embedding. Alignement positionnel <em>lossless</em>, donc l'Étape 2 (laplacien éventuel) récupère les embeddings sans jointure.</p>
+
+<h3>3.2 Stratégies de retrieval testées</h3>
+<table>
+  <thead><tr><th>Stratégie</th><th>Pool</th><th>Mécanisme</th><th>Statut</th></tr></thead>
+  <tbody>
+    <tr><td><code>open</code></td><td>Tous les articles embeddés (3 k pénal ou 31 k full)</td><td><code>argsort(-Q @ art_emb.T)</code></td><td><span class="badge ok">Lancé</span></td></tr>
+    <tr><td><code>filtered</code></td><td>Restreint aux codes de la branche</td><td>Mask par <code>code_slug</code> puis cosine</td><td><span class="badge ok">Lancé</span></td></tr>
+    <tr><td><code>jp_via_graph</code></td><td>JP citant les top-K articles</td><td><code>G[:, top_K_cols].sum(axis=1) > 0</code></td><td><span class="badge ok">Lancé</span></td></tr>
+    <tr><td><code>jp_direct</code></td><td>116 755 synthèses JP (DB OVH)</td><td>Cosine <code>Q @ emb_jp_synthese.T</code></td><td><span class="badge ok">Lancé</span> (méthode #4)</td></tr>
+    <tr><td><code>jp_hybrid_max</code></td><td>Union top-K direct + via-graph</td><td>Max des deux scores</td><td><span class="badge ok">Lancé</span> mais sous-performant</td></tr>
+    <tr><td><code>jp_hybrid_rrf</code></td><td>Idem mais fusion par rangs</td><td><code>Σ 1/(60 + rang_i)</code></td><td><span class="badge todo">À coder (~10 lignes)</span></td></tr>
+    <tr><td><code>1-hop union/intersection</code></td><td>Expansion via le graphe biparti</td><td>JP citant ≥1 ou tous les articles du top-K</td><td><span class="badge todo">À coder (script 09)</span></td></tr>
+  </tbody>
+</table>
+
+<p class="legend">Note : on n'a <em>pas encore</em> testé l'intersection / union 1-hop / majority (stratégies du 5 mai sur le bon embedding). C'est le script <code>09_eval_jp_expansion.py</code> qui les implémentera, après le RRF.</p>
+
+<h3>3.3 Résultats comparatifs — embedding seul vs embedding + graphe (back-edge)</h3>
+
+<h4>Sur 38 questions CNB 2025, recall@K moyen par branche (core, open)</h4>
+<table>
+  <thead><tr><th>Branche</th><th>#q</th><th>r@1</th><th>r@5</th><th>r@10</th><th>r@20</th><th>r@100</th><th>r@1000</th></tr></thead>
+  <tbody>
+    <tr><td><strong>pénal</strong></td><td>8</td><td>0,19</td><td>0,46</td><td><strong>0,50</strong></td><td>0,50</td><td>0,53</td><td>0,72</td></tr>
+    <tr><td>social</td><td>3</td><td>0,33</td><td>0,33</td><td>0,33</td><td>0,33</td><td>0,42</td><td>0,75</td></tr>
+    <tr><td>affaires</td><td>4</td><td>0,12</td><td>0,19</td><td>0,19</td><td>0,19</td><td>0,44</td><td>0,58</td></tr>
+    <tr><td>civil</td><td>9</td><td>0,04</td><td>0,08</td><td>0,08</td><td>0,14</td><td>0,18</td><td>0,41</td></tr>
+    <tr><td>fiscal</td><td>3</td><td>0,03</td><td>0,11</td><td>0,14</td><td>0,17</td><td>0,32</td><td><strong>0,84</strong></td></tr>
+    <tr><td>admin</td><td>8</td><td>0,00</td><td>0,00</td><td>0,00</td><td>0,00</td><td>0,00</td><td>0,12</td></tr>
+  </tbody>
+</table>
+<p class="legend">Lecture : seul le pénal franchit le seuil 0,50 en top-10. Fiscal sature à K=1000 (0,84) → les gold y sont, mais classés trop loin (pattern A et C).</p>
+
+<h4>Comparaison frontale Baseline B2 (5 mai) vs Étape 1 (26 mai)</h4>
+<table>
+  <thead><tr><th>Métrique</th><th>B2 (e5-base, JP-first)</th><th>Étape 1 (BGE-M3, articles-first)</th><th>Δ</th></tr></thead>
+  <tbody>
+    <tr><td>Modèle</td><td>e5-base 768d / 512 tok</td><td>BGE-M3 1024d / 8k tok</td><td>+4× contexte</td></tr>
+    <tr><td>Input encodé</td><td>JP brut</td><td>Article LEGI</td><td>Inversion</td></tr>
+    <tr><td>Pool candidats</td><td>118 112 JP</td><td>31 357 articles</td><td>×4 plus petit</td></tr>
+    <tr><td>mean recall@10 articles (oblig)</td><td>0,158</td><td><strong>0,518</strong></td><td><span class="delta-pos">×3,3</span></td></tr>
+    <tr><td>mean recall@5 JP</td><td><strong>0,000</strong></td><td>0,286</td><td><span class="delta-pos">bond qualitatif</span></td></tr>
+    <tr><td>Rang médian gold JP</td><td>76 782 / 118 112</td><td>top-100 (majorité)</td><td>—</td></tr>
+    <tr><td><strong>Questions passant critère dur</strong></td><td><strong>0/38</strong></td><td><strong>5–7/38</strong></td><td><span class="delta-pos">Saut de régime</span></td></tr>
+  </tbody>
+</table>
+
+<h3>3.4 Changement de métrique — récap</h3>
+<table>
+  <thead><tr><th></th><th>Avant 5 mai</th><th>Après 26 mai</th></tr></thead>
+  <tbody>
+    <tr><td>Métrique</td><td>S<sub>retrieval</sub> = 0,5·S<sub>art</sub> + 0,5·S<sub>jp</sub> (recall@K agrégé)</td><td><code>recall@10 art ≥ 0,5 ET recall@5 jp ≥ 0,5</code> par question</td></tr>
+    <tr><td>Niveau de gold</td><td>Obligatoires uniquement</td><td>4 niveaux (oblig / core / expected / expert)</td></tr>
+    <tr><td>Pourquoi</td><td>Score scalaire global</td><td>Borner la précision implicitement + lisibilité question par question</td></tr>
+  </tbody>
+</table>
+
+<h2 id="extension-corpus">4. Travail #2 — Extension benchmark : 8 q pénal → 38 q full corpus</h2>
+
+<h3>4.1 Découverte de l'existant</h3>
+<p>On évaluait sur les <strong>8 questions du <code>rubrics_penal.json</code></strong> (3 pénal + 5 procédure pénale). En réalité, 11 fichiers <code>cnb-*-2025-consolidated.json</code> existent dans <code>05-Technique/benchmark/data/rubrics/</code>, totalisant <strong>38 questions sur 11 branches</strong>.</p>
+
+<h3>4.2 Répartition des 38 questions</h3>
+<table>
+  <thead><tr><th>Branche</th><th>#q</th><th>Statut</th></tr></thead>
+  <tbody>
+    <tr><td>pénal</td><td>3</td><td><span class="badge ok">8/8 évaluables</span></td></tr>
+    <tr><td>procédure pénale</td><td>5</td><td></td></tr>
+    <tr><td>civil</td><td>3</td><td></td></tr>
+    <tr><td>obligations</td><td>3</td><td></td></tr>
+    <tr><td>procédure civile</td><td>3</td><td></td></tr>
+    <tr><td>affaires</td><td>4</td><td></td></tr>
+    <tr><td>administratif</td><td>5</td><td><span class="badge fail">2/8 avec gold core vide</span></td></tr>
+    <tr><td>procédure administrative</td><td>3</td><td></td></tr>
+    <tr><td>fiscal</td><td>3</td><td></td></tr>
+    <tr><td>social</td><td>3</td><td></td></tr>
+    <tr><td>international-européen</td><td>3</td><td><span class="badge fail">Gold = règlements UE, hors pool</span></td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>38</strong></td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>4.3 Tableau résultats par branche (open vs filtered, critère dur)</h3>
+<table>
+  <thead>
+    <tr><th rowspan="2">Branche</th><th rowspan="2">#q</th><th colspan="2">OBLIG (open / filtered)</th><th colspan="2">CORE (open / filtered)</th></tr>
+    <tr><th>passées</th><th>%</th><th>passées</th><th>%</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>pénal</strong></td><td>8</td><td>3 / 4</td><td>38 / 50</td><td>2 / 3</td><td>25 / 38</td></tr>
+    <tr><td>social</td><td>3</td><td>1 / 1</td><td>33 / 33</td><td>1 / 1</td><td>33 / 33</td></tr>
+    <tr><td>affaires</td><td>4</td><td>1 / 1</td><td>25 / 25</td><td>1 / 1</td><td>25 / 25</td></tr>
+    <tr><td>civil</td><td>9</td><td>1 / 1</td><td>11 / 11</td><td>0 / 0</td><td>0 / 0</td></tr>
+    <tr><td>administratif</td><td>8</td><td>0 / 0</td><td>0 / 0</td><td>0 / 0</td><td>0 / 0</td></tr>
+    <tr><td>fiscal</td><td>3</td><td>0 / 0</td><td>0 / 0</td><td>0 / 0</td><td>0 / 0</td></tr>
+    <tr><td>inteu</td><td>3</td><td>0 / 0</td><td>0 / 0</td><td>0 / 0</td><td>0 / 0</td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>38</strong></td><td><strong>6 / 7</strong></td><td><strong>16 / 18</strong></td><td><strong>4 / 5</strong></td><td><strong>11 / 13</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>4.4 Cas hors-pénal qui passe : SOCIAL-Q2</h3>
+<div class="box success">
+  <p>Pourquoi ça marche : <strong>(1)</strong> mono-gold core (un seul article L411-2), <strong>(2)</strong> recouvrement lexical parfait (« accident de trajet »), <strong>(3)</strong> question mono-scénario factuelle (M. Stefan déneige, chute, qualification AT).</p>
+  <p>Le facteur discriminant <em>n'est pas la branche</em>, c'est : nombre d'articles gold + recouvrement lexical + caractère principe-vs-spécifique.</p>
+</div>
+
+<h2 id="doctrine-qgen">5. Travail #3 — Génération de nouvelles questions (doctrine_qgen)</h2>
+
+<p>Le benchmark CNB 2025 n'a <strong>que 8 questions en pénal et 38 au total</strong>. Pour stratifier statistiquement les patterns d'échec et entraîner / valider l'Étape 3 (GNN), il faut un benchmark étendu.</p>
+
+<h3>5.1 Architecture du pipeline (4 phases)</h3>
+<table>
+  <thead><tr><th>Phase</th><th>Rôle</th><th>Statut</th></tr></thead>
+  <tbody>
+    <tr><td>Phase 0</td><td>Parsing PDF (Jurisclasseurs LexisNexis) → sections JSON avec whitelists d'articles/JP par sous-section</td><td><span class="badge ok">Terminé</span></td></tr>
+    <tr><td>Phase 1</td><td>Génération vLLM A/B (Gemma 4 31B dense vs Gemma 4 26B-A4B MoE) avec response_format JSON schema strict</td><td><span class="badge ok">Terminé (modèle B retenu)</span></td></tr>
+    <tr><td>Phase 2</td><td>Validation déterministe : <code>articles ⊆ whitelist</code> ET <code>jp ⊆ whitelist</code> (mode extraction-only)</td><td><span class="badge ok">Terminé</span></td></tr>
+    <tr><td>Phase 3</td><td>Anonymisation A/B pour blind review humaine</td><td><span class="badge ok">Terminé</span></td></tr>
+  </tbody>
+</table>
+
+<h3>5.2 Chiffres — corpus pénal produit</h3>
+<table>
+  <thead><tr><th>Métrique</th><th>Valeur</th></tr></thead>
+  <tbody>
+    <tr><td>PDFs Jurisclasseurs parsés</td><td>5 (5 990 pages)</td></tr>
+    <tr><td>Documents JSON sections L1</td><td>230 (couverture quasi-totale du corpus PP)</td></tr>
+    <tr><td>Sections L1 distinctes</td><td>792</td></tr>
+    <tr><td>Articles cités distincts</td><td>18 447</td></tr>
+    <tr><td>Jurisprudences citées</td><td>33 421</td></tr>
+    <tr><td><strong>Questions générées (clean)</strong></td><td><strong>3 421</strong> (98,2 % du brut, modèle Gemma 4 26B-A4B)</td></tr>
+    <tr><td>Questions strict (article ET JP)</td><td>1 707 (49,9 %) — <strong>idéal scoring 2D</strong>, ×42 le CNB</td></tr>
+    <tr><td>Questions exploitable (article OU JP)</td><td>3 326 (97,2 %)</td></tr>
+    <tr><td>Hallucinations détectées sur 20-sample review</td><td><strong>0</strong> (extraction-only fonctionne)</td></tr>
+  </tbody>
+</table>
+
+<h3>5.3 Statut et extensibilité</h3>
+<div class="box success">
+  <p><strong>Pipeline branche-agnostique ✓</strong> : prompt templatable, whitelists dynamiques tirées du PDF, anonymisation pure. Pour étendre à civil / admin / social : (1) fournir les Jurisclasseurs correspondants en PDF, (2) ajuster éventuellement le prompt aux thèmes branche, (3) relancer <code>run_full_pipeline_on_cluster.py</code>.</p>
+  <p><strong>Infrastructure :</strong> vLLM 0.19 + OpenAI API compatible, modèle Gemma 4 26B-A4B AWQ-int4 sur L40S 48 Go (utilisation 34-36 Go), durée GPU ~8h pour pénal complet, cluster <code>mm</code> (QoS dédiée, 8 GPUs).</p>
+</div>
+
+<h3>5.4 Implication pour l'Étape 1</h3>
+<blockquote>
+On peut <strong>refaire tourner l'embedding articles + JP-side sur les 1 707 questions doctrine_qgen strict</strong> pour stratifier statistiquement les patterns d'échec sur le pénal. C'est même plus robuste que les 8 questions CNB : volume × 213, contrôle de la difficulté (extraction de gold validée).
+</blockquote>
+
+<h3>5.5 Blockers connus</h3>
+<ul>
+  <li>4 sections doctrine dépassent le contexte 16k (Gemma 4 26B-A4B en quantif AWQ). Phase 1 a été robustifiée pour les sauter ; décision Johnny en attente sur ces 4 cas.</li>
+  <li>Aucun autre bloqueur pour étendre à d'autres branches.</li>
+</ul>
+
+<h2 id="methode-jp-summary">6. Travail #4 — DB OVH + embedding JP-summary direct</h2>
+
+<h3>6.1 La découverte qui change la donne</h3>
+<p>Le 5 mai notait : <em>« CA et TJ ont 0 % de summary Judilibre, donc on ne peut pas les embedder proprement »</em>. C'était <strong>vrai pour les champs natifs Judilibre</strong>. Mais la <strong>DB OVH Hector PostgreSQL</strong> contient des résumés <em>produits par le pipeline LLM step1 d'Hector</em>, indépendants des champs natifs.</p>
+
+<h3>6.2 Tables de la DB OVH</h3>
+<table>
+  <thead><tr><th>Table</th><th>Rows</th><th>Colonnes clés</th></tr></thead>
+  <tbody>
+    <tr><td><code>jp_decisions</code></td><td>2 338 523</td><td><code>source_id</code> (= <code>jp_id</code> du graphe), <code>court</code>, <code>full_text</code>, <code>step1_raw</code> (jsonb), <strong><code>synthese_pour_avocat</code></strong> (text, ~500 chars, 100 % coverage), <code>cited_articles</code></td></tr>
+    <tr><td><code>jp_argument</code></td><td>8 582 505</td><td>~3,7 arguments par décision</td></tr>
+  </tbody>
+</table>
+
+<h3>6.3 Coverage obtenue (script <code>06_fetch_jp_summaries.py</code>)</h3>
+<table>
+  <thead><tr><th>Juris</th><th>Synthèses récupérées</th><th>Couverture</th></tr></thead>
+  <tbody>
+    <tr><td>CA</td><td>14 314 / 14 315</td><td><strong>100,0 %</strong> ← changement vs 5 mai !</td></tr>
+    <tr><td>CC</td><td>95 704 / 97 060</td><td>98,6 %</td></tr>
+    <tr><td>TJ</td><td>6 737 / 6 737</td><td><strong>100,0 %</strong></td></tr>
+    <tr><td><strong>TOTAL</strong></td><td><strong>116 755 / 118 112</strong></td><td><strong>98,9 %</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>6.4 TODO Johnny « recalculer les synthèses des JP » — résolu</h3>
+<div class="box success">
+  <p>Il y avait une TODO Johnny pour <strong>générer nous-même des synthèses LLM des JP</strong> (Étape 2, option A). La DB OVH les <strong>fournit déjà</strong> pour 2,3 M décisions, en production Hector.</p>
+  <p>→ <strong>On saute cette étape de calcul.</strong> On consomme directement, on embed, on évalue. Économie : ~1 semaine de compute + pipeline.</p>
+</div>
+
+<h3>6.5 Méthode #4 — JP-summary direct (en cours d'éval)</h3>
+<p><strong>Pipeline :</strong></p>
+<pre>1. fetch 116 755 synthèses via psycopg2 + temp table JOIN (15 s)
+2. embed BGE-M3 1024d (1h26, 456 MB, batch=32)
+3. cosine Q @ emb_jp_synthese.T sur 38 questions
+4. comparer aux méthodes via-graph et hybrid</pre>
+
+<h3>6.6 Le mystère « jp_direct vs jp_via_graph capturent des questions différentes »</h3>
+
+<p><strong>Définitions précises :</strong></p>
+<table>
+  <thead><tr><th>Méthode</th><th>Ce qu'elle fait</th><th>Signal exploité</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>jp_direct</code></td>
+      <td><code>cosine(Q, emb_jp_synthese)</code> → top-K JP directement</td>
+      <td><strong>Sémantique textuelle</strong> : la question ressemble-t-elle à la synthèse de la JP ?</td>
+    </tr>
+    <tr>
+      <td><code>jp_via_graph</code></td>
+      <td>Top-K articles via cosine, puis JP qui <em>citent</em> ces articles via <code>G[:, top_K_cols].sum > 0</code></td>
+      <td><strong>Structurel via graphe</strong> : la JP cite-t-elle les articles que la question vise ?</td>
+    </tr>
+    <tr>
+      <td><code>jp_hybrid_max</code></td>
+      <td>Union top-K direct + via-graph, ordre du direct préservé</td>
+      <td>Naïf → sous-performant (cf. plus bas)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>6.7 Résultats sur les 7 questions évaluables JP-side</h3>
+
+<h4>Recall @5 (critère DUR)</h4>
+<table>
+  <thead><tr><th>Question</th><th>gold JP</th><th>direct</th><th>via_graph</th><th>hybrid_max</th></tr></thead>
+  <tbody>
+    <tr><td>CNB-PENAL-Q1</td><td>8</td><td>0,00</td><td>0,12</td><td>0,00</td></tr>
+    <tr><td>CNB-PENAL-Q2</td><td>2</td><td>0,00</td><td>0,00</td><td>0,00</td></tr>
+    <tr><td><strong>CNB-PENAL-Q3</strong></td><td>2</td><td><strong>0,50</strong></td><td>0,00</td><td>0,50</td></tr>
+    <tr><td>CNB-PP-Q1</td><td>3</td><td>0,00</td><td>0,33</td><td>0,00</td></tr>
+    <tr><td><strong>CNB-PP-Q2</strong></td><td>2</td><td>0,00</td><td><strong>0,50</strong></td><td>0,00</td></tr>
+    <tr><td><strong>CNB-PP-Q3</strong></td><td>1</td><td><strong>1,00</strong></td><td><strong>1,00</strong></td><td>1,00</td></tr>
+    <tr><td>CNB-PP-Q4</td><td>2</td><td>0,00</td><td>0,00</td><td>0,00</td></tr>
+  </tbody>
+</table>
+
+<h4>Agrégat</h4>
+<table>
+  <thead><tr><th>Critère</th><th>jp_direct</th><th>jp_via_graph</th><th>jp_hybrid_max</th></tr></thead>
+  <tbody>
+    <tr><td>DUR (r@5 ≥ 0,5)</td><td>2/7 (29 %)</td><td>2/7 (29 %)</td><td>2/7 (29 %)</td></tr>
+    <tr><td>FACILE (r@10 ≥ 0,5)</td><td>2/7 (29 %)</td><td><strong>3/7 (43 %)</strong></td><td>2/7 (29 %)</td></tr>
+  </tbody>
+</table>
+
+<h3>6.8 Lecture des résultats</h3>
+<div class="box accent">
+  <ul>
+    <li><strong>Direct catche PENAL-Q3</strong> (fusion-absorption articles 121-1/121-2) : les synthèses de cassation <em>racontent</em> le même scénario que la question → similarité textuelle forte.</li>
+    <li><strong>Via-graph catche PP-Q2</strong> (garde à vue, CPP:63) : la JP gold cite directement l'article, le back-edge l'attrape immédiatement.</li>
+    <li><strong>Union théorique = 3/7 questions distinctes</strong> en DUR, 5/7 en FACILE. Mais <code>hybrid_max</code> n'y parvient pas car il écrase les hits via-graph qui arrivent loin dans le ranking direct.</li>
+    <li>→ <strong>Reciprocal Rank Fusion (RRF)</strong> est la solution prochaine.</li>
+  </ul>
+</div>
+
+<h3>6.9 Pourquoi seulement 7/38 questions évaluables JP-side</h3>
+<p>La résolution du gold JP repose sur une regex pourvoi Cour de cassation stricte : <code>\d{2}-\d{2}\.\d{3}</code> (ex. <code>22-14.567</code>).</p>
+<p><strong>Cas non couverts par cette regex (31 questions sur 38) :</strong></p>
+<ul>
+  <li><strong>Arrêts CA/TJ</strong> référencés par numéro de rôle (<code>1998-2549</code>, <code>1362/00</code>)</li>
+  <li><strong>CEDH/CJUE</strong> via ECLI (<code>ECLI:CE:ECHR:2023:...</code>)</li>
+  <li><strong>QPC Conseil constitutionnel</strong> (n° QPC)</li>
+  <li><strong><code>jp_attendues = []</code></strong> sur civil/affaires/admin (gold non défini ou JP non-CC)</li>
+</ul>
+<p><strong>Fix planifié :</strong> avec la DB OVH (<code>source_id</code> + <code>numero</code> + <code>court</code>), résoudre CA/TJ par numéro de rôle, ce qui étend l'éval à beaucoup plus de questions.</p>
+
+<h2 id="next-steps">7. Prochaines étapes</h2>
+
+<h3>7.1 Court terme (jours)</h3>
+<ul>
+  <li><span class="badge todo">TODO</span> Implémenter <code>hybrid_rrf</code> dans <code>08_eval_jp_direct.py</code> (~10 lignes : sommer <code>1/(60 + rang_i)</code>, retrier). <strong>Critère d'acceptation : passer de 2/7 → 3-4/7 DUR.</strong></li>
+  <li><span class="badge todo">TODO</span> Étendre la résolution gold JP via la DB OVH pour CA/TJ → faire passer 7/38 à ~20-25/38 évaluables.</li>
+  <li><span class="badge todo">TODO</span> Implémenter <code>09_eval_jp_expansion.py</code> : variantes 1-hop (union, intersection, majority à la 5 mai).</li>
+  <li><span class="badge todo">TODO</span> Ingérer CGFP dans le pool LEGI → débloque potentiellement ADMIN-Q2.</li>
+  <li><span class="badge todo">TODO</span> Documenter les 2 cas inévaluables (ADMIN-Q1C, PROC-Q3 avec gold core vide).</li>
+</ul>
+
+<h3>7.2 Étape 2 (semaines)</h3>
+<ul>
+  <li><strong>Refaire tourner l'embedding + recall sur les 1 707 questions doctrine_qgen strict</strong> (au lieu de 8 CNB pénal) → stratification statistique fiable des patterns A/B/C en pénal.</li>
+  <li><strong>Évaluation méthode #4 (JP-summary direct + RRF) sur le full corpus</strong> JP, pas juste pénal — l'embed est déjà fait.</li>
+  <li>Prototype <strong>réécriture LLM</strong> de questions pour pattern A → objectif civil 0/9 → 3-5/9.</li>
+  <li>Prototype <strong>décomposition LLM</strong> en sous-questions pour pattern C.</li>
+  <li>Étendre <code>doctrine_qgen</code> à civil / admin / social (pipeline branche-agnostique, juste fournir les PDFs).</li>
+</ul>
+
+<h3>7.3 Étape 3 (futur)</h3>
+<div class="box accent">
+  <p><strong>Graphe enrichi avec nœuds Question + link prediction</strong> — c'était une TODO Johnny du dernier point.</p>
+  <ul>
+    <li>Ajouter des nœuds <em>question</em> au graphe biparti existant (JP × Article).</li>
+    <li>Arêtes question → article gold (supervisé) et question → JP gold.</li>
+    <li>Entraîner un GNN (R-GCN / GraphSAGE) en task de <strong>link prediction</strong> : étant donnée une nouvelle question, prédire ses articles/JP liés.</li>
+    <li>Tester d'abord sur pénal (avec les 1 707 questions doctrine_qgen → on a un volume suffisant), puis étendre.</li>
+    <li>Avantage : exploite la structure de citations qu'on a déjà mesurée (Gini 0,95, 99,88 % connexe, 3 communautés émergentes).</li>
+  </ul>
+</div>
+
+<h3>7.4 Arbitrages à demander à Johnny</h3>
+<ol>
+  <li><strong>Priorité Étape 2</strong> : (A) réécriture LLM des questions, (B) laplacien sur graphe, ou (C) approfondir JP-summary direct + RRF ? La voie (C) est quasi-gratuite en compute (embed déjà fait, RRF = 10 lignes), donc on peut probablement la mener en parallèle des autres.</li>
+  <li><strong>Génération doctrine_qgen sur autres branches</strong> : civil/admin/social en priorité ? Quelle granularité pour les Jurisclasseurs (LexisNexis a ~100-200 fascicules par branche) ?</li>
+  <li><strong>Resolveur gold étendu</strong> : on accepte d'utiliser la DB OVH pour résoudre les CA/TJ par numéro de rôle, ou on préfère garder regex pourvoi CC pour la pureté du benchmark ?</li>
+  <li><strong>GNN link prediction</strong> : on commence à scaffolder dès maintenant (pour avoir une baseline naïve pré-Étape 2), ou on attend l'Étape 2 complète ?</li>
+</ol>
+
+<h2 id="chiffres">8. Annexe — Chiffres clés à mémoriser</h2>
+
+<table>
+  <thead><tr><th>Sujet</th><th>Chiffre</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>Baseline B2 5 mai : rang médian gold JP</td><td>76 782 / 118 112</td><td>journal 2026-05-05 §A.2</td></tr>
+    <tr><td>Baseline B2 5 mai : recall@5 JP</td><td><strong>0,000</strong> partout</td><td>journal 2026-05-05 §A.2</td></tr>
+    <tr><td>Étape 1 : articles LEGI résolus</td><td>31 357 / 87 821 (36 %)</td><td>journal 2026-05-26 §1.3</td></tr>
+    <tr><td>Étape 1 : mean recall@10 articles (oblig)</td><td>0,518</td><td>journal 2026-05-26 §3.3</td></tr>
+    <tr><td>Étape 1 : mean recall@5 JP</td><td>0,286</td><td>journal 2026-05-26 §3.3</td></tr>
+    <tr><td>Étape 1 : questions passant critère dur</td><td>5–7 / 38 (13–18 %)</td><td>journal 2026-05-26 §3.1</td></tr>
+    <tr><td>Open vs filtered : gain</td><td>+1 question sur 38</td><td>journal 2026-05-26 §4.3</td></tr>
+    <tr><td>doctrine_qgen : questions clean</td><td>3 421 (98,2 %)</td><td>journal 2026-05-24 §1</td></tr>
+    <tr><td>doctrine_qgen : questions strict (art ET jp)</td><td>1 707 (× 42 vs CNB)</td><td>journal 2026-05-24 §1</td></tr>
+    <tr><td>DB OVH : synthèses récupérées</td><td>116 755 / 118 112 (98,9 %)</td><td>journal 2026-05-26 §10.3</td></tr>
+    <tr><td>DB OVH : coverage CA/TJ</td><td>100,0 % / 100,0 %</td><td>journal 2026-05-26 §10.3</td></tr>
+    <tr><td>Méthode #4 : taille embeddings JP</td><td>456 MB (116 755 × 1024)</td><td>journal 2026-05-26 §10.4</td></tr>
+    <tr><td>JP-direct vs via-graph : union DUR</td><td>3/7 distinctes vs 2/7 chacun</td><td>journal 2026-05-26 §10.10</td></tr>
+    <tr><td>Limite éval JP-side</td><td>7/38 questions évaluables (regex pourvoi CC)</td><td>journal 2026-05-26 §10.11</td></tr>
+    <tr><td>Graphe biparti : connexité</td><td>99,88 % en une seule composante</td><td>journal 2026-04-28</td></tr>
+    <tr><td>Loi de puissance citations : Gini</td><td>0,953 (top 1 % = 72,7 % citations)</td><td>journal 2026-04-28</td></tr>
+  </tbody>
+</table>
+
+<hr>
+<p class="small">Document généré le 28 mai 2026 — synthèse de 5 explorations de subagents (présentations Beamer, journaux 2026-04-26 à 2026-05-26, code <code>etape1_embedding_pur/</code>, <code>doctrine_qgen/</code>, scripts <code>06-08_*.py</code> méthode #4).</p>
+
+</body>
+</html>

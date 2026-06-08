@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Graphe enrichi questions — design GNN link prediction</title>
+<style>
+  :root {
+    --c-bg: #fafaf7; --c-fg: #1a1a1a; --c-muted: #666;
+    --c-accent: #355c7d; --c-accent-light: #dde7f0;
+    --c-success: #2d5d3a; --c-success-light: #e6efe7;
+    --c-warn: #8b5a2b; --c-warn-light: #f4ebe0;
+    --c-fail: #8b3a3a; --c-fail-light: #f4e6e6;
+    --c-border: #d9d4c8; --c-table-stripe: #f2efe8;
+    --c-code-bg: #ecebe5;
+    --c-q: #6c5b8a; --c-q-light: #ebe5f3;
+  }
+  body { font-family: "Iowan Old Style", Palatino, Georgia, serif; background: var(--c-bg); color: var(--c-fg); max-width: 1180px; margin: 2rem auto; padding: 0 2rem 4rem; line-height: 1.55; font-size: 16px; }
+  h1 { font-size: 2rem; border-bottom: 3px solid var(--c-accent); padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+  h1 + p.lede { color: var(--c-muted); font-style: italic; margin-top: 0; margin-bottom: 2rem; }
+  h2 { font-size: 1.5rem; color: var(--c-accent); margin-top: 3rem; border-bottom: 1px solid var(--c-border); padding-bottom: 0.3rem; }
+  h3 { font-size: 1.18rem; margin-top: 1.8rem; color: #2a3f55; }
+  h4 { font-size: 1.02rem; margin-top: 1.2rem; margin-bottom: 0.3rem; color: var(--c-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; background: white; }
+  th, td { border: 1px solid var(--c-border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--c-accent); color: white; font-weight: 600; }
+  tbody tr:nth-child(even) { background: var(--c-table-stripe); }
+  code { font-family: "SF Mono", Monaco, Consolas, monospace; background: var(--c-code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+  pre { background: var(--c-code-bg); padding: 0.9rem 1.1rem; border-radius: 5px; overflow-x: auto; font-size: 0.82rem; border-left: 3px solid var(--c-accent); line-height: 1.4; }
+  .box { border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem 1.3rem; margin: 1rem 0; background: white; }
+  .box.success { border-left: 5px solid var(--c-success); background: var(--c-success-light); }
+  .box.warn    { border-left: 5px solid var(--c-warn);    background: var(--c-warn-light); }
+  .box.fail    { border-left: 5px solid var(--c-fail);    background: var(--c-fail-light); }
+  .box.accent  { border-left: 5px solid var(--c-accent);  background: var(--c-accent-light); }
+  .box.q       { border-left: 5px solid var(--c-q);       background: var(--c-q-light); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1.2rem 0 2rem; }
+  .kpi { background: white; border-radius: 6px; border: 1px solid var(--c-border); padding: 0.9rem 1rem; text-align: center; }
+  .kpi .value { font-size: 1.55rem; font-weight: 600; color: var(--c-accent); font-variant-numeric: tabular-nums; }
+  .kpi .label { font-size: 0.78rem; color: var(--c-muted); margin-top: 0.2rem; }
+  hr { border: none; border-top: 1px dashed var(--c-border); margin: 2.5rem 0; }
+  .small { font-size: 0.85rem; color: var(--c-muted); }
+  .schema { background: white; border: 1px solid var(--c-border); border-radius: 6px; padding: 1.2rem; margin: 1.2rem 0; text-align: center; }
+  .schema svg { max-width: 100%; height: auto; }
+  .legend { display: flex; gap: 1.2rem; justify-content: center; font-size: 0.85rem; margin-top: 0.6rem; color: var(--c-muted); flex-wrap: wrap; }
+  .legend span::before { content: "■ "; }
+  .legend .l-art::before { color: var(--c-accent); }
+  .legend .l-jp::before  { color: var(--c-warn); }
+  .legend .l-q::before   { color: var(--c-q); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ascii { font-family: "SF Mono", Monaco, Consolas, monospace; background: white; border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem; font-size: 0.78rem; line-height: 1.35; white-space: pre; overflow-x: auto; }
+  ul.tight li { margin-bottom: 0.25rem; }
+  .tag { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 0.78em; font-weight: 600; }
+  .tag.art { background: var(--c-accent-light); color: var(--c-accent); }
+  .tag.jp  { background: var(--c-warn-light);    color: var(--c-warn); }
+  .tag.q   { background: var(--c-q-light);       color: var(--c-q); }
+</style>
+</head>
+<body>
+
+<h1>Graphe enrichi par questions — design du link prediction par GNN</h1>
+<p class="lede">Note de design — palier 14 roadmap, 29 mai 2026. Comment ajouter 1 707 questions doctrine_qgen comme 3<sup>e</sup> type de nœud et apprendre les arêtes question→article / question→JP.</p>
+
+<div class="box accent">
+  <p><strong>Pourquoi ce chantier maintenant.</strong> Les Baselines 2-4 (cosine direct, JP→articles via graphe, cross-modal union) plafonnent autour de 84 % pass DUR avec 43 articles retournés. Aucune n'exploite la <em>structure</em> du graphe au-delà du 1-hop : pas de propagation, pas de re-pondération apprise. Un GNN supervisé sur les 1 707 questions étiquetées doit pouvoir (i) capturer des motifs de citation transverses, (ii) factoriser les signaux articles + JP au lieu de les unioner, (iii) produire un ranking et plus seulement un set.</p>
+  <p><strong>Ce que ce document décide / ouvre.</strong> Architecture du graphe, features par type de nœud, modèle GNN candidat, schéma de supervision, split anti-leakage, métrique, positionnement vs baselines, risques. <em>Trois arbitrages explicites pour Johnny en bas de page.</em></p>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi"><div class="value">3</div><div class="label">types de nœuds (Art, JP, Q)</div></div>
+  <div class="kpi"><div class="value">4</div><div class="label">types d'arêtes (cite, gold_art, gold_jp, sim?)</div></div>
+  <div class="kpi"><div class="value">1 707</div><div class="label">questions supervisées</div></div>
+  <div class="kpi"><div class="value">~2 M</div><div class="label">arêtes cite (sous-corpus pénal)</div></div>
+</div>
+
+<h2>1. Architecture du graphe enrichi</h2>
+
+<h3>1.1 Du biparti existant au tripartite</h3>
+
+<div class="two-col">
+  <div>
+    <h4>Avant — biparti</h4>
+<div class="ascii">  [Article]──cite──[JP]
+     87 821       1,07 M
+          6,44 M arêtes
+     densité 6,8e-5
+</div>
+  </div>
+  <div>
+    <h4>Après — tripartite hétérogène</h4>
+<div class="ascii">       [Question]   ← 1 707
+        ╱      ╲
+   gold_art  gold_jp
+      ╱          ╲
+[Article]──cite──[JP]
+   87 821        1,07 M
+</div>
+  </div>
+</div>
+
+<div class="schema">
+<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#666"/>
+    </marker>
+  </defs>
+  <!-- Q node -->
+  <circle cx="360" cy="50" r="32" fill="#ebe5f3" stroke="#6c5b8a" stroke-width="2"/>
+  <text x="360" y="55" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="600" fill="#6c5b8a">Q</text>
+  <text x="360" y="105" text-anchor="middle" font-size="11" fill="#666">1 707 questions</text>
+  <!-- Article node -->
+  <circle cx="170" cy="200" r="32" fill="#dde7f0" stroke="#355c7d" stroke-width="2"/>
+  <text x="170" y="205" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="600" fill="#355c7d">Art</text>
+  <text x="170" y="252" text-anchor="middle" font-size="11" fill="#666">87 821 articles LEGI</text>
+  <!-- JP node -->
+  <circle cx="550" cy="200" r="32" fill="#f4ebe0" stroke="#8b5a2b" stroke-width="2"/>
+  <text x="550" y="205" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="600" fill="#8b5a2b">JP</text>
+  <text x="550" y="252" text-anchor="middle" font-size="11" fill="#666">1,07 M arrêts</text>
+  <!-- Edges -->
+  <line x1="200" y1="200" x2="520" y2="200" stroke="#666" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="360" y="195" text-anchor="middle" font-size="11" fill="#444" font-style="italic">cite (6,44 M)</text>
+  <line x1="338" y1="76" x2="195" y2="172" stroke="#6c5b8a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="240" y="120" text-anchor="middle" font-size="11" fill="#6c5b8a" font-style="italic">gold_art (~3 700)</text>
+  <line x1="382" y1="76" x2="525" y2="172" stroke="#6c5b8a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="480" y="120" text-anchor="middle" font-size="11" fill="#6c5b8a" font-style="italic">gold_jp (~2 500)</text>
+</svg>
+<div class="legend">
+  <span class="l-art">Article (texte LEGI)</span>
+  <span class="l-jp">JP (synthèse Hector)</span>
+  <span class="l-q">Question (énoncé CRFPA)</span>
+</div>
+</div>
+
+<h3>1.2 Schéma des relations</h3>
+
+<table>
+<thead><tr><th>Type d'arête</th><th>Source → Cible</th><th>Sens</th><th>Cardinalité estimée</th><th>Origine</th><th>Statut</th></tr></thead>
+<tbody>
+<tr><td><code>cite</code></td><td>JP → Art</td><td>dirigée</td><td>6,44 M (2 M pénal)</td><td>texte arrêt (regex + parse)</td><td>donné</td></tr>
+<tr><td><code>gold_art</code></td><td>Q → Art</td><td>dirigée</td><td>~3 700 (1-4 par Q)</td><td>doctrine_qgen, Jurisclasseur</td><td><strong>labels positifs</strong></td></tr>
+<tr><td><code>gold_jp</code></td><td>Q → JP</td><td>dirigée</td><td>~2 500 (variable)</td><td>doctrine_qgen, pourvois CC</td><td><strong>labels positifs</strong></td></tr>
+<tr><td><code>sim_art</code> <span class="tag art">opt.</span></td><td>Art ↔ Art</td><td>non-dirigée, top-k</td><td>~k × 87 821</td><td>cosine BGE-M3 ≥ θ ou kNN</td><td>aug. graphe — à arbitrer</td></tr>
+<tr><td><code>sim_jp</code> <span class="tag jp">opt.</span></td><td>JP ↔ JP</td><td>non-dirigée, top-k</td><td>~k × 1,07 M</td><td>cosine synthèses Hector</td><td>aug. graphe — à arbitrer</td></tr>
+</tbody>
+</table>
+
+<div class="box warn">
+<strong>Arbitrage A — densifier ou rester sparse ?</strong> Ajouter <code>sim_art</code> et <code>sim_jp</code> (kNN sur embeddings) crée des raccourcis de propagation utiles pour les questions dont les golds sont mal connectés par <code>cite</code>. Mais cela introduit aussi du bruit (deux articles thématiquement proches mais juridiquement distincts) et augmente le coût mémoire. <em>Recommandation : commencer sans, ajouter k=5 si recall plafonne sur les questions à 1 seul article gold.</em>
+</div>
+
+<h2>2. Représentations initiales des nœuds</h2>
+
+<table>
+<thead><tr><th>Type</th><th>Source texte</th><th>Encoder</th><th>Dim</th><th>Coût</th><th>Statut</th></tr></thead>
+<tbody>
+<tr><td><span class="tag art">Art</span></td><td>texte normatif LEGI (article complet)</td><td>BGE-M3 (1024d)</td><td>1024</td><td>déjà payé (étape 1)</td><td>cache <code>parquet</code></td></tr>
+<tr><td><span class="tag jp">JP</span></td><td>synthèse Hector « synthese_pour_avocat »</td><td>BGE-M3</td><td>1024</td><td>déjà payé sur 116 755 JP pénales</td><td>cache <code>parquet</code></td></tr>
+<tr><td><span class="tag q">Q</span></td><td>énoncé brut de la question doctrine_qgen</td><td>BGE-M3</td><td>1024</td><td>négligeable (1 707)</td><td><strong>à calculer</strong></td></tr>
+</tbody>
+</table>
+
+<div class="box accent">
+<strong>Pourquoi BGE-M3 sur les 3 modalités.</strong> Cohérence d'espace — c'est ce qui permet de comparer en zero-shot un nœud Q à un nœud Art ou JP avant tout apprentissage. Le GNN ne fait alors que <em>corriger</em> et <em>contextualiser</em> ce signal pré-aligné. Si on encodait Q avec un autre modèle, on perdrait la baseline cosine zero-shot comme point de départ.
+</div>
+
+<h4>Features additionnelles (concaténées à l'embedding)</h4>
+<ul class="tight">
+<li><span class="tag art">Art</span> code (CPP, CP, CC, CGCT…) one-hot ; nb citations entrantes (log) ; année dernière modif</li>
+<li><span class="tag jp">JP</span> formation (chambre criminelle, sociale…) ; année ; longueur synthèse ; nb articles cités</li>
+<li><span class="tag q">Q</span> sous-thème Jurisclasseur (one-hot) ; difficulté estimée ; nb articles gold (∈ {1,2,3,4})</li>
+</ul>
+
+<h2>3. Modèle GNN proposé</h2>
+
+<h3>3.1 Architecture candidate — R-GCN à 2 couches, hétérogène</h3>
+
+<pre>Input  :  h_v^(0) = BGE_M3(text_v) ⊕ structural_feats_v          (1024 + ~20 dims)
+          MLP_type[v.type] projette vers d_hidden = 256
+
+Layer 1 (R-GCN):
+  pour chaque relation r ∈ {cite, cite⁻¹, gold_art, gold_jp, sim_art*, sim_jp*}:
+    m_v^r = mean_{u ∈ N_r(v)} W_r · h_u
+  h_v^(1) = ReLU( W_self · h_v^(0) + Σ_r m_v^r )
+
+Layer 2 (R-GCN):
+  idem, sortie d_out = 128
+
+Score d'arête (Q → cible):
+  score(q, c) = MLP([ h_q^(2) ⊕ h_c^(2) ⊕ h_q^(2) ⊙ h_c^(2) ])     (1 logit)
+</pre>
+
+<table>
+<thead><tr><th>Choix</th><th>Option retenue</th><th>Alternatives écartées</th><th>Justification</th></tr></thead>
+<tbody>
+<tr><td>Type</td><td>hétérogène (R-GCN)</td><td>homogène GraphSAGE, HGT</td><td>relations sémantiquement distinctes (cite ≠ gold) ; HGT trop lourd pour 1 707 supervisés</td></tr>
+<tr><td>Profondeur</td><td>2 couches</td><td>3-4 couches</td><td>au-delà : oversmoothing sur graphe sparse, mémoire prohibitive sur 1,07 M JP</td></tr>
+<tr><td>Attention</td><td>non au départ</td><td>GAT, HGT</td><td>R-GAT comme ablation phase 2 si plateau</td></tr>
+<tr><td>Décodeur</td><td>MLP sur [h_q⊕h_c⊕h_q⊙h_c]</td><td>DistMult, ComplEx, dot</td><td>plus expressif que dot, suffisamment léger ; on n'apprend pas un KG factuel</td></tr>
+<tr><td>Échantillonnage</td><td>NeighborSampler (fanout 25/10)</td><td>full-batch</td><td>obligatoire à 1,07 M JP ; PyG <code>HGTLoader</code> ou <code>NeighborLoader</code></td></tr>
+</tbody>
+</table>
+
+<h3>3.2 Variantes à benchmarker</h3>
+
+<ul class="tight">
+<li><strong>V0 baseline-frozen</strong> : pas d'apprentissage des poids, MLP de scoring seul sur les BGE-M3 bruts (test de l'utilité du GNN)</li>
+<li><strong>V1 R-GCN-2L sans sim</strong> (cas par défaut)</li>
+<li><strong>V2 R-GCN-2L + sim_art (k=5) + sim_jp (k=5)</strong></li>
+<li><strong>V3 R-GAT-2L</strong> attention par relation</li>
+<li><strong>V4 GraphSAGE homogène</strong> (graphe collapsé en un seul type) — sanity check de l'intérêt de l'hétérogénéité</li>
+</ul>
+
+<h2>4. Tâche d'apprentissage</h2>
+
+<h3>4.1 Reformulation : link prediction bi-cible</h3>
+
+<p>On apprend simultanément deux têtes de scoring sur la même backbone GNN :</p>
+
+<pre>L = L_Q→Art + λ · L_Q→JP
+
+L_Q→Art = BCE(score(q, a⁺), 1) + Σ_{a⁻}  BCE(score(q, a⁻), 0)
+L_Q→JP  = BCE(score(q, j⁺), 1) + Σ_{j⁻}  BCE(score(q, j⁻), 0)
+</pre>
+
+<h3>4.2 Échantillonnage des négatifs — le point critique</h3>
+
+<table>
+<thead><tr><th>Stratégie</th><th>Définition</th><th>Pour</th><th>Contre</th></tr></thead>
+<tbody>
+<tr><td><code>uniform_random</code></td><td>tirage uniforme dans {Art} \ gold(q)</td><td>simple, rapide</td><td>négatifs triviaux (code de la route vs question pénale)</td></tr>
+<tr><td><code>in-batch</code></td><td>les gold des autres q du batch sont les négatifs</td><td>standard contrastif</td><td>peut produire des faux négatifs si deux q partagent le thème</td></tr>
+<tr><td><code>hard_cosine</code> <strong>★</strong></td><td>top-K BGE-M3 cosine ∖ gold(q)</td><td>force le modèle à dépasser le signal cosine ; aligné sur l'erreur des baselines</td><td>coûteux à pré-calculer (déjà fait pour les baselines)</td></tr>
+<tr><td><code>structural</code></td><td>articles d'un autre code juridique</td><td>négatifs sémantiquement éloignés mais structurellement plausibles</td><td>trop facile une fois le code embeddé</td></tr>
+</tbody>
+</table>
+
+<div class="box success">
+<strong>Choix recommandé.</strong> Mix <code>hard_cosine</code> (75 %) + <code>uniform_random</code> (25 %), ratio négatifs/positifs = 50. Le 75 % hard tire directement sur le mode d'échec dominant des baselines (top-K cosine plein de plausibles non-gold) ; le 25 % uniform évite l'effondrement et préserve la calibration.
+</div>
+
+<h2>5. Split train / validation / test — éviter le leakage</h2>
+
+<div class="box fail">
+<strong>Risque n°1 : leakage par golds partagés.</strong> Si la question Q42 (train) a comme gold l'article 121-3 CP et la question Q43 (test) a aussi 121-3 CP, alors le modèle a vu (Q42, 121-3) en supervision et est testé sur (Q43, 121-3). Ce n'est <em>pas</em> du leakage strict (les nœuds Q42 et Q43 sont distincts), mais cela surévalue la généralisation à des questions <em>thématiquement nouvelles</em>.
+</div>
+
+<table>
+<thead><tr><th>Niveau de split</th><th>Définition</th><th>Réalisme</th><th>Sévérité</th></tr></thead>
+<tbody>
+<tr><td><code>random_question</code></td><td>80/10/10 sur les 1 707 Q, indépendamment des golds</td><td>« nouvelle question dans un thème connu »</td><td>faible</td></tr>
+<tr><td><code>theme_holdout</code> <strong>★</strong></td><td>holdout par sous-thème Jurisclasseur (ex: tout « légitime défense » en test)</td><td>« nouvelle famille juridique »</td><td>forte</td></tr>
+<tr><td><code>article_holdout</code></td><td>holdout sur un set d'articles : aucune Q de test n'a un gold vu en train</td><td>« article nouveau »</td><td>très forte, dur à équilibrer (1 365 / 1 707 q ont 121-3 ou 132-19 dans leurs golds)</td></tr>
+<tr><td><code>temporal</code></td><td>train sur q générées avant date T, test après</td><td>déploiement réel</td><td>moyenne ; nécessite un timestamp de génération fiable</td></tr>
+</tbody>
+</table>
+
+<div class="box accent">
+<strong>Plan d'éval.</strong> Rapporter les métriques sur les <em>deux</em> splits <code>random_question</code> (borne haute) et <code>theme_holdout</code> (borne basse). L'écart entre les deux est lui-même un signal — un écart de &gt; 15 pts indique sur-spécialisation thématique. <code>article_holdout</code> est documenté mais non bloquant pour le go/no-go.
+</div>
+
+<h2>6. Métriques</h2>
+
+<table>
+<thead><tr><th>Métrique</th><th>Définition</th><th>Cas d'usage</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td><strong>Recall@K</strong> (K=5, 10, 20)</td><td>fraction des gold dans le top-K prédit</td><td>« afficher une liste à l'utilisateur »</td><td>★ métrique principale, alignée sur DUR des baselines</td></tr>
+<tr><td><strong>MRR</strong></td><td>1/rang du premier gold</td><td>« le bon article doit être tout en haut »</td><td>★ secondaire, sensible au tri</td></tr>
+<tr><td>MAP</td><td>précision moyenne sur tous les golds</td><td>quand n_gold &gt; 1, ordre des golds entre eux compte</td><td>utile mais bruyant (n_gold ∈ {1,2,3,4})</td></tr>
+<tr><td>Hits@1</td><td>= recall@1</td><td>QA strict</td><td>trop sévère ici ; à ignorer</td></tr>
+<tr><td>nDCG@K</td><td>discount logarithmique</td><td>quand les golds sont gradués</td><td>nos golds sont binaires → équivalent à recall ranké</td></tr>
+<tr><td><strong>Pass DUR</strong></td><td>1 si tous les golds dans top-K, 0 sinon</td><td>comparabilité directe avec les baselines</td><td>★ obligatoire pour les tableaux comparatifs</td></tr>
+</tbody>
+</table>
+
+<h2>7. Positionnement vs Baselines</h2>
+
+<table>
+<thead><tr><th>Système</th><th>Type</th><th>Apprend ?</th><th>Best pass DUR (Art)</th><th>n_returned</th><th>Limite</th></tr></thead>
+<tbody>
+<tr><td>B0 — cosine Q→Art direct</td><td>retrieval dense</td><td>non</td><td>49 %</td><td>10</td><td>ignore le graphe</td></tr>
+<tr><td>B2 — JP→Art via graphe</td><td>graph 1-hop</td><td>non</td><td>69 % (K=5)</td><td>21</td><td>pas de re-ranking, pas de propagation 2-hop</td></tr>
+<tr><td>B3 — cross_art_union</td><td>fusion d'ensembles</td><td>non</td><td>84 % (K=10)</td><td>43</td><td>union = recall élevé, précision basse</td></tr>
+<tr><td>B4 — cross_art_intersection</td><td>fusion d'ensembles</td><td>non</td><td>50 % (K=20)</td><td>4</td><td>haute précision, recall plafond</td></tr>
+<tr><td><strong>GNN proposé</strong></td><td>link prediction supervisé</td><td><strong>oui</strong></td><td>objectif &gt; 88 %</td><td>K paramétrable</td><td>nécessite 1 707 labels, risque overfit</td></tr>
+</tbody>
+</table>
+
+<div class="box accent">
+<strong>Hypothèse opérationnelle.</strong> Le GNN doit faire au moins aussi bien que B3 (cross_art_union K=10, 84 %) avec un <em>K plus petit</em> (donc meilleure précision), et au moins aussi bien que B4 sur la précision avec un <em>recall plus élevé</em>. Si le GNN ne bat ni B3 ni B4 sur leur axe fort, le coût d'apprentissage n'est pas justifié et on reste sur les heuristiques.
+</div>
+
+<h2>8. Risques et alternatives</h2>
+
+<h3>8.1 Risques</h3>
+
+<table>
+<thead><tr><th>#</th><th>Risque</th><th>Probabilité</th><th>Impact</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td>R1</td><td>1 707 questions = trop peu pour un GNN, overfit massif</td><td>haute</td><td>fatal</td><td>V0 baseline-frozen comme floor ; dropout 0,3 ; early stop sur theme_holdout</td></tr>
+<tr><td>R2</td><td>oversmoothing à 2 couches sur graphe sparse</td><td>moyenne</td><td>moyen</td><td>residual + layer norm ; tester 1L vs 2L</td></tr>
+<tr><td>R3</td><td>questions ne ressemblent pas aux JP/articles existants (out-of-distribution)</td><td>moyenne</td><td>élevé</td><td>monitorer la perte de Q dont aucun gold n'a de hard cosine voisin</td></tr>
+<tr><td>R4</td><td>1,07 M JP en mémoire GPU</td><td>haute</td><td>technique</td><td>NeighborSampler obligatoire ; sous-corpus pénal uniquement (116 755 JP) pour la phase 1</td></tr>
+<tr><td>R5</td><td>biais Jurisclasseur (les golds reflètent un canon éditorial, pas la pertinence terrain)</td><td>certaine</td><td>épistémo.</td><td>documenter ; tester sur questions CRFPA réelles si dispo</td></tr>
+<tr><td>R6</td><td>GNN bat les baselines en moyenne mais pas en pire cas → utilité prod faible</td><td>moyenne</td><td>moyen</td><td>rapporter percentiles, pas seulement moyennes</td></tr>
+</tbody>
+</table>
+
+<h3>8.2 Alternatives au GNN</h3>
+
+<table>
+<thead><tr><th>Alternative</th><th>Idée</th><th>Pour</th><th>Contre vs GNN</th></tr></thead>
+<tbody>
+<tr><td><strong>Cross-encoder re-ranker</strong></td><td>BGE-Reranker-v2 sur top-100 de B3</td><td>SOTA en pratique sur 1 707 labels ; pas besoin de modéliser le graphe</td><td>ignore les arêtes <code>cite</code> → loupe les patterns structurels</td></tr>
+<tr><td>Contrastive fine-tuning de BGE-M3</td><td>InfoNCE sur (q, gold_art⁺, hard⁻)</td><td>améliore directement l'espace partagé, utile pour <em>toutes</em> les baselines</td><td>perd la structure du graphe</td></tr>
+<tr><td>LambdaRank / LightGBM sur features structurelles</td><td>features manuelles (cosine, n_hops, deg) → GBT</td><td>très robuste à peu de données ; interprétable</td><td>plafond bas, pas d'embeddings appris</td></tr>
+<tr><td>PageRank personnalisé par Q</td><td>random walk biaisé depuis le nœud Q</td><td>aucun training, exploite le graphe à fond</td><td>non supervisé, ne peut pas apprendre des erreurs</td></tr>
+</tbody>
+</table>
+
+<div class="box success">
+<strong>Stratégie raisonnable.</strong> Lancer en parallèle <em>cross-encoder re-ranker</em> (4 jours de travail, SOTA quasi-garanti) et <em>R-GCN-2L</em> (2 semaines, plus risqué mais plus original sur le plan recherche). Le GNN est l'apport scientifique du mémoire ; le re-ranker est la baseline forte qu'il doit battre.
+</div>
+
+<h2>9. Plan d'exécution proposé</h2>
+
+<ol>
+<li><strong>S1</strong> — exporter le graphe au format PyG <code>HeteroData</code>, calculer les BGE-M3 des 1 707 questions, construire les splits (random + theme).</li>
+<li><strong>S1-S2</strong> — implémenter V0 (baseline frozen + MLP decoder) ; doit déjà battre B0 cosine.</li>
+<li><strong>S2</strong> — V1 R-GCN-2L, hard negatives ; comparer aux baselines sur les deux splits.</li>
+<li><strong>S3</strong> — ablations : V2 (+sim edges), V3 (GAT), V4 (homogène) ; choisir la meilleure.</li>
+<li><strong>S3</strong> — entraîner en parallèle un cross-encoder BGE-Reranker-v2 sur les mêmes splits (concurrence honnête).</li>
+<li><strong>S4</strong> — analyse d'erreurs : sur quelles questions le GNN échoue ? overlap avec B3, B4 ? Décision finale.</li>
+</ol>
+
+<hr>
+
+<h2>10. Trois arbitrages à demander à Johnny</h2>
+
+<div class="box q">
+<p><strong>Q1 — Périmètre du graphe en phase 1.</strong> On reste sur le sous-corpus pénal (116 755 JP, 2 M citations, ~30 % des articles utilisés) pour limiter la RAM et accélérer les itérations, ou on passe d'emblée au full corpus (1,07 M JP) ? <em>Recommandation : pénal seul en phase 1, full en phase 2 après validation V1.</em></p>
+
+<p><strong>Q2 — Question vue comme nœud ou comme requête ?</strong> Deux postures théoriques opposées : (a) <em>question = nœud du graphe</em> (notre choix par défaut), le GNN apprend une représentation de Q par message passing depuis ses voisins gold — mais alors une <em>nouvelle</em> question Q' n'a pas d'arête, donc pas de message à recevoir, donc on retombe sur son embedding BGE-M3 initial ; (b) <em>question = requête externe</em>, jamais dans le graphe, le GNN apprend uniquement Art et JP, et le scoring se fait par dot-product entre embedding Q et embedding GNN(Art|JP). La posture (b) est plus propre pour l'inférence sur questions futures. <em>Recommandation : commencer par (b), plus inductive et plus simple ; passer à (a) seulement si (b) sous-performe.</em> À trancher avant de commencer.</p>
+
+<p><strong>Q3 — Métrique de référence pour le go/no-go.</strong> Recall@10 sur le split <code>theme_holdout</code> ? Pass DUR à K=10 ? Une combinaison ? Cette décision conditionne quel modèle on déclare gagnant.</p>
+</div>
+
+<h2>11. Questions ouvertes (non tranchées)</h2>
+
+<ul class="tight">
+<li>Faut-il pondérer les arêtes <code>cite</code> par la fréquence de citation de l'article par la JP ? (les arrêts CC citent souvent plusieurs fois le même article)</li>
+<li>Doit-on inclure les <em>articles non-cités par aucune JP</em> dans le graphe (~30 % de LEGI) ? Ils n'ont pas de voisin JP, donc message passing inutile, mais ils peuvent être des golds.</li>
+<li>Comment gérer la temporalité — un article modifié en 2024 vs sa version 2010 ? Pour l'instant on suppose une version unique par article.</li>
+<li>Faut-il un nœud « code juridique » (CPP, CP, CGCT…) pour aider la propagation intra-code ?</li>
+</ul>
+
+<hr>
+<p class="small">Note de design, 29 mai 2026. À mettre à jour après arbitrage Johnny et après les premiers runs V0/V1.</p>
+
+</body>
+</html>
