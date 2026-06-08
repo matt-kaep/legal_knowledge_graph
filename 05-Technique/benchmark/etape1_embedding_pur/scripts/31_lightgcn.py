@@ -50,9 +50,11 @@ DQ_IDS = ROOT / "data/doctrine_qgen/questions_ids.npy"
 
 K_OUT = ppr.K_OUT          # 10, identique à PPR/B*
 N_LAYERS = 3
-LR = 5e-4                  # petit : préserve l'init BGE-M3
-WEIGHT_DECAY = 1e-4
-EPOCHS = 40
+TRAIN_K = int(__import__("os").environ.get("TRAIN_K", 2))  # K du modèle entraîné (best untrained)
+LR = 1e-3
+EPOCHS = 30
+TAU = 0.1                  # température du cosine-BPR (cosine ∈ [-1,1] → logits)
+LAMBDA_ANCHOR = 1.0        # ancrage ‖E0 − BGE‖² sur les nœuds embeddés (anti-drift)
 DEVICE = "cpu"             # spmm sparse fiable sur CPU (MPS souvent non supporté)
 SEED = 42
 
@@ -81,10 +83,20 @@ class LightGCNa(nn.Module):
         return sum(outs) / (self.n_layers + 1)      # layer combination = moyenne
 
 
-def bpr_loss(q_vec, item_final, pos_idx, neg_idx):
-    """q_vec [B,D] figé ; item_final [N,D] ; pos/neg_idx [B] (index graphe item)."""
-    pos = (q_vec * item_final[pos_idx]).sum(1)
-    neg = (q_vec * item_final[neg_idx]).sum(1)
+def _l2(x):
+    return x / x.norm(dim=1, keepdim=True).clamp_min(1e-9)
+
+
+def bpr_loss(q_vec, item_final, pos_idx, neg_idx, tau=TAU):
+    """BPR en COSINUS (cohérent avec l'éval) + température.
+
+    Le produit scalaire brut laisse la norme gonflée par la propagation dominer
+    (biais hubs). On normalise q et items → cosine, divisé par tau pour un
+    gradient exploitable (cosine ∈ [-1,1]).
+    """
+    qn = _l2(q_vec)
+    pos = (qn * _l2(item_final[pos_idx])).sum(1) / tau
+    neg = (qn * _l2(item_final[neg_idx])).sum(1) / tau
     return -torch.log(torch.sigmoid(pos - neg) + 1e-10).mean()
 
 
@@ -238,22 +250,28 @@ def main() -> int:
             rows.append({"qid": q["id"], "variant": variant, **am, **jm})
         return rows
 
+    anchor_idx = torch.tensor(np.where(has_init)[0], dtype=torch.long, device=DEVICE)
+
     def train(n_layers: int) -> torch.Tensor:
         torch.manual_seed(SEED)
         model = LightGCNa(e0_t, n_layers).to(DEVICE)
-        opt = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
+        opt = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=0.0)
         n_pos = pos_q.shape[0]
+        e0_ref = e0_t[anchor_idx].detach().clone()    # init BGE-M3 de référence
         for ep in range(EPOCHS):
             model.train()
             item_final = model.propagate(adj)
             neg = torch.tensor(rng.integers(0, len(art_pool_graph_idx), n_pos),
                                dtype=torch.long, device=DEVICE)
             neg_item = pool_item_idx_t[neg]
-            loss = bpr_loss(Q_train[pos_q], item_final, pos_item, neg_item)
+            bpr = bpr_loss(Q_train[pos_q], item_final, pos_item, neg_item)
+            # ancrage anti-drift : pénalise l'éloignement de l'init BGE-M3
+            anchor = ((model.emb[anchor_idx] - e0_ref) ** 2).sum(1).mean()
+            loss = bpr + LAMBDA_ANCHOR * anchor
             opt.zero_grad(); loss.backward(); opt.step()
             if ep % 10 == 0 or ep == EPOCHS - 1:
-                print(f"    K{n_layers} ep {ep:>3d}/{EPOCHS}  loss {loss.item():.4f}"
-                      f"  (t={time.time()-t0:.1f}s)")
+                print(f"    K{n_layers} ep {ep:>3d}/{EPOCHS}  bpr {bpr.item():.4f}"
+                      f"  anchor {anchor.item():.4f}  (t={time.time()-t0:.1f}s)")
         model.eval()
         with torch.no_grad():
             return model.propagate(adj)
@@ -272,11 +290,9 @@ def main() -> int:
             fk = m.propagate(adj)
         all_rows += evaluate(fk, f"untrained_K{k}")
         print(f"    untrained_K{k} évalué  (t={time.time()-t0:.1f}s)")
-    if os.environ.get("TRAIN") == "1":
-        print("══ trained_K0 ─────────────────────────────────────────────")
-        all_rows += evaluate(train(0), "trained_K0")
-        print(f"══ trained_K{N_LAYERS} ─────────────────────────────────────────")
-        all_rows += evaluate(train(N_LAYERS), f"trained_K{N_LAYERS}")
+    if os.environ.get("NOTRAIN") != "1":
+        print(f"══ trained_K{TRAIN_K} (BPR cosinus τ={TAU} + ancrage λ={LAMBDA_ANCHOR}) ──")
+        all_rows += evaluate(train(TRAIN_K), f"trained_K{TRAIN_K}")
 
     df = pd.DataFrame(all_rows)
     out_csv = OUT_DIR / "lightgcn_eval.csv"
@@ -308,11 +324,16 @@ def main() -> int:
         print(f"\n  [réf] PPR row α=0.95 : M1e_a={champ.get('m1_ext_art', float('nan')):.3f} "
               f"NDCe_a={champ.get('ndcg_ext_art', float('nan')):.3f} "
               f"M1_jp={champ.get('m1_jp', float('nan')):.3f}")
-    raw, k3 = summ.get("cosine_raw", {}), summ.get(f"trained_K{N_LAYERS}", {})
-    if raw and k3 and k3["m1_ext_art"] < raw["m1_ext_art"]:
-        print("\n  ⚠️ GARDE ANTI-DRIFT : trained_K{} < cosine_raw côté art_ext "
-              "→ l'espace items a dérivé hors manifold BGE. "
-              "Augmenter weight_decay / baisser lr / moins d'epochs.".format(N_LAYERS))
+    # Garde anti-drift : l'entraînement doit au moins égaler la propagation
+    # NON entraînée au même K, sur le strict (régime gagnant). Sinon → drift.
+    unt = summ.get(f"untrained_K{TRAIN_K}", {})
+    tr = summ.get(f"trained_K{TRAIN_K}", {})
+    if unt and tr:
+        delta = tr["m1_strict_art"] - unt["m1_strict_art"]
+        verdict = "AIDE ✅" if delta > 0.003 else ("NEUTRE ≈" if delta > -0.003 else "DRIFT ⚠️")
+        print(f"\n  [entraînement] trained_K{TRAIN_K} vs untrained_K{TRAIN_K} "
+              f"(M1 strict) : {tr['m1_strict_art']:.3f} vs {unt['m1_strict_art']:.3f} "
+              f"(Δ={delta:+.3f}) → {verdict}")
 
     (OUT_DIR / "lightgcn_summary.json").write_text(
         json.dumps(summ, ensure_ascii=False, indent=2))

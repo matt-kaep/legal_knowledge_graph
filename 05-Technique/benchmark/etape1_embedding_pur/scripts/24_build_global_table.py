@@ -1,6 +1,6 @@
 """Construit le grand tableau global de synthèse (chantier 2 Week-10).
 
-Lit eval_m1_m2.csv (script 18) + ppr_naive_eval.csv (script 20), produit :
+Lit eval_m1_m2.csv (18) + ppr_naive_eval.csv (20) + lightgcn_eval.csv (31), produit :
   - global_table_articles.csv  : 1 ligne / méthode champion / 10 cols panel × strict/ext
   - global_table_jp.csv        : 1 ligne / méthode champion / 5 cols panel
   - global_table.md            : rendu Markdown lisible pour la présentation
@@ -34,6 +34,8 @@ ART_SELECTION = [
         lambda d: (d["method"] == "B3-e") & (d["k_in"] == 10)),
     ("PPR row-norm α=0,85",          "p", lambda d: (d["norm"] == "row") & (d["alpha"] == 0.85)),
     ("PPR row-norm α=0,95",          "p", lambda d: (d["norm"] == "row") & (d["alpha"] == 0.95)),
+    ("LightGCN K=2 (BGE propagé, cosinus)", "lg", lambda d: d["variant"] == "untrained_K2"),
+    ("LightGCN K=2 entraîné (BPR cosinus)", "lg", lambda d: d["variant"] == "trained_K2"),
 ]
 
 JP_SELECTION = [
@@ -45,6 +47,8 @@ JP_SELECTION = [
     ("B4-f — citation-weighted (k_in=10)", "b",
         lambda d: (d["method"] == "B4-f") & (d["k_in"] == 10)),
     ("PPR row-norm α=0,95 (côté JP)",   "p", lambda d: (d["norm"] == "row") & (d["alpha"] == 0.95)),
+    ("LightGCN K=2 (BGE propagé, cosinus)", "lg", lambda d: d["variant"] == "untrained_K2"),
+    ("LightGCN K=2 entraîné (BPR cosinus)", "lg", lambda d: d["variant"] == "trained_K2"),
 ]
 
 
@@ -81,10 +85,19 @@ def aggregate_p(df_ppr: pd.DataFrame, side: str) -> pd.DataFrame:
     return agg
 
 
-def collect_rows(selection, df_b, df_p, side: str) -> pd.DataFrame:
+def aggregate_lg(df_lg: pd.DataFrame, side: str) -> pd.DataFrame:
+    """Agrège lightgcn_eval.csv (script 31). Index = variant, cols panel."""
+    if side == "art":
+        cols = [f"{m}_{r}_art" for m in METRICS for r in ("strict", "ext")]
+    else:
+        cols = [f"{m}_jp" for m in METRICS]
+    agg = df_lg.groupby("variant")[cols].mean()
+    agg.columns = [c.replace("_art", "").replace("_jp", "") for c in agg.columns]
+    return agg
+
+
+def collect_rows(selection, df_b, df_p, df_lg, side: str) -> pd.DataFrame:
     """Pour chaque entrée de selection, extrait la ligne agrégée correspondante."""
-    agg_b = aggregate_b(df_b, side)
-    agg_p = aggregate_p(df_p, side)
     rows = []
     for label, source, filt in selection:
         if source == "b":
@@ -92,11 +105,18 @@ def collect_rows(selection, df_b, df_p, side: str) -> pd.DataFrame:
             if sub.empty:
                 continue
             row = aggregate_b(sub, side).iloc[0].to_dict()
-        else:
+        elif source == "p":
             sub = df_p[filt(df_p)]
             if sub.empty:
                 continue
             row = aggregate_p(sub, side).iloc[0].to_dict()
+        else:  # source == "lg"
+            if df_lg is None:
+                continue
+            sub = df_lg[filt(df_lg)]
+            if sub.empty:
+                continue
+            row = aggregate_lg(sub, side).iloc[0].to_dict()
         rows.append({"méthode": label, **row})
     return pd.DataFrame(rows)
 
@@ -138,11 +158,14 @@ def fmt_table_jp(df: pd.DataFrame) -> str:
 def main() -> int:
     df_b = pd.read_csv(DATA / "eval_m1_m2.csv")
     df_p = pd.read_csv(DATA / "ppr_naive_eval.csv")
+    lg_path = DATA / "lightgcn_eval.csv"
+    df_lg = pd.read_csv(lg_path) if lg_path.exists() else None
     print(f"  eval_m1_m2.csv : {len(df_b)} lignes")
     print(f"  ppr_naive_eval.csv : {len(df_p)} lignes")
+    print(f"  lightgcn_eval.csv : {len(df_lg) if df_lg is not None else 'absent'} lignes")
 
-    art = collect_rows(ART_SELECTION, df_b, df_p, "art")
-    jp  = collect_rows(JP_SELECTION,  df_b, df_p, "jp")
+    art = collect_rows(ART_SELECTION, df_b, df_p, df_lg, "art")
+    jp  = collect_rows(JP_SELECTION,  df_b, df_p, df_lg, "jp")
 
     out_art = DATA / "global_table_articles.csv"
     out_jp  = DATA / "global_table_jp.csv"
