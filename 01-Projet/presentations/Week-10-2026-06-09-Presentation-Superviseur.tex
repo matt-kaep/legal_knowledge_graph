@@ -211,7 +211,7 @@
     18 & \textbf{LightGCN sur G0} (design A, cosine BPR + ancrage)                   & \textcolor{ok}{\textbf{Validé S10}} \\
     \midrule
     \rowcolor{green!10}
-    19 & \textbf{LightGCN multi-seed} + régime D (supervision JP) + $G_0 \to V_1$    & \textcolor{accent}{\textbf{S11--S12}} \\
+    19 & \textbf{LightGCN} ablation init + régime D (supervision JP) + $G_0 \to V_1$    & \textcolor{accent}{\textbf{S11--S12}} \\
     \rowcolor{green!10}
     20 & \textbf{Enrichissement du bench} (visa, reverse-eng décisions, CRFPA)       & \textcolor{accent}{\textbf{S11--S13}} \\
     \rowcolor{green!10}
@@ -452,7 +452,7 @@
      & 0,296 & 0,819 & 0,558 & 0,317 & 0,279 \\
     \rowcolor{green!10}
     \textbf{LightGCN $K{=}2$ entraîné}
-     & 0,705 & 0,739 & \textbf{0,496} & \textbf{0,533} & 0,592
+     & 0,704 & 0,739 & \textbf{0,496} & \textbf{0,532} & 0,592
      & 0,324 & 0,861 & 0,623 & 0,356 & 0,314 \\
     \midrule
     LLM seul / LLM+RAG (à venir)        & --- & --- & --- & --- & --- & --- & --- & --- & --- & --- \\
@@ -768,8 +768,10 @@
 
   \vspace{0.4em}
   \keybox{\scriptsize \textbf{Caveat} : la victoire vs PPR (untrained $K{=}2$) est
-  \textbf{déterministe} (aucun apprentissage). Le gain de l'entraînement ($+0{,}052$
-  sur M1 strict) est \textbf{single-seed, hyperparams non tunés} $\to$ à valider multi-seed.}
+  \textbf{déterministe} (aucun apprentissage). Le gain de l'entraînement
+  est \textbf{validé multi-seed} (3 seeds) : M1 strict $\mathbf{0{,}704 \pm 0{,}007}$,
+  $\Delta$ vs untrained $\mathbf{+0{,}051}$ (toujours positif, $\in [+0{,}045 ; +0{,}059]$).
+  Hyperparams $(\tau, \lambda, \mathrm{lr})$ non encore tunés.}
 \end{frame}
 
 \begin{frame}{LightGCN -- décomposition de l'ablation (M1 strict articles)}
@@ -787,15 +789,16 @@
     Texte seul (cosine BGE-M3) & $0{,}459$ & le sémantique pur \\
     \;\; + propagation graphe ($K{=}2$, figé) & $\mathbf{0{,}653}$
     & \textcolor{ok}{\textbf{$+0{,}194$ = apport du GRAPHE}} \\
-    \;\;\;\; + apprentissage (BPR cosinus) & $\mathbf{0{,}705}$
-    & \textcolor{ok}{\textbf{$+0{,}052$ = apport de l'APPRENTISSAGE}} \\
+    \;\;\;\; + apprentissage (BPR cosinus, \emph{3 seeds}) & $\mathbf{0{,}704 \pm 0{,}007}$
+    & \textcolor{ok}{\textbf{$+0{,}051$ = apport de l'APPRENTISSAGE}} \\
     \bottomrule
   \end{tabular}
   \end{center}
 
   \vspace{0.6em}
-  \keybox{Chaque étage \textbf{ajoute}. Le graphe de citations
-  apporte massivement au sémantique pur ; l'apprentissage ajoute encore par-dessus.}
+  \keybox{Chaque étage \textbf{ajoute}. Le graphe de citations apporte massivement au
+  sémantique pur ; l'apprentissage ajoute encore par-dessus \emph{de façon robuste}
+  (3 seeds : $0{,}698 / 0{,}712 / 0{,}701$, $\Delta \in [+0{,}045 ; +0{,}059]$ toujours positif).}
 
   \vspace{0.4em}
   \textbf{Over-smoothing} visible : $K_0 < K_1 < \mathbf{K_2} > K_3$.
@@ -842,7 +845,7 @@
   \vspace{0.4em}
   \textbf{Prochaines étapes priorisées} :
   \begin{enumerate}\setlength{\itemsep}{0.1em}
-    \item Valider l'entraînement \textbf{multi-seed} (3 seeds, mean$\pm$range) -- en cours.
+    \item \textcolor{ok}{\textbf{$\checkmark$ Multi-seed validé}} (3 seeds, $\pm 0{,}007$). Reste : ablation init (zéro vs aléatoire) pour décomposer le $+0{,}051$.
     \item \textbf{Régime D} : injecter la supervision JP$+$article (cf. ADR-001).
     \item $G_0 \to V_1$ : retirer les 41\,824 nœuds morts, re-mesurer.
     \item Combler l'\textbf{étendu} (variante C : questions dans le graphe).
