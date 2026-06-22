@@ -112,12 +112,13 @@ def unique_lightgcn_champions(champions: dict[str, Any]) -> list[dict[str, Any]]
 def replay_b3_b4(eval_bench_dir: Path, champions: dict[str, Any]) -> pd.DataFrame:
     baseline_eval = _load_script_module("26_eval_doctrine_v3plus_m1_m2.py", "eval_b3b4_final")
     questions = graph_protocol.load_bench_questions(eval_bench_dir)
+    ks_in = baseline_kins(champions)
     with tempfile.TemporaryDirectory(prefix="final_b3b4_") as tmp_dir:
         out_dir = Path(tmp_dir)
         baseline_eval.eval_m1_m2(
             questions,
             out_dir,
-            ks_in=baseline_kins(champions),
+            ks_in=ks_in or None,
         )
         df = pd.read_csv(out_dir / "eval_m1_m2.csv")
     masks = []
@@ -237,12 +238,31 @@ def load_coverage_summary(path: Path, graph_version: str) -> dict[str, float]:
     graph_key = str(graph_version).lower()
     row = split.get(graph_key, {})
     return {
+        "coverage_questions": row.get("questions"),
         "coverage_articles": row.get("strict_q_any_pct"),
         "coverage_articles_occ_pct": row.get("strict_occ_pct"),
+        "coverage_articles_occ_present": row.get("strict_occ_present"),
+        "coverage_articles_occ_total": row.get("strict_occ_total"),
         "coverage_articles_unique_pct": row.get("strict_unique_pct"),
+        "coverage_articles_unique_present": row.get("strict_unique_present"),
+        "coverage_articles_unique_total": row.get("strict_unique_total"),
+        "coverage_articles_q_all_pct": row.get("strict_q_all_pct"),
+        "coverage_articles_q_any_pct": row.get("strict_q_any_pct"),
+        "coverage_articles_extended_occ_pct": row.get("ext_occ_pct"),
+        "coverage_articles_extended_occ_present": row.get("ext_occ_present"),
+        "coverage_articles_extended_occ_total": row.get("ext_occ_total"),
+        "coverage_articles_extended_unique_pct": row.get("ext_unique_pct"),
+        "coverage_articles_extended_unique_present": row.get("ext_unique_present"),
+        "coverage_articles_extended_unique_total": row.get("ext_unique_total"),
         "coverage_jp": row.get("jp_q_any_pct"),
         "coverage_jp_occ_pct": row.get("jp_occ_pct"),
+        "coverage_jp_occ_present": row.get("jp_occ_present"),
+        "coverage_jp_occ_total": row.get("jp_occ_total"),
         "coverage_jp_unique_pct": row.get("jp_unique_pct"),
+        "coverage_jp_unique_present": row.get("jp_unique_present"),
+        "coverage_jp_unique_total": row.get("jp_unique_total"),
+        "coverage_jp_q_all_pct": row.get("jp_q_all_pct"),
+        "coverage_jp_q_any_pct": row.get("jp_q_any_pct"),
     }
 
 
@@ -298,14 +318,9 @@ def summarize_final_slice(
         "question_coverage": df["qid"].nunique() / float(n_questions_benchmark or 1),
         "n_questions_covered": int(df["qid"].nunique()),
         "n_questions_benchmark": int(n_questions_benchmark),
-        "coverage_articles": coverage.get("coverage_articles"),
-        "coverage_articles_occ_pct": coverage.get("coverage_articles_occ_pct"),
-        "coverage_articles_unique_pct": coverage.get("coverage_articles_unique_pct"),
-        "coverage_jp": coverage.get("coverage_jp"),
-        "coverage_jp_occ_pct": coverage.get("coverage_jp_occ_pct"),
-        "coverage_jp_unique_pct": coverage.get("coverage_jp_unique_pct"),
         "m3_display": "—",
     }
+    row.update(coverage)
     for out_col, src_col in metrics.items():
         if src_col in df.columns:
             row[out_col] = float(df[src_col].mean())

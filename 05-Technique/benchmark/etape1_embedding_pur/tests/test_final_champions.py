@@ -243,6 +243,73 @@ def _write_replay_outputs(out_dir: Path) -> None:
     pd.DataFrame(lightgcn_rows).to_csv(out_dir / "lightgcn_eval.csv", index=False)
 
 
+def test_replay_b3_b4_accepts_baseline_only_champions(tmp_path, monkeypatch):
+    eval_dir = tmp_path / "eval"
+    _write_bench(
+        eval_dir,
+        [
+            {
+                "qid": "q1",
+                "articles_attendus": ["art1"],
+                "articles_attendus_etendu": ["art1", "art2"],
+                "gold_jp_ids": ["jp1"],
+            }
+        ],
+    )
+
+    class FakeBaselineEval:
+        @staticmethod
+        def eval_m1_m2(questions, out_dir, limit=None, qid_filter=None, ks_in=None):
+            assert ks_in is None
+            pd.DataFrame(
+                [
+                    {
+                        "qid": "q1",
+                        "method": "B2-a",
+                        "modality": "art",
+                        "k_in": np.nan,
+                        "m1_strict": 0.5,
+                        "hit_strict": 0.5,
+                        "mrr_strict": 0.4,
+                        "ndcg_strict": 0.45,
+                        "m2_strict": 0.4,
+                        "m1_ext": 0.8,
+                        "hit_ext": 0.9,
+                        "mrr_ext": 0.6,
+                        "ndcg_ext": 0.7,
+                        "m2_ext": 0.3,
+                    },
+                    {
+                        "qid": "q1",
+                        "method": "B3-a",
+                        "modality": "jp",
+                        "k_in": np.nan,
+                        "m1": 0.4,
+                        "hit": 0.5,
+                        "mrr": 0.3,
+                        "ndcg": 0.35,
+                        "m2": 0.45,
+                    },
+                ]
+            ).to_csv(Path(out_dir) / "eval_m1_m2.csv", index=False)
+
+    monkeypatch.setattr(
+        final_champions,
+        "_load_script_module",
+        lambda script_name, module_name: FakeBaselineEval,
+    )
+
+    out = final_champions.replay_b3_b4(
+        eval_dir,
+        {
+            "articles": {"method": "B2-a", "modality": "art", "k_in": None},
+            "jp": {"method": "B3-a", "modality": "jp", "k_in": None},
+        },
+    )
+
+    assert set(out["method"]) == {"B2-a", "B3-a"}
+
+
 def test_main_skip_replay_builds_final_outputs(tmp_path, monkeypatch):
     train_dir = tmp_path / "train"
     eval_dir = tmp_path / "eval"
@@ -276,12 +343,29 @@ def test_main_skip_replay_builds_final_outputs(tmp_path, monkeypatch):
                 "datasets": {
                     "eval_rich_retrievable_strict": {
                         "g0": {
-                            "strict_q_any_pct": 0.95,
-                            "strict_occ_pct": 0.91,
-                            "strict_unique_pct": 0.89,
-                            "jp_q_any_pct": 0.93,
-                            "jp_occ_pct": 0.9,
-                            "jp_unique_pct": 0.88,
+                            "questions": 2,
+                            "strict_occ_total": 4,
+                            "strict_occ_present": 4,
+                            "strict_occ_pct": 91.0,
+                            "strict_unique_total": 3,
+                            "strict_unique_present": 3,
+                            "strict_unique_pct": 89.0,
+                            "strict_q_all_pct": 100.0,
+                            "strict_q_any_pct": 95.0,
+                            "ext_occ_total": 8,
+                            "ext_occ_present": 8,
+                            "ext_occ_pct": 92.0,
+                            "ext_unique_total": 5,
+                            "ext_unique_present": 5,
+                            "ext_unique_pct": 90.0,
+                            "jp_occ_total": 2,
+                            "jp_occ_present": 2,
+                            "jp_occ_pct": 90.0,
+                            "jp_unique_total": 2,
+                            "jp_unique_present": 2,
+                            "jp_unique_pct": 88.0,
+                            "jp_q_all_pct": 100.0,
+                            "jp_q_any_pct": 93.0,
                         }
                     }
                 }
@@ -331,11 +415,15 @@ def test_main_skip_replay_builds_final_outputs(tmp_path, monkeypatch):
     assert set(summary["target"]) == {"articles_strict", "jp"}
     assert summary["n_questions_benchmark"].eq(2).all()
     assert summary["question_coverage"].eq(1.0).all()
-    assert summary["coverage_articles"].eq(0.95).all()
-    assert summary["coverage_jp"].eq(0.93).all()
+    assert summary["coverage_articles"].eq(95.0).all()
+    assert summary["coverage_jp"].eq(93.0).all()
+    assert summary["coverage_articles_occ_total"].eq(4).all()
+    assert summary["coverage_articles_extended_unique_total"].eq(5).all()
+    assert summary["coverage_jp_occ_total"].eq(2).all()
 
     assert not articles.empty
     assert not jp.empty
     assert not comparison.empty
     assert "coverage_articles" in comparison.columns
     assert "n_questions_benchmark" in comparison.columns
+    assert "coverage_articles_occ_total" in comparison.columns
