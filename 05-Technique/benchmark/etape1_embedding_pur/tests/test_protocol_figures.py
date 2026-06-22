@@ -41,3 +41,43 @@ def test_lightgcn_history_long_format_is_plot_ready():
         "variant",
     ]
     assert set(out["series"]) == {"train_loss", "val_hit"}
+
+
+def test_lightgcn_history_supports_real_exported_columns():
+    df = pd.DataFrame(
+        [
+            {
+                "epoch": 0,
+                "graph_version": "canonical",
+                "variant": "trained_K2",
+                "train_loss": 1.2,
+                "bpr_loss": 1.0,
+                "anchor_loss": 0.2,
+                "val_hit": 0.31,
+                "val_ndcg": 0.22,
+                "val_mrr": 0.19,
+                "val_recall": 0.31,
+                "val_norm_rank": 0.22,
+                "val_hit_jp": 0.41,
+                "val_ndcg_jp": 0.29,
+                "fold": 0,
+                "seed": 42,
+            },
+        ]
+    )
+
+    out = protocol_figures.prepare_lightgcn_history(df)
+
+    assert set(out["series"]) == {
+        "train_loss",
+        "bpr_loss",
+        "anchor_loss",
+        "val_hit",
+        "val_ndcg",
+        "val_mrr",
+        "val_recall",
+        "val_norm_rank",
+        "val_hit_jp",
+        "val_ndcg_jp",
+    }
+    assert out["value"].notna().all()
