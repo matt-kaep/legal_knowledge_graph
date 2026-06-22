@@ -12,17 +12,20 @@ Sym-norm déjà confirmé collapsé sur cosine (cf. décisions Week-9), donc on
 n'évalue ici que row-norm. Power iteration identique au script 20 :
 20 itérations max, tol 1e-7, r ← α P^T r + (1-α) s.
 
-Sortie :
-  - data/global_bench/ppr_kin_sweep_eval.csv   (1 ligne / qid / variante)
-  - data/global_bench/ppr_kin_sweep_summary.json (agrégats par triplet)
+Sortie dans --bench-dir :
+  - ppr_kin_sweep_eval.csv   (1 ligne / qid / variante)
+  - ppr_kin_sweep_summary.json (agrégats par triplet)
+  - rankings.parquet mis à jour si --dump-rankings
 """
 from __future__ import annotations
-import json, re, sys, time
+import argparse
+import json
+import sys
+import time
 from pathlib import Path
 import numpy as np
 import pandas as pd
 import scipy.sparse as sp
-import pyarrow.parquet as pq
 
 REPO = Path("/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph")
 sys.path.insert(0, str(REPO / "05-Technique" / "benchmark" / "etape1_embedding_pur"))
@@ -30,11 +33,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from etape1 import config  # noqa: E402
 import metrics as M  # noqa: E402
 
-BENCH = REPO / "05-Technique/benchmark/etape1_embedding_pur/data/global_bench/bench_global.json"
-OUT_DIR = REPO / "05-Technique/benchmark/etape1_embedding_pur/data/global_bench"
-Q_EMB_CACHE = OUT_DIR / "questions_977_emb.npy"
-Q_IDS_CACHE = OUT_DIR / "questions_977_ids.npy"
-_POURVOI_RE = re.compile(r"\d{2}-\d{2}\.\d{3}")
+DEFAULT_BENCH_DIR = REPO / "05-Technique/benchmark/etape1_embedding_pur/data/global_bench"
 
 K_OUT = 10
 K_INS = [5, 10, 20, 50]
@@ -43,36 +42,59 @@ ALPHAS = [0.5, 0.7, 0.85, 0.95]
 N_ITER = 20
 TOL = 1e-7
 
-OUT_CSV = OUT_DIR / "ppr_kin_sweep_eval.csv"
-OUT_SUMMARY = OUT_DIR / "ppr_kin_sweep_summary.json"
 
-
-def load_cohort_977() -> list[dict]:
-    d = json.loads(BENCH.read_text())
+def load_questions(bench_path: Path, qid_filter: set[str] | None = None) -> list[dict]:
+    d = json.loads(bench_path.read_text())
     out = []
     for q in d["questions"]:
+        if qid_filter is not None and q["qid"] not in qid_filter:
+            continue
         arts = q.get("articles_attendus") or []
-        pourvois = q.get("pourvois_cc") or []
-        if not arts or not pourvois or q.get("n_jp_resolues", 0) < 1:
+        gold_jp_ids = q.get("gold_jp_ids") or []
+        if not arts or not gold_jp_ids or q.get("n_jp_resolues", 0) < 1:
             continue
         out.append({
             "id": q["qid"],
             "gt_strict": set(arts),
             "gt_ext": set(q.get("articles_attendus_etendu") or arts),
-            "pourvois": set(pourvois),
+            "gold_jp_ids": set(gold_jp_ids),
         })
     return out
 
 
-def build_pourvoi_map() -> dict[str, list[str]]:
-    jp = pq.read_table(config.JP_INDEX, columns=["id", "number", "juris"]).to_pandas()
-    jp = jp[jp["juris"] == "CC"]
-    out: dict[str, list[str]] = {}
-    for r in jp.itertuples():
-        n = (r.number or "").strip()
-        if _POURVOI_RE.fullmatch(n):
-            out.setdefault(n, []).append(r.id)
-    return out
+def summarize_results(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame(
+            columns=[
+                "method_key",
+                "k_in",
+                "seed_variant",
+                "alpha",
+                "n_iter_avg",
+                "n_rows",
+            ]
+        )
+    cols = (
+        [f"{m}_strict_art" for m in M.METRIC_NAMES]
+        + [f"{m}_ext_art" for m in M.METRIC_NAMES]
+        + [f"{m}_jp" for m in M.METRIC_NAMES]
+    )
+    rows = []
+    for (k_in, variant, alpha), sub in df.groupby(["k_in", "seed_variant", "alpha"]):
+        rows.append(
+            {
+                "method_key": f"PPR-sweep-k{int(k_in)}-{variant}-a{float(alpha)}",
+                "k_in": int(k_in),
+                "seed_variant": variant,
+                "alpha": float(alpha),
+                "n_iter_avg": float(sub["n_iter_used"].mean()),
+                "n_rows": int(len(sub)),
+                **{c: float(sub[c].mean()) for c in cols if c in sub.columns},
+            }
+        )
+    return pd.DataFrame(rows).sort_values(
+        ["k_in", "seed_variant", "alpha"]
+    ).reset_index(drop=True)
 
 
 def row_normalize(Mat: sp.csr_matrix) -> sp.csr_matrix:
@@ -81,10 +103,9 @@ def row_normalize(Mat: sp.csr_matrix) -> sp.csr_matrix:
     return sp.diags(1.0 / rs) @ Mat
 
 
-def ppr_power_iteration(P: sp.csr_matrix, s: np.ndarray, alpha: float,
+def ppr_power_iteration(PT: sp.csr_matrix, s: np.ndarray, alpha: float,
                         n_iter: int = N_ITER, tol: float = TOL) -> tuple[np.ndarray, int]:
     """r ← α P^T r + (1-α) s  (row-norm => PageRank standard)."""
-    PT = P.T.tocsr()
     r = s.copy()
     for t in range(n_iter):
         r_new = alpha * (PT @ r) + (1 - alpha) * s
@@ -92,6 +113,25 @@ def ppr_power_iteration(P: sp.csr_matrix, s: np.ndarray, alpha: float,
             return r_new, t + 1
         r = r_new
     return r, n_iter
+
+
+def ppr_power_iteration_batch(PT: sp.csr_matrix, S: np.ndarray, alphas: np.ndarray,
+                              n_iter: int = N_ITER, tol: float = TOL) -> tuple[np.ndarray, np.ndarray]:
+    """Version batched de PPR pour plusieurs seeds/alphas d'une même question."""
+    R = S.copy()
+    alpha_row = alphas.reshape(1, -1)
+    teleport_row = (1.0 - alphas).reshape(1, -1)
+    n_used = np.zeros(len(alphas), dtype=np.int16)
+    for t in range(n_iter):
+        R_new = (PT @ R) * alpha_row + S * teleport_row
+        delta = np.abs(R_new - R).sum(axis=0)
+        newly_converged = (n_used == 0) & (delta < tol)
+        n_used[newly_converged] = t + 1
+        R = R_new
+        if np.all(n_used):
+            break
+    n_used[n_used == 0] = n_iter
+    return R, n_used
 
 
 def build_seed(variant: str, n_jp: int, N_total: int,
@@ -116,8 +156,116 @@ def build_seed(variant: str, n_jp: int, N_total: int,
     return s
 
 
-def main(limit_q: int | None = None) -> int:
+def parse_config_specs(specs: list[str] | None) -> set[tuple[int, str, float]] | None:
+    if not specs:
+        return None
+    out = set()
+    for spec in specs:
+        try:
+            k_raw, variant, alpha_raw = spec.split(":")
+            k_in = int(k_raw)
+            alpha = float(alpha_raw)
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid --config {spec!r}; expected format k_in:seed_variant:alpha "
+                "for example 20:both:0.5"
+            ) from exc
+        if k_in not in K_INS:
+            raise ValueError(f"Invalid k_in={k_in}; expected one of {K_INS}")
+        if variant not in SEED_VARIANTS:
+            raise ValueError(f"Invalid seed_variant={variant!r}; expected one of {SEED_VARIANTS}")
+        if alpha not in ALPHAS:
+            raise ValueError(f"Invalid alpha={alpha}; expected one of {ALPHAS}")
+        out.add((k_in, variant, alpha))
+    return out
+
+
+def build_seed_configs(n_jp: int, N_total: int, top_art_full_q, top_jp_full_q,
+                       sim_art_q, sim_jp_q, art_order, jp_order,
+                       artid_to_graphcol, jpid_to_graphrow,
+                       allowed_configs: set[tuple[int, str, float]] | None = None):
+    configs = []
+    seeds = []
+    for k_in in K_INS:
+        top_art_emb_idx = top_art_full_q[:k_in]
+        top_art_pks = art_order[top_art_emb_idx]
+        art_sims = sim_art_q[top_art_emb_idx]
+        top_jp_emb_idx = top_jp_full_q[:k_in]
+        top_jp_ids_arr = jp_order[top_jp_emb_idx]
+        jp_sims = sim_jp_q[top_jp_emb_idx]
+
+        for variant in SEED_VARIANTS:
+            wanted_alphas = [
+                alpha for alpha in ALPHAS
+                if allowed_configs is None or (k_in, variant, alpha) in allowed_configs
+            ]
+            if not wanted_alphas:
+                continue
+            s = build_seed(variant, n_jp, N_total,
+                           top_art_pks, art_sims, top_jp_ids_arr, jp_sims,
+                           artid_to_graphcol, jpid_to_graphrow)
+            if s is None:
+                continue
+            for alpha in wanted_alphas:
+                configs.append((k_in, variant, alpha))
+                seeds.append(s)
+    if not seeds:
+        return [], None, None
+    S = np.column_stack(seeds)
+    alphas = np.array([cfg[2] for cfg in configs], dtype=np.float64)
+    return configs, S, alphas
+
+
+def ranking_rows(qid, method, k_in, modality, ranked, k):
+    return [
+        {
+            "qid": qid,
+            "method": method,
+            "k_in": k_in,
+            "modality": modality,
+            "rank": rank + 1,
+            "item_id": str(item),
+        }
+        for rank, item in enumerate(ranked[:k])
+    ]
+
+
+def top_k_labels(scores: np.ndarray, labels: np.ndarray, k: int) -> list:
+    """Retourne les labels des k meilleurs scores, triés décroissant.
+
+    On évite argsort complet : les pools JP dépassent 100k items et le sweep
+    appelle ce top-k des dizaines de milliers de fois.
+    """
+    if len(scores) <= k:
+        order = np.argsort(-scores)
+    else:
+        candidates = np.argpartition(-scores, k - 1)[:k]
+        order = candidates[np.argsort(-scores[candidates])]
+    return list(labels[order])
+
+
+def main(
+    bench_dir: Path,
+    limit_q: int | None = None,
+    config_specs: list[str] | None = None,
+    dump_rankings: bool = False,
+    qid_filter: set[str] | None = None,
+) -> int:
     t0 = time.time()
+    bench_path = bench_dir / "bench_global.json"
+    q_emb_cache = bench_dir / "questions_emb.npy"
+    q_ids_cache = bench_dir / "questions_ids.npy"
+    out_csv = bench_dir / "ppr_kin_sweep_eval.csv"
+    out_summary = bench_dir / "ppr_kin_sweep_summary.json"
+    allowed_configs = parse_config_specs(config_specs)
+    if not bench_path.exists():
+        raise FileNotFoundError(f"Missing bench file: {bench_path}")
+    if not q_emb_cache.exists() or not q_ids_cache.exists():
+        raise FileNotFoundError(
+            f"Missing question embedding cache in {bench_dir}: "
+            "expected questions_emb.npy and questions_ids.npy"
+        )
+
     print("══ Chargement graphe + embeddings ─────────────────────────")
     art_emb = np.load(config.EMB_ARTICLES_ALL)
     art_order = np.load(config.ARTICLES_ORDER_ALL, allow_pickle=True)
@@ -141,6 +289,7 @@ def main(limit_q: int | None = None) -> int:
     G_full = sp.bmat([[None, G], [G.T, None]], format="csr")
     print(f"  G_full {G_full.shape}  nnz {G_full.nnz:,}")
     P_row = row_normalize(G_full)
+    PT_row = P_row.T.tocsr()
     print(f"  P_row ready  (t={time.time()-t0:.1f}s)")
 
     art_pool_graph_idx = np.array(
@@ -159,10 +308,9 @@ def main(limit_q: int | None = None) -> int:
     )
 
     print("\n══ Chargement cohorte ─────────────────────────────────────")
-    questions = load_cohort_977()
-    pourvoi_map = build_pourvoi_map()
-    Q_emb = np.load(Q_EMB_CACHE)
-    cached_qids = np.load(Q_IDS_CACHE, allow_pickle=True).tolist()
+    questions = load_questions(bench_path, qid_filter=qid_filter)
+    Q_emb = np.load(q_emb_cache)
+    cached_qids = np.load(q_ids_cache, allow_pickle=True).tolist()
     qid_set = set(cached_qids)
     questions = [q for q in questions if q["id"] in qid_set]
     qid_to_emb = {qid: i for i, qid in enumerate(cached_qids)}
@@ -171,6 +319,10 @@ def main(limit_q: int | None = None) -> int:
         questions = questions[:limit_q]
         Q = Q[:limit_q]
     print(f"  questions évaluées : {len(questions)}")
+    if allowed_configs is not None:
+        print("  configs PPR filtrées : " + ", ".join(
+            f"k{k}|{variant}|a{alpha}" for k, variant, alpha in sorted(allowed_configs)
+        ))
 
     print("\n══ Cosine sim ─────────────────────────────────────────────")
     sim_art = Q @ art_emb.T
@@ -191,62 +343,74 @@ def main(limit_q: int | None = None) -> int:
 
     print("\n══ Boucle PPR sweep ───────────────────────────────────────")
     rows = []
+    rankings = []
     n_skip = 0
     for qi, q in enumerate(questions):
-        if qi % 100 == 0:
+        if qi < 20 or qi % 100 == 0:
             print(f"  q {qi}/{len(questions)}  (t={time.time()-t0:.1f}s, rows={len(rows)})")
 
         gt_s = q["gt_strict"] & pool_articles_set
         gt_e = q["gt_ext"] & pool_articles_set
-        gold_jp = ({jid for p in q["pourvois"] for jid in pourvoi_map.get(p, [])}
-                   & pool_jp_set)
+        gold_jp = q["gold_jp_ids"] & pool_jp_set
         if not gt_s and not gold_jp:
             n_skip += 1
             continue
 
-        for k_in in K_INS:
-            top_art_emb_idx = top_art_full[qi, :k_in]
-            top_art_pks = art_order[top_art_emb_idx]
-            art_sims = sim_art[qi, top_art_emb_idx]
-            top_jp_emb_idx = top_jp_full[qi, :k_in]
-            top_jp_ids_arr = jp_order[top_jp_emb_idx]
-            jp_sims = sim_jp[qi, top_jp_emb_idx]
+        configs, S, alphas = build_seed_configs(
+            n_jp, N_total,
+            top_art_full[qi], top_jp_full[qi],
+            sim_art[qi], sim_jp[qi],
+            art_order, jp_order,
+            artid_to_graphcol, jpid_to_graphrow,
+            allowed_configs,
+        )
+        if S is None:
+            continue
+        R, n_used_by_col = ppr_power_iteration_batch(PT_row, S, alphas)
+        R_art_pool = R[art_pool_graph_idx, :]
+        R_jp_pool = R[jp_pool_graph_idx, :]
 
-            for variant in SEED_VARIANTS:
-                s = build_seed(variant, n_jp, N_total,
-                               top_art_pks, art_sims, top_jp_ids_arr, jp_sims,
-                               artid_to_graphcol, jpid_to_graphrow)
-                if s is None:
-                    continue
-                for alpha in ALPHAS:
-                    r, n_used = ppr_power_iteration(P_row, s, alpha)
+        for col, (k_in, variant, alpha) in enumerate(configs):
+            method_name = f"PPR-sweep-k{k_in}-{variant}-a{alpha}"
 
-                    r_art_pool = r[art_pool_graph_idx]
-                    top_art_idx = np.argsort(-r_art_pool)[:K_OUT]
-                    ranked_art = list(art_pool_pks[top_art_idx])
+            ranked_art = top_k_labels(R_art_pool[:, col], art_pool_pks, K_OUT)
+            ranked_jp = top_k_labels(R_jp_pool[:, col], jp_pool_ids, K_OUT)
+            if dump_rankings:
+                rankings.extend(
+                    ranking_rows(q["id"], method_name, k_in, "art", ranked_art, K_OUT)
+                )
+                rankings.extend(
+                    ranking_rows(q["id"], method_name, k_in, "jp", ranked_jp, K_OUT)
+                )
 
-                    r_jp_pool = r[jp_pool_graph_idx]
-                    top_jp_idx = np.argsort(-r_jp_pool)[:K_OUT]
-                    ranked_jp = list(jp_pool_ids[top_jp_idx])
-
-                    art_metrics = M.panel_strict_ext(ranked_art, gt_s, gt_e, K_OUT)
-                    art_metrics = {f"{k}_art": v for k, v in art_metrics.items()}
-                    jp_metrics = {f"{k}_jp": v for k, v in
-                                  M.all_metrics(ranked_jp, gold_jp, K_OUT).items()}
-                    rows.append({
-                        "qid": q["id"],
-                        "k_in": k_in,
-                        "seed_variant": variant,
-                        "alpha": alpha,
-                        "n_iter_used": n_used,
-                        **art_metrics,
-                        **jp_metrics,
-                    })
+            art_metrics = M.panel_strict_ext(ranked_art, gt_s, gt_e, K_OUT)
+            art_metrics = {f"{k}_art": v for k, v in art_metrics.items()}
+            jp_metrics = {f"{k}_jp": v for k, v in
+                          M.all_metrics(ranked_jp, gold_jp, K_OUT).items()}
+            rows.append({
+                "qid": q["id"],
+                "k_in": k_in,
+                "seed_variant": variant,
+                "alpha": alpha,
+                "n_iter_used": int(n_used_by_col[col]),
+                **art_metrics,
+                **jp_metrics,
+            })
 
     print(f"\n  skipped (GT vide) : {n_skip}")
     df = pd.DataFrame(rows)
-    df.to_csv(OUT_CSV, index=False)
-    print(f"\n✓ {OUT_CSV}  ({len(df)} lignes)")
+    df.to_csv(out_csv, index=False)
+    print(f"\n✓ {out_csv}  ({len(df)} lignes)")
+
+    if dump_rankings:
+        rank_path = bench_dir / "rankings.parquet"
+        rk = pd.DataFrame(rankings)
+        if rank_path.exists():
+            prev = pd.read_parquet(rank_path)
+            prev = prev[~prev["method"].astype(str).str.startswith("PPR-sweep-")]
+            rk = pd.concat([prev, rk], ignore_index=True)
+        rk.to_parquet(rank_path, index=False)
+        print(f"✓ {rank_path}  ({len(rk)} lignes rankings)")
 
     print("\n══ Agrégats par (k_in, seed, α) ───────────────────────────")
     cols = (
@@ -254,18 +418,15 @@ def main(limit_q: int | None = None) -> int:
         [f"{m}_ext_art"    for m in M.METRIC_NAMES] +
         [f"{m}_jp"         for m in M.METRIC_NAMES]
     )
+    summary_df = summarize_results(df)
     summary = {}
-    for (k_in, variant, alpha), sub in df.groupby(["k_in", "seed_variant", "alpha"]):
-        means = {c: float(sub[c].mean()) for c in cols}
-        iters = float(sub["n_iter_used"].mean())
-        summary[f"k{k_in}|{variant}|a{alpha}"] = {
-            "k_in": int(k_in), "seed_variant": variant, "alpha": float(alpha),
-            "n_iter_avg": iters, "n_rows": int(len(sub)), **means
-        }
-    OUT_SUMMARY.write_text(json.dumps(summary, ensure_ascii=False, indent=2))
-    print(f"✓ {OUT_SUMMARY}")
+    for row in summary_df.to_dict(orient="records"):
+        key = row["method_key"]
+        summary[key] = {k: v for k, v in row.items() if k != "method_key"}
+    out_summary.write_text(json.dumps(summary, ensure_ascii=False, indent=2))
+    print(f"✓ {out_summary}")
 
-    s_df = pd.DataFrame(summary.values())
+    s_df = summary_df.drop(columns=["method_key"], errors="ignore")
     for metric in ["m1_ext_art", "ndcg_ext_art", "mrr_strict_art", "ndcg_jp", "hit_ext_art"]:
         if metric not in s_df.columns:
             continue
@@ -280,8 +441,19 @@ def main(limit_q: int | None = None) -> int:
 
 
 if __name__ == "__main__":
-    limit = None
-    if len(sys.argv) > 1 and sys.argv[1].startswith("--limit="):
-        limit = int(sys.argv[1].split("=", 1)[1])
-        print(f"[mode sanity check : limit={limit}]")
-    sys.exit(main(limit))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--bench-dir", type=Path, default=DEFAULT_BENCH_DIR)
+    parser.add_argument("--limit", type=int)
+    parser.add_argument(
+        "--config",
+        action="append",
+        help=(
+            "Restrict sweep to one config k_in:seed_variant:alpha, "
+            "for example --config 20:both:0.5. Repeatable."
+        ),
+    )
+    parser.add_argument("--dump-rankings", action="store_true")
+    args = parser.parse_args()
+    if args.limit is not None:
+        print(f"[mode sanity check : limit={args.limit}]")
+    sys.exit(main(args.bench_dir, args.limit, args.config, args.dump_rankings))
