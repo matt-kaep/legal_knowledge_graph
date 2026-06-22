@@ -81,8 +81,76 @@ def test_summarize_cv_results_adds_explicit_coverage_columns():
     summary = cv_b3b4.summarize_cv_results(df, "art")
 
     assert summary.loc[0, "n_questions_covered"] == 2
+    assert summary.loc[0, "n_questions_benchmark"] == 2
     assert summary.loc[0, "n_folds_covered"] == 2
+    assert summary.loc[0, "question_coverage"] == 1.0
     assert summary.loc[0, "fold_coverage"] == 2 / cv_b3b4.graph_protocol.OFFICIAL_N_FOLDS
+
+
+def test_ppr_summary_adds_explicit_coverage_denominator_columns():
+    df = pd.DataFrame(
+        [
+            {
+                "fold": 0,
+                "qid": "q1",
+                "k_in": 10,
+                "seed_variant": "both",
+                "alpha": 0.5,
+                "hit_strict_art": 0.6,
+                "ndcg_strict_art": 0.5,
+                "mrr_strict_art": 0.4,
+                "m1_strict_art": 0.6,
+                "m2_strict_art": 0.5,
+            },
+            {
+                "fold": 1,
+                "qid": "q2",
+                "k_in": 10,
+                "seed_variant": "both",
+                "alpha": 0.5,
+                "hit_strict_art": 0.5,
+                "ndcg_strict_art": 0.4,
+                "mrr_strict_art": 0.3,
+                "m1_strict_art": 0.5,
+                "m2_strict_art": 0.4,
+            },
+        ]
+    )
+
+    summary = cv_ppr.summarize_cv_results(df, "art")
+
+    assert summary.loc[0, "n_questions_covered"] == 2
+    assert summary.loc[0, "n_questions_benchmark"] == 2
+    assert summary.loc[0, "question_coverage"] == 1.0
+    assert summary.loc[0, "n_folds_covered"] == 2
+    assert summary.loc[0, "fold_coverage"] == 2 / cv_ppr.graph_protocol.OFFICIAL_N_FOLDS
+
+
+@pytest.mark.parametrize("module", [cv_b3b4, cv_ppr])
+def test_validate_fold_assignments_rejects_duplicate_qids(module):
+    folds = pd.DataFrame(
+        [
+            {"qid": "q1", "fold": 0},
+            {"qid": "q1", "fold": 1},
+            {"qid": "q2", "fold": 2},
+        ]
+    )
+
+    with pytest.raises(ValueError, match="duplicate qids"):
+        module.validate_fold_assignments(folds, {"q1", "q2"})
+
+
+@pytest.mark.parametrize("module", [cv_b3b4, cv_ppr])
+def test_validate_fold_assignments_rejects_missing_and_extra_qids(module):
+    folds = pd.DataFrame(
+        [
+            {"qid": "q1", "fold": 0},
+            {"qid": "q3", "fold": 1},
+        ]
+    )
+
+    with pytest.raises(ValueError, match="missing qids=.*q2.*extra qids=.*q3"):
+        module.validate_fold_assignments(folds, {"q1", "q2"})
 
 
 def test_b3b4_main_rejects_non_official_split():

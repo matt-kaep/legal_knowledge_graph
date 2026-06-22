@@ -55,7 +55,9 @@ def load_questions(bench_path: Path, qid_filter: set[str] | None = None) -> list
         arts = q.get("articles_attendus") or []
         gold_jp_ids = q.get("gold_jp_ids") or []
         pourvois = q.get("pourvois_cc") or []
-        if not arts or not (gold_jp_ids or pourvois) or q.get("n_jp_resolues", 0) < 1:
+        if not arts or not (gold_jp_ids or pourvois):
+            continue
+        if q.get("n_jp_resolues", 0) < 1 and not pourvois:
             continue
         out.append({
             "id": q["qid"],

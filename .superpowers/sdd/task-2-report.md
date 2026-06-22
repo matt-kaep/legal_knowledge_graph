@@ -101,3 +101,39 @@ Verification run:
 
 Concern:
 - no full heavy CV benchmark replay was run in this fix wave; verification stayed focused on regression tests plus syntax compilation.
+
+---
+
+## Fix wave 2 after re-review (2026-06-22)
+
+Scope of this patch:
+- keep legacy `pourvois_cc` questions alive in PPR loading even when `n_jp_resolues == 0`
+- enforce fold assignment invariants against the current bench questions in both CV wrappers
+- publish an explicit benchmark question denominator and question-level coverage ratio in CV summaries/champions
+
+What changed:
+- `05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py`
+  - `load_questions(...)` now preserves legacy questions that still have `pourvois_cc` even when `n_jp_resolues == 0`
+  - the modern strict gate remains in place for rows that have neither resolved `gold_jp_ids` nor legacy pourvois
+- `05-Technique/benchmark/etape1_embedding_pur/scripts/42_run_cv_b3_b4.py`
+  - added `validate_fold_assignments(...)`
+  - `load_fold_assignments(...)` now fails loudly on duplicate qids and on missing/extra qids versus the current bench
+  - `main(...)` validates folds against the active graph bench before running CV
+  - `summarize_cv_results(...)` now emits `n_questions_benchmark` and `question_coverage` in addition to existing coverage counts
+- `05-Technique/benchmark/etape1_embedding_pur/scripts/43_run_cv_ppr.py`
+  - same fold invariant validation as baseline CV wrapper
+  - same explicit denominator fields in summary rows, which flow through into `champions.json`
+- tests
+  - extended `05-Technique/benchmark/etape1_embedding_pur/tests/test_ppr_question_loading.py`
+  - extended `05-Technique/benchmark/etape1_embedding_pur/tests/test_cv_selection.py`
+  - added duplicate/missing/extra fold validation coverage for both wrappers
+
+Verification run:
+1. `pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_cv_selection.py 05-Technique/benchmark/etape1_embedding_pur/tests/test_ppr_question_loading.py -q`
+   - red first: `7 failed, 6 passed`
+   - green after patch: `13 passed`
+2. `python -m py_compile 05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py 05-Technique/benchmark/etape1_embedding_pur/scripts/42_run_cv_b3_b4.py 05-Technique/benchmark/etape1_embedding_pur/scripts/43_run_cv_ppr.py`
+   - passed
+
+Concern:
+- no end-to-end heavy CV replay was run here; verification stayed intentionally focused on the regression tests and script compilation requested for this fix wave.
