@@ -40,3 +40,55 @@ Result: 3 passed.
 ## Notes
 - Output paths are rooted under `data/doctrine_v3plus_bench`, not `data/global_bench`.
 - The implementation preserves deterministic behavior for repeated runs with the same seed and input questions.
+
+## Fix Follow-up — 2026-06-22
+
+Addressed the reviewer findings without widening ownership beyond the four Task 1 files.
+
+### What changed
+- `graph_protocol.py`
+  - `resolve_graph_bench_dir()` now supports both layouts:
+    - future: `data/doctrine_v3plus_bench/<graph_version>/<split>/`
+    - current producer layout: `data/doctrine_v3plus_bench/<split>/`
+  - Added shared protocol constants/helpers for the official benchmark path:
+    - `OFFICIAL_TRAIN_SPLIT = train_augmented_retrievable_strict`
+    - `OFFICIAL_N_FOLDS = 5`
+    - shared protocol dir under `data/doctrine_v3plus_bench/_protocol/<split>/`
+
+- `41_make_kfold_assignments.py`
+  - The CLI no longer derives folds from a graph-local bench directory.
+  - Canonical folds are now always built from the official source bench:
+    - `data/doctrine_v3plus_bench/train_augmented_retrievable_strict/bench_global.json`
+  - Outputs are now written once to the shared protocol location:
+    - `data/doctrine_v3plus_bench/_protocol/train_augmented_retrievable_strict/fold_assignments.csv`
+    - `data/doctrine_v3plus_bench/_protocol/train_augmented_retrievable_strict/fold_assignments_meta.json`
+  - The CLI now rejects protocol drift for the official path:
+    - non-official `--split`
+    - any `--n-folds` other than `5`
+  - Kept `--graph-version` only as compatibility metadata; it no longer influences the canonical fold source or output path.
+
+### Why this closes the findings
+- Shared frozen reference:
+  - folds are generated once from the full official train strict bench, independent of graph coverage.
+- No CLI drift:
+  - official generation is locked to `train_augmented_retrievable_strict` and exactly `5` folds.
+- Layout compatibility:
+  - graph bench resolution now works with today’s root-per-split producer layout and will prefer graph-version subdirectories once they exist.
+
+### Added regression coverage
+- `test_graph_protocol.py`
+  - prefers graph-version layout when present
+  - falls back to legacy root-per-split layout when graph-version layout is absent
+- `test_kfold_assignments.py`
+  - writes canonical folds to the shared protocol directory from the official train strict bench
+  - rejects non-official split values
+  - rejects non-5 fold counts
+
+### Verification
+Ran:
+
+```bash
+pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_graph_protocol.py 05-Technique/benchmark/etape1_embedding_pur/tests/test_kfold_assignments.py -v
+```
+
+Result: `8 passed`

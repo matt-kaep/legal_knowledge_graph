@@ -14,7 +14,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from graph_protocol import load_bench_questions, resolve_graph_bench_dir  # noqa: E402
+import graph_protocol  # noqa: E402
 
 
 def _group_seed(seed: int, n_articles_strict: int, n_jp_resolues: int) -> int:
@@ -42,28 +42,48 @@ def build_fold_assignments(
     return pd.DataFrame(rows, columns=["qid", "fold"])
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--graph-version", required=True)
-    parser.add_argument("--split", required=True)
-    parser.add_argument("--n-folds", type=int, default=5)
+    parser.add_argument(
+        "--graph-version",
+        default="canonical",
+        help="Conserve pour compatibilite, mais les folds officiels sont partages et independants du graphe.",
+    )
+    parser.add_argument("--split", default=graph_protocol.OFFICIAL_TRAIN_SPLIT)
+    parser.add_argument("--n-folds", type=int, default=graph_protocol.OFFICIAL_N_FOLDS)
     parser.add_argument("--seed", type=int, default=42)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if args.split != graph_protocol.OFFICIAL_TRAIN_SPLIT:
+        parser.error(
+            f"official folds must use split={graph_protocol.OFFICIAL_TRAIN_SPLIT}"
+        )
+    if args.n_folds != graph_protocol.OFFICIAL_N_FOLDS:
+        parser.error(
+            f"official folds must use n_folds={graph_protocol.OFFICIAL_N_FOLDS}"
+        )
+    return args
 
-    bench_dir = resolve_graph_bench_dir(args.graph_version, args.split)
-    questions = load_bench_questions(bench_dir)
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+
+    bench_dir = graph_protocol.resolve_official_train_bench_dir()
+    questions = graph_protocol.load_bench_questions(bench_dir)
     df = build_fold_assignments(questions, n_folds=args.n_folds, seed=args.seed)
-    bench_dir.mkdir(parents=True, exist_ok=True)
-    out_csv = bench_dir / "fold_assignments.csv"
+    out_csv, out_meta = graph_protocol.resolve_shared_fold_paths(args.split)
+    out_csv.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out_csv, index=False)
     meta = {
         "graph_version": args.graph_version,
-        "split": args.split,
+        "split": graph_protocol.OFFICIAL_TRAIN_SPLIT,
         "n_folds": args.n_folds,
         "seed": args.seed,
         "n_questions": int(len(df)),
+        "source_bench_dir": str(bench_dir),
+        "output_dir": str(out_csv.parent),
+        "is_canonical_shared_protocol": True,
     }
-    (bench_dir / "fold_assignments_meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2))
+    out_meta.write_text(json.dumps(meta, ensure_ascii=False, indent=2))
     print(out_csv)
     return 0
 
