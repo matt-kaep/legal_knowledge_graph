@@ -20,12 +20,14 @@ Sortie dans --bench-dir :
 from __future__ import annotations
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
 import numpy as np
 import pandas as pd
 import scipy.sparse as sp
+import pyarrow.parquet as pq
 
 REPO = Path("/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph")
 sys.path.insert(0, str(REPO / "05-Technique" / "benchmark" / "etape1_embedding_pur"))
@@ -34,6 +36,7 @@ from etape1 import config  # noqa: E402
 import metrics as M  # noqa: E402
 
 DEFAULT_BENCH_DIR = REPO / "05-Technique/benchmark/etape1_embedding_pur/data/global_bench"
+_POURVOI_RE = re.compile(r"\d{2}-\d{2}\.\d{3}")
 
 K_OUT = 10
 K_INS = [5, 10, 20, 50]
@@ -51,15 +54,42 @@ def load_questions(bench_path: Path, qid_filter: set[str] | None = None) -> list
             continue
         arts = q.get("articles_attendus") or []
         gold_jp_ids = q.get("gold_jp_ids") or []
-        if not arts or not gold_jp_ids or q.get("n_jp_resolues", 0) < 1:
+        pourvois = q.get("pourvois_cc") or []
+        if not arts or not (gold_jp_ids or pourvois) or q.get("n_jp_resolues", 0) < 1:
             continue
         out.append({
             "id": q["qid"],
             "gt_strict": set(arts),
             "gt_ext": set(q.get("articles_attendus_etendu") or arts),
             "gold_jp_ids": set(gold_jp_ids),
+            "pourvois": set(pourvois),
         })
     return out
+
+
+def build_pourvoi_map() -> dict[str, list[str]]:
+    jp = pq.read_table(config.JP_INDEX, columns=["id", "number", "juris"]).to_pandas()
+    jp = jp[jp["juris"] == "CC"]
+    out: dict[str, list[str]] = {}
+    for r in jp.itertuples():
+        n = (r.number or "").strip()
+        if _POURVOI_RE.fullmatch(n):
+            out.setdefault(n, []).append(r.id)
+    return out
+
+
+def resolve_question_cache_paths(bench_dir: Path) -> tuple[Path, Path]:
+    q_emb_cache = bench_dir / "questions_emb.npy"
+    q_ids_cache = bench_dir / "questions_ids.npy"
+    if q_emb_cache.exists() and q_ids_cache.exists():
+        return q_emb_cache, q_ids_cache
+
+    legacy_q_emb_cache = bench_dir / "questions_977_emb.npy"
+    legacy_q_ids_cache = bench_dir / "questions_977_ids.npy"
+    if legacy_q_emb_cache.exists() and legacy_q_ids_cache.exists():
+        return legacy_q_emb_cache, legacy_q_ids_cache
+
+    return q_emb_cache, q_ids_cache
 
 
 def summarize_results(df: pd.DataFrame) -> pd.DataFrame:
@@ -253,8 +283,7 @@ def main(
 ) -> int:
     t0 = time.time()
     bench_path = bench_dir / "bench_global.json"
-    q_emb_cache = bench_dir / "questions_emb.npy"
-    q_ids_cache = bench_dir / "questions_ids.npy"
+    q_emb_cache, q_ids_cache = resolve_question_cache_paths(bench_dir)
     out_csv = bench_dir / "ppr_kin_sweep_eval.csv"
     out_summary = bench_dir / "ppr_kin_sweep_summary.json"
     allowed_configs = parse_config_specs(config_specs)
@@ -263,7 +292,8 @@ def main(
     if not q_emb_cache.exists() or not q_ids_cache.exists():
         raise FileNotFoundError(
             f"Missing question embedding cache in {bench_dir}: "
-            "expected questions_emb.npy and questions_ids.npy"
+            "expected questions_emb.npy/questions_ids.npy or "
+            "legacy questions_977_emb.npy/questions_977_ids.npy"
         )
 
     print("══ Chargement graphe + embeddings ─────────────────────────")
@@ -309,6 +339,7 @@ def main(
 
     print("\n══ Chargement cohorte ─────────────────────────────────────")
     questions = load_questions(bench_path, qid_filter=qid_filter)
+    pourvoi_map = build_pourvoi_map() if any(q["pourvois"] for q in questions) else {}
     Q_emb = np.load(q_emb_cache)
     cached_qids = np.load(q_ids_cache, allow_pickle=True).tolist()
     qid_set = set(cached_qids)
@@ -351,7 +382,10 @@ def main(
 
         gt_s = q["gt_strict"] & pool_articles_set
         gt_e = q["gt_ext"] & pool_articles_set
-        gold_jp = q["gold_jp_ids"] & pool_jp_set
+        gold_jp = (
+            q["gold_jp_ids"]
+            | {jid for p in q["pourvois"] for jid in pourvoi_map.get(p, [])}
+        ) & pool_jp_set
         if not gt_s and not gold_jp:
             n_skip += 1
             continue

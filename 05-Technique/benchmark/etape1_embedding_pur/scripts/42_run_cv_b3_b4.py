@@ -29,6 +29,14 @@ def _load_script_module(script_name: str, module_name: str):
 baseline_eval = _load_script_module("26_eval_doctrine_v3plus_m1_m2.py", "eval_b3b4")
 
 
+def enforce_official_split(split: str) -> None:
+    if split != graph_protocol.OFFICIAL_TRAIN_SPLIT:
+        raise ValueError(
+            "CV wrappers support only "
+            f"split={graph_protocol.OFFICIAL_TRAIN_SPLIT}; got {split}"
+        )
+
+
 def load_fold_assignments() -> pd.DataFrame:
     fold_csv, _ = graph_protocol.resolve_shared_fold_paths()
     df = pd.read_csv(fold_csv)
@@ -89,6 +97,20 @@ def summarize_cv_results(df: pd.DataFrame, modality: str) -> pd.DataFrame:
         sub.groupby(group_cols, dropna=False)[metric_cols]
         .mean()
         .reset_index()
+    )
+    coverage = (
+        sub.groupby(group_cols, dropna=False)
+        .agg(
+            n_questions_covered=("qid", "nunique"),
+            n_folds_covered=("fold", "nunique"),
+        )
+        .reset_index()
+    )
+    coverage["fold_coverage"] = (
+        coverage["n_folds_covered"] / graph_protocol.OFFICIAL_N_FOLDS
+    )
+    summary = (
+        summary.merge(coverage, on=group_cols, how="left")
         .sort_values(group_cols, na_position="first")
         .reset_index(drop=True)
     )
@@ -111,6 +133,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--k-in", type=int, action="append", dest="k_ins")
     args = parser.parse_args(argv)
 
+    enforce_official_split(args.split)
     bench_dir = graph_protocol.resolve_graph_bench_dir(args.graph_version, args.split)
     folds = load_fold_assignments()
     rows = []

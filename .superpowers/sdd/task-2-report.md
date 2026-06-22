@@ -68,3 +68,36 @@ Commands executed:
 ## Concerns
 
 - I did not execute a full real CV benchmark run on the canonical train split because that would trigger the full embedding/PPR workloads. The implementation is verified by targeted tests and script compilation, not by an end-to-end heavy benchmark replay.
+
+---
+
+## Fix wave after review (2026-06-22)
+
+Scope of this patch:
+- restore historical compatibility in `05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py`
+- hard-lock CV wrappers to `train_augmented_retrievable_strict`
+- publish explicit coverage counts in CV summaries/champions
+
+What changed:
+- `25_ppr_kin_sweep.py`
+  - `load_questions(...)` now accepts both modern `gold_jp_ids` and historical `pourvois_cc`
+  - restored historical pourvoi → JP-id resolution for legacy `data/global_bench/bench_global.json`
+  - restored fallback to legacy cache names `questions_977_emb.npy` / `questions_977_ids.npy`
+- `42_run_cv_b3_b4.py`
+  - rejects any split other than `train_augmented_retrievable_strict` with a clear `ValueError`
+  - `cv_results_summary.csv` now includes `n_questions_covered`, `n_folds_covered`, `fold_coverage`
+- `43_run_cv_ppr.py`
+  - same split lock
+  - same explicit coverage fields in `cv_results_summary.csv`
+- tests
+  - extended `05-Technique/benchmark/etape1_embedding_pur/tests/test_cv_selection.py`
+  - added `05-Technique/benchmark/etape1_embedding_pur/tests/test_ppr_question_loading.py`
+
+Verification run:
+1. `pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_cv_selection.py 05-Technique/benchmark/etape1_embedding_pur/tests/test_ppr_question_loading.py -q`
+   - result: `6 passed`
+2. `python -m py_compile 05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py 05-Technique/benchmark/etape1_embedding_pur/scripts/42_run_cv_b3_b4.py 05-Technique/benchmark/etape1_embedding_pur/scripts/43_run_cv_ppr.py`
+   - result: passed
+
+Concern:
+- no full heavy CV benchmark replay was run in this fix wave; verification stayed focused on regression tests plus syntax compilation.
