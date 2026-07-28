@@ -1,7 +1,7 @@
 ---
 date: 2026-07-28
 type: conception-presentation
-status: a-valider
+status: valide
 owner: papier
 cible: superviseur
 tags: [papier, cvpr, presentation, plan-detaille, questions-reviewer]
@@ -97,4 +97,3 @@ L'ouverture est transformée plus fortement : l'actuelle slide d'introduction es
 - La progression mène du problème aux preuves, et non d'une liste de composants à une autre.
 - Le deck reste utilisable comme plan détaillé de rédaction après la réunion.
 - Les statuts scientifiques restent visibles et conformes aux fichiers de coordination.
-
