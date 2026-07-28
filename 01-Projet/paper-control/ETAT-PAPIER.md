@@ -221,4 +221,4 @@ Voir `SYNC-ASSAINISSEMENT-VERS-PAPIER.md`.
 
 ## Dernière mise à jour
 
-2026-07-28 — Introduction et Related Work développées ; support superviseur porté à vingt-sept slides avec motivation juridique, rôle du retrieval, neuf références primaires et contributions clarifiées. Compilation sans avertissement et vérification visuelle intégrale. Aucun résultat ni statut scientifique modifié.
+2026-07-28 — Introduction et Related Work développées ; support superviseur porté à vingt-sept slides avec motivation juridique, rôle du retrieval, dix références primaires et contributions clarifiées. Compilation sans avertissement et vérification visuelle intégrale. Aucun résultat ni statut scientifique modifié.

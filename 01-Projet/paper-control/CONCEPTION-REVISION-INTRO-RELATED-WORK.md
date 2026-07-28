@@ -148,6 +148,7 @@ Les remplacer par une phrase simple :
 - JuriBERT : <https://aclanthology.org/2021.nllp-1.9/>
 - BSARD : <https://aclanthology.org/2022.acl-long.468/>
 - Finding the Law : <https://aclanthology.org/2023.eacl-main.203/>
+- CaseHOLD : <https://arxiv.org/abs/2104.08671>
 - CaseLink : <https://arxiv.org/abs/2403.17780>
 - LePaRD : <https://aclanthology.org/2024.acl-long.532/>
 - CLERC : <https://aclanthology.org/2025.findings-naacl.441/>
