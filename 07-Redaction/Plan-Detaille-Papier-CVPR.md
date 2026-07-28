@@ -112,8 +112,8 @@ Faire émerger le positionnement par comparaison vérifiable avec les travaux le
 
 ### 2.1 Legal information retrieval and benchmarks
 
-- retrieval d'articles, notamment BSARD ;
-- retrieval ou sélection de décisions, notamment CaseHOLD et travaux comparables ;
+- français juridique et retrieval d'articles : JuriBERT, BSARD et Finding the Law ;
+- retrieval ou sélection de décisions : CaseHOLD, CaseLink, LePaRD et CLERC ;
 - benchmarks juridiques plus généraux : LexGLUE, LEXTREME, LegalBench ;
 - limites pour la tâche conjointe articles--décisions étudiée ici.
 
@@ -121,17 +121,20 @@ Faire émerger le positionnement par comparaison vérifiable avec les travaux le
 
 - graphes de citations ;
 - recommandation de cas similaires ;
-- GNN et apprentissage inductif, notamment CaseLink ;
+- GNN et apprentissage inductif, notamment Finding the Law et CaseLink ;
+- réseau de citations et prédiction de liens, notamment LeCNet ;
 - distinction entre retrieval, prédiction de citations et prédiction de jugement.
 
 ### 2.3 French legal resources and systems
 
 - ressources ouvertes françaises ;
 - Open French Law RAG ;
-- KG français de la Cour de cassation ;
+- KG de pourvois pénaux de la Cour de cassation par Belikov et Raoult ;
 - périmètres et protocoles d'évaluation existants.
 
 ### 2.4 Positioning
+
+Le gap candidat est limité à l'absence identifiée d'un benchmark ouvert en droit français réunissant une même question, deux cibles Articles--jurisprudences et une comparaison contrôlée des citations et proximités sémantiques. Il reste à consolider par la bibliographie primaire avant de figer `C008`.
 
 Tableau comparatif selon : juridiction/langue, questions naturelles, articles, décisions, structure citationnelle, retrieval conjoint, benchmark public ou protocole reproductible.
 

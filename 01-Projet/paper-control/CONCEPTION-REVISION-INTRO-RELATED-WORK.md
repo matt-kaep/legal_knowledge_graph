@@ -1,7 +1,7 @@
 ---
 date: 2026-07-28
 type: conception-presentation
-status: a-valider
+status: valide
 owner: papier
 cible: superviseur
 tags: [papier, cvpr, presentation, introduction, related-work, contributions]

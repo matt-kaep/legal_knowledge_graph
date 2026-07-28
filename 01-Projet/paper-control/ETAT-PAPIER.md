@@ -211,7 +211,7 @@ Le support de référence est désormais la présentation Beamer :
 - source : `01-Projet/presentations/Plan-Detaille-Papier-Legal-KG-2026-07-28.tex` ;
 - PDF compilé : `01-Projet/presentations/Plan-Detaille-Papier-Legal-KG-2026-07-28.pdf`.
 
-Elle contient vingt-quatre slides organisées selon les questions successives du reviewer : importance, difficulté, solutions existantes, manque, idée, question scientifique, contributions, tâche, méthodes, preuves et limites. Chaque slide indique la section du futur papier qui porte la réponse. Elle reprend le format des présentations hebdomadaires, notamment la présentation Week 16 V2. Les visuels historiques sont explicitement marqués comme exemples structurels ou exploratoires. Les vingt-quatre pages ont été rendues et vérifiées visuellement sans débordement. La version PowerPoint du 27 juillet reste conservée comme artefact intermédiaire et n'est plus le support courant.
+Elle contient vingt-sept slides organisées selon les questions successives du reviewer : importance, complexité juridique, rôle du retrieval pour les assistants LLM, trois blocs de Related Work, manque, idée, question scientifique, contributions, tâche, méthodes, preuves et limites. Chaque slide indique la section du futur papier qui porte la réponse. La Related Work distingue modèles de langue, benchmarks, retrieval de jurisprudences et graphes juridiques ; le gap est limité au retrieval conjoint Articles--jurisprudences en droit français. Elle reprend le format des présentations hebdomadaires, notamment la présentation Week 16 V2. Les visuels historiques sont explicitement marqués comme exemples structurels ou exploratoires. Les vingt-sept pages ont été rendues et vérifiées visuellement sans débordement. La version PowerPoint du 27 juillet reste conservée comme artefact intermédiaire et n'est plus le support courant.
 
 Cette réorganisation est strictement narrative : elle n'ajoute aucune preuve, ne modifie aucun chiffre et ne change aucun statut expérimental.
 
@@ -221,4 +221,4 @@ Voir `SYNC-ASSAINISSEMENT-VERS-PAPIER.md`.
 
 ## Dernière mise à jour
 
-2026-07-28 — Support superviseur réorganisé en vingt-quatre slides selon les questions du reviewer et les sections correspondantes du papier ; compilation sans avertissement et vérification visuelle intégrale. Aucun résultat ni statut scientifique modifié. Architecture retrieval puis LLM validée, étude LLM contrôlée séparée de l'end-to-end, prochaines décisions ordonnées avant rédaction.
+2026-07-28 — Introduction et Related Work développées ; support superviseur porté à vingt-sept slides avec motivation juridique, rôle du retrieval, neuf références primaires et contributions clarifiées. Compilation sans avertissement et vérification visuelle intégrale. Aucun résultat ni statut scientifique modifié.

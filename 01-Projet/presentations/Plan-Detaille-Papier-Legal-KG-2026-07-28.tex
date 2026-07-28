@@ -116,146 +116,246 @@
       \end{enumerate}
     \end{column}
   \end{columns}
-
-  \vspace{0.55em}
-  \warnbox{\scriptsize L'abstract sera écrit en dernier, une fois les affirmations finales et leurs
-  \texttt{experiment\_id} connus.}
 \end{frame}
 
 % 4
 \begin{frame}{Pourquoi ce problème est-il important ?}
   \papersection{1. Introduction -- Motivation}
   \footnotesize
-  \textbf{Une question juridique appelle deux lectures complémentaires du droit.}
+  \textbf{Un avocat, un professionnel du droit ou un particulier cherche à répondre à une question juridique.}
 
-  \vspace{0.8em}
+  \vspace{0.65em}
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.46\textwidth}
-      \textbf{\color{accent}Cadre normatif : les articles}
+      \textbf{\color{accent}1. Les articles : la règle}
       \begin{itemize}\setlength{\itemsep}{0.38em}
-        \item Ils définissent les règles applicables.
-        \item Ils permettent d'identifier le premier cadre de réponse.
+        \item Ils définissent le cadre normatif applicable.
+        \item Ils indiquent les conditions, exceptions et sanctions prévues par le droit.
       \end{itemize}
     \end{column}
     \begin{column}{0.46\textwidth}
-      \textbf{\color{ok}Application : les jurisprudences}
+      \textbf{\color{ok}2. Les jurisprudences : l'application}
       \begin{itemize}\setlength{\itemsep}{0.38em}
         \item Elles montrent comment les règles sont interprétées.
-        \item Elles permettent de soutenir ou de contester un argument précis.
+        \item Elles relient le texte à des situations concrètes et à des arguments précis.
       \end{itemize}
     \end{column}
   \end{columns}
 
-  \vspace{1.0em}
-  \keybox{\scriptsize Le besoin central n'est pas seulement de trouver un texte proche,
-  mais de retrouver les sources normatives et jurisprudentielles pertinentes pour la question.}
+  \vspace{0.85em}
+  \keybox{\scriptsize Répondre correctement suppose de retrouver les deux fondements :
+  la règle de droit et son application jurisprudentielle.}
 \end{frame}
 
 % 5
 \begin{frame}{Pourquoi ce problème est-il difficile ?}
   \papersection{1. Introduction -- Difficultés}
-  \footnotesize
+  \scriptsize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.23\textwidth}
-      \textbf{\color{accent}Accès}
+      \textbf{\color{accent}Expertise juridique}
       \begin{itemize}\setlength{\itemsep}{0.3em}
-        \item bases souvent fermées ;
-        \item ouverture récente et partielle.
+        \item vocabulaire spécialisé ;
+        \item qualifications dépendantes du contexte ;
+        \item interprétation experte nécessaire.
       \end{itemize}
     \end{column}
     \begin{column}{0.23\textwidth}
-      \textbf{\color{ok}Volume}
+      \textbf{\color{ok}Échelle et cas particuliers}
       \begin{itemize}\setlength{\itemsep}{0.3em}
-        \item nombreux articles et décisions ;
-        \item candidats hétérogènes.
+        \item grand volume de textes et décisions ;
+        \item exceptions nombreuses ;
+        \item configurations factuelles variées.
       \end{itemize}
     \end{column}
     \begin{column}{0.23\textwidth}
-      \textbf{\color{crosscol}Structure}
+      \textbf{\color{crosscol}Organisation du droit}
       \begin{itemize}\setlength{\itemsep}{0.3em}
-        \item citations explicites ;
-        \item proximités implicites ;
-        \item liens incomplets.
+        \item domaines et sous-domaines ;
+        \item hiérarchies et renvois ;
+        \item citations et évolutions temporelles.
       \end{itemize}
     \end{column}
     \begin{column}{0.23\textwidth}
-      \textbf{\color{warning}Évaluation}
+      \textbf{\color{warning}Limites de la similarité}
       \begin{itemize}\setlength{\itemsep}{0.3em}
-        \item golds partiels ;
-        \item Articles et JP séparés ;
-        \item sources récupérables strictes.
+        \item termes proches, solutions opposées ;
+        \item régimes distincts, vocabulaire commun ;
+        \item relations absentes du texte local.
       \end{itemize}
     \end{column}
   \end{columns}
 
-  \vspace{0.9em}
-  \keybox{\scriptsize La similarité textuelle capte le contenu local ; elle ne représente pas
-  directement la structure documentaire qui relie les sources juridiques.}
-
-  {\scriptsize \textbf{Terminologie :} retrieval de sources pertinentes,
-  pas génération autonome de la bonne réponse juridique.}
+  \vspace{0.65em}
+  \keybox{\scriptsize La proximité sémantique est utile, mais elle ne suffit pas à représenter
+  les oppositions juridiques, les hiérarchies et les liens entre sources.}
 \end{frame}
 
 % 6
-\begin{frame}{Que proposent déjà les travaux existants ?}
-  \papersection{2. Related Work -- Familles de solutions}
+\begin{frame}{Pourquoi le retrieval est-il indispensable aux assistants juridiques ?}
+  \papersection{1. Introduction -- Motivation système}
   \footnotesize
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.19\textwidth}\centering
+      \colorbox{accentsoft}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{Question juridique}\vspace{0.65em}}}
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.20\textwidth}\centering
+      \colorbox{accentsoft}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{Retriever}\\sources candidates\vspace{0.65em}}}
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.20\textwidth}\centering
+      \colorbox{green!10}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{LLM}\\sélection et synthèse\vspace{0.65em}}}
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.20\textwidth}\centering
+      \colorbox{green!10}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{Réponse ancrée}\\articles + JP\vspace{0.65em}}}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.9em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \textbf{Sans sources pertinentes}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item réponse juridiquement fragile ;
+        \item citations inexactes ou inexistantes ;
+        \item impossibilité de vérifier le fondement.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{Notre périmètre}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item améliorer d'abord le retrieval ;
+        \item mesurer ensuite la sélection par le LLM ;
+        \item ne pas revendiquer encore une réponse juridique autonome.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \keybox{\scriptsize En droit, le grounding n'est pas un confort : la source doit être retrouvée,
+  identifiable et vérifiable.}
+\end{frame}
+
+% 7
+\begin{frame}{Que sait-on faire en français sur les textes juridiques et les articles ?}
+  \papersection{2. Related Work -- Français et statutory retrieval}
+  \scriptsize
   \begin{center}
-  \renewcommand{\arraystretch}{1.32}
-  \setlength{\tabcolsep}{5pt}
-  \begin{tabular}{@{}L{3.2cm} L{6.2cm} L{3.4cm}@{}}
+  \renewcommand{\arraystretch}{1.22}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{3.0cm} L{4.8cm} L{5.2cm}@{}}
     \toprule
-    \textbf{Famille} & \textbf{Ce qu'elle apporte} & \textbf{Question pour nous} \\
+    \textbf{Travail} & \textbf{Apport} & \textbf{Limite pour notre problème} \\
     \midrule
-    Legal retrieval & Recherche de sources depuis une question en langage naturel. & Quelle couverture Articles/JP ? \\
-    Graph-based retrieval & Citations, précédence, liens documentaires et GNN. & Quels signaux sont utiles ? \\
-    Ressources françaises & Données ouvertes, RAG et knowledge graphs juridiques. & Quelle tâche est évaluée ? \\
+    JuriBERT (2021) & modèle adapté au français juridique & représentation linguistique, pas benchmark de retrieval \\
+    BSARD (2022) & questions françaises vers articles belges & articles seulement ; droit belge \\
+    Finding the Law (2023) & GNN sur la structure hiérarchique des lois & retrieval statutaire, sans jurisprudence \\
+    Open French Law RAG (2024) & étude RAG sur un corpus de droit français & étude de cas, pas benchmark conjoint Articles--JP \\
     \bottomrule
   \end{tabular}
   \end{center}
 
-  \vspace{0.7em}
-  \keybox{\scriptsize La Related Work devra comparer les problèmes et les capacités,
-  et non produire une simple liste de papiers.}
+  \vspace{0.55em}
+  \keybox{\scriptsize Le français juridique et le retrieval d'articles disposent déjà de ressources ;
+  le lien systématique avec la jurisprudence reste absent de ces travaux.}
+
+  {\tiny Douka et al., NLLP 2021 ; Louis et Spanakis, ACL 2022 ; Louis et al., EACL 2023 ; Harvard LIL, 2024.}
 \end{frame}
 
-% 7
+% 8
+\begin{frame}{Que sait-on faire pour retrouver des jurisprudences ?}
+  \papersection{2. Related Work -- Legal case retrieval}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.22}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{2.7cm} L{5.0cm} L{5.3cm}@{}}
+    \toprule
+    \textbf{Travail} & \textbf{Apport} & \textbf{Limite pour notre problème} \\
+    \midrule
+    CaseHOLD (2021) & sélection du holding pertinent parmi des candidats & QCM de compréhension ; common law américaine \\
+    CaseLink (2024) & graphe inductif pour le retrieval de cas similaires & cas vers cas ; autre système juridique \\
+    LePaRD (2024) & retrieval de passages issus de précédents & droit américain ; passages jurisprudentiels uniquement \\
+    CLERC (2025) & retrieval de décisions puis génération d'analyse & droit américain ; aucun couple Articles--JP français \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.55em}
+  \keybox{\scriptsize Le case retrieval est un champ actif : notre différence ne peut pas être
+  « retrouver des jurisprudences », mais le contexte français et l'articulation avec les articles.}
+
+  {\tiny Zheng et al., ICAIL 2021 ; Tang et al., SIGIR 2024 ; Mahari et al., ACL 2024 ; Hou et al., NAACL 2025.}
+\end{frame}
+
+% 9
+\begin{frame}{Que sait-on faire avec des graphes juridiques ?}
+  \papersection{2. Related Work -- Graphes et réseaux de citations}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.22}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{3.0cm} L{4.8cm} L{5.2cm}@{}}
+    \toprule
+    \textbf{Travail} & \textbf{Apport} & \textbf{Limite pour notre problème} \\
+    \midrule
+    Finding the Law (2023) & hiérarchie législative intégrée à un GNN & graphe d'articles uniquement \\
+    CaseLink (2024) & graphe global pour le retrieval de cas & une seule cible documentaire \\
+    LeCNet (2025) & réseau de citations judiciaires et link prediction & droit indien ; prédiction de liens \\
+    Belikov et Raoult (2025) & KG de pourvois pénaux de la Cour de cassation & construction de KG, pas benchmark conjoint \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.55em}
+  \keybox{\scriptsize Les relations juridiques sont déjà exploitées, mais rarement comparées
+  comme facteurs contrôlés dans une tâche de retrieval à deux cibles.}
+
+  {\tiny Louis et al., EACL 2023 ; Tang et al., SIGIR 2024 ; Harde et al., JustNLP 2025 ; Belikov et Raoult, 2025.}
+\end{frame}
+
+% 10
 \begin{frame}{Quel manque précis reste à établir ?}
   \papersection{1--2. Introduction et Related Work -- Gap}
   \footnotesize
+  \keybox{\small Les travaux existants étudient séparément la représentation du français juridique,
+  le retrieval d'articles, le retrieval de jurisprudences ou la construction de graphes.}
+
+  \vspace{0.7em}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.30\textwidth}
-      \textbf{\color{accent}Langue et sources}
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{accent}Contexte}
       \begin{itemize}\setlength{\itemsep}{0.35em}
         \item droit français ;
-        \item articles et jurisprudences ;
-        \item corpus ouverts.
+        \item sources ouvertes ;
+        \item benchmark pénal actuel.
       \end{itemize}
     \end{column}
-    \begin{column}{0.30\textwidth}
-      \textbf{\color{ok}Structure évaluée}
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{ok}Deux cibles}
       \begin{itemize}\setlength{\itemsep}{0.35em}
-        \item citations nettoyées ;
-        \item proximités sémantiques ;
-        \item graphes typés et pondérés.
+        \item articles applicables ;
+        \item jurisprudences pertinentes ;
+        \item même question juridique.
       \end{itemize}
     \end{column}
-    \begin{column}{0.34\textwidth}
-      \textbf{\color{crosscol}Diagnostic}
+    \begin{column}{0.32\textwidth}
+      \textbf{\color{crosscol}Relations évaluées}
       \begin{itemize}\setlength{\itemsep}{0.35em}
-        \item deux tâches séparées ;
-        \item protocole reproductible ;
-        \item couverture puis sélection LLM.
+        \item citations ;
+        \item proximité sémantique ;
+        \item architectures hybrides.
       \end{itemize}
     \end{column}
   \end{columns}
 
-  \vspace{0.9em}
-  \decisionbox{\scriptsize Formulation provisoire uniquement : les sources primaires doivent être
-  lues et vérifiées avant de figer l'affirmation de nouveauté \texttt{C008}.}
+  \vspace{0.7em}
+  \decisionbox{\scriptsize Gap candidat : aucun benchmark ouvert identifié en droit français
+  ne réunit ces trois propriétés. L'affirmation de nouveauté reste à consolider par la bibliographie primaire.}
 \end{frame}
 
-% 8
+% 11
 \begin{frame}{Quelle est notre idée principale ?}
   \papersection{1. Introduction -- Key idea et teaser}
   \footnotesize
@@ -293,7 +393,7 @@
   \end{columns}
 \end{frame}
 
-% 9
+% 12
 \begin{frame}{Quelle question scientifique testons-nous ?}
   \papersection{1. Introduction -- Question et portée}
   \footnotesize
@@ -325,43 +425,40 @@
   restent limitées au droit pénal français.}
 \end{frame}
 
-% 10
+% 13
 \begin{frame}{Que revendiquons-nous exactement ?}
   \papersection{1. Introduction -- Contributions}
-  \footnotesize
+  \scriptsize
   \begin{columns}[T,onlytextwidth]
     \begin{column}{0.31\textwidth}
-      \textbf{\color{accent}1. Benchmark français}
+      \textbf{\color{accent}1. Benchmark pénal français}
       \begin{itemize}\setlength{\itemsep}{0.32em}
-        \item Retrieval conjoint de sources juridiques.
-        \item Deux tâches évaluées séparément.
-        \item Protocole reproductible et auditable.
+        \item Dataset d'entraînement et évaluation interne.
+        \item Articles et JP retrouvés séparément depuis une même question.
+        \item Protocole reproductible.
       \end{itemize}
     \end{column}
     \begin{column}{0.31\textwidth}
-      \textbf{\color{ok}2. Design space des graphes}
+      \textbf{\color{ok}2. Architectures de graphes}
       \begin{itemize}\setlength{\itemsep}{0.32em}
-        \item Citations et proximité sémantique.
-        \item Relations typées et pondérées.
-        \item Contrôles et ablations causales.
+        \item Citations et proximités sémantiques.
+        \item Graphes citationnels, sémantiques et hybrides.
+        \item Relations uniformes, typées ou pondérées.
       \end{itemize}
     \end{column}
     \begin{column}{0.32\textwidth}
-      \textbf{\color{crosscol}3. Diagnostic aval}
+      \textbf{\color{crosscol}3. Pipeline retrieval--LLM}
       \begin{itemize}\setlength{\itemsep}{0.32em}
-        \item Retriever puis LLM reranker.
-        \item Couverture et sélection séparées.
-        \item Capacité contrôlée sous distracteurs.
+        \item Comparaison de plusieurs retrievers.
+        \item Sélection LLM contrôlée sous distracteurs.
+        \item Couverture du vivier séparée de l'échec du reranker.
       \end{itemize}
     \end{column}
   \end{columns}
 
-  \vspace{0.75em}
-  \warnbox{\scriptsize \textbf{Performance conditionnelle :} toute affirmation de supériorité
-  dépend des résultats confirmatoires de la tâche A et d'une future lockbox non consultée.}
-
-  \decisionbox{\scriptsize À décider : \emph{framework hybride typé} ou
-  \emph{étude contrôlée du graph design}.}
+  \vspace{0.8em}
+  \keybox{\scriptsize Le papier revendique les ressources, le protocole et l'étude comparative ;
+  les conclusions de performance seront formulées après validation des expériences correspondantes.}
 \end{frame}
 
 % 8
