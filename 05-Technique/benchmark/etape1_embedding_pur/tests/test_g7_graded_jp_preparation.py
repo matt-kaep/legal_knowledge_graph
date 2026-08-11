@@ -124,3 +124,23 @@ def test_existing_g8_card_fetcher_can_be_loaded_without_running_the_database():
     fetcher = MODULE._load_card_fetcher()
     assert callable(fetcher)
     assert fetcher.__name__ == "fetch_decision_cards"
+
+
+def test_judge_contract_pins_model_revision_and_artifact_hashes(tmp_path):
+    prompt = tmp_path / "prompt.txt"
+    schema = tmp_path / "schema.json"
+    prompt.write_text("prompt", encoding="utf-8")
+    schema.write_text("{}", encoding="utf-8")
+    contract = MODULE.make_judge_contract(
+        model_id="model",
+        model_revision="immutable-revision",
+        prompt_path=prompt,
+        schema_path=schema,
+    )
+    assert contract == {
+        "model_id": "model",
+        "model_revision": "immutable-revision",
+        "prompt_version": "g7_graded_jp_judge_v1",
+        "prompt_sha256": "cf07194ee232eb531e15f690000d19846dea69cf05504782658afcfacb9228a2",
+        "schema_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    }

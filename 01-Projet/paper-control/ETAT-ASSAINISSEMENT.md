@@ -24,6 +24,7 @@ Transformer les explorations existantes en un benchmark reproductible, comparabl
 - `eval_rich_retrievable_strict` reste une évaluation interne déjà consultée, jamais une lockbox.
 - Diagnostic G8 E015 : replay G7 JP reproductible et audit juridique sur textes intégraux terminé pour 114 cas. Sur les 34 rattrapages bruts, 30 sont `meme_regle_valide` et 4 relèvent de la même procédure/noyau factuel ; le rattrapage exploratoire audité vaut `0,032714` contre `0,038019` brut. Aucune métrique officielle n'est modifiée et la matérialisation G8 reste bloquée par le filtre anti-même-procédure.
 - E016 : chaîne d'évaluation graduée G7 implémentée et préparation locale terminée, sans score à ce stade. Le périmètre contient 754 questions × top-10 JP de `LightGCN-trained_K2`, soit 7 540 positions, 7 487 couples uniques et zéro fiche Step1 manquante. Cinquante-trois positions répètent une JP déjà classée ; elles restent dans K mais leur gain effectif vaut zéro après la première occurrence. L'audit avocat aveugle cible 100 cas stratifiés repondérés.
+- Pilote E016 cluster : aucun jugement produit après trois échecs de démarrage documentés. Le snapshot modèle est désormais pin au commit complet et se charge, mais la capture CUDA manque de mémoire sur la partition générique `mm`; le choix d'une partition GPU dédiée reste à valider avant resoumission.
 
 ## Gates restants
 
@@ -61,4 +62,4 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-08-11 — E016 enregistré, préflight passé et bundles préparés : 7 540 positions eval, 7 487 couples uniques, aucune fiche Step1 manquante ; pilote train-only de 30 questions préparé. Aucun score n'est encore produit ; le run LLM et l'audit avocat restent à exécuter.
+2026-08-11 — E016 enregistré, préflight passé et bundles préparés. Le pilote train-only ne produit encore aucune réponse : cache et snapshot corrigés, puis OOM CUDA sur `nodemm02`; resoumission suspendue avant un quatrième changement de lancement.

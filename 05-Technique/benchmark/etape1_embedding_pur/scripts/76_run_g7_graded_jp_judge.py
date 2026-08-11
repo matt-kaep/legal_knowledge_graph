@@ -31,6 +31,7 @@ DEFAULT_OUT = (
     / "eval_rich_retrievable_strict/E016-g7-graded-jp-v1"
 )
 DEFAULT_MODEL = "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit"
+DEFAULT_MODEL_REVISION = "519bdca117c8f10a9a578d1b70b5c0d54c59b7ba"
 
 
 def _load_contract_module():
@@ -47,6 +48,16 @@ CONTRACT = _load_contract_module()
 
 def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def build_runtime_contract(model_id: str, model_revision: str) -> dict[str, str]:
+    return {
+        "model_id": model_id,
+        "model_revision": model_revision,
+        "prompt_version": "g7_graded_jp_judge_v1",
+        "prompt_sha256": file_sha256(PROMPT_PATH),
+        "schema_sha256": file_sha256(SCHEMA_PATH),
+    }
 
 
 def load_jobs(path: Path, limit: int | None = None) -> list[dict]:
@@ -233,6 +244,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--responses-path", type=Path)
     parser.add_argument("--model-id", default=os.environ.get("MODEL_ID", DEFAULT_MODEL))
+    parser.add_argument(
+        "--model-revision", default=os.environ.get("REVISION", DEFAULT_MODEL_REVISION)
+    )
     parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))
     parser.add_argument("--workers", type=int, default=int(os.environ.get("WORKERS", "32")))
     parser.add_argument("--limit", type=int)
@@ -250,12 +264,7 @@ def main(argv: list[str] | None = None) -> int:
     jobs = load_jobs(args.jobs, limit=args.limit)
     if not jobs:
         raise ValueError(f"no jobs found at {args.jobs}")
-    expected = {
-        "model_id": args.model_id,
-        "prompt_version": "g7_graded_jp_judge_v1",
-        "prompt_sha256": file_sha256(PROMPT_PATH),
-        "schema_sha256": file_sha256(SCHEMA_PATH),
-    }
+    expected = build_runtime_contract(args.model_id, args.model_revision)
     verify_contracts(jobs, expected)
     judge = mock_judge if args.mock else make_vllm_judge(args)
     started = time.monotonic()

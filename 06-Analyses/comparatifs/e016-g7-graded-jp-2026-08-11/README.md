@@ -20,7 +20,7 @@ tags: [benchmark, jurisprudence, llm-judge, evaluation-graduee, avocat, g7]
 - sortie : `classe` parmi A, B, C, D, E, `non_jugeable`, plus une justification juridique concrète d'une phrase ;
 - gains : A = 1, B = 0,5, autres classes = 0 ;
 - score : `(n_A + 0,5 × n_B) / 10` sur les premières occurrences, avec dénominateur fixe et répétitions suivantes à zéro ;
-- juge initial : `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit`, température 0, schéma JSON strict ;
+- juge initial : `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit`, snapshot `519bdca117c8f10a9a578d1b70b5c0d54c59b7ba`, température 0, schéma JSON strict ;
 - audit : 100 cas stratifiés, avocat aveugle au label LLM, accès possible au texte intégral.
 
 Le juge ne reçoit jamais le rang, la méthode, les JP gold, une relation G8 ni une distance dans le graphe. Les erreurs techniques bloquent l'agrégation ; elles ne sont jamais transformées en `non_jugeable`.
@@ -124,6 +124,16 @@ Le jugement LLM réel reste à exécuter. Reporter ensuite séparément :
 - taux `non_jugeable@10` ;
 - taux de positions répétées ;
 - métriques pondérées de l'audit avocat.
+
+### Tentatives de pilote cluster
+
+Trois soumissions n'ont produit aucun jugement :
+
+- `935280` : échec avant vLLM, cache par défaut `/scratch/kaeppelin-22` non accessible ;
+- `935290` : échec avant chargement, révision courte non résolue en ligne après évolution du dépôt Hugging Face ;
+- `935297` : le snapshot local complet `519bdca117c8f10a9a578d1b70b5c0d54c59b7ba` charge correctement 16,47 Gio de poids, puis la capture CUDA échoue par manque de mémoire sur `nodemm02` dans la partition générique `mm`.
+
+Le cache et le snapshot sont désormais explicitement figés dans le runner. Le prochain lancement exige une décision de ressource : utiliser la partition `L40S`/QOS `normal`, déjà éprouvée avec le juge G8 31B, est préférable à une nouvelle modification des paramètres d'inférence sur `mm`.
 
 ## Limites obligatoires
 

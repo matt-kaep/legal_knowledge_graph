@@ -14,7 +14,7 @@
 set -euo pipefail
 
 export LKG_REPO="${LKG_REPO:-$HOME/legal_knowledge_graph}"
-export HF_HOME="${HF_HOME:-/scratch/$USER/hf_cache}"
+export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
 mkdir -p "$HF_HOME"
 cd "$LKG_REPO/05-Technique/benchmark/etape1_embedding_pur"
 bash scripts/run_g7_graded_jp_judge_on_cluster.sh "${1:-full}"

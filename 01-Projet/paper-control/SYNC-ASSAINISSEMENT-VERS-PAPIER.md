@@ -103,3 +103,11 @@ tags: [coordination, benchmark, papier]
 - Preuve : manifest E016 local hashé et bundle train-only de 30 questions/298 couples, sans sortie LLM réelle à ce stade.
 - Action demandée : ne pas interpréter la couverture des fiches ni le nombre de doublons comme un score de pertinence ; attendre le run LLM et le gate avocat.
 - Statut : Gate 1 terminé ; Gate 2 réel GPU en attente.
+
+### 2026-08-11 — Pilote E016 suspendu au gate ressource
+
+- Décision ou résultat : les jobs Slurm `935280`, `935290` et `935297` ont échoué avant toute réponse LLM, respectivement sur le cache, la résolution de révision puis une OOM de capture CUDA sur `nodemm02`.
+- Preuve : le troisième job charge bien le snapshot complet du juge et 16,47 Gio de poids ; `judge_responses.jsonl` reste absent.
+- Conséquence scientifique : aucune classe ni métrique E016 n'existe encore ; le prompt n'a pas été calibré sur l'eval interne.
+- Action demandée : aucune pour B. A doit choisir une ressource dédiée, avec préférence pour `L40S` déjà éprouvée par G8, avant de reprendre Gate 2.
+- Statut : blocage technique de lancement, pas blocage scientifique du protocole.

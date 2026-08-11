@@ -28,6 +28,7 @@ EVAL_SPLIT = "eval_rich_retrievable_strict"
 TRAIN_SPLIT = "train_augmented_retrievable_strict"
 DEFAULT_METHOD = "LightGCN-trained_K2"
 DEFAULT_MODEL = "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit"
+DEFAULT_MODEL_REVISION = "519bdca117c8f10a9a578d1b70b5c0d54c59b7ba"
 PROMPT_VERSION = "g7_graded_jp_judge_v1"
 PROMPT_PATH = ETAPE1 / "prompts/g7_graded_jp_judge_v1.txt"
 SCHEMA_PATH = ETAPE1 / "schemas/g7_graded_jp_judge_v1.json"
@@ -51,6 +52,22 @@ def sha256(path: Path) -> str:
 def stable_json_sha256(value: object) -> str:
     payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def make_judge_contract(
+    *,
+    model_id: str,
+    model_revision: str,
+    prompt_path: Path = PROMPT_PATH,
+    schema_path: Path = SCHEMA_PATH,
+) -> dict[str, str]:
+    return {
+        "model_id": model_id,
+        "model_revision": model_revision,
+        "prompt_version": PROMPT_VERSION,
+        "prompt_sha256": sha256(prompt_path),
+        "schema_sha256": sha256(schema_path),
+    }
 
 
 def validate_profile_paths(profile: str, rankings_path: Path, bench_path: Path) -> None:
@@ -227,6 +244,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--question-limit", type=int)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--model-id", default=DEFAULT_MODEL)
+    parser.add_argument("--model-revision", default=DEFAULT_MODEL_REVISION)
     parser.add_argument("--force", action="store_true")
     return parser.parse_args()
 
@@ -275,12 +293,10 @@ def main() -> None:
         max_field_chars=4_000,
         batch_size=5_000,
     )
-    judge_contract = {
-        "model_id": args.model_id,
-        "prompt_version": PROMPT_VERSION,
-        "prompt_sha256": sha256(PROMPT_PATH),
-        "schema_sha256": sha256(SCHEMA_PATH),
-    }
+    judge_contract = make_judge_contract(
+        model_id=args.model_id,
+        model_revision=args.model_revision,
+    )
     jobs, frozen_positions = build_blind_jobs(
         positions=positions,
         questions=questions,

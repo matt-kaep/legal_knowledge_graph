@@ -21,6 +21,7 @@ def blind_job(job_id="job-1"):
         "decision_card": {"synthese_pour_avocat": "Synthèse de la décision."},
         "judge_contract": {
             "model_id": "model",
+            "model_revision": "revision",
             "prompt_version": "v1",
             "prompt_sha256": "prompt-hash",
             "schema_sha256": "schema-hash",
@@ -79,3 +80,9 @@ def test_verify_contract_rejects_jobs_from_another_prompt():
     changed["judge_contract"] = {**expected, "prompt_sha256": "changed"}
     with pytest.raises(ValueError, match="judge contract mismatch"):
         MODULE.verify_contracts([blind_job(), changed], expected)
+
+
+def test_runtime_contract_pins_the_model_revision():
+    contract = MODULE.build_runtime_contract("model", "immutable-revision")
+    assert contract["model_id"] == "model"
+    assert contract["model_revision"] == "immutable-revision"

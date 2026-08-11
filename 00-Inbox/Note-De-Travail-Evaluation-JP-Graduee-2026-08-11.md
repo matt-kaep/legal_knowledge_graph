@@ -226,6 +226,8 @@ Rankings gelés
 - étape suivante : exécuter et inspecter le pilote train-only sur GPU, puis lancer le jugement complet ;
 - aucun score E016 produit à ce stade.
 
+Trois tentatives Slurm ont échoué avant tout jugement : cache non accessible, révision Hugging Face non résolue, puis OOM CUDA après chargement du snapshot sur `nodemm02`. Le snapshot complet est maintenant pin ; la reprise attend le choix d'une partition GPU dédiée, de préférence `L40S` déjà validée par les runs G8.
+
 ## Liens
 
 - [[Audit-Juridique-G7-G8-2026-08-10]]

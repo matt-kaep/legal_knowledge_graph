@@ -137,7 +137,7 @@ Le score n'est pas pondéré par le rang. Une A en position 1 et une A en positi
 
 Le premier instrument réutilise l'infrastructure locale/cluster éprouvée par M3 et G8 :
 
-- modèle : `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit` ;
+- modèle : `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit`, snapshot figé `519bdca117c8f10a9a578d1b70b5c0d54c59b7ba` ;
 - température : `0` ;
 - sortie : JSON Schema strict ;
 - un couple question--JP par appel ;
