@@ -39,43 +39,61 @@
 \begin{document}
 
 % 1
-\begin{frame}{E016 mesure l'utilité juridique au-delà de l'identité exacte}
-  \small
-  \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.46\textwidth}
-      \keybox{\large\textbf{Hit@10 exact}\\[0.35em]
-      \normalsize La jurisprudence attendue est-elle présente dans le top--10 ?}
-    \end{column}
-    \begin{column}{0.46\textwidth}
-      \keybox{\large\textbf{Score gradué@10}\\[0.35em]
-      \normalsize Les décisions proposées permettent-elles juridiquement de répondre ?}
-    \end{column}
-  \end{columns}
+\begin{frame}[t]{Hit@K exact ou pertinence juridique graduée ?}
+  \scriptsize
+  \keybox{\small\textbf{Périmètre commun :} top--10 G7 par question $\cdot$ 7 540 positions $\cdot$ 7 487 couples question--JP uniques}
 
-  \vspace{0.65em}
+  \vspace{0em}
   \begin{columns}[T,onlytextwidth]
-    \begin{column}{0.53\textwidth}
-      \textbf{Population évaluée}
-      \vspace{0.35em}
-      \begin{itemize}\setlength{\itemsep}{0.4em}
-        \item \textbf{754 questions} de l'évaluation interne G7 ;
-        \item \textbf{$K=10$}, soit \textbf{7 540 positions} ;
-        \item \textbf{7 487 couples question--JP uniques} ;
-        \item 53 répétitions sur 30 questions : conservées, mais gain nul après la première occurrence.
+    \begin{column}{0.47\textwidth}
+      \begin{center}
+        {\color{accent}\textbf{MÉTRIQUE ACTUELLE}}\\[0.05em]
+        \large\textbf{Hit@K exact}
+      \end{center}
+
+      \vspace{0em}
+      \textbf{Entrée}
+      \begin{itemize}\setlength{\itemsep}{0.2em}
+        \item les JP attendues dans le benchmark ;
+        \item les $K$ premières JP retournées par G7.
       \end{itemize}
+
+      \textbf{Mesure}
+      \[
+        \mathrm{Hit@K}(q)=
+        \frac{|A_q\cap R_q[{:}K]|}{\min(|A_q|,K)}
+      \]
+
+      \colorbox{yellow!18}{\parbox{0.92\linewidth}{\centering
+        Une JP utile mais absente des réponses attendues vaut \textbf{0}.}}
     \end{column}
-    \begin{column}{0.43\textwidth}
-      \textbf{Ce que voit le juge}
-      \vspace{0.35em}
-      \begin{itemize}\setlength{\itemsep}{0.4em}
+
+    \begin{column}{0.47\textwidth}
+      \begin{center}
+        {\color{ok}\textbf{NOUVELLE MÉTHODE}}\\[0.05em]
+        \large\textbf{Score gradué@K}
+      \end{center}
+
+      \vspace{0em}
+      \textbf{Entrée du juge}
+      \begin{itemize}\setlength{\itemsep}{0.2em}
         \item la question juridique ;
-        \item la fiche Step1 déjà calculée pour la décision ;
-        \item \textbf{jamais} le rang G7, la JP gold, G8 ni la distance dans le graphe.
+        \item une analyse détaillée de la jurisprudence retournée.
       \end{itemize}
+
+      \textbf{Jugement et score}
+      \begin{center}
+        A = 1 $\cdot$ B = 0,5 $\cdot$ C/D/E/NJ = 0\\[0em]
+        $\displaystyle \mathrm{Score@K}(q)=\frac{\sum_{i=1}^{K}\mathrm{gain}_i}{K}$
+      \end{center}
+
+      \colorbox{green!12}{\parbox{0.92\linewidth}{\centering
+        Une autre JP peut rapporter des points si elle répond juridiquement à la question.}}
     \end{column}
   \end{columns}
 
-  \warnbox{\small E016 complète le Hit@10 ; il ne transforme pas une décision alternative utile en « bonne JP exacte ».}
+  \vspace{-0.35em}
+  \warnbox{\small\textbf{Diagnostic :} Hit bas + gradué bas $\Rightarrow$ JP faibles ; Hit bas + gradué haut $\Rightarrow$ réponses attendues incomplètes.}
   \status{E016 exploratoire sur \texttt{eval\_rich\_retrievable\_strict}, déjà consulté ; aucun tuning G7 autorisé.}
 \end{frame}
 
@@ -116,15 +134,16 @@
       \textbf{298/298 réponses valides} ; 0 erreur ; 0 JSON invalide}
 
       \vspace{0.4em}
-      \keybox{\textbf{Campagne complète lancée}\\[0.3em]
+      \keybox{\textbf{Jugement complet terminé}\\[0.3em]
       Job 935568 sur L40S\\
-      \textbf{7 487 couples} à juger}
+      \textbf{7 487/7 487 réponses valides}\\
+      score gradué brut : \textbf{0,4271}}
     \end{column}
   \end{columns}
 
   \vspace{0.55em}
   \warnbox{\small Le score ne devient interprétable qu'avec la distribution A--E et l'audit avocat ; vigilance particulière sur la frontière B.}
-  \status{processus lancé ; aucun résultat final E016 ni validation avocat à ce stade.}
+  \status{jugement et agrégation terminés ; score exploratoire en attente de validation avocat.}
 \end{frame}
 
 \end{document}

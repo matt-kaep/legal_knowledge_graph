@@ -9,7 +9,7 @@ tags: [benchmark, jurisprudence, llm-judge, evaluation-graduee, avocat, g7]
 
 ## Statut scientifique
 
-`exploratoire_en_cours` — l'instrument et la chaîne reproductible sont implémentés. Aucun score E016 n'est enregistré dans cette note avant la fin du jugement des positions et aucun résultat ne devient confirmatoire sur `eval_rich_retrievable_strict`, déjà consulté.
+`exploratoire_en_attente_audit_avocat` — le jugement complet et l'agrégation sont terminés. Le score reste provisoire jusqu'au contrôle des 100 cas avocat et aucun résultat ne devient confirmatoire sur `eval_rich_retrievable_strict`, déjà consulté.
 
 ## Périmètre figé
 
@@ -116,14 +116,15 @@ Préparation locale terminée :
 - 53 positions répétées, soit 30 questions affectées ;
 - bundle de calibration train-only : 30 questions, 300 positions, 298 couples uniques, aucune fiche manquante.
 
-Le jugement complet des 754 questions est lancé mais n'est pas encore agrégé. Reporter ensuite séparément :
+Le jugement complet des 754 questions est agrégé. Les sorties donnent :
 
-- `Hit@10` exact historique ;
-- moyenne de `score_gradue@10` ;
-- distribution A–E ;
-- taux `non_jugeable@10` ;
-- taux de positions répétées ;
-- métriques pondérées de l'audit avocat.
+- `score_gradue@10` moyen : `0,427122` ;
+- distribution : A=`2 442`, B=`1 592`, C=`102`, D=`428`, E=`2 976`, `non_jugeable`=`0` ;
+- taux `non_jugeable@10` : `0` ;
+- 53 positions répétées sur 7 540 (`0,7029 %`), pénalisées après leur première occurrence ;
+- échantillon avocat : 100 cas, aveugle aux labels LLM, stratifié A=27, B=22, C=17, D=17, E=17 et accompagné des poids d'inclusion dans la clé privée.
+
+Le champ technique `exact_hit_at_10=0,263926` produit par l'agrégateur indique seulement si au moins une JP gold apparaît dans le top-10. Il ne doit pas être confondu avec le `Hit@10` officiel du benchmark, défini par $|A_q\cap R_q[:K]|/\min(|A_q|,K)$ et reporté séparément.
 
 ### Pilote train-only et lancement complet
 
@@ -135,7 +136,7 @@ Trois premières soumissions n'ont produit aucun jugement :
 
 Le job `935516`, exécuté ensuite sur `L40S`/QOS `normal`, valide le pilote train-only : 298 couples chargés, 298 réponses `ok`, zéro erreur, zéro sortie invalide et 28,439 secondes d'inférence après démarrage du serveur. La distribution de calibration est A=83, B=58, C=4, D=25, E=130 et `non_jugeable`=0. Elle sert au contrôle du contrat et ne constitue pas un résultat E016 sur G7.
 
-La première soumission complète `935563` a échoué avant le chargement du modèle et avant toute réponse sur une erreur matérielle `CUDA uncorrectable ECC error` de `node51`. Le protocole et les artefacts sont inchangés. Le même run est resoumis en reprise append-only sous le job `935568`, avec `node51` exclu ; son résultat reste en attente.
+La première soumission complète `935563` a échoué avant le chargement du modèle et avant toute réponse sur une erreur matérielle `CUDA uncorrectable ECC error` de `node51`. Le protocole et les artefacts sont restés inchangés. Le même run, resoumis sous `935568` avec `node51` exclu, s'est terminé sur `node52` en 13 min 15 s : 7 487 couples chargés, 7 487 réponses `ok`, zéro erreur et zéro sortie invalide.
 
 ## Limites obligatoires
 

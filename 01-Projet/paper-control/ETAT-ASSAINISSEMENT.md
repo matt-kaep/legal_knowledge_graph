@@ -23,8 +23,8 @@ Transformer les explorations existantes en un benchmark reproductible, comparabl
 - Historique G0–G7, negative mining, LLM+RAG et M3 classifié dans le registre.
 - `eval_rich_retrievable_strict` reste une évaluation interne déjà consultée, jamais une lockbox.
 - Diagnostic G8 E015 : replay G7 JP reproductible et audit juridique sur textes intégraux terminé pour 114 cas. Sur les 34 rattrapages bruts, 30 sont `meme_regle_valide` et 4 relèvent de la même procédure/noyau factuel ; le rattrapage exploratoire audité vaut `0,032714` contre `0,038019` brut. Aucune métrique officielle n'est modifiée et la matérialisation G8 reste bloquée par le filtre anti-même-procédure.
-- E016 : chaîne d'évaluation graduée G7 implémentée et préparation locale terminée, sans score final à ce stade. Le périmètre contient 754 questions × top-10 JP de `LightGCN-trained_K2`, soit 7 540 positions, 7 487 couples uniques et zéro fiche Step1 manquante. Cinquante-trois positions répètent une JP déjà classée ; elles restent dans K mais leur gain effectif vaut zéro après la première occurrence. L'audit avocat aveugle cible 100 cas stratifiés repondérés.
-- Pilote E016 cluster : le job train-only `935516` sur L40S est terminé avec 298/298 réponses `ok`, zéro erreur et zéro sortie invalide. La répartition A=83, B=58, C=4, D=25, E=130, NJ=0 reste une calibration du contrat, pas un résultat G7 publiable. La campagne complète a été soumise : `935563` a échoué avant toute réponse sur une erreur ECC matérielle de `node51`, puis le même run inchangé a été resoumis sous `935568` en excluant ce nœud.
+- E016 : jugement complet et agrégation terminés sur 754 questions × top-10 JP de `LightGCN-trained_K2`, soit 7 540 positions et 7 487 couples uniques. Les 7 487 réponses sont valides. Le score gradué brut vaut `0,427122`; distribution A=2 442, B=1 592, C=102, D=428, E=2 976, NJ=0. Cinquante-trois répétitions restent dans K mais leur gain effectif vaut zéro après la première occurrence.
+- Exécution E016 cluster : pilote `935516` validé, puis run complet `935568` terminé sur `node52` en 13 min 15 s avec zéro erreur après exclusion de `node51`, affecté par une erreur ECC sur la tentative `935563`. L'échantillon avocat aveugle de 100 cas est préparé et stratifié A=27, B=22, C=17, D=17, E=17 ; l'interprétation du score reste bloquée sur cet audit.
 
 ## Gates restants
 
@@ -62,4 +62,4 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-08-11 — E016 enregistré et pilote train-only validé sur L40S (`935516`, 298/298 sorties valides). Campagne complète relancée sous `935568` après une erreur ECC matérielle de `node51` sur `935563`; aucun résultat final ni audit avocat à ce stade.
+2026-08-11 — E016 jugé et agrégé : `935568` terminé avec 7 487/7 487 sorties valides, score gradué brut `0,427122`. Échantillon avocat de 100 cas préparé ; verdict scientifique en attente de l'audit pondéré.

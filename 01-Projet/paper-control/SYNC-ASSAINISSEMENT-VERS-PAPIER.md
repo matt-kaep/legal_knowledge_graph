@@ -119,3 +119,11 @@ tags: [coordination, benchmark, papier]
 - Exécution complète : `935563` a échoué avant toute réponse sur une erreur ECC matérielle de `node51`; le même run, sans changement de prompt, modèle ou données, est resoumis sous `935568` en excluant ce nœud.
 - Action demandée : ne publier aucun score E016 avant agrégation des 754 questions et contrôle avocat. La frontière B reste le point de vigilance prioritaire de l'audit.
 - Statut : Gate technique du pilote passé ; jugement complet en cours de lancement, audit avocat en attente.
+
+### 2026-08-11 — Jugement complet E016 terminé, audit avocat préparé
+
+- Décision ou résultat : le job `935568` termine les 7 487 couples avec 7 487 réponses `ok`, zéro erreur et zéro sortie invalide. L'agrégation donne un score gradué@10 brut de `0,427122` et la distribution A=2 442, B=1 592, C=102, D=428, E=2 976, NJ=0.
+- Distinction obligatoire : le champ technique `exact_hit_at_10=0,263926` est un indicateur binaire « au moins une gold dans le top-10 », pas le `Hit@10` officiel du benchmark. Ne pas les comparer comme s'ils partageaient la même définition.
+- Audit : 100 cas aveugles sont préparés, stratifiés A=27, B=22, C=17, D=17, E=17, avec poids d'inclusion dans la clé privée. La frontière B reste prioritaire.
+- Action demandée : ne pas présenter `0,427122` comme score validé avant accord pondéré avocat et précision pondérée A/B ; conserver le statut exploratoire interne.
+- Statut : jugement et agrégation terminés ; gate avocat en attente.
