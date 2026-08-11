@@ -111,3 +111,11 @@ tags: [coordination, benchmark, papier]
 - Conséquence scientifique : aucune classe ni métrique E016 n'existe encore ; le prompt n'a pas été calibré sur l'eval interne.
 - Action demandée : aucune pour B. A doit choisir une ressource dédiée, avec préférence pour `L40S` déjà éprouvée par G8, avant de reprendre Gate 2.
 - Statut : blocage technique de lancement, pas blocage scientifique du protocole.
+
+### 2026-08-11 — Pilote E016 validé et campagne complète lancée
+
+- Décision ou résultat : le pilote train-only `935516` sur L40S produit 298/298 réponses `ok`, sans erreur ni JSON invalide. La distribution A=83, B=58, C=4, D=25, E=130, NJ=0 est un diagnostic de calibration et non un score G7 à publier.
+- Preuve : `judge_responses.jsonl`, `run_summaries/judge-judge_responses.json` et agrégats de calibration sous `data/doctrine_v3plus_bench/calibration/E016-g7-graded-jp-v1/`.
+- Exécution complète : `935563` a échoué avant toute réponse sur une erreur ECC matérielle de `node51`; le même run, sans changement de prompt, modèle ou données, est resoumis sous `935568` en excluant ce nœud.
+- Action demandée : ne publier aucun score E016 avant agrégation des 754 questions et contrôle avocat. La frontière B reste le point de vigilance prioritaire de l'audit.
+- Statut : Gate technique du pilote passé ; jugement complet en cours de lancement, audit avocat en attente.

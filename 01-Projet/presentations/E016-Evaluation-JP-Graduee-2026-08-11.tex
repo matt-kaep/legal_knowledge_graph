@@ -1,0 +1,130 @@
+% !TEX program = pdflatex
+% E016 -- evaluation graduee des jurisprudences retournees par G7 -- 2026-08-11
+% Statut global : exploration interne. Le pilote train-only ne mesure pas la performance finale de G7.
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\definecolor{accent}{RGB}{41,92,155}
+\definecolor{accentsoft}{RGB}{230,238,247}
+\definecolor{ok}{RGB}{30,130,70}
+\definecolor{warning}{RGB}{173,101,0}
+
+\newcommand{\keybox}[1]{%
+  \begin{center}\colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering #1}}\end{center}}
+\newcommand{\okbox}[1]{%
+  \begin{center}\colorbox{green!12}{\parbox{0.92\linewidth}{\centering #1}}\end{center}}
+\newcommand{\warnbox}[1]{%
+  \begin{center}\colorbox{yellow!18}{\parbox{0.92\linewidth}{\centering #1}}\end{center}}
+\newcommand{\status}[1]{\vfill\tiny\textit{Statut scientifique : #1}}
+
+\title[E016 -- JP graduées]{E016 : évaluation graduée des jurisprudences retournées par G7}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{11 août 2026}
+
+\begin{document}
+
+% 1
+\begin{frame}{E016 mesure l'utilité juridique au-delà de l'identité exacte}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.46\textwidth}
+      \keybox{\large\textbf{Hit@10 exact}\\[0.35em]
+      \normalsize La jurisprudence attendue est-elle présente dans le top--10 ?}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \keybox{\large\textbf{Score gradué@10}\\[0.35em]
+      \normalsize Les décisions proposées permettent-elles juridiquement de répondre ?}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.65em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.53\textwidth}
+      \textbf{Population évaluée}
+      \vspace{0.35em}
+      \begin{itemize}\setlength{\itemsep}{0.4em}
+        \item \textbf{754 questions} de l'évaluation interne G7 ;
+        \item \textbf{$K=10$}, soit \textbf{7 540 positions} ;
+        \item \textbf{7 487 couples question--JP uniques} ;
+        \item 53 répétitions sur 30 questions : conservées, mais gain nul après la première occurrence.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      \textbf{Ce que voit le juge}
+      \vspace{0.35em}
+      \begin{itemize}\setlength{\itemsep}{0.4em}
+        \item la question juridique ;
+        \item la fiche Step1 déjà calculée pour la décision ;
+        \item \textbf{jamais} le rang G7, la JP gold, G8 ni la distance dans le graphe.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \warnbox{\small E016 complète le Hit@10 ; il ne transforme pas une décision alternative utile en « bonne JP exacte ».}
+  \status{E016 exploratoire sur \texttt{eval\_rich\_retrievable\_strict}, déjà consulté ; aucun tuning G7 autorisé.}
+\end{frame}
+
+% 2
+\begin{frame}{Du jugement aveugle au score audité}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.28}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{c L{2.0cm} c L{2.45cm} c L{2.35cm} c L{2.35cm}}
+    \colorbox{accentsoft}{\textbf{1. G7}} & top--10 JP par question
+    & $\rightarrow$ & \colorbox{accentsoft}{\textbf{2. Juge aveugle}} & $\rightarrow$
+    & \colorbox{accentsoft}{\textbf{3. Score fixed-$K$}} & $\rightarrow$
+    & \colorbox{green!12}{\textbf{4. Audit avocat}} \\
+    & & & A--E ou \texttt{non\_jugeable} & & $(n_A+0{,}5n_B)/10$ & & 100 cas stratifiés et repondérés \\
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\textwidth}
+      \textbf{Grille fermée}
+      \vspace{0.35em}
+      \begin{tabular}{@{}c L{5.25cm} c@{}}
+        \toprule
+        \textbf{Classe} & \textbf{Rôle juridique} & \textbf{Gain} \\
+        \midrule
+        A & répond directement par la règle ou le raisonnement appliqué & 1 \\
+        B & apporte une exception, une limite ou une condition utile & 0,5 \\
+        C--E & même question sans solution, proximité factuelle/procédurale, ou hors sujet & 0 \\
+        NJ & fiche insuffisante pour juger sans inventer & 0 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \okbox{\textbf{Pilote train-only validé}\\[0.3em]
+      Job 935516 sur L40S\\
+      \textbf{298/298 réponses valides} ; 0 erreur ; 0 JSON invalide}
+
+      \vspace{0.4em}
+      \keybox{\textbf{Campagne complète lancée}\\[0.3em]
+      Job 935568 sur L40S\\
+      \textbf{7 487 couples} à juger}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.55em}
+  \warnbox{\small Le score ne devient interprétable qu'avec la distribution A--E et l'audit avocat ; vigilance particulière sur la frontière B.}
+  \status{processus lancé ; aucun résultat final E016 ni validation avocat à ce stade.}
+\end{frame}
+
+\end{document}

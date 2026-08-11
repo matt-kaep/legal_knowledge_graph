@@ -23,8 +23,8 @@ Transformer les explorations existantes en un benchmark reproductible, comparabl
 - Historique G0–G7, negative mining, LLM+RAG et M3 classifié dans le registre.
 - `eval_rich_retrievable_strict` reste une évaluation interne déjà consultée, jamais une lockbox.
 - Diagnostic G8 E015 : replay G7 JP reproductible et audit juridique sur textes intégraux terminé pour 114 cas. Sur les 34 rattrapages bruts, 30 sont `meme_regle_valide` et 4 relèvent de la même procédure/noyau factuel ; le rattrapage exploratoire audité vaut `0,032714` contre `0,038019` brut. Aucune métrique officielle n'est modifiée et la matérialisation G8 reste bloquée par le filtre anti-même-procédure.
-- E016 : chaîne d'évaluation graduée G7 implémentée et préparation locale terminée, sans score à ce stade. Le périmètre contient 754 questions × top-10 JP de `LightGCN-trained_K2`, soit 7 540 positions, 7 487 couples uniques et zéro fiche Step1 manquante. Cinquante-trois positions répètent une JP déjà classée ; elles restent dans K mais leur gain effectif vaut zéro après la première occurrence. L'audit avocat aveugle cible 100 cas stratifiés repondérés.
-- Pilote E016 cluster : aucun jugement produit après trois échecs de démarrage documentés. Le snapshot modèle est désormais pin au commit complet et se charge, mais la capture CUDA manque de mémoire sur la partition générique `mm`; le choix d'une partition GPU dédiée reste à valider avant resoumission.
+- E016 : chaîne d'évaluation graduée G7 implémentée et préparation locale terminée, sans score final à ce stade. Le périmètre contient 754 questions × top-10 JP de `LightGCN-trained_K2`, soit 7 540 positions, 7 487 couples uniques et zéro fiche Step1 manquante. Cinquante-trois positions répètent une JP déjà classée ; elles restent dans K mais leur gain effectif vaut zéro après la première occurrence. L'audit avocat aveugle cible 100 cas stratifiés repondérés.
+- Pilote E016 cluster : le job train-only `935516` sur L40S est terminé avec 298/298 réponses `ok`, zéro erreur et zéro sortie invalide. La répartition A=83, B=58, C=4, D=25, E=130, NJ=0 reste une calibration du contrat, pas un résultat G7 publiable. La campagne complète a été soumise : `935563` a échoué avant toute réponse sur une erreur ECC matérielle de `node51`, puis le même run inchangé a été resoumis sous `935568` en excluant ce nœud.
 
 ## Gates restants
 
@@ -62,4 +62,4 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-08-11 — E016 enregistré, préflight passé et bundles préparés. Le pilote train-only ne produit encore aucune réponse : cache et snapshot corrigés, puis OOM CUDA sur `nodemm02`; resoumission suspendue avant un quatrième changement de lancement.
+2026-08-11 — E016 enregistré et pilote train-only validé sur L40S (`935516`, 298/298 sorties valides). Campagne complète relancée sous `935568` après une erreur ECC matérielle de `node51` sur `935563`; aucun résultat final ni audit avocat à ce stade.

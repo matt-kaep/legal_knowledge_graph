@@ -116,7 +116,7 @@ Préparation locale terminée :
 - 53 positions répétées, soit 30 questions affectées ;
 - bundle de calibration train-only : 30 questions, 300 positions, 298 couples uniques, aucune fiche manquante.
 
-Le jugement LLM réel reste à exécuter. Reporter ensuite séparément :
+Le jugement complet des 754 questions est lancé mais n'est pas encore agrégé. Reporter ensuite séparément :
 
 - `Hit@10` exact historique ;
 - moyenne de `score_gradue@10` ;
@@ -125,15 +125,17 @@ Le jugement LLM réel reste à exécuter. Reporter ensuite séparément :
 - taux de positions répétées ;
 - métriques pondérées de l'audit avocat.
 
-### Tentatives de pilote cluster
+### Pilote train-only et lancement complet
 
-Trois soumissions n'ont produit aucun jugement :
+Trois premières soumissions n'ont produit aucun jugement :
 
 - `935280` : échec avant vLLM, cache par défaut `/scratch/kaeppelin-22` non accessible ;
 - `935290` : échec avant chargement, révision courte non résolue en ligne après évolution du dépôt Hugging Face ;
 - `935297` : le snapshot local complet `519bdca117c8f10a9a578d1b70b5c0d54c59b7ba` charge correctement 16,47 Gio de poids, puis la capture CUDA échoue par manque de mémoire sur `nodemm02` dans la partition générique `mm`.
 
-Le cache et le snapshot sont désormais explicitement figés dans le runner. Le prochain lancement exige une décision de ressource : utiliser la partition `L40S`/QOS `normal`, déjà éprouvée avec le juge G8 31B, est préférable à une nouvelle modification des paramètres d'inférence sur `mm`.
+Le job `935516`, exécuté ensuite sur `L40S`/QOS `normal`, valide le pilote train-only : 298 couples chargés, 298 réponses `ok`, zéro erreur, zéro sortie invalide et 28,439 secondes d'inférence après démarrage du serveur. La distribution de calibration est A=83, B=58, C=4, D=25, E=130 et `non_jugeable`=0. Elle sert au contrôle du contrat et ne constitue pas un résultat E016 sur G7.
+
+La première soumission complète `935563` a échoué avant le chargement du modèle et avant toute réponse sur une erreur matérielle `CUDA uncorrectable ECC error` de `node51`. Le protocole et les artefacts sont inchangés. Le même run est resoumis en reprise append-only sous le job `935568`, avec `node51` exclu ; son résultat reste en attente.
 
 ## Limites obligatoires
 
