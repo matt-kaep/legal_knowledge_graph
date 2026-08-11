@@ -16,7 +16,7 @@
 - LLM input is only question text plus the existing G8 Step1 card; do not regenerate Step1 or add full text.
 - Never expose method, rank, Ground Truth, G8 relation, or graph distance in a judge job.
 - Labels are `A`, `B`, `C`, `D`, `E`, `non_jugeable`; gains are `1`, `0.5`, `0`, `0`, `0`, `0`.
-- Score uses fixed `K=10`: `(n_A + 0.5*n_B)/10`; missing slots and `non_jugeable` keep the denominator fixed.
+- Score uses fixed `K=10`: `(n_A + 0.5*n_B)/10` over first occurrences; missing slots, repeated JP positions, and `non_jugeable` keep the denominator fixed and add zero.
 - Technical failures are not `non_jugeable`; incomplete technical work blocks aggregation.
 - Prompt calibration uses train-only examples; the 754 internal-eval questions never tune prompt/model/weights.
 - Preserve unrelated dirty work and commit only files belonging to each task.
@@ -35,7 +35,7 @@
 - Produces: `LABEL_GAIN`, `VALID_LABELS`, `validate_judgment(payload) -> tuple[bool, str]`, `score_labels(labels, k=10) -> float`, `is_generic_justification(text) -> bool`.
 - Consumes: no earlier task.
 
-- [ ] **Step 1: Write failing tests for label validation and fixed-K scoring**
+- [x] **Step 1: Write failing tests for label validation and fixed-K scoring**
 
 ```python
 def test_score_labels_keeps_fixed_k_denominator():
@@ -59,13 +59,13 @@ def test_validate_judgment_accepts_concrete_legal_reason():
     assert reason == ""
 ```
 
-- [ ] **Step 2: Run the tests and verify RED**
+- [x] **Step 2: Run the tests and verify RED**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_contract.py -q`
 
 Expected: FAIL because `74_g7_graded_jp_contract.py` does not exist.
 
-- [ ] **Step 3: Implement the minimal contract**
+- [x] **Step 3: Implement the minimal contract**
 
 ```python
 VALID_LABELS = ("A", "B", "C", "D", "E", "non_jugeable")
@@ -98,7 +98,7 @@ def score_labels(labels: list[str], *, k: int = 10) -> float:
 
 Write the prompt with the approved decision tree and exact output contract. Write a JSON Schema with `additionalProperties: false`, required `classe`/`justification`, and the six-label enum.
 
-- [ ] **Step 4: Run tests and prompt/schema validation**
+- [x] **Step 4: Run tests and prompt/schema validation**
 
 Run:
 
@@ -109,7 +109,7 @@ python3 -m json.tool 05-Technique/benchmark/etape1_embedding_pur/schemas/g7_grad
 
 Expected: all tests pass; schema parses.
 
-- [ ] **Step 5: Commit Task 1**
+- [x] **Step 5: Commit Task 1**
 
 ```bash
 git add 05-Technique/benchmark/etape1_embedding_pur/scripts/74_g7_graded_jp_contract.py \
@@ -129,7 +129,7 @@ git commit -m "feat: define G7 graded JP judgment contract"
 - Consumes: `VALID_LABELS` contract; existing `67_prepare_g8_llm_jp_link_jobs.fetch_decision_cards` behavior and `bench_global.json`.
 - Produces: `select_g7_positions(...) -> pd.DataFrame`, `build_blind_jobs(...) -> tuple[list[dict], pd.DataFrame]`, `manifest.json`, `rankings_topk.parquet`, `judge_jobs.jsonl`.
 
-- [ ] **Step 1: Write failing tests for ranking completeness and payload blindness**
+- [x] **Step 1: Write failing tests for ranking completeness and payload blindness**
 
 ```python
 def test_select_g7_positions_requires_one_to_k_per_question():
@@ -154,14 +154,15 @@ def test_build_blind_jobs_never_exposes_rank_method_gt_or_g8():
 
 Add a separate test proving a missing card creates no LLM job but keeps a position with `card_status=missing`.
 Add a test proving `--profile calibration` selects only `train_augmented_retrievable_strict`, defaults to `B3-a`, and rejects any path containing `eval_rich_retrievable_strict`.
+Add a test proving repeated `(qid, jp_id)` positions remain frozen, receive one shared `job_id`, and emit only one judge job.
 
-- [ ] **Step 2: Run the tests and verify RED**
+- [x] **Step 2: Run the tests and verify RED**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_preparation.py -q`
 
 Expected: FAIL because the preparation script does not exist.
 
-- [ ] **Step 3: Implement selection, card attachment, and manifests**
+- [x] **Step 3: Implement selection, card attachment, and manifests**
 
 Implement:
 
@@ -191,7 +192,7 @@ Add two explicit profiles:
 
 The calibration profile must fail closed if either input path contains `eval_rich_retrievable_strict`. Fetch cards only for unique JP IDs through existing `jp_decisions.step1_raw`; import the DB helper lazily inside `main()` so unit tests stay DB-free, and never update the database. Hash the source rankings, benchmark, prompt, schema, selected position parquet, card payload, and script.
 
-- [ ] **Step 4: Run tests and a local no-DB fixture smoke test**
+- [x] **Step 4: Run tests and a local no-DB fixture smoke test**
 
 Run:
 
@@ -202,7 +203,7 @@ python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g8_sema
 
 Expected: all pass.
 
-- [ ] **Step 5: Commit Task 2**
+- [x] **Step 5: Commit Task 2**
 
 ```bash
 git add 05-Technique/benchmark/etape1_embedding_pur/scripts/75_prepare_g7_graded_jp_eval.py \
@@ -222,7 +223,7 @@ git commit -m "feat: prepare blind G7 graded JP jobs"
 - Consumes: `judge_jobs.jsonl`, prompt/schema, `validate_judgment`.
 - Produces: append-only `judge_responses.jsonl` or shard files with `status=ok|invalid|error`, response payload, contract, latency.
 
-- [ ] **Step 1: Write failing tests for prompt, retries, cache, and validation**
+- [x] **Step 1: Write failing tests for prompt, retries, cache, and validation**
 
 ```python
 def test_make_prompt_contains_only_question_and_card():
@@ -236,13 +237,13 @@ def test_load_done_retries_invalid_and_error_rows(tmp_path): ...
 def test_mock_runner_writes_valid_minimal_payload(tmp_path): ...
 ```
 
-- [ ] **Step 2: Run the tests and verify RED**
+- [x] **Step 2: Run the tests and verify RED**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_runner.py -q`
 
 Expected: FAIL because the runner does not exist.
 
-- [ ] **Step 3: Implement the dedicated runner**
+- [x] **Step 3: Implement the dedicated runner**
 
 Reuse the concurrency and append-under-lock pattern from script 68, but keep the new response contract:
 
@@ -263,13 +264,13 @@ Use `response_format=json_schema`, `temperature=0`, bounded retries, `--retry-no
 
 The shell runner starts `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit` under vLLM, waits for `/v1/models`, then executes the Python runner. The Slurm wrapper uses one GPU and writes job-specific logs without mutating another experiment directory.
 
-- [ ] **Step 4: Run tests and mock end-to-end**
+- [x] **Step 4: Run tests and mock end-to-end**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_runner.py -q`
 
 Expected: tests pass; the pytest-managed mock fixture gives every input job exactly one terminal response without depending on a pre-existing `/tmp` directory.
 
-- [ ] **Step 5: Commit Task 3**
+- [x] **Step 5: Commit Task 3**
 
 ```bash
 git add 05-Technique/benchmark/etape1_embedding_pur/scripts/76_run_g7_graded_jp_judge.py \
@@ -289,7 +290,7 @@ git commit -m "feat: run resumable G7 graded JP judge"
 - Consumes: positions parquet, response JSONL/shards, benchmark questions.
 - Produces: `graded_jp_detail.csv`, `graded_jp_per_question.csv`, `graded_jp_summary.json`.
 
-- [ ] **Step 1: Write failing tests for fixed denominator, missing cards, and technical incompleteness**
+- [x] **Step 1: Write failing tests for fixed denominator, missing cards, and technical incompleteness**
 
 ```python
 def test_aggregate_uses_fixed_ten_denominator():
@@ -300,13 +301,13 @@ def test_missing_card_is_non_judgeable_but_missing_response_blocks(): ...
 def test_summary_keeps_exact_hit_separate_from_graded_score(): ...
 ```
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_summary.py -q`
 
 Expected: FAIL because the summarizer does not exist.
 
-- [ ] **Step 3: Implement deterministic aggregation**
+- [x] **Step 3: Implement deterministic aggregation**
 
 Implement response deduplication by `job_id`, reject conflicting duplicates, synthesize `non_jugeable` only for `card_status=missing`, and fail if any card-present position lacks an `ok` response. Join `gold_jp_ids` only after judgment. Compute:
 
@@ -316,7 +317,7 @@ score = (count_A + 0.5 * count_B) / 10
 
 Macro-average over all 754 questions. Export class distribution over 7,540 positions, `non_jugeable_at_10`, exact-hit flags, hashes, and explicit `status=exploratory_internal_evaluation`.
 
-- [ ] **Step 4: Run tests and deterministic rebuild**
+- [x] **Step 4: Run tests and deterministic rebuild**
 
 Run:
 
@@ -327,7 +328,7 @@ python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_m3_judg
 
 Expected: all pass.
 
-- [ ] **Step 5: Commit Task 4**
+- [x] **Step 5: Commit Task 4**
 
 ```bash
 git add 05-Technique/benchmark/etape1_embedding_pur/scripts/77_summarize_g7_graded_jp_eval.py \
@@ -346,7 +347,7 @@ git commit -m "feat: aggregate fixed-K G7 graded JP scores"
 - Consumes: graded detail, existing Step1 cards, Judilibre corpora, completed lawyer annotations.
 - Produces: blind `lawyer_audit_sample.csv`, private `lawyer_audit_key.csv`, `lawyer_evidence.jsonl`, `lawyer_agreement.json`.
 
-- [ ] **Step 1: Write failing tests for deterministic stratification and blinding**
+- [x] **Step 1: Write failing tests for deterministic stratification and blinding**
 
 ```python
 def test_select_sample_uses_target_allocation_and_seed(): ...
@@ -355,19 +356,19 @@ def test_agreement_reweights_stratified_sample_to_population(): ...
 def test_gate_requires_weighted_agreement_and_positive_precision(): ...
 ```
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_lawyer_audit.py -q`
 
 Expected: FAIL because the audit scripts do not exist.
 
-- [ ] **Step 3: Implement selection and evidence materialization**
+- [x] **Step 3: Implement selection and evidence materialization**
 
 Target 25 A, 20 B, 15 C, 15 D, 15 E, 10 `non_jugeable`; redistribute unavailable quotas deterministically. Within strata, balance ranks 1--3/4--10 and exact/non-exact where possible. Store population size, inclusion probability, and sampling weight in the private key only.
 
 The blind CSV contains `case_id`, question, Step1 card, empty `classe_avocat`, and empty `justification_avocat`. Materialize full Judilibre text in evidence JSONL via the existing corpus loader. Do not expose the LLM class in either lawyer-facing artifact.
 
-- [ ] **Step 4: Implement weighted agreement and gate**
+- [x] **Step 4: Implement weighted agreement and gate**
 
 Compute population-reweighted metrics with the inverse inclusion probability stored in the private key:
 
@@ -380,13 +381,13 @@ mean_absolute_gain_error = weighted_mean(abs(gain_llm - gain_lawyer))
 
 Also compute the full weighted confusion matrix. Estimate 95% percentile intervals using 2,000 deterministic stratified bootstrap resamples (`seed=42`), resampling with replacement inside each predicted-label stratum and retaining the original sampling weights. Gates are `gain_agreement >= 0.70` and `positive_precision >= 0.85`. If annotations are incomplete, return `status=incomplete_annotations` rather than partial metrics.
 
-- [ ] **Step 5: Run audit tests**
+- [x] **Step 5: Run audit tests**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_lawyer_audit.py -q`
 
 Expected: all pass.
 
-- [ ] **Step 6: Commit Task 5**
+- [x] **Step 6: Commit Task 5**
 
 ```bash
 git add 05-Technique/benchmark/etape1_embedding_pur/scripts/78_select_g7_graded_jp_lawyer_audit.py \
@@ -409,7 +410,7 @@ git commit -m "feat: prepare and score G7 lawyer audit"
 - Consumes: Tasks 1--5 commands/artifacts.
 - Produces: preflight/status JSON, reproducible cluster commands, Task A state updates.
 
-- [ ] **Step 1: Write failing campaign-state tests**
+- [x] **Step 1: Write failing campaign-state tests**
 
 ```python
 def test_status_requires_7540_positions_and_no_open_technical_errors(): ...
@@ -417,23 +418,23 @@ def test_status_keeps_lawyer_gate_pending_until_100_annotations(): ...
 def test_status_never_calls_internal_eval_confirmatory(): ...
 ```
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run: `python3 -m pytest 05-Technique/benchmark/etape1_embedding_pur/tests/test_g7_graded_jp_campaign.py -q`
 
 Expected: FAIL because campaign manager does not exist.
 
-- [ ] **Step 3: Implement status and runbook commands**
+- [x] **Step 3: Implement status and runbook commands**
 
 Provide subcommands `preflight`, `status`, `prepare`, `summarize`, `select-lawyer-audit`. All commands default to the frozen E016 paths from Task 2. `preflight` is read-only and validates source files, expected G7 method, 754 JP question IDs, prompt/schema validity, and DB configuration without fetching cards. `prepare` invokes the evaluation profile from Task 2. Status reads artifacts only and reports gates without launching GPU jobs. The README documents local preparation, train-only calibration, rsync/cluster launch, polling, response retrieval, aggregation, and lawyer handoff.
 
-- [ ] **Step 4: Register E016 without claiming a result**
+- [x] **Step 4: Register E016 without claiming a result**
 
 Append one E016 row with method `G7_graded_JP_LLM_judge`, graph `G7-citation-JJ-cit1-sem025-knn5`, protocol `internal_graded_judge_v1`, status `exploratoire_en_cours`, metrics `jp_score_gradue_at_10;class_distribution;non_jugeable_at_10;lawyer_agreement`, and the E016 README path.
 
 Update Task A state/outgoing channel with planned scope only; do not add score values before the run completes.
 
-- [ ] **Step 5: Run the focused and neighboring test suites**
+- [x] **Step 5: Run the focused and neighboring test suites**
 
 Run:
 
@@ -453,7 +454,7 @@ git diff --check
 
 Expected: all tests and compilation pass; no whitespace errors.
 
-- [ ] **Step 6: Commit Task 6**
+- [x] **Step 6: Commit Task 6**
 
 ```bash
 git add 05-Technique/benchmark/etape1_embedding_pur/scripts/80_manage_g7_graded_jp_campaign.py \
@@ -476,7 +477,7 @@ git commit -m "chore: register E016 G7 graded JP campaign"
 - Consumes: completed implementation and cluster access.
 - Produces: complete E016 raw/summary artifacts and 100-case lawyer package.
 
-- [ ] **Step 1: Run local preflight and preparation**
+- [x] **Step 1: Run local preflight and preparation**
 
 Run:
 

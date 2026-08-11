@@ -8,6 +8,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -107,8 +108,7 @@ def select_g7_positions(
         ranks = group["rank"].tolist()
         if ranks != expected_ranks:
             raise ValueError(f"{qid}: expected ranks 1..{k}, found {ranks}")
-        if group["jp_id"].duplicated().any():
-            raise ValueError(f"{qid}: duplicate JP inside top-{k}")
+    selected["duplicate_position"] = selected.duplicated(["qid", "jp_id"], keep="first")
     return selected
 
 
@@ -127,6 +127,7 @@ def build_blind_jobs(
     jobs: list[dict] = []
     statuses: list[str] = []
     job_ids: list[str] = []
+    emitted_job_ids: set[str] = set()
     for row in frozen.itertuples(index=False):
         qid = str(row.qid)
         jp_id = str(row.jp_id)
@@ -140,6 +141,9 @@ def build_blind_jobs(
             statuses.append("missing")
             continue
         statuses.append("available")
+        if job_id in emitted_job_ids:
+            continue
+        emitted_job_ids.add(job_id)
         jobs.append(
             {
                 "job_id": job_id,
@@ -171,6 +175,7 @@ def _load_card_fetcher():
     spec = importlib.util.spec_from_file_location("g8_card_fetcher", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module.fetch_decision_cards
 
@@ -296,6 +301,7 @@ def main() -> None:
         "n_unique_jp": len(jp_ids),
         "n_cards_available": len(cards),
         "n_jobs": len(jobs),
+        "n_duplicate_positions": int(frozen_positions["duplicate_position"].sum()),
         "n_missing_card_positions": int((frozen_positions["card_status"] == "missing").sum()),
         "judge_contract": judge_contract,
         "sources": {

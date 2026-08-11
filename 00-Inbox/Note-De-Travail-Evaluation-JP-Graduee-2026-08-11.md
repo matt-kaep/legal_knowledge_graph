@@ -138,6 +138,8 @@ Pour `K=10` :
 score_gradue@10(q) = (nombre_A + 0,5 * nombre_B) / 10
 ```
 
+Les nombres A et B ci-dessus comptent seulement la première occurrence de chaque JP. Si une même JP apparaît plusieurs fois pour une question, les répétitions suivantes restent dans les dix positions mais valent zéro : elles représentent des places de retrieval perdues, pas de nouvelles réponses juridiques.
+
 Le score vaut donc toujours entre `0` et `1`. Les classes C, D, E et `non_jugeable`, ainsi que les positions manquantes si une méthode retourne moins de K JP, contribuent zéro au numérateur sans réduire le dénominateur.
 
 Reporter obligatoirement en parallèle :
@@ -220,7 +222,8 @@ Rankings gelés
 - plan : `docs/superpowers/plans/2026-08-11-g7-graded-jp-evaluation.md` ;
 - scripts reproductibles : 74 à 80 ;
 - expérience enregistrée : E016 ;
-- étape suivante : préflight, bundle train-only de calibration, puis préparation des 7 540 positions ;
+- préflight et préparation terminés : 7 540 positions eval, 7 487 couples uniques, zéro fiche manquante et 53 positions répétées ; bundle train-only de 30 questions/298 couples préparé ;
+- étape suivante : exécuter et inspecter le pilote train-only sur GPU, puis lancer le jugement complet ;
 - aucun score E016 produit à ce stade.
 
 ## Liens

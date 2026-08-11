@@ -100,10 +100,17 @@ def aggregate(
     k: int = 10,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
     _validate_positions(positions, k=k)
+    positions = positions.copy().sort_values(["qid", "rank"], kind="stable")
+    derived_duplicates = positions.duplicated(["qid", "jp_id"], keep="first")
+    if "duplicate_position" in positions.columns:
+        supplied_duplicates = positions["duplicate_position"].astype(bool)
+        if not supplied_duplicates.equals(derived_duplicates):
+            raise ValueError("duplicate_position flags do not match qid/jp_id positions")
+    positions["duplicate_position"] = derived_duplicates
     selected = select_terminal_responses(responses)
     details: list[dict] = []
     incomplete: list[str] = []
-    for row in positions.sort_values(["qid", "rank"], kind="stable").itertuples(index=False):
+    for row in positions.itertuples(index=False):
         qid = str(row.qid)
         jp_id = str(row.jp_id)
         card_status = str(row.card_status)
@@ -141,6 +148,10 @@ def aggregate(
                 "response_status": response_status,
                 "classe": label,
                 "gain": CONTRACT.LABEL_GAIN[label],
+                "effective_gain": (
+                    0.0 if bool(row.duplicate_position) else CONTRACT.LABEL_GAIN[label]
+                ),
+                "duplicate_position": bool(row.duplicate_position),
                 "justification": justification,
                 "exact_gold": jp_id in gold_ids,
             }
@@ -158,7 +169,7 @@ def aggregate(
         per_rows.append(
             {
                 "qid": qid,
-                "score_gradue_at_10": float(group["gain"].sum() / k),
+                "score_gradue_at_10": float(group["effective_gain"].sum() / k),
                 "exact_hit_at_10": bool(group["exact_gold"].any()),
                 **{f"count_{label}": int(counts[label]) for label in CONTRACT.VALID_LABELS},
                 "non_jugeable_count": int(counts["non_jugeable"]),
@@ -175,6 +186,8 @@ def aggregate(
         "macro_score_gradue_at_10": float(per_question["score_gradue_at_10"].mean()),
         "exact_hit_at_10": float(per_question["exact_hit_at_10"].mean()),
         "non_jugeable_at_10": float(distribution["non_jugeable"] / len(detail)),
+        "duplicate_position_count": int(detail["duplicate_position"].sum()),
+        "duplicate_position_rate": float(detail["duplicate_position"].mean()),
         "class_distribution": {
             label: int(distribution[label]) for label in CONTRACT.VALID_LABELS
         },

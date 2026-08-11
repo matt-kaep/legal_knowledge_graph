@@ -19,11 +19,13 @@ tags: [benchmark, jurisprudence, llm-judge, evaluation-graduee, avocat, g7]
 - entrée du juge : question + fiche Step1 G8 existante ;
 - sortie : `classe` parmi A, B, C, D, E, `non_jugeable`, plus une justification juridique concrète d'une phrase ;
 - gains : A = 1, B = 0,5, autres classes = 0 ;
-- score : `(n_A + 0,5 × n_B) / 10`, avec dénominateur fixe ;
+- score : `(n_A + 0,5 × n_B) / 10` sur les premières occurrences, avec dénominateur fixe et répétitions suivantes à zéro ;
 - juge initial : `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit`, température 0, schéma JSON strict ;
 - audit : 100 cas stratifiés, avocat aveugle au label LLM, accès possible au texte intégral.
 
 Le juge ne reçoit jamais le rang, la méthode, les JP gold, une relation G8 ni une distance dans le graphe. Les erreurs techniques bloquent l'agrégation ; elles ne sont jamais transformées en `non_jugeable`.
+
+Le préflight a détecté 53 positions répétant une JP déjà présente plus haut dans le top-10, sur 30 questions. Elles proviennent de doublons historiques dans le pool JP utilisé par LightGCN. E016 conserve ces positions pour évaluer la sortie réellement produite, juge chacun des 7 487 couples uniques une fois et attribue un gain effectif nul à chaque répétition après la première. Une même JP ne peut donc pas rapporter deux fois des points.
 
 ## Chaîne d'artefacts
 
@@ -105,12 +107,22 @@ Le gate exploratoire exige un accord sur les gains d'au moins 0,70 et une préci
 
 ## Résultats
 
-En attente du run réel. Reporter séparément :
+Préparation locale terminée :
+
+- 754 questions et 7 540 positions ;
+- 4 865 JP distinctes ;
+- 7 487 couples question–JP uniques à juger ;
+- 4 865 fiches Step1 disponibles, aucune position sans fiche ;
+- 53 positions répétées, soit 30 questions affectées ;
+- bundle de calibration train-only : 30 questions, 300 positions, 298 couples uniques, aucune fiche manquante.
+
+Le jugement LLM réel reste à exécuter. Reporter ensuite séparément :
 
 - `Hit@10` exact historique ;
 - moyenne de `score_gradue@10` ;
 - distribution A–E ;
 - taux `non_jugeable@10` ;
+- taux de positions répétées ;
 - métriques pondérées de l'audit avocat.
 
 ## Limites obligatoires

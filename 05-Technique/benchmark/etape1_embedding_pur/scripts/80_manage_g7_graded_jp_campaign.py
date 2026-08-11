@@ -105,6 +105,7 @@ def campaign_status(
         "lawyer_gate": lawyer_gate,
         "prepared_questions": int(manifest.get("n_questions", 0)),
         "prepared_positions": int(manifest.get("n_positions", 0)),
+        "duplicate_positions": int(manifest.get("n_duplicate_positions", 0)),
         "expected_judge_jobs": expected_jobs,
         "judge_ok_jobs": len(ok_jobs),
         "lawyer_status": lawyer_status,
@@ -145,6 +146,9 @@ def preflight() -> dict:
         ]
         checks["ranking_questions"] = int(selected["qid"].nunique())
         checks["ranking_positions"] = int(len(selected))
+        checks["duplicate_positions"] = int(
+            selected.duplicated(["qid", "item_id"], keep="first").sum()
+        )
         checks["rank_sequence_ok"] = bool(
             selected.groupby("qid")["rank"].apply(lambda values: sorted(values.astype(int)) == list(range(1, 11))).all()
         )

@@ -15,7 +15,7 @@ tags: [coordination, benchmark, papier]
 - Les folds groupés et l'intégration des runners/replay sont audités. La baseline mémoire est maintenant mesurée et la campagne est en cours avec un seul job graphe ; aucun résultat confirmatoire n'est transmissible avant la fin des gates.
 - Les sections méthodes et protocole peuvent suivre le contrat figé ; les sections résultats doivent attendre les exports post-campagne.
 - E015 dispose désormais d'un audit humain sur textes intégraux : 30/34 rattrapages bruts sont juridiquement valides après exclusion de quatre cas de même procédure/noyau factuel. Ce résultat reste exploratoire et ne doit pas entrer comme gain LightGCN dans le tableau principal.
-- E016 est enregistré pour mesurer, sur G7 seulement, la pertinence graduée A–E des 7 540 positions top-10 puis la contrôler sur 100 cas avocat. La chaîne est implémentée mais aucun score E016 n'est encore disponible.
+- E016 est enregistré pour mesurer, sur G7 seulement, la pertinence graduée A–E des 7 540 positions top-10 puis la contrôler sur 100 cas avocat. La préparation trouve 7 487 couples uniques, zéro fiche manquante et 53 positions JP répétées qui seront pénalisées comme places perdues. Aucun score E016 n'est encore disponible.
 
 ## Action demandée à B
 
@@ -95,3 +95,11 @@ tags: [coordination, benchmark, papier]
 - Artefacts affectés : `06-Analyses/comparatifs/e016-g7-graded-jp-2026-08-11/README.md`; scripts 74–80; entrée E016 du registre.
 - Action demandée : ne publier aucun score avant la transmission des artefacts agrégés ; conserver explicitement le statut interne/exploratoire même si le gate avocat est franchi.
 - Statut : implémentation transmise, exécution LLM et validation avocat en attente.
+
+### 2026-08-11 — Préflight et préparation E016
+
+- Décision ou résultat : le préflight confirme 754 questions et 7 540 rangs. Les fiches Step1 couvrent les 4 865 JP distinctes ; 7 487 couples uniques seront jugés. Le ranking contient 53 répétitions sur 30 questions, issues de doublons du pool JP LightGCN.
+- Traitement : chaque couple unique est jugé une fois ; la première occurrence conserve son gain A/B éventuel, toute répétition ultérieure consomme une place du top-10 et vaut zéro.
+- Preuve : manifest E016 local hashé et bundle train-only de 30 questions/298 couples, sans sortie LLM réelle à ce stade.
+- Action demandée : ne pas interpréter la couverture des fiches ni le nombre de doublons comme un score de pertinence ; attendre le run LLM et le gate avocat.
+- Statut : Gate 1 terminé ; Gate 2 réel GPU en attente.

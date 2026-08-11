@@ -10,7 +10,7 @@ assert SPEC.loader is not None
 SPEC.loader.exec_module(MODULE)
 
 
-def write_campaign(tmp_path, *, positions=7540, questions=754, jobs=3, responses=None, lawyer=None):
+def write_campaign(tmp_path, *, positions=7540, questions=754, jobs=3, duplicates=0, responses=None, lawyer=None):
     (tmp_path / "manifest.json").write_text(
         json.dumps(
             {
@@ -20,6 +20,7 @@ def write_campaign(tmp_path, *, positions=7540, questions=754, jobs=3, responses
                 "n_questions": questions,
                 "n_jobs": jobs,
                 "n_missing_card_positions": positions - jobs,
+                "n_duplicate_positions": duplicates,
             }
         ),
         encoding="utf-8",
@@ -65,7 +66,8 @@ def test_status_keeps_lawyer_gate_pending_until_complete_audit(tmp_path):
 
 
 def test_status_never_calls_internal_eval_confirmatory(tmp_path):
-    write_campaign(tmp_path, responses=[ok_response(i) for i in range(3)])
+    write_campaign(tmp_path, duplicates=53, responses=[ok_response(i) for i in range(3)])
     status = MODULE.campaign_status(tmp_path)
     assert status["scientific_status"] == "exploratory_internal_evaluation"
+    assert status["duplicate_positions"] == 53
     assert "confirm" not in json.dumps(status).lower()

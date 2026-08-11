@@ -65,6 +65,10 @@ def select_sample(population: pd.DataFrame, *, sample_size: int = 100, seed: int
         raise ValueError(f"unknown labels: {sorted(unknown)}")
 
     working = population.copy()
+    if "duplicate_position" in working.columns:
+        working = working.loc[~working["duplicate_position"].astype(bool)].copy()
+    if working["job_id"].duplicated().any():
+        raise ValueError("lawyer population must contain unique question-JP judgments")
     working["classe"] = working["classe"].astype(str)
     working["rank_bucket"] = working["rank"].astype(int).map(lambda rank: "1-3" if rank <= 3 else "4-10")
     working["exact_bucket"] = working["exact_gold"].astype(bool).map({True: "exact", False: "non_exact"})

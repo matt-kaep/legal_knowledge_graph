@@ -44,6 +44,24 @@ def test_select_g7_positions_rejects_incomplete_rank_sequence():
         )
 
 
+def test_duplicate_jp_positions_are_kept_but_marked_as_wasted_slots():
+    duplicated = rankings()
+    duplicated.loc[duplicated["rank"] == 2, "item_id"] = "jp1"
+    selected = MODULE.select_g7_positions(
+        duplicated, question_ids={"q1"}, method="LightGCN-trained_K2", k=2
+    )
+    assert selected["duplicate_position"].tolist() == [False, True]
+
+    jobs, frozen = MODULE.build_blind_jobs(
+        positions=selected,
+        questions={"q1": {"enonce": "Question ?", "gold_jp_ids": []}},
+        cards={"jp1": {"solution_resume": "Solution"}},
+        judge_contract={"model_id": "model"},
+    )
+    assert len(jobs) == 1
+    assert frozen["job_id"].nunique() == 1
+
+
 def test_build_blind_jobs_never_exposes_rank_method_gt_or_g8():
     jobs, positions = MODULE.build_blind_jobs(
         positions=pd.DataFrame([{"qid": "q1", "rank": 1, "jp_id": "jp1"}]),
@@ -100,3 +118,9 @@ def test_deterministic_question_sample_is_stable_and_sorted():
     second = MODULE.select_question_ids({"q2", "q3", "q1"}, limit=2, seed=42)
     assert first == second
     assert len(first) == 2
+
+
+def test_existing_g8_card_fetcher_can_be_loaded_without_running_the_database():
+    fetcher = MODULE._load_card_fetcher()
+    assert callable(fetcher)
+    assert fetcher.__name__ == "fetch_decision_cards"

@@ -83,6 +83,20 @@ def test_missing_or_non_ok_response_blocks_aggregation():
         MODULE.aggregate(positions_10(), invalid, questions(), k=10)
 
 
+def test_repeated_jp_position_keeps_k_but_cannot_earn_gain_twice():
+    positions = positions_10()
+    positions.loc[1, ["jp_id", "job_id"]] = ["jp1", "job1"]
+    positions["duplicate_position"] = positions.duplicated(["qid", "jp_id"])
+    responses = responses_for(["A"] + ["E"] * 9)
+    detail, per_question, summary = MODULE.aggregate(positions, responses, questions(), k=10)
+    duplicate = detail.loc[detail["rank"] == 2].iloc[0]
+    assert duplicate["classe"] == "A"
+    assert duplicate["gain"] == 1.0
+    assert duplicate["effective_gain"] == 0.0
+    assert per_question.iloc[0]["score_gradue_at_10"] == 0.1
+    assert summary["duplicate_position_count"] == 1
+
+
 def test_summary_keeps_exact_hit_separate_from_graded_score():
     _, per_question, summary = MODULE.aggregate(
         positions_10(), responses_for(["E"] * 10), questions(gold=["jp7"]), k=10

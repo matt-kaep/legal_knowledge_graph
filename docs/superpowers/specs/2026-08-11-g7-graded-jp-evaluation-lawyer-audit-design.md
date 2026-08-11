@@ -114,10 +114,10 @@ Gains :
 Pour chaque question `q` :
 
 ```text
-score_gradue@10(q) = (nombre_A + 0,5 * nombre_B) / 10
+score_gradue@10(q) = somme(gain_i × premiere_occurrence_i, i=1..10) / 10
 ```
 
-Le dénominateur reste toujours `K=10`. Une position manquante ou `non_jugeable` ne réduit pas le dénominateur. Le score global G7 est la moyenne macro sur les 754 questions.
+Le dénominateur reste toujours `K=10`. Une position manquante ou `non_jugeable` ne réduit pas le dénominateur. Une JP répétée dans le top-10 est jugée une seule fois : sa première occurrence peut rapporter son gain A/B, chaque occurrence suivante consomme une position mais vaut zéro. Le score global G7 est la moyenne macro sur les 754 questions.
 
 Exports obligatoires :
 
@@ -125,6 +125,7 @@ Exports obligatoires :
 - score par question ;
 - comptes et proportions A, B, C, D, E et `non_jugeable` ;
 - taux `non_jugeable@10` ;
+- nombre et taux de positions JP répétées ;
 - `Hit@10 exact` historique reporté séparément, jamais fusionné avec le score gradué ;
 - détail des 7 540 positions : `qid`, `jp_id`, rang, classe, gain, justification et statut technique ;
 - provenance de la classe : `llm` ou `preflight_missing_card` ;
@@ -166,7 +167,7 @@ Après calibration, le modèle, le prompt, le schéma, `K`, les gains et les par
 
 ### Gate 3 — Run G7 interne complet
 
-- générer les 7 540 travaux aveugles ;
+- conserver les 7 540 positions et générer un travail aveugle par couple unique ;
 - dédupliquer les éventuels couples répétés ;
 - juger chaque couple unique une fois ;
 - reconstruire les dix positions de chaque question ;
@@ -198,7 +199,7 @@ Gate minimal avant usage substantiel dans le papier : accord pondéré sur les g
 - erreur technique persistante : run incomplet, aucune agrégation finale ;
 - carte absente : position conservée, classe `non_jugeable`, justification indiquant l'absence de carte et `label_source=preflight_missing_card` ;
 - carte présente mais champs partiels : le juge applique l'arbre et n'utilise `non_jugeable` que si la qualification juridique est impossible ;
-- doublon `(qid, jp_id)` : un jugement en cache, réutilisé dans toutes les positions concernées ;
+- doublon `(qid, jp_id)` : un jugement en cache ; première occurrence scorée, occurrences suivantes marquées `duplicate_position` et de gain effectif nul ;
 - sortie hors taxonomie ou justification générique : invalide, retry ;
 - moins de dix JP retournées : positions manquantes explicites de gain zéro, dénominateur inchangé.
 
