@@ -1,0 +1,309 @@
+% First narrative draft for the ECIR 2027 full-paper submission.
+% Coordination version with named authors; re-anonymize before double-blind submission.
+% Quantitative results remain pending until the paper-control scientific gate authorizes them.
+
+\documentclass[runningheads]{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{microtype}
+\usepackage{placeins}
+\setlength{\emergencystretch}{3em}
+
+\newcommand{\pending}{\emph{pending verified export}}
+
+\begin{document}
+
+\title{French Legal Retrieval: A Two-Task Benchmark and an Adaptable Graph-Based Retrieval--Reranking Framework}
+\titlerunning{French Legal Retrieval}
+
+\author{Matthieu Kaeppelin \and Jhony Giraldo}
+\institute{}
+
+\maketitle
+
+\begin{abstract}
+Legal questions expressed in ordinary language must be connected to both the statutory provisions that define the applicable normative framework and the judicial decisions that interpret or apply it. French legal retrieval remains difficult to study reproducibly because these two source types are commonly treated in isolation and their relational structure is not represented by semantic similarity alone. We introduce a French criminal-law benchmark comprising two related but separately evaluated tasks: statutory-article retrieval and case-law-decision retrieval. We also define an adaptable graph-based legal retrieval framework that combines document encoders, typed relations between legal sources, task-specific candidate scoring, and optional post-retrieval reranking. The evaluation protocol compares semantic-only retrieval with non-learned and learned graph instantiations under shared grouped validation, while preserving separate metrics and model selection for the two tasks. The current manuscript reports the benchmark, framework, and validation protocol; final quantitative comparisons remain subject to verified exports from the internal evaluation campaign. The empirical scope is limited to French criminal law, and the consulted internal evaluation set is not presented as an unseen test set.
+\keywords{Legal information retrieval \and French law \and Statutory retrieval \and Case-law retrieval \and Graph-based legal retrieval \and Reranking}
+\end{abstract}
+
+\section{Introduction}
+
+% P1: European and jurisdiction-specific legal-information context.
+European legal information is organized through national languages, institutions, codes, courts, and citation practices. Users, however, usually formulate a legal problem in ordinary language rather than as an identifier, a statutory heading, or a citation to a reported decision. A retrieval system must therefore bridge not only a lexical gap between questions and legal writing, but also a structural gap between a user's description and the way a jurisdiction organizes its authoritative sources.
+
+% P2: Complementary roles of statutory articles and case-law decisions.
+For many questions, a useful source set contains two complementary forms of authority. Statutory articles state the normative framework: applicable rules, conditions, exceptions, procedures, and sanctions. Judicial decisions show how those rules have been interpreted or applied in concrete disputes. Retrieving only one source type can leave the legal picture incomplete. We therefore treat article retrieval and decision retrieval as two outputs for the same question, while keeping their candidate spaces and evaluation measures separate.
+
+% P3: Retrieval difficulty and grounding risk.
+The task is difficult because plain-language questions and legal sources may express the same issue with different terminology, relevant provisions may depend on surrounding code structure, and decisions may refer to statutes or other decisions through sparse and heterogeneous citations. Relevance annotations are also necessarily incomplete when several decisions apply the same rule to comparable circumstances. These difficulties matter for downstream legal assistance: fluent generation cannot compensate for a failure to retrieve the sources on which the response should be grounded. Retrieval is not itself legal reasoning, but it is a necessary and independently measurable component of a grounded system.
+
+% P4: Precise scientific gap without an absolute novelty claim.
+Existing work provides important components of this problem. French legal encoders model domain-specific language~\cite{douka2021juribert}; BSARD evaluates French-language statutory retrieval in Belgian law~\cite{louis2022bsard}; graph-augmented statutory retrieval exploits legislative hierarchy~\cite{louis2023finding}; and several resources study holdings, precedent passages, or case-to-case retrieval in other jurisdictions~\cite{zheng2021casehold,tang2024caselink,mahari2024lepard,hou2024clerc}. What remains underrepresented is a reproducible evaluation in which natural-language questions are connected to both French statutory articles and French judicial decisions through a common retrieval interface, without collapsing the two tasks into a single score.
+
+% P5: Research question, proposed framework, and testable hypothesis.
+This work asks: \emph{Can a graph of the legal framework support the retrieval of relevant statutory articles and case-law decisions?} We test the hypothesis that observable relations among legal sources can complement dense semantic similarity, and that their value may differ between statutory and case-law retrieval. To make this hypothesis testable, we define a framework with replaceable encoding, graph-exploitation, scoring, and reranking blocks and compare its instantiations under a shared model-selection protocol.
+
+% P6: Contributions and empirical scope.
+Our contribution is twofold. First, we formulate a French criminal-law benchmark with the same questions feeding two related but independently evaluated retrieval tasks. Second, we define an adaptable graph-based legal retrieval and reranking framework for statutory and judicial sources. The empirical study compares semantic controls, non-learned graph propagation, learned graph representations, and optional LLM reranking. At this draft stage, we do not claim that a particular graph is superior: final quantitative conclusions require the validated campaign outputs. Moreover, all empirical claims will remain limited to French criminal law and to an internal evaluation set that has already informed exploratory development.
+
+\section{Related Work}
+
+\subsection{Legal Information Retrieval and Benchmarks}
+
+Statutory article retrieval maps a natural-language question to one or more provisions in a candidate body of law. BSARD made this setting directly measurable for French-language questions and Belgian legislation, pairing jurist-written questions with relevant articles and benchmarking lexical and dense retrievers~\cite{louis2022bsard}. Its contribution is a retrieval dataset and evaluation setting rather than a general French-law encoder. Conversely, JuriBERT is a family of language models pretrained on French legal text and evaluated on downstream legal-language tasks~\cite{douka2021juribert}; it supplies representations that may be adapted to retrieval or reranking, but it is not itself an article-and-case-law benchmark.
+
+Dense retrieval treats candidate texts largely as independent units. Finding the Law instead represents the hierarchy of legislation and enriches article representations with a graph neural network~\cite{louis2023finding}. This work is the closest methodological precedent for our statutory branch: it shows how the organization of a code can support article retrieval. Our scope differs in two respects. We include relations involving judicial decisions as well as statutory sources, and we use one interface to compare multiple graph operators while still reporting the two retrieval modalities separately.
+
+\subsection{Case-Law Retrieval}
+
+Case-law resources vary substantially in query form and retrieved unit. CaseHOLD is a multiple-choice task that selects the correct legal holding for a context extracted from a U.S. judicial decision~\cite{zheng2021casehold}; it measures holding selection rather than retrieval from a complete decision corpus. LePaRD pairs citation contexts from U.S. federal opinions with passages from cited precedents and evaluates legal passage retrieval at scale~\cite{mahari2024lepard}. CLERC combines U.S. case retrieval with retrieval-augmented legal analysis generation~\cite{hou2024clerc}. These benchmarks demonstrate the importance of precedent retrieval but do not instantiate the French article-plus-decision setting studied here.
+
+CaseLink directly addresses case-to-case retrieval and uses an inductive global case graph built from semantic and legal-charge relations, while using reference relations in its learning objective~\cite{tang2024caselink}. Its inductive design is important because citation labels for a new query case cannot be assumed to be available at retrieval time. Our questions are shorter natural-language legal questions rather than full query cases, and our graph combines statutory and judicial signals. We nonetheless adopt the same general discipline: a relation used as relevance evidence must not be leaked into the query-time input.
+
+\subsection{Graph-Based Legal Retrieval}
+
+Graphs can support retrieval in at least three distinct ways. A graph may encode an explicit hierarchy, as in legislative section--article structure~\cite{louis2023finding}; it may encode observed links, such as citations between documents; or it may add neighbourhoods derived from semantic proximity, as in graph-based case retrieval~\cite{tang2024caselink}. These uses must be distinguished from citation prediction, link prediction, document classification, and judgment prediction: in the present work the graph is useful only insofar as it produces a ranking of candidate legal sources for an external question.
+
+Our learned propagation instantiation draws on LightGCN, which retains normalized neighbourhood aggregation while removing feature transformations and nonlinear activations used by more general graph convolutional networks~\cite{he2020lightgcn}. LightGCN originated in recommendation, so its inclusion does not imply that legal sources are equivalent to users and items. It provides a deliberately simple propagation control for testing whether learned graph neighbourhoods add information above initialized semantic representations.
+
+\subsection{Positioning}
+
+The literature therefore supplies strong but differently scoped components: French legal-language modeling, French-language statutory retrieval outside French law, hierarchy-aware article retrieval, holding selection, passage retrieval, retrieval-augmented analysis, and graph-based case retrieval. We position this work more narrowly as a French two-task evaluation and a common graph-based retrieval interface for statutory articles and judicial decisions. This formulation avoids an absolute novelty claim: the intended contribution is the combination of task scope, jurisdiction, comparable protocol, and modular graph instantiations.
+
+\section{Tasks and Benchmark}
+
+\subsection{Formal Task Definition}
+
+Let the benchmark question set be
+\begin{equation}
+  \mathcal{Q}=\{q_i\}_{i=1}^{N},
+  \qquad N=|\mathcal{Q}|.
+  \label{eq:questions}
+\end{equation}
+Here, \(\mathcal{Q}\) is the set of natural-language legal questions, \(N\) is its cardinality, \(i\in\{1,\ldots,N\}\) is a question index, and \(q_i\) is the question at index \(i\). We use \(q\in\mathcal{Q}\) for a generic question.
+
+For each retrieval modality, a scoring function produces a task-specific ranking:
+\begin{equation}
+  s_m:\mathcal{Q}\times\mathcal{C}_m\rightarrow\mathbb{R},
+  \qquad
+  R_m^K(q)=\operatorname{TopK}_{d\in\mathcal{C}_m}s_m(q,d).
+  \label{eq:task-ranking}
+\end{equation}
+In Eq.~\eqref{eq:task-ranking}, \(m\in\{A,J\}\) identifies statutory article retrieval (\(A\)) or case-law retrieval (\(J\)); \(\mathcal{C}_m\) is the candidate set for modality \(m\); \(d\in\mathcal{C}_m\) is a candidate source; \(s_m(q,d)\in\mathbb{R}\) is its retrieval score; \(K\in\mathbb{N}_{>0}\) is the requested ranking depth; \(\operatorname{TopK}\) sorts candidates by decreasing score and retains the first \(K\); and \(R_m^K(q)\) is the resulting ordered list. The Ground Truth relevance set is \(Y_m(q)\subseteq\mathcal{C}_m\).
+
+Task \(A\) ranks statutory articles that state the rules applicable to \(q\). Task \(J\) ranks individual judicial decisions that are relevant to the same question through their interpretation or application of those rules. A decision is identified by the stable identifier used by the source corpus; fragments or duplicate representations are normalized to that unit before evaluation. We never merge \(\mathcal{C}_A\) with \(\mathcal{C}_J\), nor do we average the two modalities into a single headline score.
+
+\subsection{Benchmark Sources and Construction}
+
+The benchmark combines three inputs with different roles. Source doctrinal material supports the construction of natural-language questions and the identification of cited legal references; it is not part of the retrieval candidate space. Statutory candidates are normalized articles from the French LEGI legal-data collection, distributed through L\'egifrance under the applicable open-data conditions~\cite{legifrance2023opendata}. Case-law candidates are pseudonymized judicial decisions distributed through Judilibre by the Cour de cassation~\cite{courdecassation2026judilibre}. The final artifact inventory will record exact snapshots, temporal coverage, licenses, and identifiers rather than relying on the evolving live services.
+
+Construction proceeds from a question and its extracted references. Article and decision references are normalized, resolved against their respective candidate snapshots, and deduplicated. A question contributes to modality \(m\) only when its relevance set is non-empty after resolution. References absent from the fixed corpus, ambiguous references that cannot be resolved reliably, and sources outside the declared temporal or jurisdictional scope are excluded with a recorded reason. Generated or augmented questions are retained only in the training material and remain grouped with their provenance during validation.
+
+Table~\ref{tab:benchmark} specifies the statistics that the versioned export must provide. Values are intentionally not copied from exploratory notes: each final cell will be generated from the frozen benchmark manifests used by the evaluation runners.
+
+\begin{table}[t]
+  \caption{Benchmark inventory. Numerical cells await the frozen, versioned export used by the final evaluation.}
+  \label{tab:benchmark}
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{@{}Xcc@{}}
+    \toprule
+    Item & Training/validation & Internal evaluation \\
+    \midrule
+    Natural-language questions & \pending & \pending \\
+    Statutory-article candidates & \pending & \pending \\
+    Case-law-decision candidates & \pending & \pending \\
+    Resolved article relevance references & \pending & \pending \\
+    Resolved decision relevance references & \pending & \pending \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Graph-Based Legal Retrieval and Reranking Framework}
+
+\subsection{Framework Overview}
+
+The framework separates four configurable blocks. First, encoders map the question and legal sources to vector representations. Second, a graph operator exploits relations among sources or propagates their representations. Third, a task-specific scorer retrieves a candidate pool. Fourth, an optional reranker returns a shorter ordered subset. The separation makes the scientific comparison explicit: changing an encoder, graph, propagation rule, or reranker creates an instantiation of the same interface rather than a new definition of the task.
+
+For task \(m\), the four blocks are written as
+\begin{align}
+  \mathbf{z}_q&=\phi_q(q),
+  &\{\mathbf{h}_d:d\in\mathcal{C}_m\}
+  &=T_{\theta_m}\!\left(G_m,\{\phi_d(d):d\in\mathcal{C}_m\}\right),
+  \label{eq:encoding-propagation}\\
+  C_m^K(q)&=\operatorname{TopK}_{d\in\mathcal{C}_m}
+  g_m(\mathbf{z}_q,\mathbf{h}_d),
+  &S_m^{K_{\mathrm{out}}}(q)&=\rho_m\!\left(q,C_m^K(q)\right).
+  \label{eq:retrieval-reranking}
+\end{align}
+Here, \(m\in\{A,J\}\) is the modality; \(q\in\mathcal{Q}\) is a question; \(d\in\mathcal{C}_m\) is a candidate; \(p\in\mathbb{N}_{>0}\) is the representation dimension; \(\phi_q:\mathcal{Q}\rightarrow\mathbb{R}^{p}\) and \(\phi_d:\mathcal{C}_m\rightarrow\mathbb{R}^{p}\) are the question and document encoders; \(\mathbf{z}_q\in\mathbb{R}^{p}\) is the question representation; \(G_m\) is the graph available to modality \(m\); \(T_{\theta_m}\) is a graph operator with parameters \(\theta_m\); \(\mathbf{h}_d\in\mathbb{R}^{p}\) is the resulting graph-aware candidate representation; and \(g_m:\mathbb{R}^{p}\times\mathbb{R}^{p}\rightarrow\mathbb{R}\) is the candidate scorer. Furthermore, \(K\in\mathbb{N}_{>0}\) is the candidate-pool depth, \(C_m^K(q)\) is its ordered top-\(K\) list, \(\rho_m\) is an optional reranker, \(K_{\mathrm{out}}\in\{1,\ldots,K\}\) is the final output depth, and \(S_m^{K_{\mathrm{out}}}(q)\) is the final ordered list.
+
+\subsection{Typed Legal-Source Graph}
+
+The task-specific graph is
+\begin{equation}
+  G_m=(V_m,E_m,\tau_m,w_m),
+  \qquad
+  \tau_m:E_m\rightarrow\mathcal{R}_m,
+  \qquad
+  w_m:E_m\rightarrow\mathbb{R}_{>0}.
+  \label{eq:typed-graph}
+\end{equation}
+In Eq.~\eqref{eq:typed-graph}, \(V_m\) is the set of legal-source nodes available to modality \(m\); \(E_m\subseteq V_m\times V_m\) is the directed edge set; \(\mathcal{R}_m\) is the set of relation types; \(\tau_m\) assigns a type to every edge; and \(w_m\) assigns a positive edge weight. Nodes represent statutory articles or judicial decisions. Relations represent observable signals such as article-to-article references, decision-to-article citations, decision-to-decision citations, and optional semantic neighbourhoods. Edge type states why two sources are linked; weight and normalization state how strongly the relation contributes.
+
+The graph is constrained by the information available at retrieval time. A citation or document version created after a query's temporal cutoff must not influence that query. Likewise, Ground Truth membership is never added as an edge. Semantic-neighbourhood relations are computed solely from document representations and are treated as a separate relation family rather than as legal citations. These constraints make it possible to distinguish a genuine relational signal from label leakage or from a renamed semantic baseline.
+
+\subsection{Candidate Retrieval Instantiations}
+
+The semantic control sets \(T_{\theta_m}\) to the identity and uses cosine similarity between normalized question and candidate embeddings. The current implementation uses BGE-M3 as a multilingual document and query encoder~\cite{chen2024bgem3}. A non-learned graph instantiation uses personalized propagation from semantically initialized nodes. A learned instantiation uses LightGCN-style normalized neighbourhood aggregation~\cite{he2020lightgcn}:
+\begin{equation}
+  \mathbf{h}_v^{(\ell+1)}=
+  \sum_{u\in\mathcal{N}(v)}
+  \frac{w_{uv}}{\sqrt{Z_u Z_v}}\mathbf{h}_u^{(\ell)},
+  \qquad
+  \bar{\mathbf{h}}_v=\sum_{\ell=0}^{L_{\mathrm{GNN}}}\alpha_\ell\mathbf{h}_v^{(\ell)}.
+  \label{eq:lightgcn}
+\end{equation}
+Here, \(v\in V_m\) is a node, \(u\in\mathcal{N}(v)\) is a neighbour of \(v\), \(\mathcal{N}(v)\) is the neighbour set, \(\ell\in\{0,\ldots,L_{\mathrm{GNN}}-1\}\) is a propagation-layer index, \(L_{\mathrm{GNN}}\in\mathbb{N}_{>0}\) is the number of propagation layers, \(\mathbf{h}_v^{(\ell)}\in\mathbb{R}^{p}\) is the representation at layer \(\ell\), \(w_{uv}>0\) is the weight of edge \((u,v)\), \(Z_v=\sum_{x\in\mathcal{N}(v)}w_{xv}\) is the weighted degree used for normalization, \(\alpha_\ell\geq0\) is the contribution of layer \(\ell\), and \(\bar{\mathbf{h}}_v\in\mathbb{R}^{p}\) is the final representation. Layer zero contains the initialized source representation. The experimental section fixes or selects \(L_{\mathrm{GNN}}\), \(w_{uv}\), and \(\alpha_\ell\) using training and validation data only.
+
+When the learned graph model is optimized with pairwise ranking, its objective is
+\begin{equation}
+  \mathcal{L}_{\mathrm{BPR}}=
+  -\!\sum_{(q,d^+,d^-)\in\mathcal{T}_m}
+  \log\sigma\!\left(
+  \frac{g_m(\mathbf{z}_q,\bar{\mathbf{h}}_{d^+})-
+        g_m(\mathbf{z}_q,\bar{\mathbf{h}}_{d^-})}
+       {\tau_{\mathrm{BPR}}}\right)
+  +\lambda\lVert\Theta_m\rVert_2^2.
+  \label{eq:bpr}
+\end{equation}
+In Eq.~\eqref{eq:bpr}, \(\mathcal{T}_m\) is the set of training triples for modality \(m\); \(d^+\in Y_m(q)\) is a relevant candidate; \(d^-\in\mathcal{C}_m\setminus Y_m(q)\) is a sampled negative; \(\sigma\) is the logistic sigmoid; \(\tau_{\mathrm{BPR}}>0\) is a temperature; \(\Theta_m\) is the complete set of trainable parameters; \(\lambda\geq0\) is the regularization coefficient; and \(\lVert\cdot\rVert_2\) is the Euclidean norm. The negative-sampling strategy is a controlled hyperparameter because easy and semantically hard negatives define substantially different learning problems.
+
+\subsection{Optional Reranking}
+
+The reranker receives the question and the content of the retrieved pool \(C_m^K(q)\), with candidate identifiers and any presentation order required by the recorded prompt. It has no access to Ground Truth labels, original relevance scores unless explicitly declared, or candidates outside the pool. It must return at most \(K_{\mathrm{out}}\) source identifiers. This design separates two failure modes: a source absent from \(C_m^K(q)\) is a retrieval-coverage failure, whereas an available source placed too low is a reranking failure. Downstream answer generation is outside the primary target and would require a separate evaluation of source fidelity and legal support.
+
+\section{Experiments and Results}
+
+\subsection{Evaluation Questions}
+
+The empirical study asks three questions. \textbf{RQ1} compares the semantic control with graph-based retrieval separately for articles and decisions. \textbf{RQ2} examines whether citations, semantic neighbourhoods, relation typing, and relation weighting change retrieval quality when other factors are held constant. \textbf{RQ3} evaluates whether an optional reranker improves the order within actual retrieved pools and whether its effect depends on the pool's source method. These questions define comparisons, not expected outcomes; a graph may help one modality, harm the other, or merely reproduce semantic neighbours.
+
+\subsection{Data Separation and Model Selection}
+
+All hyperparameter selection uses the augmented retrievable training set and shared grouped five-fold validation. Questions with the same provenance tuple---source document and section---remain in the same fold, as do questions whose normalized text is identical. The folds are shared across graph variants, candidate spaces, methods, seeds, budgets, and metrics. This prevents a method from benefiting from easier splits or from selecting parameters on a different question population.
+
+For each fold, training produces rankings on the held-out validation partition. Article configurations are ordered first by mean validation Recall@10, then by NDCG@10 and MRR@10. Decision configurations are ordered first by mean validation Hit@10, then by NDCG@10 and MRR@10. The selected propagation depth, weights, seed policy, negative sampler, and LightGCN epoch are frozen before replay on the internal evaluation set. The internal evaluation has been inspected during earlier exploratory work; it is therefore an internal benchmark, not a pristine lockbox for final external claims.
+
+\subsection{Compared Instantiations and Reproducibility}
+
+The comparison contains a BGE-M3 cosine control, non-learned graph propagation through personalized PageRank, and learned propagation through LightGCN. Graph families G0--G7 instantiate increasing or alternative combinations of citations, semantic neighbourhoods, typed relations, and weights. Their names are retained as concise labels, but the final reproducibility table will state each node set, edge family, direction, normalization rule, weight, neighbourhood size, and temporal restriction. A valid ablation changes one causal factor; historical pairs that also change normalization or graph composition are reported as comparisons rather than causal ablations.
+
+The final implementation record will also include encoder revision, representation dimension, similarity normalization, optimizer, learning rate, batch construction, negative sampling, number of propagation layers, epoch-selection rule, seeds, software revisions, hardware, runtime, and cost. For reranking, it will include the model revision, prompt, candidate formatting, randomization, context budget, input pool depth \(K\), and output depth \(K_{\mathrm{out}}\). Controlled pools with guaranteed relevant sources evaluate context and ordering capacity; end-to-end pools contain only the actual retriever output and evaluate the complete second stage.
+
+\subsection{Metrics}
+
+Evaluation first removes duplicate candidate identifiers while preserving the first observed rank. Let \(\widehat{R}_m^K(q)\) be the first \(K\) unique items of \(R_m^K(q)\), and define
+\begin{equation}
+  \mathcal{Q}_m^+=\{q\in\mathcal{Q}:|Y_m(q)|>0\},
+  \qquad N_m=|\mathcal{Q}_m^+|.
+  \label{eq:evaluable-questions}
+\end{equation}
+Here, \(\widehat{R}_m^K(q)\) is the deduplicated top-\(K\) ranking for modality \(m\); \(\mathcal{Q}_m^+\) is the subset of questions with a non-empty Ground Truth set; and \(N_m\) is the number of evaluable questions. Questions with empty Ground Truth are excluded rather than scored as zero. Metrics are computed per question and then macro-averaged over \(\mathcal{Q}_m^+\).
+
+The primary article metric is
+\begin{equation}
+  \operatorname{Recall@}K_A=
+  \frac{1}{N_A}\sum_{q\in\mathcal{Q}_A^+}
+  \frac{|\widehat{R}_A^K(q)\cap Y_A(q)|}{|Y_A(q)|}.
+  \label{eq:recall}
+\end{equation}
+In Eq.~\eqref{eq:recall}, \(A\) denotes the article modality, \(K\) is the ranking depth, \(N_A\) is the number of evaluable article questions, \(Y_A(q)\) is the relevant-article set, and the numerator counts relevant articles retrieved among the first \(K\) unique candidates.
+
+The primary decision metric is the project's reachable-coverage definition
+\begin{equation}
+  \operatorname{Hit@}K_J=
+  \frac{1}{N_J}\sum_{q\in\mathcal{Q}_J^+}
+  \frac{|\widehat{R}_J^K(q)\cap Y_J(q)|}
+       {\min(|Y_J(q)|,K)}.
+  \label{eq:hit}
+\end{equation}
+In Eq.~\eqref{eq:hit}, \(J\) denotes the decision modality, \(N_J\) is its number of evaluable questions, \(Y_J(q)\) is the relevant-decision set, and \(\min(|Y_J(q)|,K)\) is the maximum number of relevant decisions that a length-\(K\) list can contain. This \(\operatorname{Hit@}K\) is a fractional coverage score, not the common binary indicator that records whether at least one relevant item was found.
+
+For either modality, define the reciprocal rank at depth \(K\) as
+\begin{equation}
+  \operatorname{RR}_m^K(q)=
+  \begin{cases}
+    1/r_m(q), & \text{if }r_m(q)\leq K,\\
+    0, & \text{otherwise},
+  \end{cases}
+  \qquad
+  \operatorname{MRR@}K_m=
+  \frac{1}{N_m}\sum_{q\in\mathcal{Q}_m^+}\operatorname{RR}_m^K(q),
+  \label{eq:mrr}
+\end{equation}
+where \(r_m(q)=\min\{r\in\{1,\ldots,K\}:\widehat{R}_m^K(q)[r]\in Y_m(q)\}\) is the first relevant one-indexed rank when such an item exists; \(\widehat{R}_m^K(q)[r]\) is the item at rank \(r\); \(\operatorname{RR}_m^K(q)\) is its capped reciprocal rank; and \(\operatorname{MRR@}K_m\) is the macro-average over evaluable questions.
+
+Finally, binary-relevance NDCG is
+\begin{align}
+  \operatorname{rel}_{m,q}(r)&=
+  \mathbf{1}\!\left[\widehat{R}_m^K(q)[r]\in Y_m(q)\right],\\
+  \operatorname{DCG}_m^K(q)&=
+  \sum_{r=1}^{K}\frac{\operatorname{rel}_{m,q}(r)}{\log_2(r+1)},
+  &
+  \operatorname{IDCG}_m^K(q)&=
+  \sum_{r=1}^{\min(|Y_m(q)|,K)}\frac{1}{\log_2(r+1)},\\
+  \operatorname{NDCG@}K_m&=
+  \frac{1}{N_m}\sum_{q\in\mathcal{Q}_m^+}
+  \frac{\operatorname{DCG}_m^K(q)}{\operatorname{IDCG}_m^K(q)}.
+  \label{eq:ndcg}
+\end{align}
+Here, \(\mathbf{1}[\cdot]\) is the indicator function, \(r\) is the one-indexed rank, \(\operatorname{rel}_{m,q}(r)\in\{0,1\}\) is binary relevance, \(\operatorname{DCG}_m^K(q)\) is discounted cumulative gain, \(\operatorname{IDCG}_m^K(q)\) is the ideal gain for the same Ground Truth size and ranking capacity, and \(\operatorname{NDCG@}K_m\) is their per-question normalized ratio averaged over \(\mathcal{Q}_m^+\).
+
+\subsection{Main Results and Diagnostics}
+
+The validated quantitative export for the shared protocol is not yet available for reader-facing use. Table~\ref{tab:results} therefore records the comparisons that will be reported without substituting exploratory scores. The final table will show fold-level validation summaries and frozen internal-evaluation replays separately, with uncertainty across folds or seeds where the design supports it.
+
+\begin{table}[!b]
+  \caption{Planned main comparison. Article columns will report Recall@10, NDCG@10, and MRR@10; decision columns will report Hit@10, NDCG@10, and MRR@10. All values remain pending until the validated export is accepted for the paper.}
+  \label{tab:results}
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{@{}Xcc@{}}
+    \toprule
+    Method family & Articles & Decisions \\
+    \midrule
+    Semantic cosine control & \pending & \pending \\
+    Non-learned graph propagation & \pending & \pending \\
+    Learned graph propagation & \pending & \pending \\
+    Selected retriever + reranker & \pending & \pending \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Diagnostics will separate candidate-pool coverage from early-rank quality, compare actual top-\(K\) overlap across methods, and inspect errors by source type and relation family. Ablations will compare citation-only, semantic-only, and hybrid graphs; typed and untyped relations; and uniform and weighted edges when normalization is fixed. A JuriBERT cross-encoder and an explicit code-hierarchy encoder are future comparisons, not executed components of the current main table.
+
+\FloatBarrier
+\section{Limitations and Future Work}
+
+The benchmark is limited to French criminal law. Its broader European motivation does not establish transfer to another branch, language, court structure, or legal system. Future work should first extend the candidate corpora and annotation process to other French domains, then test cross-jurisdictional adaptation under a protocol that controls changes in language, source hierarchy, and citation practice.
+
+The current internal evaluation set has been consulted during exploratory development. Although the final replay configuration is selected from grouped validation, repeated observation of the evaluation population limits the strength of confirmatory claims. A new, temporally controlled and independently annotated lockbox is required before reporting a final external estimate or choosing a system for deployment.
+
+Ground Truth is incomplete by construction: doctrine and explicit citations identify defensible references but may omit legally compatible articles or decisions. Generated or augmented training questions may also differ from the distribution of questions written by practitioners. Retrieval metrics should consequently be complemented by blinded legal assessment of sampled retrieved sources, inter-annotator agreement, and an audit that distinguishes exact references from graded legal compatibility without replacing the official metrics post hoc.
+
+Some historical graph variants change several factors simultaneously, including relation inventory, weighting, and normalization. Their differences are descriptive rather than causal until single-factor ablations are run. In addition, graph edges and document content must obey temporal availability. Future experiments should freeze time-indexed corpora, report edge provenance, and test sensitivity to degree, disconnected nodes, semantic-neighbourhood size, and negative sampling.
+
+LLM reranking introduces model-, prompt-, order-, context-, and stochasticity-dependent behavior. Controlled candidate pools can diagnose context capacity, but they do not estimate end-to-end performance when relevant sources are missing from retrieval. We therefore keep controlled and actual-pool studies separate. Any later answer-generation component should be evaluated independently for source coverage, attribution fidelity, unsupported claims, and temporal validity.
+
+\section{Conclusion}
+
+We formulated French legal retrieval as two connected but separately measured tasks: retrieving statutory articles that define the normative framework and judicial decisions that show its interpretation or application. We introduced a benchmark construction protocol for French criminal law and a graph-based retrieval framework that makes encoders, typed relations, graph operators, scorers, and optional rerankers replaceable under one interface. The experimental design compares semantic-only, non-learned graph, learned graph, and reranked systems through shared grouped validation and exact metric definitions. Quantitative superiority is deliberately left unresolved until validated exports are available. The immediate next steps are to complete that controlled comparison, audit incomplete relevance judgments, and construct an independently annotated temporal lockbox.
+
+\bibliographystyle{splncs04}
+\bibliography{references-first-draft}
+
+\end{document}
