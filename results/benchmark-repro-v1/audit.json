@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-17T23:30:55.024350+00:00",
+  "generated_at": "2026-08-17T23:41:43.184969+00:00",
   "manifest": {
     "campaign_id": "confirmatory-g1-g6-g7-grouped-v2-repro-v1-2026-08-18",
     "manifest_sha256": "b852b0dbf9460ac8541c5447e61b37ea5987c99f0126a0bf74f0947a36a69152",
@@ -444,7 +444,7 @@
     "hashes_ok": true,
     "questions": 754,
     "positions": 7540,
-    "unique_judged_pairs": 7540,
+    "unique_judged_pairs": 7487,
     "exact_any_gold_at_10_mean": 0.2639257294429708,
     "lawyer_sample_exists": true,
     "lawyer_key_exists": true,

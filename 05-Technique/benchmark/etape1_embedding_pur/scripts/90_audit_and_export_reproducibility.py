@@ -285,11 +285,24 @@ def _official_metrics(rankings: pd.DataFrame, benchmark_path: Path) -> dict[str,
     return {f"{key}_mean": float(pd.Series(items).mean()) for key, items in values.items()}
 
 
+def _unique_judged_pairs(
+    summary: dict[str, Any], detail_rows: int, manifest: dict[str, Any] | None = None
+) -> int:
+    """Use the source summary for unique jobs, not repeated ranking positions."""
+
+    for source in (summary, manifest or {}):
+        for key in ("n_unique_judged_pairs", "n_unique_jobs", "n_jobs"):
+            if source.get(key) is not None:
+                return int(source[key])
+    return int(detail_rows)
+
+
 def audit_e016() -> tuple[dict[str, Any], dict[str, Any]]:
     root = BENCH / "G7-citation-JJ-cit1-sem025-knn5/eval_rich_retrievable_strict/E016-g7-graded-jp-v1"
     summary_path = root / "graded_jp_summary.json"
     manifest_path = root / "manifest.json"
     summary = load_json(summary_path) if summary_path.is_file() else {}
+    manifest = load_json(manifest_path) if manifest_path.is_file() else {}
     detail_path = root / "graded_jp_detail.csv"
     per_question_path = root / "graded_jp_per_question.csv"
     hashes_ok = (
@@ -302,7 +315,12 @@ def audit_e016() -> tuple[dict[str, Any], dict[str, Any]]:
     agreement_path = audit_dir / "lawyer_agreement.json"
     detail = pd.read_csv(detail_path) if detail_path.is_file() else pd.DataFrame()
     per_question = pd.read_csv(per_question_path) if per_question_path.is_file() else pd.DataFrame()
-    complete = len(detail) == 7487 and len(per_question) == 754 and hashes_ok
+    complete = (
+        len(detail) == int(summary.get("n_positions", len(detail)))
+        and len(per_question) == int(summary.get("n_questions", len(per_question)))
+        and int(manifest.get("n_jobs", len(detail))) == _unique_judged_pairs(summary, len(detail), manifest)
+        and hashes_ok
+    )
     status = classify_evidence(exists=root.is_dir(), complete=complete, scientific_status="exploratory")
     audit = {
         "experiment_id": "E016",
@@ -311,7 +329,7 @@ def audit_e016() -> tuple[dict[str, Any], dict[str, Any]]:
         "hashes_ok": hashes_ok,
         "questions": len(per_question),
         "positions": int(summary.get("n_positions", 0)),
-        "unique_judged_pairs": len(detail),
+        "unique_judged_pairs": _unique_judged_pairs(summary, len(detail), manifest),
         "exact_any_gold_at_10_mean": summary.get("exact_hit_at_10"),
         "lawyer_sample_exists": (audit_dir / "lawyer_audit_sample.csv").is_file(),
         "lawyer_key_exists": (audit_dir / "lawyer_audit_key.csv").is_file(),

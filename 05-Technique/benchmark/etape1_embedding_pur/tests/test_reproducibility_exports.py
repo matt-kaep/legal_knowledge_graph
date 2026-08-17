@@ -34,3 +34,9 @@ def test_e017_replay_coverage_requires_all_questions_and_ranks():
 
     assert MODULE._ranking_coverage(complete, questions=754, k=10)
     assert not MODULE._ranking_coverage(incomplete, questions=754, k=10)
+
+
+def test_e016_unique_judged_pairs_prefers_source_summary_count():
+    assert MODULE._unique_judged_pairs({"n_unique_judged_pairs": 7487}, 7540) == 7487
+    assert MODULE._unique_judged_pairs({"n_unique_jobs": 7487}, 7540) == 7487
+    assert MODULE._unique_judged_pairs({}, 7540) == 7540
