@@ -20,6 +20,7 @@ Sortie dans --bench-dir :
 from __future__ import annotations
 import argparse
 import json
+import os
 import re
 import sys
 import time
@@ -29,10 +30,14 @@ import pandas as pd
 import scipy.sparse as sp
 import pyarrow.parquet as pq
 
-REPO = Path("/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph")
+REPO = Path(os.environ.get(
+    "LKG_REPO",
+    str(Path(__file__).resolve().parents[4]),
+))
 sys.path.insert(0, str(REPO / "05-Technique" / "benchmark" / "etape1_embedding_pur"))
 sys.path.insert(0, str(Path(__file__).parent))
 from etape1 import config  # noqa: E402
+from etape1 import graph_versions  # noqa: E402
 import metrics as M  # noqa: E402
 
 DEFAULT_BENCH_DIR = REPO / "05-Technique/benchmark/etape1_embedding_pur/data/global_bench"
@@ -44,6 +49,13 @@ SEED_VARIANTS = ["art_only", "jp_only", "both"]
 ALPHAS = [0.5, 0.7, 0.85, 0.95]
 N_ITER = 20
 TOL = 1e-7
+
+
+def write_progress(progress_path: Path | None, payload: dict) -> None:
+    if progress_path is None:
+        return
+    progress_path.parent.mkdir(parents=True, exist_ok=True)
+    progress_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def load_questions(bench_path: Path, qid_filter: set[str] | None = None) -> list[dict]:
@@ -282,6 +294,10 @@ def main(
     config_specs: list[str] | None = None,
     dump_rankings: bool = False,
     qid_filter: set[str] | None = None,
+    graph_version: str = "canonical",
+    progress_path: Path | None = None,
+    progress_label: str | None = None,
+    top_k_out: int = K_OUT,
 ) -> int:
     t0 = time.time()
     bench_path = bench_dir / "bench_global.json"
@@ -297,18 +313,28 @@ def main(
             "expected questions_emb.npy/questions_ids.npy or "
             "legacy questions_977_emb.npy/questions_977_ids.npy"
         )
+    write_progress(
+        progress_path,
+        {
+            "status": "starting",
+            "label": progress_label,
+            "graph_version": graph_version,
+            "bench_dir": str(bench_dir),
+            "started_at": t0,
+        },
+    )
 
     print("══ Chargement graphe + embeddings ─────────────────────────")
-    art_emb = np.load(config.EMB_ARTICLES_ALL)
-    art_order = np.load(config.ARTICLES_ORDER_ALL, allow_pickle=True)
-    jp_emb = np.load(config.EMB_JP_SYNTHESE)
-    jp_order = np.load(config.JP_SUMMARY_ORDER, allow_pickle=True)
-
-    z = np.load(config.GRAPH_NPZ, allow_pickle=True)
-    G = sp.csr_matrix((z["data"], z["indices"], z["indptr"]), shape=tuple(z["shape"]))
-    jp_ids_graph = z["jp_ids"]
-    article_ids_graph = z["article_ids"]
-    n_jp, n_art = G.shape
+    view = graph_versions.load_retrieval_view(graph_version)
+    art_emb = view.art_emb
+    art_order = view.art_order
+    jp_emb = view.jp_emb
+    jp_order = view.jp_order
+    G = view.graph
+    jp_ids_graph = view.jp_ids_graph
+    article_ids_graph = view.article_ids_graph
+    n_jp = len(jp_ids_graph)
+    n_art = len(article_ids_graph)
     print(f"  G {G.shape}  nnz {G.nnz:,}")
 
     jpid_to_graphrow = {jid: i for i, jid in enumerate(jp_ids_graph)}
@@ -318,7 +344,15 @@ def main(
 
     print("\n══ Block-bipartite + row-normalize ────────────────────────")
     N_total = n_jp + n_art
-    G_full = sp.bmat([[None, G], [G.T, None]], format="csr")
+    if G.shape == (n_jp, n_art):
+        G_full = sp.bmat([[None, G], [G.T, None]], format="csr")
+    elif G.shape == (N_total, N_total):
+        G_full = G.tocsr()
+    else:
+        raise ValueError(
+            f"Unsupported graph shape for PPR: graph={G.shape}, "
+            f"n_jp={n_jp}, n_art={n_art}"
+        )
     print(f"  G_full {G_full.shape}  nnz {G_full.nnz:,}")
     P_row = row_normalize(G_full)
     PT_row = P_row.T.tocsr()
@@ -352,6 +386,19 @@ def main(
         questions = questions[:limit_q]
         Q = Q[:limit_q]
     print(f"  questions évaluées : {len(questions)}")
+    write_progress(
+        progress_path,
+        {
+            "status": "running",
+            "label": progress_label,
+            "graph_version": graph_version,
+            "bench_dir": str(bench_dir),
+            "phase": "loaded_questions",
+            "questions_total": len(questions),
+            "rows_written": 0,
+            "elapsed_seconds": time.time() - t0,
+        },
+    )
     if allowed_configs is not None:
         print("  configs PPR filtrées : " + ", ".join(
             f"k{k}|{variant}|a{alpha}" for k, variant, alpha in sorted(allowed_configs)
@@ -381,6 +428,21 @@ def main(
     for qi, q in enumerate(questions):
         if qi < 20 or qi % 100 == 0:
             print(f"  q {qi}/{len(questions)}  (t={time.time()-t0:.1f}s, rows={len(rows)})")
+            write_progress(
+                progress_path,
+                {
+                    "status": "running",
+                    "label": progress_label,
+                    "graph_version": graph_version,
+                    "bench_dir": str(bench_dir),
+                    "phase": "ppr_sweep",
+                    "questions_total": len(questions),
+                    "question_index": qi,
+                    "question_id": q["id"],
+                    "rows_written": len(rows),
+                    "elapsed_seconds": time.time() - t0,
+                },
+            )
 
         gt_s = q["gt_strict"] & pool_articles_set
         gt_e = q["gt_ext"] & pool_articles_set
@@ -409,20 +471,20 @@ def main(
         for col, (k_in, variant, alpha) in enumerate(configs):
             method_name = f"PPR-sweep-k{k_in}-{variant}-a{alpha}"
 
-            ranked_art = top_k_labels(R_art_pool[:, col], art_pool_pks, K_OUT)
-            ranked_jp = top_k_labels(R_jp_pool[:, col], jp_pool_ids, K_OUT)
+            ranked_art = top_k_labels(R_art_pool[:, col], art_pool_pks, top_k_out)
+            ranked_jp = top_k_labels(R_jp_pool[:, col], jp_pool_ids, top_k_out)
             if dump_rankings:
                 rankings.extend(
-                    ranking_rows(q["id"], method_name, k_in, "art", ranked_art, K_OUT)
+                    ranking_rows(q["id"], method_name, k_in, "art", ranked_art, top_k_out)
                 )
                 rankings.extend(
-                    ranking_rows(q["id"], method_name, k_in, "jp", ranked_jp, K_OUT)
+                    ranking_rows(q["id"], method_name, k_in, "jp", ranked_jp, top_k_out)
                 )
 
-            art_metrics = M.panel_strict_ext(ranked_art, gt_s, gt_e, K_OUT)
+            art_metrics = M.panel_strict_ext(ranked_art, gt_s, gt_e, top_k_out)
             art_metrics = {f"{k}_art": v for k, v in art_metrics.items()}
             jp_metrics = {f"{k}_jp": v for k, v in
-                          M.all_metrics(ranked_jp, gold_jp, K_OUT).items()}
+                          M.all_metrics(ranked_jp, gold_jp, top_k_out).items()}
             rows.append({
                 "qid": q["id"],
                 "k_in": k_in,
@@ -461,6 +523,21 @@ def main(
         summary[key] = {k: v for k, v in row.items() if k != "method_key"}
     out_summary.write_text(json.dumps(summary, ensure_ascii=False, indent=2))
     print(f"✓ {out_summary}")
+    write_progress(
+        progress_path,
+        {
+            "status": "completed",
+            "label": progress_label,
+            "graph_version": graph_version,
+            "bench_dir": str(bench_dir),
+            "phase": "completed",
+            "questions_total": len(questions),
+            "rows_written": len(df),
+            "elapsed_seconds": time.time() - t0,
+            "out_csv": str(out_csv),
+            "out_summary": str(out_summary),
+        },
+    )
 
     s_df = summary_df.drop(columns=["method_key"], errors="ignore")
     for metric in ["m1_ext_art", "ndcg_ext_art", "mrr_strict_art", "ndcg_jp", "hit_ext_art"]:
@@ -489,7 +566,22 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument("--dump-rankings", action="store_true")
+    parser.add_argument("--graph-version", default="canonical")
+    parser.add_argument("--progress-path", type=Path)
+    parser.add_argument("--progress-label")
+    parser.add_argument("--top-k-out", type=int, default=K_OUT)
     args = parser.parse_args()
     if args.limit is not None:
         print(f"[mode sanity check : limit={args.limit}]")
-    sys.exit(main(args.bench_dir, args.limit, args.config, args.dump_rankings))
+    sys.exit(
+        main(
+            args.bench_dir,
+            args.limit,
+            args.config,
+            args.dump_rankings,
+            graph_version=args.graph_version,
+            progress_path=args.progress_path,
+            progress_label=args.progress_label,
+            top_k_out=args.top_k_out,
+        )
+    )

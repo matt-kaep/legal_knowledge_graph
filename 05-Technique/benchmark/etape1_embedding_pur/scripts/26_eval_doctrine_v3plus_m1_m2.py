@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from collections import Counter
@@ -16,11 +17,15 @@ import numpy as np
 import pandas as pd
 import scipy.sparse as sp
 
-REPO = Path("/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph")
+REPO = Path(os.environ.get(
+    "LKG_REPO",
+    str(Path(__file__).resolve().parents[4]),
+))
 sys.path.insert(0, str(REPO / "05-Technique" / "benchmark" / "etape1_embedding_pur"))
 sys.path.insert(0, str(Path(__file__).parent))
 
 from etape1 import config  # noqa: E402
+from etape1 import graph_versions  # noqa: E402
 import metrics as M  # noqa: E402
 
 DATASET_DIR = (
@@ -128,15 +133,44 @@ def compute_stats(questions: list[dict]) -> dict:
     }
 
 
-def encode_questions(questions: list[dict], out_dir: Path) -> np.ndarray:
+def _subset_cached_questions(
+    qids: list[str],
+    cache_dir: Path,
+) -> np.ndarray | None:
+    emb_cache = cache_dir / "questions_emb.npy"
+    ids_cache = cache_dir / "questions_ids.npy"
+    if not emb_cache.exists() or not ids_cache.exists():
+        return None
+    cached_ids = np.load(ids_cache, allow_pickle=True).tolist()
+    if cached_ids == qids:
+        print(f"  cache questions HIT : {emb_cache}")
+        return np.load(emb_cache)
+    pos_by_qid = {str(qid): idx for idx, qid in enumerate(cached_ids)}
+    if any(qid not in pos_by_qid for qid in qids):
+        return None
+    cached_emb = np.load(emb_cache)
+    subset_idx = np.asarray([pos_by_qid[qid] for qid in qids], dtype=np.int64)
+    print(f"  cache questions SUBSET : {emb_cache}")
+    return cached_emb[subset_idx]
+
+
+def encode_questions(
+    questions: list[dict],
+    out_dir: Path,
+    question_cache_dir: Path | None = None,
+) -> np.ndarray:
     qids = [q["qid"] for q in questions]
     emb_cache = out_dir / "questions_emb.npy"
     ids_cache = out_dir / "questions_ids.npy"
-    if emb_cache.exists() and ids_cache.exists():
-        cached_ids = np.load(ids_cache, allow_pickle=True).tolist()
-        if cached_ids == qids:
-            print(f"  cache questions HIT : {emb_cache}")
-            return np.load(emb_cache)
+    local_cached = _subset_cached_questions(qids, out_dir)
+    if local_cached is not None:
+        return local_cached
+    if question_cache_dir is not None and question_cache_dir != out_dir:
+        source_cached = _subset_cached_questions(qids, question_cache_dir)
+        if source_cached is not None:
+            np.save(emb_cache, source_cached.astype(np.float32))
+            np.save(ids_cache, np.asarray(qids, dtype=object))
+            return source_cached.astype(np.float32)
 
     from sentence_transformers import SentenceTransformer
     import torch
@@ -192,6 +226,9 @@ def eval_m1_m2(
     limit: int | None = None,
     qid_filter: set[str] | None = None,
     ks_in: list[int] | None = None,
+    question_cache_dir: Path | None = None,
+    graph_version: str = "canonical",
+    top_k_out: int = K_ART,
 ) -> None:
     t0 = time.time()
     if qid_filter is not None:
@@ -202,15 +239,20 @@ def eval_m1_m2(
     k_ins = list(ks_in or KS_IN)
     if not k_ins:
         raise ValueError("ks_in must contain at least one value")
+    k_art = int(top_k_out)
+    k_jp = int(top_k_out)
 
     print("══ Chargement embeddings + graphe")
-    art_emb = np.load(config.EMB_ARTICLES_ALL)
-    art_order = np.load(config.ARTICLES_ORDER_ALL, allow_pickle=True)
-    p2col = np.load(config.PAIRKEY_TO_GRAPHCOL_ALL)
-    jp_emb = np.load(config.EMB_JP_SYNTHESE)
-    jp_order = np.load(config.JP_SUMMARY_ORDER, allow_pickle=True)
-    jp_to_row = np.load(config.JP_SUMMARY_TO_GRAPHROW)
-    graph, jp_ids_graph, article_ids_graph = load_graph()
+    view = graph_versions.load_retrieval_view(graph_version)
+    art_emb = view.art_emb
+    art_order = view.art_order
+    p2col = view.p2col
+    jp_emb = view.jp_emb
+    jp_order = view.jp_order
+    jp_to_row = view.jp_to_row
+    graph = view.graph
+    jp_ids_graph = view.jp_ids_graph
+    article_ids_graph = view.article_ids_graph
 
     pk_to_emb_idx = {pk: i for i, pk in enumerate(art_order)}
     jpid_to_emb_idx = {jid: i for i, jid in enumerate(jp_order)}
@@ -219,7 +261,7 @@ def eval_m1_m2(
     print(f"  art_emb={art_emb.shape} jp_emb={jp_emb.shape} graph={graph.shape}")
 
     print("══ Encodage / cache questions")
-    q_emb = encode_questions(questions, out_dir)
+    q_emb = encode_questions(questions, out_dir, question_cache_dir=question_cache_dir)
     print(f"  Q={q_emb.shape}")
 
     print("══ Similarités cosine")
@@ -229,7 +271,7 @@ def eval_m1_m2(
 
     rows = []
     rankings = []
-    max_k_in = max(k_ins)
+    max_k_in = max(max(k_ins), k_art, k_jp)
     print("══ Évaluation M1/M2/Hit/MRR/NDCG")
     for qi, q in enumerate(questions):
         if qi % 100 == 0:
@@ -244,31 +286,31 @@ def eval_m1_m2(
         top_art_max = top_sorted(sim_art[qi], max_k_in)
         top_jp_max = top_sorted(sim_jp[qi], max_k_in)
 
-        ranked_art = list(art_order[top_art_max[:K_ART]])
+        ranked_art = list(art_order[top_art_max[:k_art]])
         rows.append(
             {
                 "qid": q["qid"],
                 "method": "B2-a",
                 "k_in": None,
-                "k": K_ART,
+                "k": k_art,
                 "modality": "art",
-                **M.panel_strict_ext(ranked_art, gt_s, gt_e, K_ART),
+                **M.panel_strict_ext(ranked_art, gt_s, gt_e, k_art),
             }
         )
-        rankings.extend(ranking_rows(q["qid"], "B2-a", None, "art", ranked_art, K_ART))
+        rankings.extend(ranking_rows(q["qid"], "B2-a", None, "art", ranked_art, k_art))
 
-        ranked_jp = list(jp_order[top_jp_max[:K_JP]])
+        ranked_jp = list(jp_order[top_jp_max[:k_jp]])
         rows.append(
             {
                 "qid": q["qid"],
                 "method": "B3-a",
                 "k_in": None,
-                "k": K_JP,
+                "k": k_jp,
                 "modality": "jp",
-                **M.panel_strict_ext(ranked_jp, gold_jp, gold_jp, K_JP),
+                **M.panel_strict_ext(ranked_jp, gold_jp, gold_jp, k_jp),
             }
         )
-        rankings.extend(ranking_rows(q["qid"], "B3-a", None, "jp", ranked_jp, K_JP))
+        rankings.extend(ranking_rows(q["qid"], "B3-a", None, "jp", ranked_jp, k_jp))
 
         for k_in in k_ins:
             top_art_emb_idx = top_art_max[:k_in]
@@ -306,12 +348,12 @@ def eval_m1_m2(
                         "qid": q["qid"],
                         "method": method,
                         "k_in": k_in,
-                        "k": K_ART,
+                        "k": k_art,
                         "modality": "art",
-                        **M.panel_strict_ext(ranked, gt_s, gt_e, K_ART),
+                        **M.panel_strict_ext(ranked, gt_s, gt_e, k_art),
                     }
                 )
-                rankings.extend(ranking_rows(q["qid"], method, k_in, "art", ranked, K_ART))
+                rankings.extend(ranking_rows(q["qid"], method, k_in, "art", ranked, k_art))
 
             jp_methods = {
                 "B4-c": a_jp_ids | top_jp_ids,
@@ -330,12 +372,12 @@ def eval_m1_m2(
                         "qid": q["qid"],
                         "method": method,
                         "k_in": k_in,
-                        "k": K_JP,
+                        "k": k_jp,
                         "modality": "jp",
-                        **M.panel_strict_ext(ranked, gold_jp, gold_jp, K_JP),
+                        **M.panel_strict_ext(ranked, gold_jp, gold_jp, k_jp),
                     }
                 )
-                rankings.extend(ranking_rows(q["qid"], method, k_in, "jp", ranked, K_JP))
+                rankings.extend(ranking_rows(q["qid"], method, k_in, "jp", ranked, k_jp))
 
             rank_cos = {jp_order[top_jp_emb_idx[r]]: r + 1 for r in range(k_in)}
             a_sorted = sorted(a_jp_ids, key=lambda j: (-jp_citation_count.get(j, 0), j))
@@ -359,12 +401,12 @@ def eval_m1_m2(
                     "qid": q["qid"],
                     "method": "B4-e",
                     "k_in": k_in,
-                    "k": K_JP,
+                    "k": k_jp,
                     "modality": "jp",
-                    **M.panel_strict_ext(ranked, gold_jp, gold_jp, K_JP),
+                    **M.panel_strict_ext(ranked, gold_jp, gold_jp, k_jp),
                 }
             )
-            rankings.extend(ranking_rows(q["qid"], "B4-e", k_in, "jp", ranked, K_JP))
+            rankings.extend(ranking_rows(q["qid"], "B4-e", k_in, "jp", ranked, k_jp))
 
             ranked = sorted(
                 candidates,
@@ -378,12 +420,12 @@ def eval_m1_m2(
                     "qid": q["qid"],
                     "method": "B4-f",
                     "k_in": k_in,
-                    "k": K_JP,
+                    "k": k_jp,
                     "modality": "jp",
-                    **M.panel_strict_ext(ranked, gold_jp, gold_jp, K_JP),
+                    **M.panel_strict_ext(ranked, gold_jp, gold_jp, k_jp),
                 }
             )
-            rankings.extend(ranking_rows(q["qid"], "B4-f", k_in, "jp", ranked, K_JP))
+            rankings.extend(ranking_rows(q["qid"], "B4-f", k_in, "jp", ranked, k_jp))
 
     df = pd.DataFrame(rows)
     df.to_csv(out_dir / "eval_m1_m2.csv", index=False)
@@ -415,6 +457,8 @@ def main() -> int:
     )
     parser.add_argument("--build-only", action="store_true")
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--graph-version", default="canonical")
+    parser.add_argument("--top-k-out", type=int, default=K_ART)
     args = parser.parse_args()
 
     out_dir = OUT_ROOT / args.split
@@ -422,7 +466,13 @@ def main() -> int:
     questions = build_bench(args.split, out_dir)
     print(f"  questions={len(questions)} out={out_dir}")
     if not args.build_only:
-        eval_m1_m2(questions, out_dir, limit=args.limit)
+        eval_m1_m2(
+            questions,
+            out_dir,
+            limit=args.limit,
+            graph_version=args.graph_version,
+            top_k_out=args.top_k_out,
+        )
     return 0
 
 

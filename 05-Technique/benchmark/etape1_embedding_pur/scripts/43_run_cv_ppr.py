@@ -3,13 +3,14 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
 
 import pandas as pd
 
-REPO = Path("/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph")
+REPO = Path(os.environ.get("LKG_REPO", str(Path(__file__).resolve().parents[4])))
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -27,6 +28,19 @@ def _load_script_module(script_name: str, module_name: str):
 
 
 ppr_sweep = _load_script_module("25_ppr_kin_sweep.py", "ppr_sweep")
+
+
+def refresh_results_surfaces() -> None:
+    try:
+        report = _load_script_module("49_build_intergraph_results_report.py", "intergraph_results_report")
+        report.build_report(report.DEFAULT_OUT_DIR)
+    except Exception as exc:  # pragma: no cover - best effort refresh
+        print(f"[warn] inter-graph report refresh failed: {exc}")
+    try:
+        snippets = _load_script_module("50_build_week13_intergraph_snippets.py", "week13_intergraph_snippets")
+        snippets.main([])
+    except Exception as exc:  # pragma: no cover - best effort refresh
+        print(f"[warn] week13 snippet refresh failed: {exc}")
 
 
 def enforce_official_split(split: str) -> None:
@@ -53,20 +67,22 @@ def validate_fold_assignments(df: pd.DataFrame, bench_qids: set[str]) -> pd.Data
     return df
 
 
-def load_fold_assignments(bench_qids: set[str]) -> pd.DataFrame:
-    fold_csv, _ = graph_protocol.resolve_shared_fold_paths()
-    df = pd.read_csv(fold_csv)
+def load_fold_assignments(bench_dir: Path, bench_qids: set[str]) -> tuple[pd.DataFrame, dict]:
+    df, metadata = graph_protocol.load_verified_grouped_fold_assignments(bench_dir)
     expected = set(range(graph_protocol.OFFICIAL_N_FOLDS))
     found = set(df["fold"].astype(int).unique().tolist())
     if found != expected:
         raise ValueError(f"Expected folds {sorted(expected)}, got {sorted(found)}")
-    return validate_fold_assignments(df, bench_qids)
+    return validate_fold_assignments(df, bench_qids), metadata
 
 
 def run_fold_subset(
     question_ids: set[str],
     bench_dir: Path,
+    graph_version: str,
     config_specs: list[str] | None = None,
+    progress_path: Path | None = None,
+    progress_label: str | None = None,
 ) -> pd.DataFrame:
     with tempfile.TemporaryDirectory(prefix="cv_ppr_") as tmp_dir:
         tmp_path = Path(tmp_dir)
@@ -83,8 +99,65 @@ def run_fold_subset(
             tmp_path,
             config_specs=config_specs,
             qid_filter=question_ids,
+            graph_version=graph_version,
+            progress_path=progress_path,
+            progress_label=progress_label,
         )
         return pd.read_csv(tmp_path / "ppr_kin_sweep_eval.csv")
+
+
+def _metric_columns(modality: str) -> dict[str, str]:
+    if modality == "art":
+        return {
+            "article_hit_at_10": "hit_strict_art",
+            "article_ndcg_at_10": "ndcg_strict_art",
+            "article_mrr_at_10": "mrr_strict_art",
+            "article_recall_at_10": "m1_strict_art",
+        }
+    if modality == "jp":
+        return {
+            "jp_hit_at_10": "hit_jp",
+            "jp_ndcg_at_10": "ndcg_jp",
+            "jp_mrr_at_10": "mrr_jp",
+            "jp_recall_at_10": "m1_jp",
+        }
+    raise ValueError(f"Unsupported modality: {modality}")
+
+
+def summarize_cv_outputs(
+    df: pd.DataFrame,
+    modality: str,
+    n_questions_benchmark: int | None = None,
+    expected_qids_by_fold: dict[int, set[str]] | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if df.empty:
+        return pd.DataFrame(), pd.DataFrame()
+    if n_questions_benchmark is None:
+        n_questions_benchmark = int(df["qid"].nunique())
+    config_columns = ["k_in", "seed_variant", "alpha"]
+    metric_columns = _metric_columns(modality)
+    fold_metrics, summary = graph_protocol.summarize_fold_metrics(
+        df,
+        config_columns=config_columns,
+        metric_columns=metric_columns,
+        expected_qids_by_fold=expected_qids_by_fold,
+    )
+    summary["n_questions_benchmark"] = int(n_questions_benchmark)
+    if expected_qids_by_fold is None:
+        summary["n_questions_covered"] = int(df["qid"].nunique())
+        summary["question_coverage"] = 1.0
+    summary = summary.sort_values(["k_in", "seed_variant", "alpha"]).reset_index(drop=True)
+    summary.insert(0, "method", summary.apply(
+        lambda row: f"PPR-sweep-k{int(row['k_in'])}-{row['seed_variant']}-a{float(row['alpha'])}",
+        axis=1,
+    ))
+    summary.insert(1, "modality", modality)
+    fold_metrics.insert(0, "method", fold_metrics.apply(
+        lambda row: f"PPR-sweep-k{int(row['k_in'])}-{row['seed_variant']}-a{float(row['alpha'])}",
+        axis=1,
+    ))
+    fold_metrics.insert(1, "modality", modality)
+    return fold_metrics, summary
 
 
 def summarize_cv_results(
@@ -92,71 +165,45 @@ def summarize_cv_results(
     modality: str,
     n_questions_benchmark: int | None = None,
 ) -> pd.DataFrame:
-    if df.empty:
-        return pd.DataFrame()
-    if n_questions_benchmark is None:
-        n_questions_benchmark = int(df["qid"].nunique())
-    if modality == "art":
-        metric_map = {
-            "hit_strict": "hit_strict_art",
-            "ndcg_strict": "ndcg_strict_art",
-            "mrr_strict": "mrr_strict_art",
-            "m1_strict": "m1_strict_art",
-            "m2_strict": "m2_strict_art",
-            "hit_ext": "hit_ext_art",
-            "ndcg_ext": "ndcg_ext_art",
-            "mrr_ext": "mrr_ext_art",
-            "m1_ext": "m1_ext_art",
-            "m2_ext": "m2_ext_art",
-        }
-    else:
-        metric_map = {
-            "hit": "hit_jp",
-            "ndcg": "ndcg_jp",
-            "mrr": "mrr_jp",
-            "m1": "m1_jp",
-            "m2": "m2_jp",
-        }
-    available = {out: src for out, src in metric_map.items() if src in df.columns}
-    if not available:
-        return pd.DataFrame()
-    summary = (
-        df.groupby(["k_in", "seed_variant", "alpha"], dropna=False)[list(available.values())]
-        .mean()
-        .reset_index()
-        .rename(columns={src: out for out, src in available.items()})
+    return summarize_cv_outputs(df, modality, n_questions_benchmark)[1]
+
+
+def build_paired_deltas(
+    candidate: pd.DataFrame,
+    control: pd.DataFrame,
+    modality: str,
+    expected_folds: int = graph_protocol.OFFICIAL_N_FOLDS,
+) -> pd.DataFrame:
+    config_columns = ["k_in", "seed_variant", "alpha"]
+    metric_columns = [
+        metric for metric in _metric_columns(modality).values()
+        if metric in candidate.columns and metric in control.columns
+    ]
+    return graph_protocol.summarize_paired_fold_deltas(
+        candidate,
+        control,
+        config_columns=config_columns,
+        metric_columns=metric_columns,
+        expected_folds=expected_folds,
     )
-    coverage = (
-        df.groupby(["k_in", "seed_variant", "alpha"], dropna=False)
-        .agg(
-            n_questions_covered=("qid", "nunique"),
-            n_folds_covered=("fold", "nunique"),
-        )
-        .reset_index()
-    )
-    coverage["n_questions_benchmark"] = int(n_questions_benchmark)
-    coverage["question_coverage"] = (
-        coverage["n_questions_covered"] / coverage["n_questions_benchmark"]
-    )
-    coverage["fold_coverage"] = (
-        coverage["n_folds_covered"] / graph_protocol.OFFICIAL_N_FOLDS
-    )
-    summary = (
-        summary.merge(coverage, on=["k_in", "seed_variant", "alpha"], how="left")
-        .sort_values(["k_in", "seed_variant", "alpha"])
-        .reset_index(drop=True)
-    )
-    summary.insert(0, "method", summary.apply(
-        lambda row: f"PPR-sweep-k{int(row['k_in'])}-{row['seed_variant']}-a{float(row['alpha'])}",
-        axis=1,
-    ))
-    summary.insert(1, "modality", modality)
-    return summary
 
 
 def select_champion(summary_df: pd.DataFrame, modality: str) -> dict:
     if summary_df.empty:
         raise ValueError(f"No CV results available for modality={modality}")
+    if "eligible_champion" in summary_df:
+        eligible = summary_df[summary_df["eligible_champion"]].copy()
+        if eligible.empty:
+            raise ValueError(f"No eligible CV champion for modality={modality}: missing fold coverage")
+        sort_columns = graph_protocol.champion_sort_columns(modality)
+        missing = [column for column, _ in sort_columns if column not in eligible.columns]
+        if missing:
+            raise KeyError(missing[0])
+        return eligible.sort_values(
+            [column for column, _ in sort_columns],
+            ascending=[ascending for _, ascending in sort_columns],
+            kind="stable",
+        ).iloc[0].to_dict()
     records = summary_df.to_dict(orient="records")
     return max(records, key=lambda row: graph_protocol.metric_rank_tuple(row, modality))
 
@@ -167,27 +214,48 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--split", default=graph_protocol.OFFICIAL_TRAIN_SPLIT)
     parser.add_argument("--out-dir", type=Path)
     parser.add_argument("--config", action="append")
+    parser.add_argument("--control-fold-metrics", type=Path)
+    parser.add_argument("--refresh-legacy-surfaces", action="store_true")
     args = parser.parse_args(argv)
 
     enforce_official_split(args.split)
     bench_dir = graph_protocol.resolve_graph_bench_dir(args.graph_version, args.split)
     bench_questions = graph_protocol.load_bench_questions(bench_dir)
     bench_qids = {str(question["qid"]) for question in bench_questions}
-    folds = load_fold_assignments(bench_qids)
+    folds, fold_metadata = load_fold_assignments(bench_dir, bench_qids)
+    expected_qids_by_fold = graph_protocol.expected_qids_by_fold(folds)
     rows = []
+    out_dir = args.out_dir or (graph_protocol.cv_root(graph_protocol.BENCH_ROOT) / args.graph_version / "ppr")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    progress_path = out_dir / "progress.json"
     for fold in sorted(folds["fold"].astype(int).unique()):
         qids = set(folds.loc[folds["fold"] == fold, "qid"].astype(str))
-        fold_df = run_fold_subset(qids, bench_dir, config_specs=args.config)
+        fold_df = run_fold_subset(
+            qids,
+            bench_dir,
+            args.graph_version,
+            config_specs=args.config,
+            progress_path=progress_path,
+            progress_label=f"fold {fold + 1}/{graph_protocol.OFFICIAL_N_FOLDS}",
+        )
         fold_df.insert(0, "fold", fold)
         rows.append(fold_df)
 
     raw_df = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
-    summary_parts = [
-        summarize_cv_results(raw_df, "art", n_questions_benchmark=len(bench_qids)),
-        summarize_cv_results(raw_df, "jp", n_questions_benchmark=len(bench_qids)),
+    output_parts = [
+        summarize_cv_outputs(
+            raw_df, "art", n_questions_benchmark=len(bench_qids), expected_qids_by_fold=expected_qids_by_fold
+        ),
+        summarize_cv_outputs(
+            raw_df, "jp", n_questions_benchmark=len(bench_qids), expected_qids_by_fold=expected_qids_by_fold
+        ),
     ]
+    fold_metrics_df = pd.concat(
+        [fold_metrics for fold_metrics, _ in output_parts if not fold_metrics.empty],
+        ignore_index=True,
+    )
     summary_df = pd.concat(
-        [part for part in summary_parts if not part.empty],
+        [summary for _, summary in output_parts if not summary.empty],
         ignore_index=True,
     )
     champions = {}
@@ -197,11 +265,46 @@ def main(argv: list[str] | None = None) -> int:
             if not sub.empty:
                 champions[modality] = select_champion(sub, modality)
 
-    out_dir = args.out_dir or (bench_dir / "_cv" / "ppr")
-    out_dir.mkdir(parents=True, exist_ok=True)
-    raw_df.to_csv(out_dir / "cv_results_raw.csv", index=False)
-    summary_df.to_csv(out_dir / "cv_results_summary.csv", index=False)
+    run_metadata = {
+        key: fold_metadata[key]
+        for key in ["protocol_version", "dataset_sha256", "fold_assignment_sha256"]
+    }
+    for key, value in run_metadata.items():
+        summary_df[key] = value
+    for champion in champions.values():
+        champion.update(run_metadata)
+
+    raw_df.to_csv(out_dir / "raw.csv", index=False)
+    fold_metrics_df.to_csv(out_dir / "fold_metrics.csv", index=False)
+    summary_df.to_csv(out_dir / "summary.csv", index=False)
+    (out_dir / "run_metadata.json").write_text(json.dumps(run_metadata, ensure_ascii=False, indent=2))
     (out_dir / "champions.json").write_text(json.dumps(champions, ensure_ascii=False, indent=2))
+    if args.control_fold_metrics is not None:
+        control_fold_metrics = pd.read_csv(args.control_fold_metrics)
+        paired_parts = []
+        for modality in ["art", "jp"]:
+            candidate = fold_metrics_df[fold_metrics_df["modality"] == modality]
+            control = control_fold_metrics[control_fold_metrics["modality"] == modality]
+            paired_parts.append(
+                build_paired_deltas(candidate, control, modality, expected_folds=len(expected_qids_by_fold))
+            )
+        pd.concat(paired_parts, ignore_index=True).to_csv(out_dir / "paired_deltas.csv", index=False)
+    progress_path.write_text(
+        json.dumps(
+            {
+                "status": "completed",
+                "graph_version": args.graph_version,
+                "split": args.split,
+                "folds_completed": graph_protocol.OFFICIAL_N_FOLDS,
+                "out_dir": str(out_dir),
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    if args.refresh_legacy_surfaces:
+        refresh_results_surfaces()
     print(out_dir)
     return 0
 

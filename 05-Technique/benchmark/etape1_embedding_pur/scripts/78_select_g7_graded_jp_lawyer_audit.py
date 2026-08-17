@@ -16,7 +16,7 @@ import pandas as pd
 REPO = Path(
     os.environ.get(
         "LKG_REPO",
-        "/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph",
+        str(Path(__file__).resolve().parents[4]),
     )
 )
 ETAPE1 = REPO / "05-Technique/benchmark/etape1_embedding_pur"

@@ -98,3 +98,14 @@ def test_resolve_question_cache_paths_falls_back_to_legacy_global_bench_names(tm
 
     assert emb_path == tmp_path / "questions_977_emb.npy"
     assert ids_path == tmp_path / "questions_977_ids.npy"
+
+
+def test_write_progress_writes_json_payload(tmp_path):
+    progress_path = tmp_path / "progress.json"
+
+    ppr_sweep.write_progress(progress_path, {"status": "running", "question_index": 12})
+
+    assert progress_path.exists()
+    payload = json.loads(progress_path.read_text())
+    assert payload["status"] == "running"
+    assert payload["question_index"] == 12

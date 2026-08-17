@@ -241,6 +241,94 @@ def _write_replay_outputs(out_dir: Path) -> None:
         },
     ]
     pd.DataFrame(lightgcn_rows).to_csv(out_dir / "lightgcn_eval.csv", index=False)
+    pd.DataFrame(
+        [
+            {
+                "epoch": 0,
+                "graph_version": "G0",
+                "variant": "trained_K2",
+                "train_loss": 1.0,
+                "val_hit": 0.5,
+            }
+        ]
+    ).to_csv(out_dir / "lightgcn_history.csv", index=False)
+    pd.DataFrame(
+        [
+            {"qid": "q1", "method": "B2-a", "k_in": np.nan, "modality": "art", "rank": 1, "item_id": "art1"},
+            {"qid": "q2", "method": "B2-a", "k_in": np.nan, "modality": "art", "rank": 1, "item_id": "art2"},
+            {"qid": "q1", "method": "B3-a", "k_in": np.nan, "modality": "jp", "rank": 1, "item_id": "jp1"},
+            {
+                "qid": "q2",
+                "method": "PPR-sweep-k20-both-a0.5",
+                "k_in": 20,
+                "modality": "art",
+                "rank": 1,
+                "item_id": "art2",
+            },
+            {
+                "qid": "q1",
+                "method": "LightGCN-trained_K2",
+                "k_in": 2,
+                "modality": "jp",
+                "rank": 1,
+                "item_id": "jp1",
+            },
+        ]
+    ).to_parquet(out_dir / "rankings.parquet", index=False)
+    pd.DataFrame(
+        [
+            {"qid": "q1", "method": "B2-a", "modality": "art", "k_in": np.nan, "m3": 0.5, "n2": 1, "n1": 1, "n0": 8, "n_judged": 10},
+            {"qid": "q2", "method": "B2-a", "modality": "art", "k_in": np.nan, "m3": 0.6, "n2": 2, "n1": 0, "n0": 8, "n_judged": 10},
+            {"qid": "q1", "method": "B3-a", "modality": "jp", "k_in": np.nan, "m3": 0.4, "n2": 1, "n1": 0, "n0": 9, "n_judged": 10},
+            {"qid": "q2", "method": "B3-a", "modality": "jp", "k_in": np.nan, "m3": 0.5, "n2": 1, "n1": 1, "n0": 8, "n_judged": 10},
+        ]
+    ).to_csv(out_dir / "eval_m3.csv", index=False)
+
+
+def test_select_champion_rows_matches_lightgcn_method_alias_and_train_k():
+    rankings = pd.DataFrame(
+        [
+            {
+                "qid": "q1",
+                "method": "LightGCN-trained_K2",
+                "k_in": 2,
+                "modality": "art",
+                "rank": 1,
+                "item_id": "art1",
+            }
+        ]
+    )
+    champions = {
+        "art": {
+            "method": "LightGCN-trained_K2-s42-lr0.001-e30-la1",
+            "modality": "art",
+            "variant": "trained_K2",
+            "train_k": 2,
+            "seed": 42,
+            "lr": 0.001,
+            "epochs": 30,
+            "lambda_anchor": 1.0,
+        }
+    }
+
+    selected = final_champions._select_champion_rows(rankings, champions)
+
+    assert len(selected) == 1
+
+
+def test_m3_display_for_champion_matches_lightgcn_alias_and_train_k():
+    champion = {
+        "method": "LightGCN-trained_K2-s42-lr0.001-e30-la1",
+        "modality": "art",
+        "variant": "trained_K2",
+        "train_k": 2,
+    }
+    lookup = {"LightGCN-trained_K2|art|kin=2": "0.750 (4.0/3.0/3.0)"}
+
+    assert (
+        final_champions._m3_display_for_champion(lookup, champion, "art")
+        == "0.750 (4.0/3.0/3.0)"
+    )
 
 
 def test_replay_b3_b4_accepts_baseline_only_champions(tmp_path, monkeypatch):
@@ -259,8 +347,20 @@ def test_replay_b3_b4_accepts_baseline_only_champions(tmp_path, monkeypatch):
 
     class FakeBaselineEval:
         @staticmethod
-        def eval_m1_m2(questions, out_dir, limit=None, qid_filter=None, ks_in=None):
+        def eval_m1_m2(
+            questions,
+            out_dir,
+            limit=None,
+            qid_filter=None,
+            ks_in=None,
+            question_cache_dir=None,
+            graph_version="canonical",
+            top_k_out=10,
+        ):
             assert ks_in is None
+            assert question_cache_dir == eval_dir
+            assert graph_version == "G0"
+            assert top_k_out == 10
             pd.DataFrame(
                 [
                     {
@@ -299,15 +399,17 @@ def test_replay_b3_b4_accepts_baseline_only_champions(tmp_path, monkeypatch):
         lambda script_name, module_name: FakeBaselineEval,
     )
 
-    out = final_champions.replay_b3_b4(
+    out, rankings = final_champions.replay_b3_b4(
         eval_dir,
         {
             "articles": {"method": "B2-a", "modality": "art", "k_in": None},
             "jp": {"method": "B3-a", "modality": "jp", "k_in": None},
         },
+        "G0",
     )
 
     assert set(out["method"]) == {"B2-a", "B3-a"}
+    assert rankings.empty
 
 
 def test_main_skip_replay_builds_final_outputs(tmp_path, monkeypatch):
@@ -388,6 +490,18 @@ def test_main_skip_replay_builds_final_outputs(tmp_path, monkeypatch):
         "resolve_graph_bench_dir",
         fake_resolve_graph_bench_dir,
     )
+    refreshed = {"called": False}
+    monkeypatch.setattr(
+        final_champions,
+        "refresh_intergraph_report",
+        lambda: refreshed.__setitem__("called", True),
+    )
+    snippets = {"called": False}
+    monkeypatch.setattr(
+        final_champions,
+        "refresh_week13_snippets",
+        lambda: snippets.__setitem__("called", True),
+    )
 
     rc = final_champions.main(
         [
@@ -404,11 +518,14 @@ def test_main_skip_replay_builds_final_outputs(tmp_path, monkeypatch):
     )
 
     assert rc == 0
+    assert refreshed["called"] is True
+    assert snippets["called"] is True
 
     summary = pd.read_csv(out_dir / "final_champions_summary.csv")
     articles = pd.read_csv(out_dir / "global_table_articles.csv")
     jp = pd.read_csv(out_dir / "global_table_jp.csv")
     comparison = pd.read_csv(out_dir / "global_table_graph_comparison.csv")
+    rankings = pd.read_parquet(out_dir / "rankings.parquet")
 
     assert len(summary) == 6
     assert set(summary["family"]) == {"b3_b4", "ppr", "lightgcn"}
@@ -420,10 +537,12 @@ def test_main_skip_replay_builds_final_outputs(tmp_path, monkeypatch):
     assert summary["coverage_articles_occ_total"].eq(4).all()
     assert summary["coverage_articles_extended_unique_total"].eq(5).all()
     assert summary["coverage_jp_occ_total"].eq(2).all()
+    assert summary["m3_display"].ne("—").any()
 
     assert not articles.empty
     assert not jp.empty
     assert not comparison.empty
+    assert not rankings.empty
     assert "coverage_articles" in comparison.columns
     assert "n_questions_benchmark" in comparison.columns
     assert "coverage_articles_occ_total" in comparison.columns

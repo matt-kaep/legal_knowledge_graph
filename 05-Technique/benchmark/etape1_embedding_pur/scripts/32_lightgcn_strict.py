@@ -29,12 +29,16 @@ import scipy.sparse as sp
 import torch
 import torch.nn as nn
 
-REPO = Path("/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph")
+REPO = Path(os.environ.get(
+    "LKG_REPO",
+    str(Path(__file__).resolve().parents[4]),
+))
 ROOT = REPO / "05-Technique/benchmark/etape1_embedding_pur"
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from etape1 import config  # noqa: E402
+from etape1 import graph_versions  # noqa: E402
 import metrics as M  # noqa: E402
 
 DEFAULT_BASE = ROOT / "data/doctrine_v3plus_bench"
@@ -45,6 +49,9 @@ K_OUT = 10
 N_LAYERS_TO_EVAL = (1, 2, 3)
 TAU = 0.1
 DEVICE = "cpu"
+NEGATIVE_RANDOM = "random"
+HARD_NEGATIVE_PREFIX = "hard_negative_cosine_top"
+SEMI_HARD_NEGATIVE_PREFIX = "semi_hard_cosine_rank"
 
 
 def rowcol_top_k(scores: np.ndarray, labels: np.ndarray, k: int) -> list:
@@ -56,7 +63,7 @@ def rowcol_top_k(scores: np.ndarray, labels: np.ndarray, k: int) -> list:
     return list(labels[order])
 
 
-def ranking_rows(qid, method, k_in, modality, ranked, k):
+def ranking_rows(qid, method, k_in, modality, ranked, k, negative_sampling_strategy):
     return [
         {
             "qid": qid,
@@ -65,6 +72,7 @@ def ranking_rows(qid, method, k_in, modality, ranked, k):
             "modality": modality,
             "rank": rank + 1,
             "item_id": str(item),
+            "negative_sampling_strategy": negative_sampling_strategy,
         }
         for rank, item in enumerate(ranked[:k])
     ]
@@ -77,11 +85,41 @@ def sym_normalize(A: sp.csr_matrix) -> sp.csr_matrix:
     return sp.diags(dinv) @ A @ sp.diags(dinv)
 
 
+def row_normalize(A: sp.csr_matrix) -> sp.csr_matrix:
+    deg = np.asarray(A.sum(axis=1)).ravel()
+    deg[deg == 0] = 1.0
+    return sp.diags(1.0 / deg) @ A
+
+
+def normalize_adjacency(A: sp.csr_matrix, mode: str) -> sp.csr_matrix:
+    if mode == "sym":
+        return sym_normalize(A)
+    if mode == "row":
+        return row_normalize(A)
+    if mode == "none":
+        return A.tocsr()
+    raise ValueError(f"Unsupported adjacency normalization: {mode!r}")
+
+
 def sparse_scipy_to_torch(A: sp.csr_matrix) -> torch.Tensor:
     A = A.tocoo().astype(np.float32)
     idx = torch.tensor(np.vstack([A.row, A.col]), dtype=torch.long)
     val = torch.tensor(A.data, dtype=torch.float32)
     return torch.sparse_coo_tensor(idx, val, torch.Size(A.shape)).coalesce()
+
+
+def iter_similarity_batches(
+    queries: torch.Tensor,
+    candidates: torch.Tensor,
+    *,
+    batch_size: int,
+) -> tuple[int, np.ndarray]:
+    """Yield cosine score batches without materializing all query-item scores."""
+    if batch_size <= 0:
+        raise ValueError(f"eval batch size must be positive, got {batch_size}")
+    for start in range(0, queries.shape[0], batch_size):
+        stop = min(start + batch_size, queries.shape[0])
+        yield start, (queries[start:stop] @ candidates.T).cpu().numpy()
 
 
 def load_split(bench_dir: Path, limit: int | None = None) -> tuple[list[dict], np.ndarray]:
@@ -160,6 +198,143 @@ def summarize_eval_rows(rows: list[dict]) -> dict[str, float]:
     return summary
 
 
+def parse_negative_sampling_strategy(
+    strategy: str,
+) -> tuple[str, int | tuple[int, int] | None]:
+    if strategy == NEGATIVE_RANDOM:
+        return NEGATIVE_RANDOM, None
+    if strategy.startswith(HARD_NEGATIVE_PREFIX):
+        suffix = strategy.removeprefix(HARD_NEGATIVE_PREFIX)
+        if suffix.isdigit() and int(suffix) > 0:
+            return HARD_NEGATIVE_PREFIX, int(suffix)
+    if strategy.startswith(SEMI_HARD_NEGATIVE_PREFIX):
+        suffix = strategy.removeprefix(SEMI_HARD_NEGATIVE_PREFIX)
+        bounds = suffix.split("_")
+        if len(bounds) == 2 and all(bound.isdigit() for bound in bounds):
+            start_rank, end_rank = (int(bound) for bound in bounds)
+            if 1 <= start_rank <= end_rank:
+                return SEMI_HARD_NEGATIVE_PREFIX, (start_rank, end_rank)
+    raise ValueError(
+        "Unsupported negative sampling strategy: "
+        f"{strategy}. Expected random, hard_negative_cosine_topN, "
+        "or semi_hard_cosine_rankSTART_END."
+    )
+
+
+def _l2_np(x: np.ndarray) -> np.ndarray:
+    return x / np.linalg.norm(x, axis=1, keepdims=True).clip(min=1e-9)
+
+
+def build_cosine_negative_pools(
+    q_embeddings: np.ndarray,
+    item_embeddings: np.ndarray,
+    item_indices: np.ndarray,
+    gold_item_indices_by_question: dict[int, set[int]],
+    *,
+    start_rank: int,
+    end_rank: int,
+) -> dict[int, np.ndarray]:
+    if start_rank < 1 or end_rank < start_rank:
+        raise ValueError(
+            f"Invalid cosine rank window: start_rank={start_rank}, end_rank={end_rank}"
+        )
+    qn = _l2_np(q_embeddings.astype(np.float32, copy=False))
+    itemn = _l2_np(item_embeddings.astype(np.float32, copy=False))
+    k = min(int(end_rank), len(item_indices))
+    pools: dict[int, np.ndarray] = {}
+    if k <= 0:
+        return {qi: np.array([], dtype=np.int64) for qi in range(len(q_embeddings))}
+    scores = qn @ itemn.T
+    for qi, row in enumerate(scores):
+        if len(row) <= k:
+            order = np.argsort(-row)
+        else:
+            cand = np.argpartition(-row, k - 1)[:k]
+            order = cand[np.argsort(-row[cand])]
+        gold = gold_item_indices_by_question.get(qi, set())
+        window = order[start_rank - 1:k]
+        negatives = [
+            int(item_indices[idx])
+            for idx in window
+            if int(item_indices[idx]) not in gold
+        ]
+        pools[qi] = np.asarray(negatives, dtype=np.int64)
+    return pools
+
+
+def build_hard_negative_pools(
+    q_embeddings: np.ndarray,
+    item_embeddings: np.ndarray,
+    item_indices: np.ndarray,
+    gold_item_indices_by_question: dict[int, set[int]],
+    *,
+    top_n: int,
+) -> dict[int, np.ndarray]:
+    return build_cosine_negative_pools(
+        q_embeddings,
+        item_embeddings,
+        item_indices,
+        gold_item_indices_by_question,
+        start_rank=1,
+        end_rank=top_n,
+    )
+
+
+def _sample_random_non_gold_item(
+    item_indices: np.ndarray,
+    gold: set[int],
+    rng: np.random.Generator,
+) -> int:
+    if len(item_indices) <= len(gold):
+        return int(rng.choice(item_indices))
+    for _ in range(32):
+        candidate = int(rng.choice(item_indices))
+        if candidate not in gold:
+            return candidate
+    candidates = [int(item) for item in item_indices if int(item) not in gold]
+    return int(rng.choice(np.asarray(candidates, dtype=np.int64)))
+
+
+def sample_negative_items(
+    pos_q: np.ndarray,
+    item_indices: np.ndarray,
+    gold_item_indices_by_question: dict[int, set[int]],
+    rng: np.random.Generator,
+    *,
+    hard_negative_pools: dict[int, np.ndarray] | None = None,
+) -> np.ndarray:
+    negatives = np.empty(len(pos_q), dtype=np.int64)
+    for i, qi_raw in enumerate(pos_q):
+        qi = int(qi_raw)
+        pool = None if hard_negative_pools is None else hard_negative_pools.get(qi)
+        if pool is not None and len(pool) > 0:
+            negatives[i] = int(rng.choice(pool))
+        else:
+            negatives[i] = _sample_random_non_gold_item(
+                item_indices,
+                gold_item_indices_by_question.get(qi, set()),
+                rng,
+            )
+    return negatives
+
+
+def evaluate_training_epoch(
+    checkpoint_selection: str,
+    *,
+    item_final,
+    variant: str,
+    top_k_out: int,
+    evaluate_fn,
+):
+    """Evaluate an epoch only when validation is authorized for checkpoint selection."""
+    if checkpoint_selection == "validation_best":
+        rows, _ = evaluate_fn(item_final, variant, top_k_out=top_k_out)
+        return rows
+    if checkpoint_selection == "fixed_final_epoch":
+        return None
+    raise ValueError(f"Unsupported checkpoint_selection={checkpoint_selection!r}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-bench-dir", type=Path, default=DEFAULT_TRAIN)
@@ -167,6 +342,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit-train", type=int)
     parser.add_argument("--limit-eval", type=int)
     parser.add_argument("--epochs", type=int, default=30)
+    parser.add_argument(
+        "--checkpoint-selection",
+        choices=("validation_best", "fixed_final_epoch"),
+        default="validation_best",
+        help=(
+            "validation_best évalue chaque epoch sur la validation; "
+            "fixed_final_epoch interdit toute évaluation intermédiaire."
+        ),
+    )
+    parser.add_argument(
+        "--eval-batch-size",
+        type=int,
+        default=32,
+        help="Nombre de questions scorees ensemble pendant l'evaluation (defaut: 32).",
+    )
     parser.add_argument("--train-k", type=int, default=int(os.environ.get("TRAIN_K", 2)))
     parser.add_argument("--seed", type=int, default=int(os.environ.get("SEED", 42)))
     parser.add_argument("--lr", type=float, default=1e-3)
@@ -192,31 +382,78 @@ def main(argv: list[str] | None = None) -> int:
         default="canonical",
         help="Label de graphe reporte dans lightgcn_history_<suffix>.csv.",
     )
+    parser.add_argument(
+        "--adj-normalization",
+        choices=["sym", "row", "none"],
+        default="sym",
+        help="Normalisation de l'adjacence LightGCN : sym=D^-1/2 A D^-1/2, row=D^-1 A.",
+    )
     parser.add_argument("--dump-rankings", action="store_true")
+    parser.add_argument("--top-k-out", type=int, default=K_OUT)
+    parser.add_argument(
+        "--history-top-k-out",
+        type=int,
+        default=K_OUT,
+        help="K utilisé pour les métriques de validation pendant l'entraînement. Garder 10 pour éviter de ralentir les exports top-100.",
+    )
+    parser.add_argument(
+        "--selection-metric",
+        default="val_hit",
+        choices=[
+            "val_hit",
+            "val_ndcg",
+            "val_mrr",
+            "val_recall",
+            "val_norm_rank",
+            "val_hit_jp",
+            "val_ndcg_jp",
+        ],
+        help="Métrique de validation utilisée pour retenir le meilleur epoch entraîné.",
+    )
+    parser.add_argument(
+        "--negative-sampling-strategy",
+        default=NEGATIVE_RANDOM,
+        help=(
+            "random, hard_negative_cosine_topN, ou "
+            "semi_hard_cosine_rankSTART_END, ex: semi_hard_cosine_rank21_50."
+        ),
+    )
     args = parser.parse_args(argv)
+    negative_strategy_kind, negative_strategy_param = parse_negative_sampling_strategy(
+        args.negative_sampling_strategy
+    )
 
     t0 = time.time()
     torch.manual_seed(args.seed)
     rng = np.random.default_rng(args.seed)
 
     print("══ Chargement graphe + embeddings ─────────────────────────")
-    art_emb = np.load(config.EMB_ARTICLES_ALL).astype(np.float32)
-    art_order = np.load(config.ARTICLES_ORDER_ALL, allow_pickle=True)
-    jp_emb = np.load(config.EMB_JP_SYNTHESE).astype(np.float32)
-    jp_order = np.load(config.JP_SUMMARY_ORDER, allow_pickle=True)
+    view = graph_versions.load_retrieval_view(args.graph_version)
+    art_emb = view.art_emb.astype(np.float32)
+    art_order = view.art_order
+    jp_emb = view.jp_emb.astype(np.float32)
+    jp_order = view.jp_order
     D = art_emb.shape[1]
 
-    z = np.load(config.GRAPH_NPZ, allow_pickle=True)
-    G = sp.csr_matrix((z["data"], z["indices"], z["indptr"]), shape=tuple(z["shape"]))
-    jp_ids_graph = z["jp_ids"]
-    article_ids_graph = z["article_ids"]
-    n_jp, n_art = G.shape
+    G = view.graph
+    jp_ids_graph = view.jp_ids_graph
+    article_ids_graph = view.article_ids_graph
+    n_jp = len(jp_ids_graph)
+    n_art = len(article_ids_graph)
     n_total = n_jp + n_art
     print(f"  G {G.shape}  nnz {G.nnz:,}  N={n_total:,}")
 
-    G_full = sp.bmat([[None, G], [G.T, None]], format="csr")
-    adj = sparse_scipy_to_torch(sym_normalize(G_full)).to(DEVICE)
-    print(f"  adj sym ready  (t={time.time()-t0:.1f}s)")
+    if G.shape == (n_jp, n_art):
+        G_full = sp.bmat([[None, G], [G.T, None]], format="csr")
+    elif G.shape == (n_total, n_total):
+        G_full = G.tocsr()
+    else:
+        raise ValueError(
+            f"Unsupported graph shape for LightGCN: graph={G.shape}, "
+            f"n_jp={n_jp}, n_art={n_art}"
+        )
+    adj = sparse_scipy_to_torch(normalize_adjacency(G_full, args.adj_normalization)).to(DEVICE)
+    print(f"  adj {args.adj_normalization} ready  (t={time.time()-t0:.1f}s)")
 
     artid_to_graphcol = {aid: i for i, aid in enumerate(article_ids_graph)}
     jpid_to_graphrow = {jid: i for i, jid in enumerate(jp_ids_graph)}
@@ -279,20 +516,23 @@ def main(argv: list[str] | None = None) -> int:
 
     train_q_rows = []
     train_pos = []
+    train_gold_items: dict[int, set[int]] = {}
     for qi, q in enumerate(train_q):
         gts = (q["gt_ext"] or q["gt_strict"]) & pool_art_set
         if not gts:
             continue
         local_qi = len(train_q_rows)
         train_q_rows.append(q_train_np[qi])
+        train_gold_items[local_qi] = {art_pk_to_itemidx[pk] for pk in gts}
         for pk in gts:
             train_pos.append((local_qi, art_pk_to_itemidx[pk]))
     if not train_pos:
         raise RuntimeError("No train positives after pool filtering")
     print(f"  train positives {len(train_pos):,} over {len(train_q_rows):,} questions")
 
+    pos_q_np = np.asarray([p[0] for p in train_pos], dtype=np.int64)
     q_train_t = torch.tensor(np.asarray(train_q_rows), dtype=torch.float32, device=DEVICE)
-    pos_q = torch.tensor([p[0] for p in train_pos], dtype=torch.long, device=DEVICE)
+    pos_q = torch.tensor(pos_q_np, dtype=torch.long, device=DEVICE)
     pos_item = torch.tensor([p[1] for p in train_pos], dtype=torch.long, device=DEVICE)
     q_eval_t = torch.tensor(q_eval_np, dtype=torch.float32, device=DEVICE)
     e0_t = torch.tensor(e0, dtype=torch.float32, device=DEVICE)
@@ -300,29 +540,107 @@ def main(argv: list[str] | None = None) -> int:
     art_pool_idx_t = torch.tensor(art_pool_graph_idx, dtype=torch.long, device=DEVICE)
     jp_pool_idx_t = torch.tensor(jp_pool_graph_idx, dtype=torch.long, device=DEVICE)
     anchor_idx = torch.tensor(np.where(has_init)[0], dtype=torch.long, device=DEVICE)
+    hard_negative_pools: dict[int, np.ndarray] | None = None
+    hard_pool_stats = {
+        "hard_negative_pool_mean": float("nan"),
+        "hard_negative_pool_empty_pct": float("nan"),
+    }
+    if negative_strategy_kind == HARD_NEGATIVE_PREFIX:
+        hard_negative_pools = build_hard_negative_pools(
+            np.asarray(train_q_rows, dtype=np.float32),
+            e0[art_pool_graph_idx],
+            art_pool_graph_idx,
+            train_gold_items,
+            top_n=int(negative_strategy_param or 0),
+        )
+    elif negative_strategy_kind == SEMI_HARD_NEGATIVE_PREFIX:
+        start_rank, end_rank = negative_strategy_param  # type: ignore[misc]
+        hard_negative_pools = build_cosine_negative_pools(
+            np.asarray(train_q_rows, dtype=np.float32),
+            e0[art_pool_graph_idx],
+            art_pool_graph_idx,
+            train_gold_items,
+            start_rank=int(start_rank),
+            end_rank=int(end_rank),
+        )
 
-    def evaluate(item_final: torch.Tensor, variant: str) -> tuple[list[dict], list[dict]]:
+    if hard_negative_pools is not None:
+        pool_sizes = np.asarray([len(v) for v in hard_negative_pools.values()], dtype=np.float32)
+        hard_pool_stats = {
+            "hard_negative_pool_mean": float(pool_sizes.mean()) if len(pool_sizes) else float("nan"),
+            "hard_negative_pool_empty_pct": float((pool_sizes == 0).mean()) if len(pool_sizes) else float("nan"),
+        }
+        print(
+            "  cosine negative pool "
+            f"{args.negative_sampling_strategy}: mean_pool={hard_pool_stats['hard_negative_pool_mean']:.2f} "
+            f"empty={hard_pool_stats['hard_negative_pool_empty_pct']:.1%}"
+        )
+
+    def evaluate(
+        item_final: torch.Tensor,
+        variant: str,
+        *,
+        top_k_out: int | None = None,
+    ) -> tuple[list[dict], list[dict]]:
+        k_out = int(top_k_out or args.top_k_out)
         rows = []
         rankings = []
         with torch.no_grad():
             qn = l2(q_eval_t)
             art_final = l2(item_final[art_pool_idx_t])
             jp_final = l2(item_final[jp_pool_idx_t])
-            sc_art = (qn @ art_final.T).cpu().numpy()
-            sc_jp = (qn @ jp_final.T).cpu().numpy()
         method = f"LightGCN-{variant}"
         kin = 0 if variant == "cosine_raw" else int(variant.rsplit("K", 1)[-1])
-        for i, q in enumerate(eval_q):
-            gt_s = q["gt_strict"] & pool_art_set
-            gt_e = q["gt_ext"] & pool_art_set
-            gold_jp = q["gold_jp_ids"] & pool_jp_set
-            ranked_art = rowcol_top_k(sc_art[i], art_pool_pks, K_OUT)
-            ranked_jp = rowcol_top_k(sc_jp[i], jp_pool_ids, K_OUT)
-            rankings.extend(ranking_rows(q["id"], method, kin, "art", ranked_art, K_OUT))
-            rankings.extend(ranking_rows(q["id"], method, kin, "jp", ranked_jp, K_OUT))
-            am = {f"{k}_art": v for k, v in M.panel_strict_ext(ranked_art, gt_s, gt_e, K_OUT).items()}
-            jm = {f"{k}_jp": v for k, v in M.all_metrics(ranked_jp, gold_jp, K_OUT).items()}
-            rows.append({"qid": q["id"], "variant": variant, **am, **jm})
+        for start, sc_art in iter_similarity_batches(
+            qn, art_final, batch_size=args.eval_batch_size
+        ):
+            stop = start + len(sc_art)
+            with torch.no_grad():
+                sc_jp = (qn[start:stop] @ jp_final.T).cpu().numpy()
+            for offset, q in enumerate(eval_q[start:stop]):
+                gt_s = q["gt_strict"] & pool_art_set
+                gt_e = q["gt_ext"] & pool_art_set
+                gold_jp = q["gold_jp_ids"] & pool_jp_set
+                ranked_art = rowcol_top_k(sc_art[offset], art_pool_pks, k_out)
+                ranked_jp = rowcol_top_k(sc_jp[offset], jp_pool_ids, k_out)
+                rankings.extend(
+                    ranking_rows(
+                        q["id"],
+                        method,
+                        kin,
+                        "art",
+                        ranked_art,
+                        k_out,
+                        args.negative_sampling_strategy,
+                    )
+                )
+                rankings.extend(
+                    ranking_rows(
+                        q["id"],
+                        method,
+                        kin,
+                        "jp",
+                        ranked_jp,
+                        k_out,
+                        args.negative_sampling_strategy,
+                    )
+                )
+                am = {
+                    f"{k}_art": v
+                    for k, v in M.panel_strict_ext(ranked_art, gt_s, gt_e, k_out).items()
+                }
+                jm = {
+                    f"{k}_jp": v
+                    for k, v in M.all_metrics(ranked_jp, gold_jp, k_out).items()
+                }
+                rows.append({
+                    "qid": q["id"],
+                    "variant": variant,
+                    "adj_normalization": args.adj_normalization,
+                    "negative_sampling_strategy": args.negative_sampling_strategy,
+                    **am,
+                    **jm,
+                })
         return rows, rankings
 
     history_rows: list[dict] = []
@@ -332,14 +650,19 @@ def main(argv: list[str] | None = None) -> int:
         opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.0)
         n_pos = pos_q.shape[0]
         e0_ref = e0_t[anchor_idx].detach().clone()
+        best_metric = -float("inf")
+        best_epoch = -1
+        best_final: torch.Tensor | None = None
         for ep in range(args.epochs):
             item_final = model.propagate(adj)
-            neg = torch.tensor(
-                rng.integers(0, len(art_pool_graph_idx), n_pos),
-                dtype=torch.long,
-                device=DEVICE,
+            neg_item_np = sample_negative_items(
+                pos_q_np,
+                art_pool_graph_idx,
+                train_gold_items,
+                rng,
+                hard_negative_pools=hard_negative_pools,
             )
-            neg_item = art_pool_idx_t[neg]
+            neg_item = torch.tensor(neg_item_np, dtype=torch.long, device=DEVICE)
             bpr = bpr_loss(q_train_t[pos_q], item_final, pos_item, neg_item)
             anchor = ((model.emb[anchor_idx] - e0_ref) ** 2).sum(1).mean()
             loss = bpr + args.lambda_anchor * anchor
@@ -348,16 +671,48 @@ def main(argv: list[str] | None = None) -> int:
             opt.step()
             with torch.no_grad():
                 current_final = model.propagate(adj)
-            val_rows, _ = evaluate(current_final, f"trained_K{n_layers}")
-            val_summary = summarize_eval_rows(val_rows)
+            val_rows = evaluate_training_epoch(
+                args.checkpoint_selection,
+                item_final=current_final,
+                variant=f"trained_K{n_layers}",
+                top_k_out=args.history_top_k_out,
+                evaluate_fn=evaluate,
+            )
+            val_summary = summarize_eval_rows(val_rows) if val_rows is not None else {}
+            selection_metric_values = {
+                "val_hit": float(val_summary.get("hit_strict_art", np.nan)),
+                "val_ndcg": float(val_summary.get("ndcg_strict_art", np.nan)),
+                "val_mrr": float(val_summary.get("mrr_strict_art", np.nan)),
+                "val_recall": float(val_summary.get("m1_strict_art", np.nan)),
+                "val_norm_rank": float(val_summary.get("m2_strict_art", np.nan)),
+                "val_hit_jp": float(val_summary.get("hit_jp", np.nan)),
+                "val_ndcg_jp": float(val_summary.get("ndcg_jp", np.nan)),
+            }
+            selection_value = selection_metric_values[args.selection_metric]
+            is_best = bool(
+                args.checkpoint_selection == "validation_best"
+                and np.isfinite(selection_value)
+                and selection_value > best_metric
+            )
+            if is_best:
+                best_metric = selection_value
+                best_epoch = ep
+                best_final = current_final.detach().clone()
             history_rows.append(
                 {
                     "epoch": ep,
                     "graph_version": args.graph_version,
                     "variant": f"trained_K{n_layers}",
+                    "adj_normalization": args.adj_normalization,
+                    "negative_sampling_strategy": args.negative_sampling_strategy,
                     "train_loss": float(loss.item()),
                     "bpr_loss": float(bpr.item()),
                     "anchor_loss": float(anchor.item()),
+                    **hard_pool_stats,
+                    "selection_metric": args.selection_metric,
+                    "selection_metric_value": selection_value,
+                    "is_new_best_epoch": is_best,
+                    "is_best_epoch": is_best,
                     "val_hit": float(val_summary.get("hit_strict_art", np.nan)),
                     "val_ndcg": float(val_summary.get("ndcg_strict_art", np.nan)),
                     "val_mrr": float(val_summary.get("mrr_strict_art", np.nan)),
@@ -371,9 +726,22 @@ def main(argv: list[str] | None = None) -> int:
                 print(
                     f"    K{n_layers} ep {ep:>3d}/{args.epochs} "
                     f"bpr {bpr.item():.4f} anchor {anchor.item():.4f} "
+                    f"{args.selection_metric} {selection_value:.4f} "
                     f"(t={time.time()-t0:.1f}s)"
                 )
-        return current_final
+        if args.checkpoint_selection == "fixed_final_epoch":
+            best_final = current_final.detach().clone()
+            best_epoch = args.epochs - 1
+            best_metric = float("nan")
+        elif best_final is None:
+            best_final = current_final.detach().clone()
+            best_epoch = args.epochs - 1
+            best_metric = float("nan")
+        print(
+            f"  selected trained_K{n_layers}: epoch {best_epoch} "
+            f"{args.selection_metric}={best_metric:.4f}"
+        )
+        return best_final
 
     all_rows = []
     all_rankings = []

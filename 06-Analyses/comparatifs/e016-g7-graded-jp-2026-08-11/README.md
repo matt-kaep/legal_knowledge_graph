@@ -126,6 +126,56 @@ Le jugement complet des 754 questions est agrégé. Les sorties donnent :
 
 Le champ technique `exact_hit_at_10=0,263926` produit par l'agrégateur indique seulement si au moins une JP gold apparaît dans le top-10. Il ne doit pas être confondu avec le `Hit@10` officiel du benchmark, défini par $|A_q\cap R_q[:K]|/\min(|A_q|,K)$ et reporté séparément.
 
+## Analyse descriptive provisoire
+
+Cette section croise les sorties graduées avec la Ground Truth uniquement après le jugement aveugle. Elle décrit le run complet, mais son interprétation juridique reste conditionnée par l'audit avocat.
+
+### Exactitude historique contre pertinence graduée
+
+- le `Hit@10` officiel de G7 est `0,250000` ;
+- 199 questions sur 754 (`26,39 %`) contiennent au moins une JP exacte dans le top-10 et 555 n'en contiennent aucune ;
+- 692 questions sur 754 (`91,78 %`) contiennent néanmoins au moins une JP classée A ou B ; seules 62 (`8,22 %`) ont un score gradué nul ;
+- parmi les 555 questions sans JP exacte, 498 (`89,73 %`) ont au moins une A/B et 232 (`41,80 %`) ont un score gradué d'au moins `0,5` ;
+- le score gradué moyen vaut `0,4111` sans JP exacte contre `0,4719` lorsqu'une JP exacte est présente ;
+- la corrélation par question entre `Hit@10` officiel et score gradué est faible : Pearson `0,078`, Spearman `0,098`.
+
+| JP exacte dans le top-10 | aucune A/B | au moins une A/B | total |
+|---|---:|---:|---:|
+| non | 57 | 498 | 555 |
+| oui | 5 | 194 | 199 |
+| total | 62 | 692 | 754 |
+
+Cette dissociation est compatible avec deux explications qui ne peuvent pas encore être départagées : soit G7 retourne de nombreuses alternatives juridiquement pertinentes absentes de la Ground Truth, soit le juge LLM surclasse une partie des décisions. Le gate avocat a précisément pour rôle de mesurer ce second risque.
+
+### Contrôle interne de cohérence
+
+Après exclusion des 53 positions répétées, les 7 487 couples uniques se répartissent ainsi :
+
+- 204 couples correspondent à une JP exacte ; 191 (`93,63 %`) sont classés A ou B, dont 170 A, 21 B, 2 C, 2 D et 9 E ;
+- 7 283 couples ne correspondent pas à une JP exacte ; 3 821 (`52,46 %`) sont classés A ou B, dont 2 259 A et 1 562 B ;
+- ces 3 821 couples non exacts A/B touchent 685 questions, dont 498 des 555 questions sans aucun hit exact.
+
+Le signal gradué décroît avec le rang : le gain effectif moyen passe de `0,5623` au rang 1 à `0,3289` au rang 10 ; la part A/B passe de `66,58 %` à `43,10 %`. Cette décroissance est cohérente avec un ranking qui concentre davantage de décisions jugées utiles en tête, mais elle ne constitue pas une comparaison à une baseline aléatoire.
+
+### Premières familles de diagnostic
+
+- **57 questions sans hit exact et sans A/B** : échecs G7 les plus nets dans cette grille ;
+- **498 questions sans hit exact mais avec A/B** : candidates principales pour mesurer l'incomplétude de la Ground Truth ;
+- **5 questions avec hit exact mais score nul** : désaccords prioritaires entre Ground Truth et juge ;
+- **13 couples exacts classés C, D ou E** : cas prioritaires pour vérifier soit la pertinence de la Ground Truth, soit une erreur du juge ou de la fiche.
+
+Le type de question montre aussi une dissociation : `cas_pratique` obtient le meilleur `Hit@10` officiel (`0,4213`) mais un score gradué moyen de `0,3958`, tandis que `articulation_textes` obtient un `Hit@10` de `0,1758` mais un score gradué de `0,4676`. Ce contraste est un axe de diagnostic, pas encore une preuve d'incomplétude différentielle.
+
+### Limite du paquet avocat actuel
+
+L'échantillon de 100 cas valide la qualité du juge LLM sur la population des sorties G7. Il contient 98 couples non exacts et seulement 2 couples exacts, conformément à leur faible fréquence dans les 7 487 couples uniques. Il ne permet donc pas, à lui seul, d'estimer solidement la qualité de toute la Ground Truth :
+
+- il n'audite presque pas les couples question--JP exacts ;
+- il n'inclut aucune JP attendue absente du top-10 G7 ;
+- il ne transforme pas automatiquement les A/B non exactes en nouvelles annotations de référence.
+
+Après le gate avocat, une évaluation directe du benchmark devra donc échantillonner séparément les 978 couples question--JP de la Ground Truth, y compris ceux que G7 ne retourne pas. Le diagnostic G8 et les distances de graphe restent différés jusque-là, conformément au protocole.
+
 ### Pilote train-only et lancement complet
 
 Trois premières soumissions n'ont produit aucun jugement :

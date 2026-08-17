@@ -119,6 +119,94 @@ def test_select_champion_uses_official_metric_priority():
     assert best["train_k"] == 3
 
 
+def test_summarize_cv_results_preserves_negative_sampling_strategy():
+    df = pd.DataFrame(
+        [
+            {
+                "qid": "q1",
+                "fold": 0,
+                "variant": "trained_K2",
+                "train_k": 2,
+                "seed": 42,
+                "lr": 1e-3,
+                "epochs": 30,
+                "lambda_anchor": 1.0,
+                "graph_version": "G0",
+                "negative_sampling_strategy": "hard_negative_cosine_top20",
+                "hit_strict_art": 0.5,
+                "ndcg_strict_art": 0.4,
+                "mrr_strict_art": 0.3,
+                "m1_strict_art": 0.5,
+                "m2_strict_art": 0.4,
+            }
+        ]
+    )
+
+    out = cv_lightgcn.summarize_cv_results(df, "art", n_questions_benchmark=1)
+
+    assert out.loc[0, "negative_sampling_strategy"] == "hard_negative_cosine_top20"
+    assert "neg-hard_negative_cosine_top20" in out.loc[0, "method"]
+
+
 def test_main_rejects_non_official_split():
     with pytest.raises(ValueError, match="train_augmented_retrievable_strict"):
         cv_lightgcn.main(["--split", "eval_rich_retrievable_strict"])
+
+
+def test_cv_summary_uses_only_checkpoint_selected_for_requested_target():
+    rows = []
+    for target in ("art", "jp"):
+        for fold in range(5):
+            rows.append(
+                {
+                    "qid": f"q{fold}",
+                    "fold": fold,
+                    "variant": "trained_K2",
+                    "train_k": 2,
+                    "seed": 42,
+                    "lr": 0.001,
+                    "epochs": 3,
+                    "lambda_anchor": 1.0,
+                    "graph_version": "G1",
+                    "negative_sampling_strategy": "random",
+                    "selection_target": target,
+                    "hit_strict_art": 0.2 if target == "art" else 0.9,
+                    "m1_strict_art": 0.7 if target == "art" else 0.1,
+                    "ndcg_strict_art": 0.4,
+                    "mrr_strict_art": 0.3,
+                    "hit_jp": 0.8 if target == "jp" else 0.1,
+                    "m1_jp": 0.5,
+                    "ndcg_jp": 0.4,
+                    "mrr_jp": 0.3,
+                }
+            )
+
+    _, article_summary = cv_lightgcn.summarize_cv_outputs(pd.DataFrame(rows), "art")
+    _, jp_summary = cv_lightgcn.summarize_cv_outputs(pd.DataFrame(rows), "jp")
+
+    assert article_summary["selection_target"].tolist() == ["art"]
+    assert article_summary.loc[0, "article_recall_at_10_mean"] == pytest.approx(0.7)
+    assert jp_summary["selection_target"].tolist() == ["jp"]
+    assert jp_summary.loc[0, "jp_hit_at_10_mean"] == pytest.approx(0.8)
+def test_paired_deltas_match_same_lightgcn_config_across_graph_versions():
+    base = {
+        "variant": "trained_K2", "train_k": 2, "seed": 42, "lr": 1e-3,
+        "epochs": 30, "lambda_anchor": 1.0, "negative_sampling_strategy": "random",
+        "selection_target": "art",
+    }
+    candidate = pd.DataFrame([
+        {**base, "fold": fold, "graph_version": "G7", "m1_strict_art": 0.6 + fold / 100}
+        for fold in range(5)
+    ])
+    control = pd.DataFrame([
+        {**base, "fold": fold, "graph_version": "G1", "m1_strict_art": 0.5 + fold / 100}
+        for fold in range(5)
+    ])
+
+    deltas = cv_lightgcn.build_paired_deltas(candidate, control, "art")
+
+    assert deltas.loc[0, "eligible_comparison"]
+    assert deltas.loc[0, "n_folds_paired"] == 5
+    assert deltas.loc[0, "m1_strict_art_delta_mean"] == pytest.approx(0.1)
+    assert deltas.loc[0, "candidate_graph_version"] == "G7"
+    assert deltas.loc[0, "control_graph_version"] == "G1"

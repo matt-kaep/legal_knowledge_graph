@@ -4,6 +4,7 @@ import argparse
 import importlib.util
 import itertools
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -11,7 +12,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-REPO = Path("/Users/matthieu.kaeppelin/Documents/5-Pro/Stages/FE_recherche/legal_knowledge_graph")
+REPO = Path(os.environ.get(
+    "LKG_REPO",
+    str(Path(__file__).resolve().parents[4]),
+))
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -29,6 +33,85 @@ def _load_script_module(script_name: str, module_name: str):
 
 
 lightgcn = _load_script_module("32_lightgcn_strict.py", "lightgcn_strict")
+
+
+def select_replay_epoch(history_df: pd.DataFrame, metric: str) -> int:
+    """Select a fixed replay epoch from non-weighted means of validation folds."""
+    required = {"fold", "epoch", metric}
+    missing = required - set(history_df.columns)
+    if missing:
+        raise KeyError(f"Missing replay epoch columns: {sorted(missing)}")
+    finite = history_df.dropna(subset=[metric]).copy()
+    if finite.empty:
+        raise ValueError(f"No finite validation history for metric={metric}")
+    fold_epoch = finite.groupby(["fold", "epoch"], as_index=False)[metric].mean()
+    epoch_scores = fold_epoch.groupby("epoch", as_index=False)[metric].mean()
+    selected_epoch_index = int(
+        epoch_scores.sort_values([metric, "epoch"], ascending=[False, True], kind="stable")
+        .iloc[0]["epoch"]
+    )
+    # Histories are zero-based; the training CLI consumes an epoch count.
+    return selected_epoch_index + 1
+
+
+def selection_metric_for_target(target: str) -> str:
+    normalized = {"art": "art", "article": "art", "jp": "jp"}.get(target)
+    if normalized == "art":
+        return "val_recall"
+    if normalized == "jp":
+        return "val_hit_jp"
+    raise ValueError(f"Unsupported LightGCN selection target: {target}")
+
+
+def attach_replay_epochs(
+    champions: dict[str, dict], history_df: pd.DataFrame
+) -> dict[str, dict]:
+    """Attach fixed replay epochs using only each champion's matching CV history."""
+    enriched: dict[str, dict] = {}
+    match_columns = [
+        "variant",
+        "train_k",
+        "seed",
+        "lr",
+        "epochs",
+        "lambda_anchor",
+        "negative_sampling_strategy",
+        "graph_version",
+        "selection_target",
+    ]
+    for target, champion in champions.items():
+        row = dict(champion)
+        if not str(row.get("variant", "")).startswith("trained_"):
+            enriched[target] = row
+            continue
+        mask = pd.Series(True, index=history_df.index)
+        for column in match_columns:
+            if column not in history_df.columns or column not in row:
+                raise KeyError(f"Missing champion history key: {column}")
+            value = row[column]
+            mask &= history_df[column].isna() if pd.isna(value) else history_df[column].eq(value)
+        matching_history = history_df.loc[mask]
+        if matching_history.empty:
+            raise ValueError(f"No CV history matches LightGCN champion target={target}")
+        metric = selection_metric_for_target(target)
+        row["replay_epochs"] = select_replay_epoch(matching_history, metric)
+        row["selected_epoch_index"] = row["replay_epochs"] - 1
+        row["epoch_selection_metric"] = metric
+        enriched[target] = row
+    return enriched
+
+
+def refresh_results_surfaces() -> None:
+    try:
+        report = _load_script_module("49_build_intergraph_results_report.py", "intergraph_results_report")
+        report.build_report(report.DEFAULT_OUT_DIR)
+    except Exception as exc:  # pragma: no cover - best effort refresh
+        print(f"[warn] inter-graph report refresh failed: {exc}")
+    try:
+        snippets = _load_script_module("50_build_week13_intergraph_snippets.py", "week13_intergraph_snippets")
+        snippets.main([])
+    except Exception as exc:  # pragma: no cover - best effort refresh
+        print(f"[warn] week13 snippet refresh failed: {exc}")
 
 
 def enforce_official_split(split: str) -> None:
@@ -55,14 +138,13 @@ def validate_fold_assignments(df: pd.DataFrame, bench_qids: set[str]) -> pd.Data
     return df
 
 
-def load_fold_assignments(bench_qids: set[str]) -> pd.DataFrame:
-    fold_csv, _ = graph_protocol.resolve_shared_fold_paths()
-    df = pd.read_csv(fold_csv)
+def load_fold_assignments(bench_dir: Path, bench_qids: set[str]) -> tuple[pd.DataFrame, dict]:
+    df, metadata = graph_protocol.load_verified_grouped_fold_assignments(bench_dir)
     expected = set(range(graph_protocol.OFFICIAL_N_FOLDS))
     found = set(df["fold"].astype(int).unique().tolist())
     if found != expected:
         raise ValueError(f"Expected folds {sorted(expected)}, got {sorted(found)}")
-    return validate_fold_assignments(df, bench_qids)
+    return validate_fold_assignments(df, bench_qids), metadata
 
 
 def build_subset_bench(src_dir: Path, qids: set[str], dst_dir: Path) -> None:
@@ -101,11 +183,13 @@ def run_lightgcn_config(
     lr: float,
     epochs: int,
     lambda_anchor: float,
+    negative_sampling_strategy: str,
+    selection_target: str,
     include_baselines: bool,
     train_variant: bool,
 ) -> tuple[pd.DataFrame, pd.DataFrame | None]:
     suffix = (
-        f"fold{fold}_k{train_k}_s{seed}_lr{lr:g}_e{epochs}_la{lambda_anchor:g}"
+        f"fold{fold}_{selection_target}_k{train_k}_s{seed}_lr{lr:g}_e{epochs}_la{lambda_anchor:g}_neg{negative_sampling_strategy}"
         .replace(".", "p")
     )
     args = [
@@ -125,6 +209,10 @@ def run_lightgcn_config(
         str(epochs),
         "--lambda-anchor",
         str(lambda_anchor),
+        "--negative-sampling-strategy",
+        negative_sampling_strategy,
+        "--selection-metric",
+        selection_metric_for_target(selection_target),
         "--output-suffix",
         suffix,
     ]
@@ -141,40 +229,39 @@ def run_lightgcn_config(
     return raw_df, history_df
 
 
-def summarize_cv_results(
+def _metric_columns(modality: str) -> dict[str, str]:
+    if modality == "art":
+        return {
+            "article_hit_at_10": "hit_strict_art",
+            "article_ndcg_at_10": "ndcg_strict_art",
+            "article_mrr_at_10": "mrr_strict_art",
+            "article_recall_at_10": "m1_strict_art",
+        }
+    if modality == "jp":
+        return {
+            "jp_hit_at_10": "hit_jp",
+            "jp_ndcg_at_10": "ndcg_jp",
+            "jp_mrr_at_10": "mrr_jp",
+            "jp_recall_at_10": "m1_jp",
+        }
+    raise ValueError(f"Unsupported modality: {modality}")
+
+
+def summarize_cv_outputs(
     df: pd.DataFrame,
     modality: str,
     n_questions_benchmark: int | None = None,
-) -> pd.DataFrame:
+    expected_qids_by_fold: dict[int, set[str]] | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     if df.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(), pd.DataFrame()
+    df = df.copy()
+    if "selection_target" not in df.columns:
+        df["selection_target"] = modality
+    else:
+        df = df[df["selection_target"].isin([modality, "shared"])].copy()
     if n_questions_benchmark is None:
         n_questions_benchmark = int(df["qid"].nunique())
-    metric_map = (
-        {
-            "hit_strict": "hit_strict_art",
-            "ndcg_strict": "ndcg_strict_art",
-            "mrr_strict": "mrr_strict_art",
-            "m1_strict": "m1_strict_art",
-            "m2_strict": "m2_strict_art",
-            "hit_ext": "hit_ext_art",
-            "ndcg_ext": "ndcg_ext_art",
-            "mrr_ext": "mrr_ext_art",
-            "m1_ext": "m1_ext_art",
-            "m2_ext": "m2_ext_art",
-        }
-        if modality == "art"
-        else {
-            "hit": "hit_jp",
-            "ndcg": "ndcg_jp",
-            "mrr": "mrr_jp",
-            "m1": "m1_jp",
-            "m2": "m2_jp",
-        }
-    )
-    available = {out: src for out, src in metric_map.items() if src in df.columns}
-    if not available:
-        return pd.DataFrame()
     group_cols = [
         "variant",
         "train_k",
@@ -182,30 +269,20 @@ def summarize_cv_results(
         "lr",
         "epochs",
         "lambda_anchor",
+        "negative_sampling_strategy",
         "graph_version",
+        "selection_target",
     ]
-    summary = (
-        df.groupby(group_cols, dropna=False)[list(available.values())]
-        .mean()
-        .reset_index()
-        .rename(columns={src: out for out, src in available.items()})
+    fold_metrics, summary = graph_protocol.summarize_fold_metrics(
+        df,
+        config_columns=group_cols,
+        metric_columns=_metric_columns(modality),
+        expected_qids_by_fold=expected_qids_by_fold,
     )
-    coverage = (
-        df.groupby(group_cols, dropna=False)
-        .agg(
-            n_questions_covered=("qid", "nunique"),
-            n_folds_covered=("fold", "nunique"),
-        )
-        .reset_index()
-    )
-    coverage["n_questions_benchmark"] = int(n_questions_benchmark)
-    coverage["question_coverage"] = (
-        coverage["n_questions_covered"] / coverage["n_questions_benchmark"]
-    )
-    coverage["fold_coverage"] = (
-        coverage["n_folds_covered"] / graph_protocol.OFFICIAL_N_FOLDS
-    )
-    summary = summary.merge(coverage, on=group_cols, how="left")
+    summary["n_questions_benchmark"] = int(n_questions_benchmark)
+    if expected_qids_by_fold is None:
+        summary["n_questions_covered"] = int(df["qid"].nunique())
+        summary["question_coverage"] = 1.0
     summary.insert(
         0,
         "method",
@@ -219,18 +296,82 @@ def summarize_cv_results(
                     f"-lr{float(row['lr']):g}"
                     f"-e{int(row['epochs'])}"
                     f"-la{float(row['lambda_anchor']):g}"
+                    f"-neg-{row['negative_sampling_strategy']}"
                 )
             ),
             axis=1,
         ),
     )
     summary.insert(1, "modality", modality)
-    return summary.sort_values(["method"]).reset_index(drop=True)
+    fold_metrics.insert(
+        0,
+        "method",
+        fold_metrics.apply(
+            lambda row: (
+                f"LightGCN-{row['variant']}"
+                if row["variant"].startswith("untrained_")
+                else (
+                    f"LightGCN-{row['variant']}"
+                    f"-s{int(row['seed'])}"
+                    f"-lr{float(row['lr']):g}"
+                    f"-e{int(row['epochs'])}"
+                    f"-la{float(row['lambda_anchor']):g}"
+                    f"-neg-{row['negative_sampling_strategy']}"
+                )
+            ),
+            axis=1,
+        ),
+    )
+    fold_metrics.insert(1, "modality", modality)
+    return fold_metrics, summary.sort_values(["method"]).reset_index(drop=True)
+
+
+def summarize_cv_results(
+    df: pd.DataFrame,
+    modality: str,
+    n_questions_benchmark: int | None = None,
+) -> pd.DataFrame:
+    return summarize_cv_outputs(df, modality, n_questions_benchmark)[1]
+
+
+def build_paired_deltas(
+    candidate: pd.DataFrame,
+    control: pd.DataFrame,
+    modality: str,
+    expected_folds: int = graph_protocol.OFFICIAL_N_FOLDS,
+) -> pd.DataFrame:
+    config_columns = [
+        "variant", "train_k", "seed", "lr", "epochs", "lambda_anchor",
+        "negative_sampling_strategy", "selection_target",
+    ]
+    metric_columns = [
+        metric for metric in _metric_columns(modality).values()
+        if metric in candidate.columns and metric in control.columns
+    ]
+    deltas = graph_protocol.summarize_paired_fold_deltas(
+        candidate, control, config_columns, metric_columns, expected_folds
+    )
+    deltas["candidate_graph_version"] = candidate["graph_version"].iloc[0] if not candidate.empty else None
+    deltas["control_graph_version"] = control["graph_version"].iloc[0] if not control.empty else None
+    return deltas
 
 
 def select_champion(summary_df: pd.DataFrame, modality: str) -> dict:
     if summary_df.empty:
         raise ValueError(f"No CV results available for modality={modality}")
+    if "eligible_champion" in summary_df:
+        eligible = summary_df[summary_df["eligible_champion"]].copy()
+        if eligible.empty:
+            raise ValueError(f"No eligible CV champion for modality={modality}: missing fold coverage")
+        sort_columns = graph_protocol.champion_sort_columns(modality)
+        missing = [column for column, _ in sort_columns if column not in eligible.columns]
+        if missing:
+            raise KeyError(missing[0])
+        return eligible.sort_values(
+            [column for column, _ in sort_columns],
+            ascending=[ascending for _, ascending in sort_columns],
+            kind="stable",
+        ).iloc[0].to_dict()
     records = summary_df.to_dict(orient="records")
     return max(records, key=lambda row: graph_protocol.metric_rank_tuple(row, modality))
 
@@ -239,6 +380,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--graph-version", default="canonical")
     parser.add_argument("--split", default=graph_protocol.OFFICIAL_TRAIN_SPLIT)
+    parser.add_argument(
+        "--bench-dir",
+        type=Path,
+        help="Explicit train benchmark directory; used by sealed cluster campaigns.",
+    )
     parser.add_argument("--out-dir", type=Path)
     parser.add_argument("--train-k", type=int, action="append", dest="train_ks")
     parser.add_argument("--seed", type=int, action="append", dest="seeds")
@@ -250,21 +396,52 @@ def main(argv: list[str] | None = None) -> int:
         action="append",
         dest="lambda_anchors",
     )
+    parser.add_argument("--control-fold-metrics", type=Path)
+    parser.add_argument("--refresh-legacy-surfaces", action="store_true")
+    parser.add_argument(
+        "--selection-target",
+        action="append",
+        dest="selection_targets",
+        choices=("art", "jp"),
+        help="Limit trained runs to one selection target; repeat to request both.",
+    )
+    parser.add_argument(
+        "--negative-sampling-strategy",
+        action="append",
+        dest="negative_sampling_strategies",
+        help="Peut être répété: random, hard_negative_cosine_top20, hard_negative_cosine_top50.",
+    )
     args = parser.parse_args(argv)
 
     enforce_official_split(args.split)
-    bench_dir = graph_protocol.resolve_graph_bench_dir(args.graph_version, args.split)
+    bench_dir = args.bench_dir or graph_protocol.resolve_graph_bench_dir(
+        args.graph_version, args.split
+    )
     bench_questions = graph_protocol.load_bench_questions(bench_dir)
     bench_qids = {str(question["qid"]) for question in bench_questions}
-    folds = load_fold_assignments(bench_qids)
+    folds, fold_metadata = load_fold_assignments(bench_dir, bench_qids)
+    expected_qids_by_fold = graph_protocol.expected_qids_by_fold(folds)
 
     train_ks = args.train_ks or [2]
     seeds = args.seeds or [42]
     lrs = args.lrs or [1e-3]
     epochs_list = args.epochs_list or [30]
     lambda_anchors = args.lambda_anchors or [1.0]
-    trained_configs = list(itertools.product(train_ks, seeds, lrs, epochs_list, lambda_anchors))
-    out_dir = args.out_dir or (bench_dir / "_cv" / "lightgcn")
+    negative_sampling_strategies = args.negative_sampling_strategies or [lightgcn.NEGATIVE_RANDOM]
+    selection_targets = args.selection_targets or ["art", "jp"]
+    for strategy in negative_sampling_strategies:
+        lightgcn.parse_negative_sampling_strategy(strategy)
+    trained_configs = list(
+        itertools.product(
+            train_ks,
+            seeds,
+            lrs,
+            epochs_list,
+            lambda_anchors,
+            negative_sampling_strategies,
+        )
+    )
+    out_dir = args.out_dir or (graph_protocol.cv_root(graph_protocol.BENCH_ROOT) / args.graph_version / "lightgcn")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     raw_parts: list[pd.DataFrame] = []
@@ -290,6 +467,8 @@ def main(argv: list[str] | None = None) -> int:
                 lr=lrs[0],
                 epochs=epochs_list[0],
                 lambda_anchor=lambda_anchors[0],
+                negative_sampling_strategy=lightgcn.NEGATIVE_RANDOM,
+                selection_target="art",
                 include_baselines=True,
                 train_variant=False,
             )
@@ -304,55 +483,72 @@ def main(argv: list[str] | None = None) -> int:
             baseline_df["lr"] = np.nan
             baseline_df["epochs"] = np.nan
             baseline_df["lambda_anchor"] = np.nan
+            baseline_df["negative_sampling_strategy"] = lightgcn.NEGATIVE_RANDOM
             baseline_df["graph_version"] = args.graph_version
+            baseline_df["selection_target"] = "shared"
             raw_parts.append(baseline_df)
 
-            for train_k, seed, lr, epochs, lambda_anchor in trained_configs:
-                trained_df, history_df = run_lightgcn_config(
-                    train_dir,
-                    val_dir,
-                    graph_version=args.graph_version,
-                    fold=fold,
-                    train_k=train_k,
-                    seed=seed,
-                    lr=lr,
-                    epochs=epochs,
-                    lambda_anchor=lambda_anchor,
-                    include_baselines=False,
-                    train_variant=True,
-                )
-                trained_df.insert(0, "fold", fold)
-                trained_df["train_k"] = train_k
-                trained_df["seed"] = seed
-                trained_df["lr"] = lr
-                trained_df["epochs"] = epochs
-                trained_df["lambda_anchor"] = lambda_anchor
-                trained_df["graph_version"] = args.graph_version
-                raw_parts.append(trained_df)
-                if history_df is not None and not history_df.empty:
-                    history_df.insert(0, "fold", fold)
-                    history_df["train_k"] = train_k
-                    history_df["seed"] = seed
-                    history_df["lr"] = lr
-                    history_df["epochs"] = epochs
-                    history_df["lambda_anchor"] = lambda_anchor
-                    history_parts.append(history_df)
-                    history_suffix = (
-                        f"fold{fold}_k{train_k}_s{seed}_lr{lr:g}_e{epochs}_la{lambda_anchor:g}"
-                        .replace(".", "p")
+            for train_k, seed, lr, epochs, lambda_anchor, negative_sampling_strategy in trained_configs:
+                for selection_target in selection_targets:
+                    trained_df, history_df = run_lightgcn_config(
+                        train_dir,
+                        val_dir,
+                        graph_version=args.graph_version,
+                        fold=fold,
+                        train_k=train_k,
+                        seed=seed,
+                        lr=lr,
+                        epochs=epochs,
+                        lambda_anchor=lambda_anchor,
+                        negative_sampling_strategy=negative_sampling_strategy,
+                        selection_target=selection_target,
+                        include_baselines=False,
+                        train_variant=True,
                     )
-                    history_df.to_csv(
-                        out_dir / f"lightgcn_history_{history_suffix}.csv",
-                        index=False,
-                    )
+                    trained_df.insert(0, "fold", fold)
+                    trained_df["train_k"] = train_k
+                    trained_df["seed"] = seed
+                    trained_df["lr"] = lr
+                    trained_df["epochs"] = epochs
+                    trained_df["lambda_anchor"] = lambda_anchor
+                    trained_df["negative_sampling_strategy"] = negative_sampling_strategy
+                    trained_df["graph_version"] = args.graph_version
+                    trained_df["selection_target"] = selection_target
+                    raw_parts.append(trained_df)
+                    if history_df is not None and not history_df.empty:
+                        history_df.insert(0, "fold", fold)
+                        history_df["train_k"] = train_k
+                        history_df["seed"] = seed
+                        history_df["lr"] = lr
+                        history_df["epochs"] = epochs
+                        history_df["lambda_anchor"] = lambda_anchor
+                        history_df["negative_sampling_strategy"] = negative_sampling_strategy
+                        history_df["selection_target"] = selection_target
+                        history_parts.append(history_df)
+                        history_suffix = (
+                            f"fold{fold}_{selection_target}_k{train_k}_s{seed}_lr{lr:g}_e{epochs}_la{lambda_anchor:g}_neg{negative_sampling_strategy}"
+                            .replace(".", "p")
+                        )
+                        history_df.to_csv(
+                            out_dir / f"lightgcn_history_{history_suffix}.csv",
+                            index=False,
+                        )
 
     raw_df = pd.concat(raw_parts, ignore_index=True) if raw_parts else pd.DataFrame()
-    summary_parts = [
-        summarize_cv_results(raw_df, "art", n_questions_benchmark=len(bench_qids)),
-        summarize_cv_results(raw_df, "jp", n_questions_benchmark=len(bench_qids)),
+    output_parts = [
+        summarize_cv_outputs(
+            raw_df, "art", n_questions_benchmark=len(bench_qids), expected_qids_by_fold=expected_qids_by_fold
+        ),
+        summarize_cv_outputs(
+            raw_df, "jp", n_questions_benchmark=len(bench_qids), expected_qids_by_fold=expected_qids_by_fold
+        ),
     ]
+    fold_metrics_df = pd.concat(
+        [fold_metrics for fold_metrics, _ in output_parts if not fold_metrics.empty],
+        ignore_index=True,
+    )
     summary_df = pd.concat(
-        [part for part in summary_parts if not part.empty],
+        [summary for _, summary in output_parts if not summary.empty],
         ignore_index=True,
     )
     champions = {}
@@ -362,12 +558,37 @@ def main(argv: list[str] | None = None) -> int:
             if not sub.empty:
                 champions[modality] = select_champion(sub, modality)
 
-    raw_df.to_csv(out_dir / "cv_results_raw.csv", index=False)
-    summary_df.to_csv(out_dir / "cv_results_summary.csv", index=False)
-    if history_parts:
-        history_df = pd.concat(history_parts, ignore_index=True)
+    run_metadata = {
+        key: fold_metadata[key]
+        for key in ["protocol_version", "dataset_sha256", "fold_assignment_sha256"]
+    }
+    for key, value in run_metadata.items():
+        summary_df[key] = value
+    history_df = pd.concat(history_parts, ignore_index=True) if history_parts else pd.DataFrame()
+    if not history_df.empty:
+        champions = attach_replay_epochs(champions, history_df)
+    for champion in champions.values():
+        champion.update(run_metadata)
+
+    raw_df.to_csv(out_dir / "raw.csv", index=False)
+    fold_metrics_df.to_csv(out_dir / "fold_metrics.csv", index=False)
+    summary_df.to_csv(out_dir / "summary.csv", index=False)
+    (out_dir / "run_metadata.json").write_text(json.dumps(run_metadata, ensure_ascii=False, indent=2))
+    if not history_df.empty:
         history_df.to_csv(out_dir / "lightgcn_history_all.csv", index=False)
     (out_dir / "champions.json").write_text(json.dumps(champions, ensure_ascii=False, indent=2))
+    if args.control_fold_metrics is not None:
+        control_fold_metrics = pd.read_csv(args.control_fold_metrics)
+        paired_parts = []
+        for modality in ["art", "jp"]:
+            candidate = fold_metrics_df[fold_metrics_df["modality"] == modality]
+            control = control_fold_metrics[control_fold_metrics["modality"] == modality]
+            paired_parts.append(
+                build_paired_deltas(candidate, control, modality, expected_folds=len(expected_qids_by_fold))
+            )
+        pd.concat(paired_parts, ignore_index=True).to_csv(out_dir / "paired_deltas.csv", index=False)
+    if args.refresh_legacy_surfaces:
+        refresh_results_surfaces()
     print(out_dir)
     return 0
 

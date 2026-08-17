@@ -15,7 +15,9 @@ tags: [coordination, benchmark, papier]
 - Les folds groupés et l'intégration des runners/replay sont audités. La baseline mémoire est maintenant mesurée et la campagne est en cours avec un seul job graphe ; aucun résultat confirmatoire n'est transmissible avant la fin des gates.
 - Les sections méthodes et protocole peuvent suivre le contrat figé ; les sections résultats doivent attendre les exports post-campagne.
 - E015 dispose désormais d'un audit humain sur textes intégraux : 30/34 rattrapages bruts sont juridiquement valides après exclusion de quatre cas de même procédure/noyau factuel. Ce résultat reste exploratoire et ne doit pas entrer comme gain LightGCN dans le tableau principal.
-- E016 est enregistré pour mesurer, sur G7 seulement, la pertinence graduée A–E des 7 540 positions top-10 puis la contrôler sur 100 cas avocat. La préparation trouve 7 487 couples uniques, zéro fiche manquante et 53 positions JP répétées qui seront pénalisées comme places perdues. Aucun score E016 n'est encore disponible.
+- E016 a jugé les 7 540 positions top-10 de G7 : score gradué brut `0,427122`, encore non validé. L'analyse descriptive trouve au moins une A/B pour 498 des 555 questions sans JP exacte ; ce signal peut refléter une Ground Truth incomplète ou un juge trop permissif. Le contrôle avocat de 100 cas reste obligatoire.
+- E017 a terminé ses 33 replays LightGCN et les 14 309 jugements gradués : 7 348 réponses E016 sont réutilisées et 6 961 sont calculées sur GPU. Les scores inter-graphes sont désormais agrégés, mais restent exploratoires et en attente de l'audit avocat E016.
+- E018 relie les faux négatifs exacts des 33 replays aux liens G8-Large bruts. Il sert à préparer un audit humain des alternatives juridiques, pas à créer une métrique de retrieval ni à présenter G8 comme une amélioration.
 
 ## Action demandée à B
 
@@ -24,6 +26,46 @@ tags: [coordination, benchmark, papier]
 - Laisser les conclusions G7 et negative mining conditionnelles.
 
 ## Journal des transmissions
+
+### 2026-08-12 — E019-A : les listes expliquent la proximité des scores
+
+- Décision ou résultat : lecture seule des 33 rankings E017, pour 11 graphes, 55 paires et les seuils top-1/top-3/top-5/top-10. G6-AA et G7-JJ c1/s0,50 partagent 7,04 JP au top-10 (Jaccard 0,565) ; leurs différences représentent environ trois JP exclusives par liste, A/B dans 46,34 % des cas pour G6 et 47,54 % pour G7.
+- Interprétation autorisée : les scores gradués proches correspondent à des listes largement communes, complétées par quelques alternatives. Le résultat décrit le comportement des rankings ; il ne démontre pas la supériorité de G7, une causalité des liens JP--JP, ni la validité du juge LLM.
+- Artefacts ou sections affectés : `e019_jp_ranking_overlap_pair_metrics.csv`, `e019_jp_ranking_overlap_per_question.parquet`, README E017 et deck G7--G8.
+- Action demandée : conserver E019-A comme diagnostic exploratoire. E019-B est prêt pour une comparaison réduite G0--G7, mais son lancement exige une sélection train-only homogène des familles historiques G0--G5.
+- Statut : `exploratoire`.
+
+### 2026-08-12 — E017 : analyse approfondie intégrée au deck
+
+- Décision ou résultat : le deck E016--E017 contient désormais cinq slides. Le tableau complet confirme deux vainqueurs distincts : G6-AA pour le `Hit@10` exact (`0,2685`) et G7-JJ c1/s0,50 pour le score gradué (`0,4317`). G6 est meilleur au rang 1 ; G7 passe devant à partir du rang 5. Les deux top-10 partagent 7,04 JP en moyenne et environ 46 % des positions restent sans gain.
+- Interprétation autorisée : les sous-groupes et deux décisions lues suggèrent que les liens JP--JP récupèrent mieux les familles jurisprudentielles transversales, tandis que les liens article--article préservent mieux l'ancrage des questions précises et des exceptions procédurales.
+- Limites : la comparaison ne constitue pas une ablation causale, le benchmark est une évaluation interne déjà consultée et le score gradué reste en attente de l'audit avocat E016.
+- Artefacts affectés : `01-Projet/presentations/E016-Evaluation-JP-Graduee-2026-08-11.tex`, son PDF et la section « Diagnostic approfondi pour la présentation » du README E017.
+- Statut : `exploratoire_agrege_en_attente_audit_avocat`.
+
+### 2026-08-12 — E018 : diagnostic transversal G8-Large × E017
+
+- Décision ou résultat : les 24 882 couples replay--question E017 sont comparés à G8-Large brut. Les cas sans hit exact mais raccordés par « même règle » (1 061) ou seulement par « même question » (1 490) ont un score gradué moyen supérieur aux 15 766 cas sans lien G8 ; cette observation sélectionne des cas à lire, elle ne mesure pas un gain de retrieval.
+- Pourquoi B est concernée : la dissociation exact / pertinence alternative peut alimenter la discussion des limites du benchmark, à condition de ne pas l'interpréter comme une validation de G8 ou du juge LLM.
+- Artefacts ou sections affectés : `06-Analyses/comparatifs/g8-llm-verified-jp-jp-2026-08-05/G8-Large-Analyse-Descriptive-2026-08-12.md`, script `scripts/85_analyze_e017_g8_large_raw_diagnostics.py` et exports E018 sous `data/doctrine_v3plus_bench/E017-intergraph-graded-jp-v1/`.
+- Action demandée : conserver `E018` comme diagnostic post-hoc exploratoire ; ne pas ajouter de score composite ni de résultat G8 au tableau principal avant filtre, audit humain et ablation G7 contre G7+G8.
+- Statut : `exploratoire`.
+
+### 2026-08-12 — E017 agrégé, réserve avocat maintenue
+
+- Décision ou résultat : les 33 replays et les 14 309 jugements JP gradués sont complets. G6 citation AA donne le meilleur `Hit@10` exact moyen (`0,2685`, ET `0,0051`) ; G7 JJ citation 1 / sémantique 0,50 donne le meilleur score gradué@10 (`0,4317`, ET `0,0020`).
+- Pourquoi B est concernée : le résultat explique une dissociation entre Ground Truth exacte et pertinence graduée, utile pour la discussion des limites et non pour désigner une méthode finale.
+- Artefacts ou sections affectés : `06-Analyses/comparatifs/e017-intergraph-graded-jp-2026-08-11/README.md` et les exports `e017_graph_seed_metrics.csv`, `e017_graph_metrics.csv`, `e017_per_question_metrics.csv`, `e017_summary.json` sous `data/doctrine_v3plus_bench/E017-intergraph-graded-jp-v1/`.
+- Action demandée : ne pas insérer ces chiffres dans un tableau confirmatoire et ne pas conclure à la supériorité d'un graphe avant le paquet avocat E016 ; la différence entre score gradué et `Hit@10` doit rester une observation exploratoire.
+- Statut : `exploratoire_agrege_en_attente_audit_avocat`.
+
+### 2026-08-12 — E017 passé au jugement GPU
+
+- Décision ou résultat : 33/33 CV et 33/33 replays complets ; pool exhaustif de 248 820 positions, 14 309 couples uniques, 7 348 réponses E016 réutilisées et 6 961 jugements nouveaux.
+- Preuve : pilote A100 `937671` terminé avec 30/30 réponses `ok`, puis run complet A100 `937682` observé `RUNNING` sur `node05`.
+- Pourquoi B est concernée : le tableau inter-graphes pourra recevoir un score JP gradué par graphe et seed seulement après résolution complète du journal et agrégation fixed-K.
+- Action demandée : ne reprendre encore aucun score E017 ; conserver le statut `exploratoire_internal_evaluation` et la réserve sur l'audit avocat E016.
+- Statut : calcul GPU en cours.
 
 ### 2026-07-26 — Initialisation
 
@@ -40,6 +82,17 @@ tags: [coordination, benchmark, papier]
 - Artefacts affectés : méthodes/protocole du papier uniquement à ce stade.
 - Action demandée : conserver C002–C005 comme proposées/exploratoires ; attendre les exports portant `experiment_id` et statut avant d'insérer des chiffres confirmatoires.
 - Statut : transmis.
+
+### 2026-08-18 — Export versionné pour la session Papier
+
+- Branche et manifeste : `paper/ecir-2027-reproducibility`, manifeste portable `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2_repro_v1.json`, campagne `confirmatory-g1-g6-g7-grouped-v2-repro-v1-2026-08-18`, SHA-256 fichier `18abc26eda35f121cf10cc9eddbce690cc8cbf367020b8080d284b90ef0413ed`, SHA-256 canonique de préflight `b852b0dbf9460ac8541c5447e61b37ea5987c99f0126a0bf74f0947a36a69152`. Le manifeste historique est conservé immuable.
+- Reprise autorisée pour B : `results/benchmark-repro-v1/internal_eval_articles.csv` (SHA `e0650daf35e2ea4d799ccaf73840dde75f94f231141ae6b914baaaa8dd925423`), `internal_eval_jp_exact.csv` (SHA `755c4025cbfc93936294a4544c40c4e678b8f18e6a7633b80916088ab54294a6`), `internal_eval_jp_llm_as_a_judge.csv` (SHA `0199bcf105d05ddd8045ef990151c0fa335b054fada4d8b3de4d3bd5e4200a60`), `train_cv_retrieval.csv` (SHA `bb62a2ef41d8413ad21c5cb6bcc1d7571825238aa19525218f6ec09d02c8645e`), et `e016_jp_llm_and_exact_context.csv` (SHA `fd256704442245d7444e478f6d8cb00a9874a2f5ff6f8259e8acf37ec2867558`). Chaque ligne contient méthode, graphe, split, folds/seeds, moyenne, dispersion, configuration, statut, source et SHA de l'artefact source.
+- Formulation autorisée Articles : « E017 fournit un export interne exploratoire de Recall@10 sur les 11 graphes, 3 seeds et 754 questions ; la sélection d'epoch est issue des folds train-only et le replay est gelé. » Ne pas transformer ce score d'évaluation interne en preuve confirmatoire ni en lockbox finale.
+- Formulation autorisée JP exacte : « L'export sépare le `Hit@10` officiel, NDCG@10 et MRR@10 du diagnostic binaire `exact_any_gold_at_10`. » Pour E016, les valeurs récupérées sont LLM-as-a-Judge `0,4271220159`, exact_any `0,2639257294`, Hit@10 officiel `0,25`, NDCG `0,1648240979`, MRR `0,1404630331`; l'audit avocat reste manquant.
+- Formulation autorisée juge : « Les scores LLM-as-a-Judge E016/E017 sont exploratoires et en attente du contrôle humain avocat ; ils ne soutiennent pas une supériorité de graphe. » La comparaison G6/G7 ne doit pas être appelée ablation causale.
+- À ne pas reprendre comme résultat : `_final_grouped_v2` est manquant ; le replay PPR interne n'a pas été relancé car le préflight mesurait 4 520 706 048 octets disponibles contre 9 771 050 598 requis ; E021 reranking comparable est préparé mais non exécuté.
+- Paquet humain : `results/audit/e016-lawyer-audit/README.md` et `manifest.json`. Les CSV sample/key restent dans le checkout de données local ; `lawyer_agreement.json` doit être produit par l'annotation aveugle avant tout changement de statut.
+- Statut de transmission : exploitable pour les tableaux internes, méthodes de protocole et limites ; non autorisé pour une formulation confirmatoire, un classement final ou une affirmation de supériorité.
 
 ### 2026-07-26 — Correction après review-loop
 
@@ -127,3 +180,20 @@ tags: [coordination, benchmark, papier]
 - Audit : 100 cas aveugles sont préparés, stratifiés A=27, B=22, C=17, D=17, E=17, avec poids d'inclusion dans la clé privée. La frontière B reste prioritaire.
 - Action demandée : ne pas présenter `0,427122` comme score validé avant accord pondéré avocat et précision pondérée A/B ; conserver le statut exploratoire interne.
 - Statut : jugement et agrégation terminés ; gate avocat en attente.
+
+### 2026-08-11 — Analyse descriptive E016, exact contre gradué
+
+- Décision ou résultat : le `Hit@10` officiel reste `0,250000`. Sur 754 questions, 199 ont au moins une JP exacte dans le top-10, alors que 692 ont au moins une JP classée A/B. Parmi les 555 sans hit exact, 498 ont une A/B et 57 n'en ont aucune.
+- Contrôle de cohérence : 191/204 couples exacts uniques sont classés A/B ; 3 821/7 283 couples non exacts uniques le sont aussi. Le gain moyen décroît du rang 1 (`0,5623`) au rang 10 (`0,3289`).
+- Interprétation autorisée : la Ground Truth peut être fortement incomplète, mais cette hypothèse reste indissociable d'un éventuel surclassement par le juge tant que l'audit avocat n'est pas terminé.
+- Limite nouvelle : l'échantillon avocat actuel contient seulement 2 couples exacts et aucune JP attendue non retournée. Il valide le juge sur les sorties G7, pas la pertinence générale des 978 couples de Ground Truth.
+- Action demandée : ne pas intégrer ces chiffres comme résultat validé dans le papier. Après le gate avocat, prévoir un audit séparé des couples de Ground Truth avant le diagnostic G8 et les propositions d'amélioration G7.
+- Statut : analyse exploratoire transmise ; verdict scientifique et diagnostic G8 toujours en attente.
+
+### 2026-08-11 — Campagne E017 inter-graphes lancée
+
+- Décision ou résultat : les onze graphes G1/G6/G7 sont en calcul LightGCN avec trois seeds et cinq folds groupés. Les CV actifs sont `936154` et `936188`; les replays `936155` et `936189` sont déjà soumis avec dépendance par graphe.
+- Preuve : 91 entrées vérifiées par SHA-256 sur le cluster; 33 tâches scientifiques isolées; artefact `06-Analyses/comparatifs/e017-intergraph-graded-jp-2026-08-11/README.md`.
+- Limite : aucun score E017 n'est encore produit. L'évaluation reste interne/exploratoire et le futur score gradué restera conditionné par l'audit avocat E016.
+- Action demandée : ne pas ajouter de classement inter-graphes au papier ou aux slides avant transmission des replays complets et de l'agrégation contrôlée par la tâche A.
+- Statut : calcul cluster en cours.

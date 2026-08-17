@@ -1,13 +1,18 @@
 """Étape 1 — chemins, constantes, mapping code_slug → nom LEGI officiel."""
 from __future__ import annotations
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data"
+REPO = Path(os.environ.get("LKG_REPO", str(ROOT.parents[4]))).expanduser().resolve()
+DATA_REPO = Path(os.environ.get("LKG_DATA_ROOT", str(REPO))).expanduser().resolve()
+CODE_BENCH = REPO / "05-Technique" / "benchmark"
+DATA_BENCH = DATA_REPO / "05-Technique" / "benchmark"
+DATA = DATA_BENCH / "etape1_embedding_pur" / "data"
 DATA.mkdir(exist_ok=True)
 
 # Inputs read-only (relatifs depuis ROOT)
-BENCH = ROOT.parents[0]  # 05-Technique/benchmark/
+BENCH = DATA_BENCH  # 05-Technique/benchmark/
 BUNDLE = BENCH / "baseline_b2" / "penal_bundle"
 GRAPH_NPZ = BUNDLE / "graph_penal.npz"
 JP_INDEX = BUNDLE / "jp_index_penal.parquet"
@@ -48,7 +53,7 @@ EMB_JP_SYNTHESE         = DATA / "emb_jp_synthese.npy"
 JP_SUMMARIES_COVERAGE   = DATA / "jp_summaries_coverage.json"
 
 # Credentials DB OVH (.env.local racine 05-Technique/)
-ENV_LOCAL = BENCH.parent / ".env.local"
+ENV_LOCAL = CODE_BENCH.parent / ".env.local"
 
 # Modèle
 MODEL_ID = "BAAI/bge-m3"

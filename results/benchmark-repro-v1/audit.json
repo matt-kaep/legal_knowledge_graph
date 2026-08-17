@@ -1,0 +1,483 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-17T23:30:55.024350+00:00",
+  "manifest": {
+    "campaign_id": "confirmatory-g1-g6-g7-grouped-v2-repro-v1-2026-08-18",
+    "manifest_sha256": "b852b0dbf9460ac8541c5447e61b37ea5987c99f0126a0bf74f0947a36a69152",
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2_repro_v1.json",
+    "manifest_status": "complete",
+    "parent_manifest": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2.json",
+      "hash_matches": true
+    },
+    "data_inputs": [
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict/bench_global.json",
+        "exists": true,
+        "size_bytes": 9027894,
+        "sha256": "7e6cf685dcf2c6d1794fbbd4cd46fbcf26ec9f6107a38c7ebf478b1450e9b9ac",
+        "expected_sha256": "7e6cf685dcf2c6d1794fbbd4cd46fbcf26ec9f6107a38c7ebf478b1450e9b9ac",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+        "exists": true,
+        "size_bytes": 1242544,
+        "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+        "expected_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy",
+        "exists": true,
+        "size_bytes": 11268032,
+        "sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f",
+        "expected_sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy",
+        "exists": true,
+        "size_bytes": 7253264,
+        "sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a",
+        "expected_sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/node_ids.npy",
+        "exists": true,
+        "size_bytes": 42934960,
+        "sha256": "7b8ff47d50ad7a154a062049cbb0c447f7d68136c449a2515f2b081105e7cbc2",
+        "expected_sha256": "7b8ff47d50ad7a154a062049cbb0c447f7d68136c449a2515f2b081105e7cbc2",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_codes.npy",
+        "exists": true,
+        "size_bytes": 6394340,
+        "sha256": "277296b7f16858594672db01ce78ff5e7a9aa0be6451c90651d8bd4c1254e6d7",
+        "expected_sha256": "277296b7f16858594672db01ce78ff5e7a9aa0be6451c90651d8bd4c1254e6d7",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict/questions_emb.npy",
+        "exists": true,
+        "size_bytes": 22950016,
+        "sha256": "3e749f1de000a056ac568cb62b1a9e73e3b733e8e821c36b27d93779082e5aa1",
+        "expected_sha256": "3e749f1de000a056ac568cb62b1a9e73e3b733e8e821c36b27d93779082e5aa1",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict/questions_ids.npy",
+        "exists": true,
+        "size_bytes": 674367,
+        "sha256": "915adef51049b312f36f990b88b0eae27485966dea5cb26d3d458b8cd6a7de31",
+        "expected_sha256": "915adef51049b312f36f990b88b0eae27485966dea5cb26d3d458b8cd6a7de31",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/questions_emb.npy",
+        "exists": true,
+        "size_bytes": 3088512,
+        "sha256": "513f24dd1afe2d284d1a266982ecad68c1a461a94725c9bcd83e3784cbf7727c",
+        "expected_sha256": "513f24dd1afe2d284d1a266982ecad68c1a461a94725c9bcd83e3784cbf7727c",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/questions_ids.npy",
+        "exists": true,
+        "size_bytes": 90627,
+        "sha256": "5c6e23ec283e955aa8a304765a8381688c2c4f28be0a50a9be40438cb2574753",
+        "expected_sha256": "5c6e23ec283e955aa8a304765a8381688c2c4f28be0a50a9be40438cb2574753",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_articles_all.npy",
+        "exists": true,
+        "size_bytes": 128438400,
+        "sha256": "9d10884944d7184aeeb95d64dfec79bc97044c3364c6e40ee60e940f61c1c944",
+        "expected_sha256": "9d10884944d7184aeeb95d64dfec79bc97044c3364c6e40ee60e940f61c1c944",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_order_all.npy",
+        "exists": true,
+        "size_bytes": 1052425,
+        "sha256": "06f5551d6a38f8f7887d760461b7f7460b2e738e062a8bed4b9c598b34c0fbb0",
+        "expected_sha256": "06f5551d6a38f8f7887d760461b7f7460b2e738e062a8bed4b9c598b34c0fbb0",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_jp_synthese.npy",
+        "exists": true,
+        "size_bytes": 478228608,
+        "sha256": "1f7eb3f6723c956d745dbdfc851730eba8af37a3dfea06c8354d191f433eead9",
+        "expected_sha256": "1f7eb3f6723c956d745dbdfc851730eba8af37a3dfea06c8354d191f433eead9",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summary_order.npy",
+        "exists": true,
+        "size_bytes": 3153329,
+        "sha256": "985e83bfbee610117fcf8873b8a58eb61ffd1e35bf1423f95985a375a3012c5b",
+        "expected_sha256": "985e83bfbee610117fcf8873b8a58eb61ffd1e35bf1423f95985a375a3012c5b",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/legi/legi.sqlite",
+        "exists": true,
+        "size_bytes": 5059645440,
+        "sha256": "f78a1dd850a65477d88a59406dafc6da29cb52d624911fc0fdca56dbf40e91fd",
+        "expected_sha256": "f78a1dd850a65477d88a59406dafc6da29cb52d624911fc0fdca56dbf40e91fd",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/baseline_b2/penal_bundle/graph_penal.npz",
+        "exists": true,
+        "size_bytes": 2021183,
+        "sha256": "4f371b94181a3f2792e8ec8d971b6eaa23f5f448dd7bb04f58dd34d4942c2a4c",
+        "expected_sha256": "4f371b94181a3f2792e8ec8d971b6eaa23f5f448dd7bb04f58dd34d4942c2a4c",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 4433622,
+        "sha256": "d5acb4dd93b33e9d8f50fb2a7ef72d4e17d688f1b7177fe41c1c665f4858c81c",
+        "expected_sha256": "d5acb4dd93b33e9d8f50fb2a7ef72d4e17d688f1b7177fe41c1c665f4858c81c",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-JJ-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 10217340,
+        "sha256": "402ef5f9d36ff534437cc4a1db47009359237b03bf50617eff6727491d88fd72",
+        "expected_sha256": "402ef5f9d36ff534437cc4a1db47009359237b03bf50617eff6727491d88fd72",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem025-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 2315121,
+        "sha256": "442f68064cee51ec3495a6bac8d193a9f4cb613fbb4064ed83adb0e81a01ce79",
+        "expected_sha256": "442f68064cee51ec3495a6bac8d193a9f4cb613fbb4064ed83adb0e81a01ce79",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem050-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 2317171,
+        "sha256": "a209ca4fe38f0808058419cee1f31f40f65a7c3cd906fe9a77444d7c589677ab",
+        "expected_sha256": "a209ca4fe38f0808058419cee1f31f40f65a7c3cd906fe9a77444d7c589677ab",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem100-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 2286155,
+        "sha256": "55cce8f19215a0e30decb283550ac3fa58236169cb7281749c26d80f5a5e1f9d",
+        "expected_sha256": "55cce8f19215a0e30decb283550ac3fa58236169cb7281749c26d80f5a5e1f9d",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit025-sem1-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 2315121,
+        "sha256": "87d192000e5bfc5594442bafd840c8ddce3671d3bdc2f9c302aa0d6602f3f07f",
+        "expected_sha256": "87d192000e5bfc5594442bafd840c8ddce3671d3bdc2f9c302aa0d6602f3f07f",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem025-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 4922791,
+        "sha256": "4d777bb404f05d52dc8c5c4005ebf6948a7e829fee830b2b601aa2e40ba3ddee",
+        "expected_sha256": "4d777bb404f05d52dc8c5c4005ebf6948a7e829fee830b2b601aa2e40ba3ddee",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem050-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 4934051,
+        "sha256": "e633dc4be9896d5e1d198d82fe3a405fb1f9a4ad44d231e7e2ba962886447a12",
+        "expected_sha256": "e633dc4be9896d5e1d198d82fe3a405fb1f9a4ad44d231e7e2ba962886447a12",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem100-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 4729348,
+        "sha256": "34249e1f92697a0e7be4b2885b72a6ad583aef1450482acf158ecd841dc74f85",
+        "expected_sha256": "34249e1f92697a0e7be4b2885b72a6ad583aef1450482acf158ecd841dc74f85",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit025-sem1-knn5/graph_hybrid_mixed.npz",
+        "exists": true,
+        "size_bytes": 4922791,
+        "sha256": "5b1098e69d1bf9f4f3c4e38dc3f2f291f1f0324a43c6f98a5efb2027f85e3c6e",
+        "expected_sha256": "5b1098e69d1bf9f4f3c4e38dc3f2f291f1f0324a43c6f98a5efb2027f85e3c6e",
+        "hash_matches": true
+      }
+    ],
+    "code_bundle": [
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py",
+        "exists": true,
+        "size_bytes": 22062,
+        "sha256": "874aeacb3d4f9c66807679798c6a1c81ef1c7de3d0e7a14859ec33acb210148b",
+        "expected_sha256": "874aeacb3d4f9c66807679798c6a1c81ef1c7de3d0e7a14859ec33acb210148b",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/26_eval_doctrine_v3plus_m1_m2.py",
+        "exists": true,
+        "size_bytes": 17459,
+        "sha256": "ee7bd373c558e4eea15e6ff8e061e6390dffb08c37254fe9425d91247df3b0a7",
+        "expected_sha256": "ee7bd373c558e4eea15e6ff8e061e6390dffb08c37254fe9425d91247df3b0a7",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/32_lightgcn_strict.py",
+        "exists": true,
+        "size_bytes": 31636,
+        "sha256": "31ae5494f759e77bf2c470c7e67dd43d96ec6efc1cd2863e9c703cb3c300d951",
+        "expected_sha256": "31ae5494f759e77bf2c470c7e67dd43d96ec6efc1cd2863e9c703cb3c300d951",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/41_make_kfold_assignments.py",
+        "exists": true,
+        "size_bytes": 15044,
+        "sha256": "295d2a33ccbb26cb399927220ae12cab14f07bc1def02d8bab4572f689747761",
+        "expected_sha256": "295d2a33ccbb26cb399927220ae12cab14f07bc1def02d8bab4572f689747761",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/42_run_cv_b3_b4.py",
+        "exists": true,
+        "size_bytes": 10549,
+        "sha256": "ae19cf0d9203921c4cca68785d3a3c140a5f7d5837206fedbb0584473514e66e",
+        "expected_sha256": "ae19cf0d9203921c4cca68785d3a3c140a5f7d5837206fedbb0584473514e66e",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/43_run_cv_ppr.py",
+        "exists": true,
+        "size_bytes": 12162,
+        "sha256": "e92852b4a14af045a076fe9ffea687610e385b77c7b31fcb4802b3f343765c01",
+        "expected_sha256": "e92852b4a14af045a076fe9ffea687610e385b77c7b31fcb4802b3f343765c01",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/44_run_cv_lightgcn.py",
+        "exists": true,
+        "size_bytes": 23712,
+        "sha256": "d7867e0de6aa64064cbd8ab1c497222df2b2177e90ddc7c43ca1ee0411ecb27d",
+        "expected_sha256": "d7867e0de6aa64064cbd8ab1c497222df2b2177e90ddc7c43ca1ee0411ecb27d",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py",
+        "exists": true,
+        "size_bytes": 39467,
+        "sha256": "a62005b8ecf4431c72b7f4fb7590af133c381d9cb1e8ae9026e3503d83dec81b",
+        "expected_sha256": "a62005b8ecf4431c72b7f4fb7590af133c381d9cb1e8ae9026e3503d83dec81b",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/64_run_confirmatory_campaign.py",
+        "exists": true,
+        "size_bytes": 54117,
+        "sha256": "246b12366318a5d539906c58bf62ad2493f7743946fda88f6f20ab051d4d697a",
+        "expected_sha256": "246b12366318a5d539906c58bf62ad2493f7743946fda88f6f20ab051d4d697a",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/65_select_lightgcn_shortlist.py",
+        "exists": true,
+        "size_bytes": 6611,
+        "sha256": "b8a0ed6f931d30b3412d4087d4dc4404d620a21009f046daaa1b469b2a85ae45",
+        "expected_sha256": "b8a0ed6f931d30b3412d4087d4dc4404d620a21009f046daaa1b469b2a85ae45",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/66_export_confirmatory_results.py",
+        "exists": true,
+        "size_bytes": 13202,
+        "sha256": "ac9df285d6bc04507dfbda1de8abda64403c22c4bcd53ac584eeb5a8bb51f05c",
+        "expected_sha256": "ac9df285d6bc04507dfbda1de8abda64403c22c4bcd53ac584eeb5a8bb51f05c",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/graph_protocol.py",
+        "exists": true,
+        "size_bytes": 13511,
+        "sha256": "a1689e57b215cff0b225a09ca241e78928ca51a51b739c648c318ae462797f90",
+        "expected_sha256": "a1689e57b215cff0b225a09ca241e78928ca51a51b739c648c318ae462797f90",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/metrics.py",
+        "exists": true,
+        "size_bytes": 4490,
+        "sha256": "be49ebee481ea4713861cde1723f17bac619bfd0445c155fb3f36587fe5b9137",
+        "expected_sha256": "be49ebee481ea4713861cde1723f17bac619bfd0445c155fb3f36587fe5b9137",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/etape1/graph_versions.py",
+        "exists": true,
+        "size_bytes": 14116,
+        "sha256": "c426ca72e3c4d5dfe4a50edf7464b9888f351b06e536caf75c455dac4fe82a29",
+        "expected_sha256": "c426ca72e3c4d5dfe4a50edf7464b9888f351b06e536caf75c455dac4fe82a29",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/etape1/config.py",
+        "exists": true,
+        "size_bytes": 9157,
+        "sha256": "2ac2a2a5403be5bc4ef3907d49f80b9e9d1e80bfdfc0a2639aa709f3601b3eb2",
+        "expected_sha256": "2ac2a2a5403be5bc4ef3907d49f80b9e9d1e80bfdfc0a2639aa709f3601b3eb2",
+        "hash_matches": true
+      },
+      {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/etape1/normalize.py",
+        "exists": true,
+        "size_bytes": 2697,
+        "sha256": "2a3e9027673eba9bcc256145b7db69a0792ae95a967d3f2631e71ecff28f0e24",
+        "expected_sha256": "2a3e9027673eba9bcc256145b7db69a0792ae95a967d3f2631e71ecff28f0e24",
+        "hash_matches": true
+      }
+    ],
+    "verified_input_count": 26,
+    "verified_code_count": 16
+  },
+  "ppr_cv": {
+    "status": "complete",
+    "n_graphs_expected": 11,
+    "n_graphs_complete": 11,
+    "graphs": [
+      {
+        "graph_id": "G1",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G1/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G6-citation-AA-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G6-citation-AA-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G6-citation-JJ-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G6-citation-JJ-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-AA-cit1-sem025-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-AA-cit1-sem025-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-AA-cit1-sem050-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-AA-cit1-sem050-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-AA-cit1-sem100-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-AA-cit1-sem100-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-AA-cit025-sem1-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-AA-cit025-sem1-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-JJ-cit1-sem025-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-JJ-cit1-sem025-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-JJ-cit1-sem050-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-JJ-cit1-sem050-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-JJ-cit1-sem100-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-JJ-cit1-sem100-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      },
+      {
+        "graph_id": "G7-citation-JJ-cit025-sem1-knn5",
+        "summary": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2/G7-citation-JJ-cit025-sem1-knn5/ppr/summary.csv",
+        "folds": 5,
+        "questions": 5603,
+        "complete": true
+      }
+    ]
+  },
+  "e016": {
+    "experiment_id": "E016",
+    "status": "exploratory",
+    "scientific_status": "exploratory_en_attente_audit_avocat",
+    "hashes_ok": true,
+    "questions": 754,
+    "positions": 7540,
+    "unique_judged_pairs": 7540,
+    "exact_any_gold_at_10_mean": 0.2639257294429708,
+    "lawyer_sample_exists": true,
+    "lawyer_key_exists": true,
+    "lawyer_agreement_exists": false,
+    "blocking_reason": "human_blind_lawyer_audit_not_completed",
+    "source_artifact": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/G7-citation-JJ-cit1-sem025-knn5/eval_rich_retrievable_strict/E016-g7-graded-jp-v1/graded_jp_summary.json",
+    "source_sha256": "6fa0e2ab04041cb3e51fd32e6cb18b126369cdd260e40d678c3f10104d52c206",
+    "hit_at_10_mean": 0.25,
+    "ndcg_at_10_mean": 0.1648240978993185,
+    "mrr_at_10_mean": 0.14046303313544692
+  },
+  "e017": {
+    "experiment_id": "E017",
+    "status": "exploratory",
+    "scientific_status": "exploratory_internal_evaluation",
+    "hashes_ok": true,
+    "graphs": 11,
+    "seeds": 3,
+    "replays_expected": 33,
+    "replays_complete": 33,
+    "questions_per_replay": 754,
+    "positions_per_replay": 7540,
+    "source_artifact": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/E017-intergraph-graded-jp-v1/e017_graph_metrics.csv",
+    "source_sha256": "eaa5f13ad47e0182380346ac4b56a7e0ca5445bb35e9359f73b4b975c0a39896"
+  },
+  "final_grouped_v2": {
+    "status": "missing",
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_final_grouped_v2"
+  },
+  "scientific_notes": [
+    "eval_rich_retrievable_strict is an already consulted internal evaluation, not an unseen lockbox.",
+    "exact_any_gold_at_10 is retained as a separate binary diagnostic and is not official Hit@10.",
+    "E016 and E017 LLM-as-a-Judge outputs remain exploratory until the blind lawyer audit is completed.",
+    "PPR CV is complete on train-only folds; its internal-evaluation replay is missing and was not rerun under the local resource gate."
+  ]
+}

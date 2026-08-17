@@ -4,6 +4,7 @@
 Importé par scripts 18 (B*), 20 (PPR), 23 (M3 LLM-judge, futur), 31 (LightGCN, futur).
 
 Conventions retenues post-Week-9 (cf. présentation Week-10) :
+- Hit@K = |GT ∩ R[:K]| / min(|GT|, K) (couverture atteignable)
 - MRR cappé à K (rang > K → 0)
 - NDCG rel binaire ({0,1}), pas multi-niveau
 - Gt vide → NaN (la question est skip côté agrégateur)
@@ -12,11 +13,26 @@ from __future__ import annotations
 import math
 
 
+def _unique_ranked(ranked: list, k: int) -> list:
+    """Top-k sans doublons, en conservant le premier rang observé."""
+    out = []
+    seen = set()
+    for item in ranked:
+        if item in seen:
+            continue
+        seen.add(item)
+        out.append(item)
+        if len(out) >= k:
+            break
+    return out
+
+
 def m1_recall(ranked: list, gt: set, k: int) -> float:
     """M1 = Recall@K = |GT ∩ R[:K]| / |GT|. NaN si gt vide."""
     if not gt:
         return float("nan")
-    return len(set(ranked[:k]) & gt) / len(gt)
+    ranked_k = _unique_ranked(ranked, k)
+    return len(set(ranked_k) & gt) / len(gt)
 
 
 def m2_rank(ranked: list, gt: set, k: int) -> float:
@@ -30,7 +46,8 @@ def m2_rank(ranked: list, gt: set, k: int) -> float:
     if not gt:
         return float("nan")
     n = len(gt)
-    pos = {a: i + 1 for i, a in enumerate(ranked[:k])}
+    ranked_k = _unique_ranked(ranked, k)
+    pos = {a: i + 1 for i, a in enumerate(ranked_k)}
     ranks = [pos.get(a, k + 1) for a in gt]
     x = sum(ranks) / n
     b_clip = min(n, k)
@@ -41,17 +58,19 @@ def m2_rank(ranked: list, gt: set, k: int) -> float:
 
 
 def hit_at_k(ranked: list, gt: set, k: int) -> float:
-    """Hit@K = 1 si ≥1 GT dans top-K, 0 sinon. NaN si gt vide."""
+    """Hit@K = |GT ∩ R[:K]| / min(|GT|, K). NaN si gt vide."""
     if not gt:
         return float("nan")
-    return 1.0 if set(ranked[:k]) & gt else 0.0
+    ranked_k = _unique_ranked(ranked, k)
+    return len(set(ranked_k) & gt) / min(len(gt), k)
 
 
 def mrr_at_k(ranked: list, gt: set, k: int) -> float:
     """MRR@K = 1/rang du premier GT (cappé à k, 0 si aucun dans top-K). NaN si gt vide."""
     if not gt:
         return float("nan")
-    for i, item in enumerate(ranked[:k]):
+    ranked_k = _unique_ranked(ranked, k)
+    for i, item in enumerate(ranked_k):
         if item in gt:
             return 1.0 / (i + 1)
     return 0.0
@@ -65,10 +84,11 @@ def ndcg_at_k(ranked: list, gt: set, k: int) -> float:
     """
     if not gt:
         return float("nan")
+    ranked_k = _unique_ranked(ranked, k)
     # i 0-indexé → rang = i+1 → log2(rang+1) = log2(i+2)
     dcg = sum(
         1.0 / math.log2(i + 2)
-        for i, item in enumerate(ranked[:k])
+        for i, item in enumerate(ranked_k)
         if item in gt
     )
     n_max = min(len(gt), k)
