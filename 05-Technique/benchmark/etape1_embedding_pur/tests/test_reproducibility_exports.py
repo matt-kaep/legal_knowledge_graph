@@ -18,6 +18,7 @@ def test_classify_evidence_states_keeps_missing_and_exploratory_distinct():
     assert MODULE.classify_evidence(exists=True, complete=False, scientific_status="complete") == "incomplete"
     assert MODULE.classify_evidence(exists=False, complete=False, scientific_status="complete") == "missing"
     assert MODULE.classify_evidence(exists=True, complete=True, scientific_status="exploratory") == "exploratory"
+    assert MODULE.classify_evidence(exists=True, complete=False, scientific_status="exploratory") == "incomplete"
 
 
 def test_portable_relative_path_never_emits_a_personal_checkout(tmp_path):

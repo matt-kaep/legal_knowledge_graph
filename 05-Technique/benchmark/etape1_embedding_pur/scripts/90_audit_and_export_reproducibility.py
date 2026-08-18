@@ -36,9 +36,11 @@ def classify_evidence(*, exists: bool, complete: bool, scientific_status: str) -
 
     if not exists:
         return "missing"
+    if not complete:
+        return "incomplete"
     if scientific_status == "exploratory":
         return "exploratory"
-    return "complete" if complete else "incomplete"
+    return "complete"
 
 
 def portable_relative_path(path: Path, root: Path) -> str:
@@ -248,7 +250,7 @@ def audit_e017() -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame, pd.DataFra
         and complete_replays == 33
         and hashes_ok
     )
-    status = classify_evidence(exists=root.is_dir(), complete=complete, scientific_status="exploratory")
+    status = classify_evidence(exists=summary_path.is_file(), complete=complete, scientific_status="exploratory")
     audit = {
         "experiment_id": "E017",
         "status": status,
