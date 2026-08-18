@@ -71,3 +71,15 @@ def test_compute_input_sha256_changes_when_pool_changes():
     second = MODULE.compute_input_sha256(second_job)
 
     assert first != second
+
+
+def test_response_format_schema_freezes_exact_output_cardinality():
+    response_format = MODULE.reranker_response_format(10)
+    schema = response_format["json_schema"]["schema"]
+    ids = schema["properties"]["ranked_jp_ids"]
+
+    assert response_format["type"] == "json_schema"
+    assert response_format["json_schema"]["strict"] is True
+    assert ids["minItems"] == 10
+    assert ids["maxItems"] == 10
+    assert ids["uniqueItems"] is True

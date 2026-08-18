@@ -33,6 +33,32 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
+def reranker_response_format(k_out: int) -> dict[str, Any]:
+    if k_out <= 0:
+        raise ValueError("k_out must be positive")
+    return {
+        "type": "json_schema",
+        "json_schema": {
+            "name": "ranked_jp_ids",
+            "strict": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "ranked_jp_ids": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "minItems": k_out,
+                        "maxItems": k_out,
+                        "uniqueItems": True,
+                    }
+                },
+                "required": ["ranked_jp_ids"],
+                "additionalProperties": False,
+            },
+        },
+    }
+
+
 def compute_input_sha256(job: dict[str, Any]) -> str:
     """Hash only the model-visible contract, not incidental filesystem metadata."""
     payload = {
@@ -125,6 +151,7 @@ def call_openai_compatible(
     endpoint: str,
     model: str,
     prompt: str,
+    k_out: int = 10,
     timeout_seconds: int = 300,
 ) -> str:
     payload = {
@@ -132,6 +159,7 @@ def call_openai_compatible(
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0,
         "max_tokens": 256,
+        "response_format": reranker_response_format(k_out),
     }
     request = Request(
         endpoint.rstrip("/") + "/chat/completions",
@@ -205,6 +233,7 @@ def run_jobs(
                         endpoint,
                         model,
                         _render_prompt(prompt_template, job),
+                        k_out=job["k_out"],
                     )
                     ranked = parse_ranked_ids(
                         raw,
