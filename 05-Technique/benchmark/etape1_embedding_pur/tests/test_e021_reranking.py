@@ -85,3 +85,10 @@ def test_response_format_schema_freezes_exact_output_cardinality():
     # vLLM 0.19.1 rejects JSON Schema's uniqueItems keyword.  Uniqueness is
     # enforced by parse_ranked_ids immediately after the provider response.
     assert "uniqueItems" not in ids
+
+
+def test_response_format_restricts_items_to_the_supplied_pool():
+    response_format = MODULE.reranker_response_format(2, ["jp-1", "jp-2"])
+    ids = response_format["json_schema"]["schema"]["properties"]["ranked_jp_ids"]
+
+    assert ids["items"]["enum"] == ["jp-1", "jp-2"]

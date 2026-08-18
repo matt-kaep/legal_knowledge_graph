@@ -33,9 +33,15 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
-def reranker_response_format(k_out: int) -> dict[str, Any]:
+def reranker_response_format(
+    k_out: int,
+    pool_ids: Iterable[str] | None = None,
+) -> dict[str, Any]:
     if k_out <= 0:
         raise ValueError("k_out must be positive")
+    item_schema: dict[str, Any] = {"type": "string"}
+    if pool_ids is not None:
+        item_schema["enum"] = [str(item_id) for item_id in pool_ids]
     return {
         "type": "json_schema",
         "json_schema": {
@@ -46,7 +52,7 @@ def reranker_response_format(k_out: int) -> dict[str, Any]:
                 "properties": {
                     "ranked_jp_ids": {
                         "type": "array",
-                        "items": {"type": "string"},
+                        "items": item_schema,
                         "minItems": k_out,
                         "maxItems": k_out,
                     }
@@ -151,6 +157,7 @@ def call_openai_compatible(
     model: str,
     prompt: str,
     k_out: int = 10,
+    pool_ids: Iterable[str] | None = None,
     timeout_seconds: int = 300,
 ) -> str:
     payload = {
@@ -158,7 +165,7 @@ def call_openai_compatible(
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0,
         "max_tokens": 256,
-        "response_format": reranker_response_format(k_out),
+        "response_format": reranker_response_format(k_out, pool_ids),
     }
     request = Request(
         endpoint.rstrip("/") + "/chat/completions",
@@ -228,15 +235,17 @@ def run_jobs(
             last_error = ""
             for attempt in range(attempts):
                 try:
+                    pool_ids = [candidate["item_id"] for candidate in job["candidates"]]
                     raw = call_openai_compatible(
                         endpoint,
                         model,
                         _render_prompt(prompt_template, job),
                         k_out=job["k_out"],
+                        pool_ids=pool_ids,
                     )
                     ranked = parse_ranked_ids(
                         raw,
-                        [candidate["item_id"] for candidate in job["candidates"]],
+                        pool_ids,
                         job["k_out"],
                     )
                     record = {
