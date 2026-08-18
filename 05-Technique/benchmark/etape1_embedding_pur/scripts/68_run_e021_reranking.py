@@ -49,7 +49,6 @@ def reranker_response_format(k_out: int) -> dict[str, Any]:
                         "items": {"type": "string"},
                         "minItems": k_out,
                         "maxItems": k_out,
-                        "uniqueItems": True,
                     }
                 },
                 "required": ["ranked_jp_ids"],

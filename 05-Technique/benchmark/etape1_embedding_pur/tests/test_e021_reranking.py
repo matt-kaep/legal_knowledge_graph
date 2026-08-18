@@ -82,4 +82,6 @@ def test_response_format_schema_freezes_exact_output_cardinality():
     assert response_format["json_schema"]["strict"] is True
     assert ids["minItems"] == 10
     assert ids["maxItems"] == 10
-    assert ids["uniqueItems"] is True
+    # vLLM 0.19.1 rejects JSON Schema's uniqueItems keyword.  Uniqueness is
+    # enforced by parse_ranked_ids immediately after the provider response.
+    assert "uniqueItems" not in ids
