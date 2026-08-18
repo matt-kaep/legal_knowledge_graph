@@ -86,7 +86,7 @@
   },
   "job_contract": {
     "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_jobs/E021-cluster-gpu-runtime-v2/jobs.jsonl",
-    "sha256": "166fc97bc13809cb9bf4bc00ec93af6f757bb0e302a1408b259861ece2a779be",
+    "sha256": "5927cc2a61980625a6117ffc9476cbad0c8d184986a2281353a6844e48445dd6",
     "jobs": 2262,
     "families": 3,
     "questions_per_family": 754,
@@ -119,4 +119,3 @@
     "audit": "results/reranking-comparable/E021-cluster-gpu-runtime-v1/audit.json"
   }
 }
-
