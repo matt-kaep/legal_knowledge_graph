@@ -87,13 +87,20 @@ def materialize_pool(
     count = 0
     with output_path.open("w", encoding="utf-8") as output:
         for qid, group in rankings.sort_values(["qid", "rank"], kind="stable").groupby("qid", sort=True):
-            top = group.head(k_in)
+            unique_rows = []
+            seen_ids = set()
+            for row in group.itertuples(index=False):
+                if row.item_id in seen_ids:
+                    continue
+                seen_ids.add(row.item_id)
+                unique_rows.append(row)
+                if len(unique_rows) == k_in:
+                    break
+            top = pd.DataFrame(unique_rows)
             ranks = top["rank"].tolist()
             ids = top["item_id"].tolist()
-            if len(top) != k_in or ranks != list(range(1, k_in + 1)):
-                raise ValueError(f"{family}/{qid}: expected ranks 1..{k_in}, got {ranks}")
-            if len(set(ids)) != k_in:
-                raise ValueError(f"{family}/{qid}: duplicate candidate identifiers")
+            if len(top) != k_in:
+                raise ValueError(f"{family}/{qid}: fewer than {k_in} unique candidates, got source ranks {ranks}")
             candidates = []
             for rank, item_id in zip(ranks, ids):
                 card = cards.get(item_id)
@@ -124,6 +131,8 @@ def materialize_pool(
                         "source_decision_cards_sha256": decision_cards_sha256,
                         "source_summaries_sha256": summaries_sha256,
                         "source_texts_sha256": summaries_sha256 or decision_cards_sha256,
+                        "source_rows_considered": int(ranks[-1]),
+                        "duplicate_candidates_skipped": int(ranks[-1] - k_in),
                         "candidates": candidates,
                     },
                     ensure_ascii=False,

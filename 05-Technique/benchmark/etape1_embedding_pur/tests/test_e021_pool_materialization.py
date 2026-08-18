@@ -79,3 +79,25 @@ def test_summary_source_rejects_conflicting_duplicate_ids(tmp_path):
         assert "conflicting" in str(error)
     else:
         raise AssertionError("conflicting duplicate identifiers must be rejected")
+
+
+def test_materialize_pool_skips_repeated_ranking_items_and_preserves_source_rank(tmp_path):
+    ranking_path = tmp_path / "ranking.parquet"
+    rows = []
+    for rank in range(1, 22):
+        item_number = rank if rank < 3 else rank - 1
+        rows.append({"qid": "q1", "method": "PPR", "modality": "jp", "rank": rank, "item_id": f"jp-{item_number}"})
+    pd.DataFrame(rows).to_parquet(ranking_path, index=False)
+    cards_path = tmp_path / "cards.json"
+    cards_path.write_text(
+        json.dumps({f"jp-{rank}": {"solution_resume": f"solution {rank}"} for rank in range(1, 21)}),
+        encoding="utf-8",
+    )
+    output_path = tmp_path / "pool.jsonl"
+
+    assert MODULE.materialize_pool(ranking_path, cards_path, output_path, "ppr") == 1
+    record = json.loads(output_path.read_text(encoding="utf-8"))
+
+    assert [candidate["source_rank"] for candidate in record["candidates"]] == [1, 2, *range(4, 22)]
+    assert record["source_rows_considered"] == 21
+    assert record["duplicate_candidates_skipped"] == 1
