@@ -197,4 +197,27 @@ tags: [coordination, benchmark, papier]
 - Preuve : 91 entrées vérifiées par SHA-256 sur le cluster; 33 tâches scientifiques isolées; artefact `06-Analyses/comparatifs/e017-intergraph-graded-jp-2026-08-11/README.md`.
 - Limite : aucun score E017 n'est encore produit. L'évaluation reste interne/exploratoire et le futur score gradué restera conditionné par l'audit avocat E016.
 - Action demandée : ne pas ajouter de classement inter-graphes au papier ou aux slides avant transmission des replays complets et de l'agrégation contrôlée par la tâche A.
-- Statut : calcul cluster en cours.
+- Statut historique au 2026-08-11 : calcul cluster en cours ; supersédé par la transmission E021 v5 datée du 2026-08-18 ci-dessous.
+
+### 2026-08-18 — Transmission E021 reranking comparable v5
+
+À reprendre par Papier, avec statut strictement exploratoire et incomplet :
+
+- Manifeste : `experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5.json`, SHA-256 `d6f8d45602218248f54a32b84160f4f1276e441efcf50c9638a7338d1a5f8cd4`.
+- Jobs : 2 262 unités (`K_in=20`, `K_out=10`, 754 questions × 3 familles), SHA `36f03198d39ec764095d3340ea1f8dc006b941e585245e30bd8e4c14a0a5afdf`.
+- Réponses : SHA `780e53c1d69481660869d4c0f9e68b377be7d4ab2f0b5c869eae1522b9a3a9fb`; 2 249 clés `(famille,qid)` valides, 13 manquantes : cosine 7, PPR 1, LightGCN 5.
+- Export JP : `results/reranking-comparable/E021-cluster-gpu-runtime-v5/metrics.json`, SHA `077bea64f34b4382ca00e251359c67d782d0c3a5c807fb571567fa357c7e5954`.
+- Audit : `results/reranking-comparable/E021-cluster-gpu-runtime-v5/audit.json`, SHA `8bc00d9c5850c985343c036bb589703c4e4d302bf2c95fb86a86cc0aedd67e4d`.
+- Code : runner SHA `6495fc37727a531f5e00555713c76d810faceb4ee1be146fb20ddc4a62aa97db`; agrégateur SHA `6d6b76d6b56b4b88aa16961bd46bf9935f347ced514b60cc78f8100ad8b4bbfc`.
+
+Valeurs exportées sur les réponses valides uniquement, avec écart-type d’échantillon par question :
+
+| Famille | Couverture | Hit@10 officiel | NDCG@10 | MRR@10 |
+|---|---:|---:|---:|---:|
+| cosine/BGE-M3 | 747/754 | 0,2707496653 ± 0,4383721651 | 0,2195999266 ± 0,3809056369 | 0,2065229171 ± 0,3769360233 |
+| PPR | 753/754 | 0,2768924303 ± 0,4405456056 | 0,2283575587 ± 0,3876235637 | 0,2167414996 ± 0,3848983077 |
+| LightGCN | 749/754 | 0,2930574099 ± 0,4480084150 | 0,2437210300 ± 0,3969861945 | 0,2323081569 ± 0,3949802308 |
+
+Formulation autorisée : « E021 fournit un export interne exploratoire d’un reranker commun appliqué à trois viviers JP réels, avec métriques exactes séparées et couverture explicitée ; 13 unités restent manquantes. » Ne pas écrire qu’une famille surclasse une autre, ne pas appeler cette évaluation confirmatoire, et ne pas produire de résultat Articles à partir de cet E021 JP-only. `exact_any_gold_at_10` reste un diagnostic séparé du `Hit@10` officiel.
+
+Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E016/E017 séparés ; l’audit avocat `lawyer_agreement.json` reste en attente dans le chantier A.
