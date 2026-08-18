@@ -25,6 +25,10 @@ def test_portable_relative_path_never_emits_a_personal_checkout(tmp_path):
     assert MODULE.portable_relative_path(artifact, tmp_path) == "data/artifact.csv"
 
 
+def test_optional_sha256_returns_none_for_missing_artifact(tmp_path):
+    assert MODULE.optional_sha256(tmp_path / "missing.json") is None
+
+
 def test_e017_replay_coverage_requires_all_questions_and_ranks():
     complete = pd.DataFrame(
         [(qid, rank) for qid in range(754) for rank in range(1, 11)],

@@ -55,6 +55,10 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def optional_sha256(path: Path) -> str | None:
+    return sha256_file(path) if path.is_file() else None
+
+
 def manifest_sha256(payload: dict[str, Any]) -> str:
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
@@ -336,7 +340,7 @@ def audit_e016() -> tuple[dict[str, Any], dict[str, Any]]:
         "lawyer_agreement_exists": agreement_path.is_file(),
         "blocking_reason": "human_blind_lawyer_audit_not_completed",
         "source_artifact": portable_relative_path(summary_path, DATA_REPO),
-        "source_sha256": sha256_file(summary_path),
+        "source_sha256": optional_sha256(summary_path),
     }
     exact = {}
     rankings_path = root / "rankings_topk.parquet"
