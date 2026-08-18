@@ -95,6 +95,12 @@ def aggregate_metrics(
             name: float(statistics.fmean(row[name] for row in rows))
             for name in metric_names
         }
+        dispersion = {
+            name: float(statistics.stdev(row[name] for row in rows))
+            if len(rows) > 1
+            else 0.0
+            for name in metric_names
+        }
         output["families"][family] = {
             "expected_questions": len(qids),
             "questions_with_gold": len(gold_qids),
@@ -104,6 +110,8 @@ def aggregate_metrics(
             "coverage": len(rows) / len(gold_qids) if gold_qids else 0.0,
             "status": "complete" if not missing_qids else "incomplete_missing_responses",
             "metrics": metrics,
+            "dispersion": dispersion,
+            "dispersion_definition": "sample_standard_deviation_over_valid_questions",
         }
     return output
 
