@@ -46,7 +46,10 @@ def classify_evidence(*, exists: bool, complete: bool, scientific_status: str) -
 def portable_relative_path(path: Path, root: Path) -> str:
     """Return a repository-relative path, never an absolute local checkout path."""
 
-    return str(path.resolve().relative_to(root.resolve()))
+    # Keep the lexical path: data mirrors may use symlinks to immutable inputs
+    # stored in another checkout.  Resolving the link would leak that checkout
+    # and make an otherwise portable audit fail before hashing the artifact.
+    return str(path.absolute().relative_to(root.absolute()))
 
 
 def sha256_file(path: Path) -> str:

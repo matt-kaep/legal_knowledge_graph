@@ -26,6 +26,18 @@ def test_portable_relative_path_never_emits_a_personal_checkout(tmp_path):
     assert MODULE.portable_relative_path(artifact, tmp_path) == "data/artifact.csv"
 
 
+def test_portable_relative_path_keeps_symlink_inside_data_root(tmp_path):
+    source = tmp_path / "source" / "artifact.csv"
+    source.parent.mkdir()
+    source.write_text("artifact", encoding="utf-8")
+    mirror = tmp_path / "mirror"
+    mirror.mkdir()
+    linked = mirror / "artifact.csv"
+    linked.symlink_to(source)
+
+    assert MODULE.portable_relative_path(linked, mirror) == "artifact.csv"
+
+
 def test_optional_sha256_returns_none_for_missing_artifact(tmp_path):
     assert MODULE.optional_sha256(tmp_path / "missing.json") is None
 
