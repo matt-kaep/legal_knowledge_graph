@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 
@@ -97,6 +98,14 @@ def test_grouped_replay_roots_never_overlap_legacy_directories(tmp_path, monkeyp
     assert "_final_champions/" not in f"{out_dir}/"
 
 
+@pytest.mark.parametrize(
+    ("graph_version", "expected"),
+    [("G1", "g1"), ("G6-citation-AA-knn5", "g1"), ("G7-citation-JJ-cit1-sem025-knn5", "g1"), ("G3", "g3")],
+)
+def test_derived_graph_coverage_uses_g1_source_row(graph_version, expected):
+    assert final_replay.coverage_source_graph_key(graph_version) == expected
+
+
 def test_target_specific_replay_epochs_are_not_deduplicated():
     article = _trained_champion()
     article["selection_target"] = "art"
@@ -120,6 +129,7 @@ def test_direct_grouped_replay_revalidates_campaign_inputs():
 def test_direct_grouped_replay_honors_resource_gate():
     manifest_path = Path(__file__).resolve().parents[1] / "configs" / "confirmatory_campaign_grouped_v2_repro_v1.json"
     campaign = json.loads(manifest_path.read_text())
+    campaign["code_bundle"]["final_replay"]["sha256"] = hashlib.sha256(SCRIPT.read_bytes()).hexdigest()
     campaign["resources"]["ram_minimum_gb_per_graph_job"] = None
 
     with pytest.raises(RuntimeError, match="ram_minimum_unmeasured"):

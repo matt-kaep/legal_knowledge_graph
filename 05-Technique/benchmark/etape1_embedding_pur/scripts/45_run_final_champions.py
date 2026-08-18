@@ -557,7 +557,7 @@ def load_coverage_summary(path: Path, graph_version: str) -> dict[str, float]:
         raise FileNotFoundError(f"Missing coverage summary: {path}")
     payload = json.loads(path.read_text(encoding="utf-8"))
     split = payload.get("datasets", {}).get("eval_rich_retrievable_strict", {})
-    graph_key = str(graph_version).lower()
+    graph_key = coverage_source_graph_key(graph_version)
     if graph_key not in split:
         raise KeyError(f"Missing coverage row for graph_version={graph_version} in {path}")
     row = split[graph_key]
@@ -588,6 +588,14 @@ def load_coverage_summary(path: Path, graph_version: str) -> dict[str, float]:
         "coverage_jp_q_all_pct": row.get("jp_q_all_pct"),
         "coverage_jp_q_any_pct": row.get("jp_q_any_pct"),
     }
+
+
+def coverage_source_graph_key(graph_version: str) -> str:
+    """Map derived G4--G7 graph variants to their G1 coverage source row."""
+    lowered = str(graph_version).lower()
+    if lowered.startswith(("g4-", "g5-", "g6-", "g6u-", "g7-")):
+        return "g1"
+    return lowered
 
 
 def _final_metric_columns(modality: str, df: pd.DataFrame) -> dict[str, str]:
