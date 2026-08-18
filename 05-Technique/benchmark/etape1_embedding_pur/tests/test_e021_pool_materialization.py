@@ -65,3 +65,17 @@ def test_materialize_pool_uses_complete_summary_source_for_unjudged_candidates(t
     assert record["candidates"][0]["text"] == "solution: judged card"
     assert record["candidates"][1]["text"] == "summary 2"
     assert record["source_texts_sha256"] == MODULE.sha256_file(summaries_path)
+
+
+def test_summary_source_rejects_conflicting_duplicate_ids(tmp_path):
+    summaries_path = tmp_path / "jp_summaries.parquet"
+    pd.DataFrame(
+        {"jp_id": ["jp-1", "jp-1"], "synthese": ["summary A", "summary B"]}
+    ).to_parquet(summaries_path, index=False)
+
+    try:
+        MODULE.load_summary_texts(summaries_path)
+    except ValueError as error:
+        assert "conflicting" in str(error)
+    else:
+        raise AssertionError("conflicting duplicate identifiers must be rejected")

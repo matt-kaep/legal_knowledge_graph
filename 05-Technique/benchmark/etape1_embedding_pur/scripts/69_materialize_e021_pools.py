@@ -45,11 +45,13 @@ def load_summary_texts(path: Path | None) -> dict[str, str]:
         raise ValueError(f"summary file missing columns: {sorted(missing)}")
     summaries = summaries[["jp_id", "synthese"]].copy()
     summaries["jp_id"] = summaries["jp_id"].astype(str)
-    if summaries["jp_id"].duplicated().any():
-        raise ValueError("summary file contains duplicate jp_id values")
     summaries["synthese"] = summaries["synthese"].fillna("").astype(str)
     if (summaries["synthese"].str.strip() == "").any():
         raise ValueError("summary file contains empty synthese values")
+    conflicting = summaries.groupby("jp_id")["synthese"].nunique()
+    if (conflicting > 1).any():
+        raise ValueError("summary file contains conflicting synthese values for one jp_id")
+    summaries = summaries.drop_duplicates(subset=["jp_id"], keep="first")
     return dict(zip(summaries["jp_id"], summaries["synthese"], strict=True))
 
 
