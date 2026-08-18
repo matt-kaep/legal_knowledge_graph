@@ -1,4 +1,9 @@
-"""Materialize one real K_in=20 JP candidate pool for E021."""
+"""Materialize one real K_in=20 JP candidate pool for E021.
+
+The E017 decision cards cover only previously judged decisions. E021 may
+need text for additional retrieved decisions, so ``--summaries`` provides
+the complete JP summary source used as an explicit fallback.
+"""
 from __future__ import annotations
 
 import argparse
@@ -30,6 +35,24 @@ def candidate_text(card: dict[str, Any]) -> str:
     return "\n".join(parts)
 
 
+def load_summary_texts(path: Path | None) -> dict[str, str]:
+    if path is None:
+        return {}
+    summaries = pd.read_parquet(path)
+    required = {"jp_id", "synthese"}
+    missing = required - set(summaries.columns)
+    if missing:
+        raise ValueError(f"summary file missing columns: {sorted(missing)}")
+    summaries = summaries[["jp_id", "synthese"]].copy()
+    summaries["jp_id"] = summaries["jp_id"].astype(str)
+    if summaries["jp_id"].duplicated().any():
+        raise ValueError("summary file contains duplicate jp_id values")
+    summaries["synthese"] = summaries["synthese"].fillna("").astype(str)
+    if (summaries["synthese"].str.strip() == "").any():
+        raise ValueError("summary file contains empty synthese values")
+    return dict(zip(summaries["jp_id"], summaries["synthese"], strict=True))
+
+
 def materialize_pool(
     ranking_path: Path,
     decision_cards_path: Path,
@@ -37,6 +60,7 @@ def materialize_pool(
     family: str,
     method: str | None = None,
     k_in: int = 20,
+    summaries_path: Path | None = None,
 ) -> int:
     rankings = pd.read_parquet(ranking_path)
     required = {"qid", "method", "modality", "rank", "item_id"}
@@ -54,6 +78,9 @@ def materialize_pool(
     rankings["item_id"] = rankings["item_id"].astype(str)
     rankings["rank"] = rankings["rank"].astype(int)
     cards = json.loads(decision_cards_path.read_text(encoding="utf-8"))
+    summaries = load_summary_texts(summaries_path)
+    decision_cards_sha256 = sha256_file(decision_cards_path)
+    summaries_sha256 = sha256_file(summaries_path) if summaries_path else None
     output_path.parent.mkdir(parents=True, exist_ok=True)
     count = 0
     with output_path.open("w", encoding="utf-8") as output:
@@ -68,12 +95,18 @@ def materialize_pool(
             candidates = []
             for rank, item_id in zip(ranks, ids):
                 card = cards.get(item_id)
-                if card is None:
-                    raise ValueError(f"missing decision card for candidate {item_id}")
+                if card is not None:
+                    text = candidate_text(card)
+                else:
+                    text = summaries.get(item_id)
+                    if text is None:
+                        raise ValueError(
+                            f"missing candidate text for {item_id}; provide --summaries for the complete source"
+                        )
                 candidates.append(
                     {
                         "item_id": item_id,
-                        "text": candidate_text(card),
+                        "text": text,
                         "source_rank": rank,
                     }
                 )
@@ -86,6 +119,9 @@ def materialize_pool(
                         "method": method,
                         "source_ranking": str(ranking_path),
                         "source_ranking_sha256": sha256_file(ranking_path),
+                        "source_decision_cards_sha256": decision_cards_sha256,
+                        "source_summaries_sha256": summaries_sha256,
+                        "source_texts_sha256": summaries_sha256 or decision_cards_sha256,
                         "candidates": candidates,
                     },
                     ensure_ascii=False,
@@ -106,6 +142,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--family", required=True)
     parser.add_argument("--method")
     parser.add_argument("--k-in", type=int, default=20)
+    parser.add_argument("--summaries", type=Path, help="Complete JP summary parquet used for missing decision cards")
     args = parser.parse_args(argv)
     print(json.dumps({"questions": materialize_pool(
         args.ranking,
@@ -114,6 +151,7 @@ def main(argv: list[str] | None = None) -> int:
         args.family,
         args.method,
         args.k_in,
+        args.summaries,
     )}))
     return 0
 

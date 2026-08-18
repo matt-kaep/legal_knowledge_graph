@@ -35,3 +35,33 @@ def test_materialize_pool_preserves_source_order_and_hash(tmp_path):
     assert [candidate["item_id"] for candidate in record["candidates"]] == [f"jp-{i}" for i in range(1, 21)]
     assert record["candidates"][0]["source_rank"] == 1
     assert record["source_ranking_sha256"] == MODULE.sha256_file(ranking_path)
+
+
+def test_materialize_pool_uses_complete_summary_source_for_unjudged_candidates(tmp_path):
+    ranking_path = tmp_path / "ranking.parquet"
+    pd.DataFrame(
+        [
+            {"qid": "q1", "method": "PPR", "modality": "jp", "rank": rank, "item_id": f"jp-{rank}"}
+            for rank in range(1, 21)
+        ]
+    ).to_parquet(ranking_path, index=False)
+    cards_path = tmp_path / "cards.json"
+    cards_path.write_text(json.dumps({"jp-1": {"solution_resume": "judged card"}}), encoding="utf-8")
+    summaries_path = tmp_path / "jp_summaries.parquet"
+    pd.DataFrame(
+        {"jp_id": [f"jp-{rank}" for rank in range(1, 21)], "synthese": [f"summary {rank}" for rank in range(1, 21)]}
+    ).to_parquet(summaries_path, index=False)
+    output_path = tmp_path / "pool.jsonl"
+
+    assert MODULE.materialize_pool(
+        ranking_path,
+        cards_path,
+        output_path,
+        "ppr",
+        summaries_path=summaries_path,
+    ) == 1
+    record = json.loads(output_path.read_text(encoding="utf-8"))
+
+    assert record["candidates"][0]["text"] == "solution: judged card"
+    assert record["candidates"][1]["text"] == "summary 2"
+    assert record["source_texts_sha256"] == MODULE.sha256_file(summaries_path)
