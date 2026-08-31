@@ -91,7 +91,7 @@ tags: [coordination, benchmark, papier]
 - Formulation autorisée Articles : « E017 fournit un export interne exploratoire de Recall@10 sur les 11 graphes, 3 seeds et 754 questions ; la sélection d'epoch est issue des folds train-only et le replay est gelé. » Ne pas transformer ce score d'évaluation interne en preuve confirmatoire ni en lockbox finale.
 - Formulation autorisée JP exacte : « L'export sépare le `Hit@10` officiel, NDCG@10 et MRR@10 du diagnostic binaire `exact_any_gold_at_10`. » Pour E016, les valeurs récupérées sont LLM-as-a-Judge `0,4271220159`, exact_any `0,2639257294`, Hit@10 officiel `0,25`, NDCG `0,1648240979`, MRR `0,1404630331`; l'audit avocat reste manquant.
 - Formulation autorisée juge : « Les scores LLM-as-a-Judge E016/E017 sont exploratoires et en attente du contrôle humain avocat ; ils ne soutiennent pas une supériorité de graphe. » La comparaison G6/G7 ne doit pas être appelée ablation causale.
-- À ne pas reprendre comme résultat : `_final_grouped_v2` est manquant ; le replay PPR interne n'a pas été relancé car le préflight mesurait 4 520 706 048 octets disponibles contre 9 771 050 598 requis ; E021 reranking comparable est préparé mais non exécuté.
+- État historique au 2026-08-18 : l'évaluation finale PPR était manquante et E021 était alors seulement préparé. Ce point est supersédé par la transmission E021 v5 ci-dessous ; l'évaluation finale PPR reste à produire.
 - Paquet humain : `results/audit/e016-lawyer-audit/README.md` et `manifest.json`. Les CSV sample/key restent dans le checkout de données local ; `lawyer_agreement.json` doit être produit par l'annotation aveugle avant tout changement de statut.
 - Statut de transmission : exploitable pour les tableaux internes, méthodes de protocole et limites ; non autorisé pour une formulation confirmatoire, un classement final ou une affirmation de supériorité.
 
@@ -221,3 +221,9 @@ Valeurs exportées sur les réponses valides uniquement, avec écart-type d’é
 Formulation autorisée : « E021 fournit un export interne exploratoire d’un reranker commun appliqué à trois viviers JP réels, avec métriques exactes séparées et couverture explicitée ; 13 unités restent manquantes. » Ne pas écrire qu’une famille surclasse une autre, ne pas appeler cette évaluation confirmatoire, et ne pas produire de résultat Articles à partir de cet E021 JP-only. `exact_any_gold_at_10` reste un diagnostic séparé du `Hit@10` officiel.
 
 Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E016/E017 séparés ; l’audit avocat `lawyer_agreement.json` reste en attente dans le chantier A.
+
+### 2026-08-31 — Décision de présentation E021
+
+- E021 sera livré à Papier comme tableau JP annexe, distinct du tableau principal de benchmark. Il comparera le même reranker appliqué aux trois viviers réels : similarité, navigation dans le graphe et modèle d'apprentissage sur graphe.
+- Condition avant insertion : reprendre les 13 unités manquantes et exporter les métriques exactes sur couverture complète. Le tableau indiquera la méthode source, le nombre de questions, Hit@10 officiel, NDCG@10 et MRR@10.
+- Le LLM-as-a-Judge reste hors de ce tableau : c'est une évaluation distincte, pas le reranker.
