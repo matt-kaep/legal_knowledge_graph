@@ -27,7 +27,8 @@ def test_submit_uses_remote_home_defaults_for_data_and_python(tmp_path: Path):
         "set -euo pipefail\n"
         "while [[ $1 == -o ]]; do shift 2; done\n"
         "shift\n"
-        "exec \"$@\"\n",
+        "remote_command=\"$*\"\n"
+        "exec bash -c \"$remote_command\"\n",
     )
     _executable(
         fake_bin / "sbatch",

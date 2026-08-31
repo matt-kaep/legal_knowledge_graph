@@ -7,8 +7,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="${LKG_REPO:-$(cd "$SCRIPT_DIR/../../../.." && pwd)}"
 REMOTE_HOST="${REMOTE_HOST:?Set REMOTE_HOST, for example user@gpu-gw.enst.fr.}"
 REMOTE_REPO="${REMOTE_REPO:?Set REMOTE_REPO to the remote code checkout name.}"
-REMOTE_DATA_ROOT="${REMOTE_DATA_ROOT:-}"
-REMOTE_PYTHON="${REMOTE_PYTHON:-}"
+REMOTE_DEFAULT="__LKG_REMOTE_DEFAULT__"
+REMOTE_DATA_ROOT="${REMOTE_DATA_ROOT:-$REMOTE_DEFAULT}"
+REMOTE_PYTHON="${REMOTE_PYTHON:-$REMOTE_DEFAULT}"
 REMOTE_BRANCH="${REMOTE_BRANCH:-paper/ecir-2027-reproducibility}"
 SSH_OPTS=(-o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10)
 
@@ -37,12 +38,12 @@ submit() {
   ssh "${SSH_OPTS[@]}" "$REMOTE_HOST" bash -s -- "$REMOTE_REPO" "$REMOTE_DATA_ROOT" "$REMOTE_PYTHON" "$batch_script" <<'REMOTE'
 set -euo pipefail
 repo_name="$1"
-data_root="${2:-}"
-python_bin="${3:-}"
+data_root="$2"
+python_bin="$3"
 batch_script="$4"
 repo="$HOME/$repo_name"
-data_root="${data_root:-$HOME/${repo_name}_data}"
-python_bin="${python_bin:-$HOME/work/.venv-benchmark/bin/python}"
+[[ "$data_root" == "__LKG_REMOTE_DEFAULT__" ]] && data_root="$HOME/${repo_name}_data"
+[[ "$python_bin" == "__LKG_REMOTE_DEFAULT__" ]] && python_bin="$HOME/work/.venv-benchmark/bin/python"
 test -d "$repo"
 test -d "$data_root"
 test -x "$python_bin"
