@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import importlib.util
 import json
+import math
 from pathlib import Path
 
 import pandas as pd
@@ -169,3 +170,56 @@ def test_audit_rejects_an_undeclared_historical_manifest(tmp_path: Path):
 
     assert result["status"] == "incomplete_or_invalid"
     assert "undeclared_result_manifest_sha256" in result["graphs"]["G1"]["errors"]
+
+
+def test_audit_recomputes_top10_from_a_historical_top20_summary(tmp_path: Path):
+    _write_fixture(tmp_path)
+    graph_dir = tmp_path / "G1"
+    champions = json.loads((graph_dir / "selected_champions.json").read_text(encoding="utf-8"))
+    for champion in champions["ppr"].values():
+        champion["n_questions_expected"] = 3
+        champion["n_questions_covered"] = 3
+    (graph_dir / "selected_champions.json").write_text(json.dumps(champions), encoding="utf-8")
+
+    rankings = []
+    for qid, article_id, jp_id in [("q1", "a1", "j1"), ("q2", "a2", "j2")]:
+        for method, k_in, modality, gold_id in [
+            ("PPR-article", 50, "art", article_id),
+            ("PPR-jp", 20, "jp", jp_id),
+        ]:
+            for rank in range(1, 21):
+                rankings.append(
+                    {
+                        "qid": qid,
+                        "method": method,
+                        "k_in": k_in,
+                        "modality": modality,
+                        "rank": rank,
+                        "item_id": gold_id if rank == 20 else f"{modality}-{qid}-{rank}",
+                    }
+                )
+    pd.DataFrame(rankings).to_parquet(graph_dir / "rankings.parquet", index=False)
+
+    summary_rows = list(csv.DictReader((graph_dir / "final_champions_summary.csv").open(encoding="utf-8")))
+    for row in summary_rows:
+        row.update({"m1": "1.0", "hit": "1.0", "mrr": "0.05", "ndcg": str(1 / math.log2(21))})
+    with (graph_dir / "final_champions_summary.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(summary_rows[0]))
+        writer.writeheader()
+        writer.writerows(summary_rows)
+
+    result = MODULE.audit_ppr_final_outputs(
+        final_root=tmp_path,
+        questions_by_qid=_questions(),
+        graph_matrix_sha256s={"G1": MATRIX_SHA},
+        expected_eval_sha256=EVAL_SHA,
+        expected_fold_sha256=FOLDS_SHA,
+        allowed_result_manifest_sha256s={RESULT_MANIFEST_SHA},
+        expected_question_count=2,
+        expected_selection_question_count=3,
+        historical_summary_top_k=20,
+    )
+
+    assert result["status"] == "complete"
+    assert result["graphs"]["G1"]["metrics"]["articles_strict"]["recall_at_10"] == 0.0
+    assert result["graphs"]["G1"]["metrics"]["jp"]["official_hit_at_10"] == 0.0

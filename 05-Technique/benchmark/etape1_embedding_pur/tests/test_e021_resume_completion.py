@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "72_finalize_e021_resume.py"
+BATCH_SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "sbatch_e021_reranking_resume.sh"
 SPEC = importlib.util.spec_from_file_location("e021_resume_completion", SCRIPT)
 MODULE = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
@@ -113,3 +114,11 @@ def test_completion_record_rejects_a_response_for_a_different_input_contract(tmp
 
     assert record["status"] == "incomplete"
     assert not record["families"]["lightgcn"]["checks"]["response_history_has_every_key"]
+
+
+def test_e021_batch_serves_the_frozen_local_model_snapshot():
+    source = BATCH_SCRIPT.read_text(encoding="utf-8")
+
+    assert 'MODEL_SNAPSHOT="${E021_MODEL_SNAPSHOT:-$HOME/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/$REVISION}"' in source
+    assert '"$VLLM_BIN" serve "$MODEL_SNAPSHOT"' in source
+    assert '--served-model-name "$MODEL"' in source

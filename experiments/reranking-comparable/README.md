@@ -18,11 +18,13 @@ The v5 execution produced 2,249 valid family/question responses out of 2,262:
 - PPR: 753 / 754;
 - LightGCN: 749 / 754.
 
-Thirteen units remain to be recovered. The historic v5 manifest remains
-immutable. `manifest_cluster_gpu_runtime_v5_resume_v1.json` is a new resume
-manifest: it pins the pre-resume response-history hash, appends only absent or
-invalid units, and writes a distinct metrics file and completion receipt. It
-does not overwrite the prior partial metrics.
+Thirteen units remain to be recovered. The historic v5 manifest and the failed
+v1 resume attempt remain immutable. The current
+`manifest_cluster_gpu_runtime_v5_resume_v2.json` pins the pre-resume
+response-history hash, starts vLLM from the exact cached model snapshot rather
+than resolving a remote revision, appends only absent or invalid units, and
+writes a distinct metrics file and completion receipt. It does not overwrite
+the prior partial metrics.
 
 E021 is a supplementary jurisprudence table. It is not part of the main
 retrieval comparison, contains no LLM-as-a-Judge column, and must not be used
@@ -53,8 +55,8 @@ hash. It then starts vLLM locally, waits for `/health`, processes only the
 missing units, recomputes metrics and writes:
 
 ```text
-.../_e021_jobs/E021-cluster-gpu-runtime-v5/resume_v1/metrics.json
-.../_e021_jobs/E021-cluster-gpu-runtime-v5/resume_v1/completion_receipt.json
+.../_e021_jobs/E021-cluster-gpu-runtime-v5/resume_v2/metrics.json
+.../_e021_jobs/E021-cluster-gpu-runtime-v5/resume_v2/completion_receipt.json
 ```
 
 The receipt exits non-zero if one family remains incomplete, but keeps the

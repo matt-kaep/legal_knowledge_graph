@@ -19,15 +19,16 @@ PYTHON_BIN="${LKG_PYTHON:-$HOME/work/.venv-benchmark/bin/python}"
 VLLM_BIN="${VLLM_BIN:-${PYTHON_BIN%/python}/vllm}"
 ROOT="$LKG_REPO/05-Technique/benchmark/etape1_embedding_pur"
 DATA_BENCH="$LKG_DATA_ROOT/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench"
-RESUME_MANIFEST="$LKG_REPO/experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5_resume_v1.json"
+RESUME_MANIFEST="$LKG_REPO/experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5_resume_v2.json"
 JOBS="$DATA_BENCH/_e021_jobs/E021-cluster-gpu-runtime-v5/jobs.jsonl"
 RESPONSES="$DATA_BENCH/_e021_jobs/E021-cluster-gpu-runtime-v5/responses.jsonl"
 QUESTIONS="$DATA_BENCH/eval_rich_retrievable_strict/bench_global.json"
 PROMPT="$ROOT/prompts/reranking_comparable_v1.txt"
-RUN_ROOT="$DATA_BENCH/_e021_jobs/E021-cluster-gpu-runtime-v5/resume_v1"
+RUN_ROOT="$DATA_BENCH/_e021_jobs/E021-cluster-gpu-runtime-v5/resume_v2"
 PORT="${E021_VLLM_PORT:-8000}"
 MODEL="cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit"
 REVISION="4033b16200f4152e55e100ea12dc388c537df622"
+MODEL_SNAPSHOT="${E021_MODEL_SNAPSHOT:-$HOME/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/$REVISION}"
 EXPECTED_JOBS_SHA="36f03198d39ec764095d3340ea1f8dc006b941e585245e30bd8e4c14a0a5afdf"
 EXPECTED_RESPONSES_SHA="780e53c1d69481660869d4c0f9e68b377be7d4ab2f0b5c869eae1522b9a3a9fb"
 SERVER_PID=""
@@ -46,7 +47,7 @@ stop_server() {
 }
 trap stop_server EXIT
 
-for path in "$PYTHON_BIN" "$VLLM_BIN" "$RESUME_MANIFEST" "$JOBS" "$RESPONSES" "$QUESTIONS" "$PROMPT"; do
+for path in "$PYTHON_BIN" "$VLLM_BIN" "$RESUME_MANIFEST" "$JOBS" "$RESPONSES" "$QUESTIONS" "$PROMPT" "$MODEL_SNAPSHOT"; do
   [[ -e "$path" ]] || { echo "missing required path: $path" >&2; exit 2; }
 done
 
@@ -56,6 +57,7 @@ actual_responses_sha="$(sha256sum "$RESPONSES" | awk '{print $1}')"
 [[ "$actual_responses_sha" == "$EXPECTED_RESPONSES_SHA" ]] || { echo "response history changed before resume" >&2; exit 2; }
 
 export LKG_REPO LKG_DATA_ROOT
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 export OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2
 nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 
@@ -72,8 +74,8 @@ PY
 )"
 
 if [[ "$missing_units" -gt 0 ]]; then
-  "$VLLM_BIN" serve "$MODEL" \
-    --revision "$REVISION" \
+  "$VLLM_BIN" serve "$MODEL_SNAPSHOT" \
+    --served-model-name "$MODEL" \
     --host 127.0.0.1 --port "$PORT" \
     --max-model-len 16384 --max-num-seqs 2 \
     --gpu-memory-utilization 0.9 > "$RUN_ROOT/vllm.log" 2>&1 &

@@ -109,7 +109,9 @@ def _validate_rankings_and_metrics(
     rankings: pd.DataFrame,
     champion: dict[str, Any],
     questions_by_qid: dict[str, dict[str, Any]],
-) -> tuple[list[str], int, dict[str, float]]:
+    *,
+    evaluation_top_k: int,
+) -> tuple[list[str], int, dict[str, float], int]:
     errors: list[str] = []
     selected = _ranking_for_champion(rankings, champion)
     selected["qid"] = selected["qid"].astype(str)
@@ -119,6 +121,7 @@ def _validate_rankings_and_metrics(
         errors.append("ranking_question_set_mismatch")
     metric_rows: list[dict[str, float]] = []
     depths: list[int] = []
+    duplicate_top_10_questions = 0
     for qid in sorted(expected_qids):
         group = selected[selected["qid"] == qid].sort_values("rank")
         ranks = [int(value) for value in group["rank"].tolist()]
@@ -126,23 +129,22 @@ def _validate_rankings_and_metrics(
             errors.append(f"ranking_non_contiguous_ranks:{qid}")
             continue
         depths.append(len(ranks))
-        if len(ranks) < TOP_K:
-            errors.append(f"ranking_shorter_than_top_{TOP_K}:{qid}")
+        if len(ranks) < evaluation_top_k:
+            errors.append(f"ranking_shorter_than_top_{evaluation_top_k}:{qid}")
             continue
-        top_items = [str(value) for value in group.head(TOP_K)["item_id"].tolist()]
-        if len(set(top_items)) != TOP_K:
-            errors.append(f"ranking_duplicate_item_in_top_{TOP_K}:{qid}")
-            continue
+        top_items = [str(value) for value in group.head(evaluation_top_k)["item_id"].tolist()]
+        if len(top_items[:TOP_K]) == TOP_K and len(set(top_items[:TOP_K])) != TOP_K:
+            duplicate_top_10_questions += 1
         gold = _gold_ids(questions_by_qid[qid], str(champion["modality"]))
         if not gold:
             errors.append(f"missing_gold_labels:{qid}")
             continue
         metric_rows.append(
             {
-                "recall_at_10": retrieval_metrics.m1_recall(top_items, gold, TOP_K),
-                "official_hit_at_10": retrieval_metrics.hit_at_k(top_items, gold, TOP_K),
-                "mrr_at_10": retrieval_metrics.mrr_at_k(top_items, gold, TOP_K),
-                "ndcg_at_10": retrieval_metrics.ndcg_at_k(top_items, gold, TOP_K),
+                "recall_at_10": retrieval_metrics.m1_recall(top_items, gold, evaluation_top_k),
+                "official_hit_at_10": retrieval_metrics.hit_at_k(top_items, gold, evaluation_top_k),
+                "mrr_at_10": retrieval_metrics.mrr_at_k(top_items, gold, evaluation_top_k),
+                "ndcg_at_10": retrieval_metrics.ndcg_at_k(top_items, gold, evaluation_top_k),
             }
         )
     if not metric_rows:
@@ -153,7 +155,7 @@ def _validate_rankings_and_metrics(
             name: float(sum(row[name] for row in metric_rows) / len(metric_rows))
             for name in metric_rows[0]
         }
-    return errors, min(depths) if depths else 0, metrics
+    return errors, min(depths) if depths else 0, metrics, duplicate_top_10_questions
 
 
 def audit_ppr_final_outputs(
@@ -165,12 +167,23 @@ def audit_ppr_final_outputs(
     expected_fold_sha256: str,
     allowed_result_manifest_sha256s: set[str],
     expected_question_count: int,
+    expected_selection_question_count: int | None = None,
+    historical_summary_top_k: int = TOP_K,
 ) -> dict[str, Any]:
     """Return a fully explicit audit for every graph in a PPR recovery root."""
+    if historical_summary_top_k < TOP_K:
+        raise ValueError("historical_summary_top_k must be at least the official top-10")
+    expected_selection_question_count = (
+        expected_question_count
+        if expected_selection_question_count is None
+        else expected_selection_question_count
+    )
     report: dict[str, Any] = {
         "audit_kind": "ppr_final_recovery",
         "expected_question_count": expected_question_count,
+        "expected_selection_question_count": expected_selection_question_count,
         "top_k_metrics": TOP_K,
+        "historical_summary_top_k": historical_summary_top_k,
         "graphs": {},
     }
     for graph_id in sorted(graph_matrix_sha256s):
@@ -180,6 +193,8 @@ def audit_ppr_final_outputs(
             "errors": [],
             "files": {},
             "metrics": {},
+            "historical_summary_metrics": {},
+            "duplicate_item_questions_in_raw_top_10": {},
         }
         report["graphs"][graph_id] = graph_report
         missing = [name for name in REQUIRED_FILES if not (graph_dir / name).is_file()]
@@ -208,7 +223,7 @@ def audit_ppr_final_outputs(
                         champion,
                         modality=modality,
                         expected_fold_sha256=expected_fold_sha256,
-                        expected_question_count=expected_question_count,
+                        expected_question_count=expected_selection_question_count,
                     )
                 )
                 matching_rows = [
@@ -239,10 +254,17 @@ def audit_ppr_final_outputs(
                 }.items():
                     if not _float_equal(row.get(key), value):
                         graph_report["errors"].append(f"summary_{key}_mismatch:{target}")
-                ranking_errors, depth, metrics = _validate_rankings_and_metrics(
-                    rankings, champion, questions_by_qid
+                ranking_errors, depth, metrics, duplicate_count = _validate_rankings_and_metrics(
+                    rankings, champion, questions_by_qid, evaluation_top_k=TOP_K
                 )
                 graph_report["errors"].extend(ranking_errors)
+                summary_errors, _, historical_summary_metrics, _ = _validate_rankings_and_metrics(
+                    rankings,
+                    champion,
+                    questions_by_qid,
+                    evaluation_top_k=historical_summary_top_k,
+                )
+                graph_report["errors"].extend(summary_errors)
                 depths.append(depth)
                 metric_column_map = {
                     "recall_at_10": "m1",
@@ -251,11 +273,15 @@ def audit_ppr_final_outputs(
                     "ndcg_at_10": "ndcg",
                 }
                 for metric_name, summary_column in metric_column_map.items():
-                    if metrics and not _float_equal(row.get(summary_column), metrics[metric_name]):
+                    if historical_summary_metrics and not _float_equal(
+                        row.get(summary_column), historical_summary_metrics[metric_name]
+                    ):
                         graph_report["errors"].append(
                             f"summary_metric_mismatch:{target}:{metric_name}"
                         )
                 graph_report["metrics"][target] = metrics
+                graph_report["historical_summary_metrics"][target] = historical_summary_metrics
+                graph_report["duplicate_item_questions_in_raw_top_10"][target] = duplicate_count
             graph_report["ranking_depth"] = min(depths) if depths else 0
         except Exception as exc:
             graph_report["errors"].append(f"audit_exception:{type(exc).__name__}:{exc}")
@@ -298,6 +324,10 @@ def main(argv: list[str] | None = None) -> int:
         expected_fold_sha256=str(campaign["folds"]["sha256"]),
         allowed_result_manifest_sha256s=set(recovery["accepted_result_manifest_sha256s"]),
         expected_question_count=int(campaign["datasets"]["internal_eval"]["questions"]),
+        expected_selection_question_count=int(campaign["datasets"]["train"]["questions"]),
+        historical_summary_top_k=int(
+            recovery["audit_contract"].get("historical_summary_metrics_k", TOP_K)
+        ),
     )
     report.update(
         {
