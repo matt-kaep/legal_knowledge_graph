@@ -8,7 +8,10 @@ from dataclasses import dataclass
 from budget import is_oversized
 from errors import classify_error, ErrorClass
 from parsing import parse_model_json, ParseError
-from schema import Step1Output, SCHEMA_VERSION, json_schema
+try:  # Package import is unambiguous when the repository test suite runs.
+    from jp_analysis.schema import Step1Output, SCHEMA_VERSION, json_schema
+except ModuleNotFoundError:  # Preserve direct ``python run_step1.py`` usage.
+    from schema import Step1Output, SCHEMA_VERSION, json_schema
 from themes_validation import canonicalize_themes
 from prompts.step1.themes_taxonomy import TAXONOMY_VERSION
 from prompts.step1.build_prompt import build_system_prompt

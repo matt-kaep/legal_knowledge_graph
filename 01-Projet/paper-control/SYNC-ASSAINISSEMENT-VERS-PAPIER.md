@@ -280,3 +280,8 @@ Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E
 
 - Formulation autorisée : « Un même reranker, figé à `K_in=20` et `K_out=10`, a été appliqué aux trois viviers JP réels sur les mêmes 754 questions ; les métriques exactes sont rapportées séparément. » Statut : `exploratoire` et tableau annexe, sans LLM-as-a-Judge. Ne pas le présenter comme une évaluation Articles ni comme une conclusion de supériorité.
 - Note de reproduction : 11 réponses du modèle contenaient 19 répétitions d'identifiants. La reprise v3, documentée dans `manifest_cluster_gpu_runtime_v5_resume_v3.json`, conserve la première occurrence et complète 19 positions selon l'ordre gelé du vivier ; les 2 251 autres réponses ne sont pas modifiées.
+
+### 2026-09-01 — État de vérification de la branche
+
+- La branche publiable passe 322 tests dans son worktree isolé. Huit tests supplémentaires nécessitent les jeux de données et graphes lourds volontairement absents de Git ; ils échouent explicitement en préflight sur fichier absent, sans produire ni modifier de résultat.
+- Les exports et tableaux transmis ci-dessus sont eux vérifiés dans ce worktree, et les calculs ayant besoin des données ont été exécutés puis contrôlés sur Télécom. Aucun changement de manuscrit n'est demandé par cette note opérationnelle.

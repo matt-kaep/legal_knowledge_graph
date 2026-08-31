@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from run_step1 import run
 from analyzer.jp_analyzer import RunConfig
-from tests.test_analyzer import FakeClient, _good_payload
+from jp_analysis.tests.test_analyzer import FakeClient, _good_payload
 
 def _rows():
     return [

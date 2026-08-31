@@ -1,6 +1,6 @@
 import pytest
 from pydantic import ValidationError
-from schema import Step1Output, SCHEMA_VERSION, json_schema
+from jp_analysis.schema import Step1Output, SCHEMA_VERSION, json_schema
 
 VALID = {
     "contexte": "Cour de cassation, chambre criminelle, pourvoi en matière de vol.",
