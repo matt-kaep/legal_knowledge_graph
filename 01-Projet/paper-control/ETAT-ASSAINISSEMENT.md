@@ -101,3 +101,10 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 - Scripts Télécom préparés : `71_audit_ppr_final_recovery.py`, `72_finalize_e021_resume.py`, `sbatch_ppr_final_audit.sh`, `sbatch_e021_reranking_resume.sh` et `run_telecom_reproducibility.sh`. Le reçu E021 recoupe désormais chaque réponse avec le hash du job correspondant. Les tests ciblés de ces contrôles et des contrats E021 existants passent à 17/17 ; la soumission cluster n'a pas encore été effectuée.
 - Publication : commit `ddda94e` poussé sur `paper/ecir-2027-reproducibility` (PR brouillon existante). Deux contrôles SSH en lecture seule vers Télécom ont expiré ; aucun job, fichier de données ou artefact distant n'a été modifié par cette étape.
 - Statut scientifique : aucune nouvelle valeur n'est promue par cette préparation. E021 reste exploratoire et incomplet jusqu'au reçu de couverture complète ; PPR final reste en attente de l'audit E022 avant transcription dans les exports versionnés.
+
+### 2026-09-01 — Soumission Télécom et surveillance
+
+- Le lanceur portable a été corrigé et poussé dans le commit `fe20588` : les valeurs par défaut de données et Python sont désormais transmises à SSH par un marqueur explicite, au lieu d'arguments vides perdus par le shell distant. Le test de transport SSH est passé avec ce comportement réel, avec cinq autres tests ciblés de l'audit et du reçu E021.
+- E022 est soumis sous Slurm `969381` (partition CPU, `nodecpu10`). Il effectue uniquement l'audit de 33 fichiers PPR existants pour les onze graphes et écrit un rapport séparé sous `_protocol/ppr_final_audit_v1/` ; aucun PPR n'est relancé et `_final_grouped_v2` reste immuable.
+- E021 est soumis sous Slurm `969382` (partition L40S, `node39`). Il vérifie les hashes initiaux, traite seulement les 13 unités manquantes, puis écrira les métriques et le reçu sous `resume_v1/`. L'historique JSONL v5 est append-only.
+- Aucun résultat nouveau n'est enregistré dans `REGISTRE-RESULTATS.csv` tant que les jobs ne sont pas terminés et que les couvertures, métriques et hashes de sortie n'ont pas été contrôlés.

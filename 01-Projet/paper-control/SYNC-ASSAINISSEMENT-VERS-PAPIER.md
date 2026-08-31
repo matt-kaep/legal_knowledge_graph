@@ -235,3 +235,9 @@ Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E
 - Artefacts : `experiments/confirmatory-recovery/manifest_ppr_final_audit_v1.json`, `experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5_resume_v1.json` et `05-Technique/benchmark/etape1_embedding_pur/scripts/run_telecom_reproducibility.sh`.
 - Action demandée : aucune modification des tableaux du papier avant réception des deux audits. E021 reste un tableau JP annexe, sans score LLM-as-a-Judge.
 - Statut : préparation vérifiée localement et poussée dans le commit `ddda94e` de `paper/ecir-2027-reproducibility`; jobs Télécom non encore soumis (passerelle SSH momentanément indisponible).
+
+### 2026-09-01 — Calculs Télécom soumis, aucun chiffre nouveau à reprendre
+
+- Les jobs d'audit et de récupération sont maintenant en cours : E022 / Slurm `969381` (CPU, audit PPR non destructif) et E021 / Slurm `969382` (L40S, reprise de 13 unités de reranking seulement). Le commit de soumission portable est `fe20588` sur `paper/ecir-2027-reproducibility`.
+- Aucun résultat nouveau n'est transmis au papier à ce stade. Les métriques PPR finales et le tableau JP de reranking restent en attente des rapports hashés, de la couverture complète et du contrôle par A.
+- Le LLM-as-a-Judge et l'audit avocat restent hors de ces jobs et de tout tableau E021.
