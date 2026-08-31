@@ -227,3 +227,11 @@ Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E
 - E021 sera livré à Papier comme tableau JP annexe, distinct du tableau principal de benchmark. Il comparera le même reranker appliqué aux trois viviers réels : similarité, navigation dans le graphe et modèle d'apprentissage sur graphe.
 - Condition avant insertion : reprendre les 13 unités manquantes et exporter les métriques exactes sur couverture complète. Le tableau indiquera la méthode source, le nombre de questions, Hit@10 officiel, NDCG@10 et MRR@10.
 - Le LLM-as-a-Judge reste hors de ce tableau : c'est une évaluation distincte, pas le reranker.
+
+### 2026-08-31 — Préparation Télécom, sans nouveau résultat à reprendre
+
+- Décision ou résultat : les sorties PPR finales des 11 graphes sont présentes sur Télécom et leur manifeste historique est identifié. A prépare E022, un audit non destructif qui revalidera les champions issus des cinq folds, les 754 questions, les rangs et les métriques exactes. Aucun PPR n'est relancé.
+- E021 : un job GPU reprenable est prêt pour les 13 réponses de reranking manquantes. Il conserve le JSONL historique, n'ajoute que les clés famille/question absentes et produit un nouveau reçu de couverture.
+- Artefacts : `experiments/confirmatory-recovery/manifest_ppr_final_audit_v1.json`, `experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5_resume_v1.json` et `05-Technique/benchmark/etape1_embedding_pur/scripts/run_telecom_reproducibility.sh`.
+- Action demandée : aucune modification des tableaux du papier avant réception des deux audits. E021 reste un tableau JP annexe, sans score LLM-as-a-Judge.
+- Statut : préparation vérifiée localement ; jobs Télécom non encore soumis.
