@@ -234,4 +234,4 @@ Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E
 - E021 : un job GPU reprenable est prêt pour les 13 réponses de reranking manquantes. Il conserve le JSONL historique, n'ajoute que les clés famille/question absentes et produit un nouveau reçu de couverture.
 - Artefacts : `experiments/confirmatory-recovery/manifest_ppr_final_audit_v1.json`, `experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5_resume_v1.json` et `05-Technique/benchmark/etape1_embedding_pur/scripts/run_telecom_reproducibility.sh`.
 - Action demandée : aucune modification des tableaux du papier avant réception des deux audits. E021 reste un tableau JP annexe, sans score LLM-as-a-Judge.
-- Statut : préparation vérifiée localement ; jobs Télécom non encore soumis.
+- Statut : préparation vérifiée localement et poussée dans le commit `ddda94e` de `paper/ecir-2027-reproducibility`; jobs Télécom non encore soumis (passerelle SSH momentanément indisponible).
