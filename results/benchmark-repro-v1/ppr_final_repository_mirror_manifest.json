@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "kind": "repository_mirror_of_telecom_e022_ppr_materialization",
+  "experiment_id": "E022",
+  "source_audit_sha256": "d0217fb5ae304d5c640101044bad75475d33cca67d94b6458a7e72f9d01d06d4",
+  "remote_materialization_manifest": {
+    "sha256": "e50da8b65804415624da94bb8a1841bc4069bc6c698a520549c02f4ba9ecf3c3",
+    "repository_copy": "results/benchmark-repro-v1/ppr_final_materialization_manifest.json"
+  },
+  "normalization": "CSV contents are byte-verified after CRLF-to-LF line-ending normalization for Git storage; no fields or row order changed.",
+  "outputs": {
+    "ppr_final_internal_eval_exact.csv": {
+      "remote_crlf_sha256": "d6adfc2bb120da4d56e25c75931388843d5a6bd3b41016af321ea58d455c4808",
+      "repository_lf_sha256": "2f311319e25b9a876a1904534f56ef53ae6729310f34aaa0ef27e60816918bb0"
+    },
+    "ppr_final_table_articles.csv": {
+      "remote_crlf_sha256": "acc9cc44f5bc72f6509e2cbf2e9ecc24570e0950a59fb33659a29a5bdb06a2c1",
+      "repository_lf_sha256": "d3b05f49d9c6d957dac29dc3b3107fb4e65e701394eb35f19a054ffa8f4e45a3"
+    },
+    "ppr_final_table_jp.csv": {
+      "remote_crlf_sha256": "aff385824ef1b5a7f405f8fabc206f0474ff9d088045e0566b91b08b5599fbec",
+      "repository_lf_sha256": "ebace97fc605254049ed268ce6c1ae61e577b83178d1c709ce91fe58195fc83c"
+    }
+  }
+}
