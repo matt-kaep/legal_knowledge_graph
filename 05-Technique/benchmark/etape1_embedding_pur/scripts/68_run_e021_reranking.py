@@ -81,7 +81,12 @@ def compute_input_sha256(job: dict[str, Any]) -> str:
 
 
 def parse_ranked_ids(raw: str, pool_ids: Iterable[str], k_out: int) -> list[str]:
-    """Parse strict JSON and enforce subset, cardinality and uniqueness."""
+    """Parse strict JSON and enforce subset and cardinality.
+
+    vLLM 0.19.1 cannot enforce JSON Schema ``uniqueItems``.  Repetitions are
+    consequently normalized in a separate, recorded deterministic step rather
+    than discarded as an unrecoverable provider failure.
+    """
     if not isinstance(raw, str) or raw.startswith("``"):
         raise InvalidRerankerResponse("response must be plain JSON, without a code fence")
     try:
@@ -95,12 +100,46 @@ def parse_ranked_ids(raw: str, pool_ids: Iterable[str], k_out: int) -> list[str]
         raise InvalidRerankerResponse(f"expected exactly {k_out} ranked ids")
     if any(not isinstance(item, str) for item in ranked):
         raise InvalidRerankerResponse("ranked ids must be strings")
-    if len(set(ranked)) != len(ranked):
-        raise InvalidRerankerResponse("ranked ids must be distinct")
     pool = set(pool_ids)
     if not set(ranked).issubset(pool):
         raise InvalidRerankerResponse("ranked ids must belong to the supplied pool")
     return ranked
+
+
+def normalize_ranked_ids(
+    ranked_ids: Iterable[str], pool_ids: Iterable[str], k_out: int
+) -> tuple[list[str], list[str]]:
+    """Preserve model order, then deterministically complete duplicate slots.
+
+    The source pool is already a real, ordered, duplicate-free K_in candidate
+    set.  For an otherwise valid model response that repeats an identifier, the
+    first occurrence is retained and missing slots are filled in that frozen
+    source order.  This makes the limited provider-schema workaround explicit
+    without changing a valid model ranking.
+    """
+    pool = [str(item_id) for item_id in pool_ids]
+    if len(pool) != len(set(pool)):
+        raise ValueError("candidate pool must contain distinct identifiers")
+    if len(pool) < k_out:
+        raise ValueError("candidate pool is smaller than k_out")
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for item_id in ranked_ids:
+        item_id = str(item_id)
+        if item_id not in seen:
+            normalized.append(item_id)
+            seen.add(item_id)
+    fallback_ids: list[str] = []
+    for item_id in pool:
+        if len(normalized) == k_out:
+            break
+        if item_id not in seen:
+            normalized.append(item_id)
+            fallback_ids.append(item_id)
+            seen.add(item_id)
+    if len(normalized) != k_out:
+        raise ValueError("could not complete a distinct top-k ranking")
+    return normalized, fallback_ids
 
 
 def _gold_ids(question: dict[str, Any], modality: str) -> set[str]:
@@ -243,8 +282,13 @@ def run_jobs(
                         k_out=job["k_out"],
                         pool_ids=pool_ids,
                     )
-                    ranked = parse_ranked_ids(
+                    raw_ranked = parse_ranked_ids(
                         raw,
+                        pool_ids,
+                        job["k_out"],
+                    )
+                    ranked, fallback_ids = normalize_ranked_ids(
+                        raw_ranked,
                         pool_ids,
                         job["k_out"],
                     )
@@ -256,6 +300,10 @@ def run_jobs(
                         "input_sha256": expected_input_sha,
                         "ranked_jp_ids": ranked,
                         "raw_response_sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(),
+                        "response_normalization": {
+                            "duplicate_ids_removed": len(raw_ranked) - len(set(raw_ranked)),
+                            "source_order_fallback_ids": fallback_ids,
+                        },
                         "attempt": attempt + 1,
                         "status": "ok",
                     }

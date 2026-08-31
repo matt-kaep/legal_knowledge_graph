@@ -27,7 +27,6 @@ def test_parse_response_accepts_exact_distinct_candidates_from_pool():
 @pytest.mark.parametrize(
     "payload",
     [
-        '{"ranked_jp_ids":["jp-1","jp-1"]}',
         '{"ranked_jp_ids":["jp-1","jp-9"]}',
         '{"ranked_jp_ids":["jp-1"]}',
         "```json\n{\"ranked_jp_ids\":[\"jp-1\",\"jp-2\"]}\n```",
@@ -36,6 +35,23 @@ def test_parse_response_accepts_exact_distinct_candidates_from_pool():
 def test_parse_response_rejects_invalid_or_non_strict_output(payload):
     with pytest.raises(MODULE.InvalidRerankerResponse):
         MODULE.parse_ranked_ids(payload, ["jp-1", "jp-2", "jp-3"], k_out=2)
+
+
+def test_duplicate_model_ids_are_completed_deterministically_from_the_real_pool():
+    raw_ranked = MODULE.parse_ranked_ids(
+        '{"ranked_jp_ids":["jp-2","jp-2"]}',
+        ["jp-1", "jp-2", "jp-3"],
+        k_out=2,
+    )
+
+    normalized, fallback_ids = MODULE.normalize_ranked_ids(
+        raw_ranked,
+        ["jp-1", "jp-2", "jp-3"],
+        k_out=2,
+    )
+
+    assert normalized == ["jp-2", "jp-1"]
+    assert fallback_ids == ["jp-1"]
 
 
 def test_metrics_keep_official_hit_distinct_from_exact_any_diagnostic():

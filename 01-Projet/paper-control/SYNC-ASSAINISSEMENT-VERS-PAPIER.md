@@ -252,3 +252,10 @@ Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E
 
 - E022 v2 / Slurm `969521` audite les onze sorties PPR existantes sans les recalculer. E021 v2 / Slurm `969522` reprend uniquement les 13 unités manquantes depuis le snapshot local figé du reranker.
 - Les entrées E021 ont été revalidées avant soumission et aucune réponse historique n'a été modifiée. Attendre les rapports v2, leurs hashes et le contrôle de couverture par A avant toute modification du papier.
+
+### 2026-09-01 — E022 terminé ; E021 reste en reprise, rien à intégrer
+
+- E022 / Slurm `969521` a audité avec succès les onze sorties PPR existantes. Son rapport hashé vérifie les champions sélectionnés sur les folds train-only, la couverture et le recalcul exact des métriques à 10 depuis les classements archivés. A matérialise maintenant les tables légères ; ne pas reprendre les chiffres avant cette exportation versionnée.
+- E021 / Slurm `969522` a exécuté les 13 unités manquantes, mais seulement deux réponses sont valides : onze sorties du modèle répètent un identifiant, malgré un vivier de 20 décisions distinctes. Le reçu est explicitement incomplet ; aucune métrique partielle ne doit être reprise.
+- A prépare une reprise v3 limitée aux onze unités, avec même modèle, prompt, température, questions et viviers. Elle documente une normalisation déterministe des doublons de sortie, nécessaire car vLLM ne sait pas imposer l'unicité dans ce schéma JSON. Le reranking reste un tableau JP annexe exploratoire, séparé du LLM-as-a-Judge.
+- Statut Papier : attendre les tables PPR versionnées et le reçu E021 complet. Aucun changement de manuscrit demandé à ce stade.
