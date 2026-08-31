@@ -83,6 +83,7 @@ def test_materializer_requires_complete_receipt_and_exports_long_and_table_rows(
     module.write_outputs(rows, output_dir=out, receipt=receipt, manifest=manifest)
     assert (out / "internal_eval_jp_reranking_exact.csv").is_file()
     assert (out / "table_jp_reranking_exact.csv").is_file()
+    assert b"\r\n" not in (out / "internal_eval_jp_reranking_exact.csv").read_bytes()
     export_manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     assert export_manifest["rows"] == 9
     assert export_manifest["completion_status"] == "complete"

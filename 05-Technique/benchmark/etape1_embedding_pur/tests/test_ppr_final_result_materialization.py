@@ -109,4 +109,5 @@ def test_materializer_exports_exact_top10_means_dispersion_and_separate_tables(t
     assert (output_dir / "internal_eval_ppr_exact.csv").is_file()
     assert (output_dir / "table_articles_ppr_exact.csv").is_file()
     assert (output_dir / "table_jp_ppr_exact.csv").is_file()
+    assert b"\r\n" not in (output_dir / "internal_eval_ppr_exact.csv").read_bytes()
     assert json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))["rows"] == 6
