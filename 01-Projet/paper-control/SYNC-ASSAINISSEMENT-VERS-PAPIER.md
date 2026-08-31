@@ -266,3 +266,17 @@ Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E
 - À reprendre : `results/benchmark-repro-v1/ppr_final_table_articles.csv` (SHA `d3b05f49d9c6d957dac29dc3b3107fb4e65e701394eb35f19a054ffa8f4e45a3`) pour Recall@10, NDCG@10 et MRR@10 ; `results/benchmark-repro-v1/ppr_final_table_jp.csv` (SHA `ebace97fc605254049ed268ce6c1ae61e577b83178d1c709ce91fe58195fc83c`) pour Hit@10 officiel, NDCG@10 et MRR@10. Le détail complet de 66 valeurs est `ppr_final_internal_eval_exact.csv`, SHA `2f311319e25b9a876a1904534f56ef53ae6729310f34aaa0ef27e60816918bb0`.
 - Formulation autorisée : « Les résultats PPR ont été sélectionnés sur cinq folds groupés d'entraînement, puis évalués à 10 résultats sur les 754 questions ; les tableaux distinguent les tâches Articles et Jurisprudence, avec Hit@10 officiel séparé des diagnostics binaires. » Reprendre les configurations et écarts-types tels quels dans les CSV ; ne pas reprendre les anciens résumés historiques à 20 comme métriques à 10.
 - E021 n'est pas encore transmissible : la reprise GPU v3 ne concerne que les onze unités de reranking restantes. Le LLM-as-a-Judge reste séparé de ce reranker et sans nouvelle valeur dans cette transmission.
+
+### 2026-09-01 — E021 reranking : tableau JP annexe complet disponible
+
+- E021 est désormais complet : Slurm `969635` a produit un reçu vérifié de 2 262/2 262 unités, soit 754/754 questions pour chacun des trois viviers. Reçu : `results/reranking-comparable/E021-cluster-gpu-runtime-v5-resume-v3/completion_receipt.json`, SHA `456b810a773ae1cafe7ec8d5ec909b19986c797379deec7079e463018484d8e5`.
+- Tableau à reprendre : `results/reranking-comparable/E021-cluster-gpu-runtime-v5-resume-v3/table_jp_reranking_exact.csv`, SHA `cbf3785e2afa394e755372dca2a81012f82991493317cec45f6ad50a8dd05b4b`. Détail des neuf valeurs : `internal_eval_jp_reranking_exact.csv`, SHA `8020ee093ce4822425731602bcb24ff6222c9cdf0c42fd76a3e3a4b90dac16f5`.
+
+| Vivier reranké | Hit@10 officiel | NDCG@10 | MRR@10 |
+|---|---:|---:|---:|
+| Cosine / BGE-M3 | 0,2708885942 ± 0,4385007964 | 0,2202137204 ± 0,3816775665 | 0,2072581154 ± 0,3777762464 |
+| PPR | 0,2765251989 ± 0,4403684495 | 0,2280546973 ± 0,3874553522 | 0,2164540440 ± 0,3847236266 |
+| LightGCN | 0,2928824050 ± 0,4476458218 | 0,2436718744 ± 0,3969293745 | 0,2323591638 ± 0,3949335717 |
+
+- Formulation autorisée : « Un même reranker, figé à `K_in=20` et `K_out=10`, a été appliqué aux trois viviers JP réels sur les mêmes 754 questions ; les métriques exactes sont rapportées séparément. » Statut : `exploratoire` et tableau annexe, sans LLM-as-a-Judge. Ne pas le présenter comme une évaluation Articles ni comme une conclusion de supériorité.
+- Note de reproduction : 11 réponses du modèle contenaient 19 répétitions d'identifiants. La reprise v3, documentée dans `manifest_cluster_gpu_runtime_v5_resume_v3.json`, conserve la première occurrence et complète 19 positions selon l'ordre gelé du vivier ; les 2 251 autres réponses ne sont pas modifiées.
