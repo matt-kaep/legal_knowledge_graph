@@ -247,3 +247,8 @@ Le LLM-as-a-Judge n’est pas le reranker E021 et doit rester dans les exports E
 - Les deux jobs v1 ont échoué avant de produire un résultat nouveau : E022 `969381` a exposé un décalage de profondeur entre le résumé historique PPR (@20) et la métrique requise (@10) ; E021 `969382` a rencontré une révision distante de modèle devenue indisponible. Le JSONL E021 n'a reçu aucune nouvelle réponse.
 - A prépare les reprises v2 sans relancer PPR : l'audit v2 vérifiera que les onze résumés @20 concordent avec les classements, puis exportera les métriques exactes @10 depuis ces mêmes classements. Le reranking v2 utilise le snapshot local figé déjà présent sur Télécom pour ne dépendre d'aucun service externe.
 - Statut Papier : ne reprendre aucun chiffre, tableau ou classement de ces tentatives. La prochaine transmission contiendra uniquement des sorties v2 hashées et validées par A.
+
+### 2026-09-01 — Reprises v2 en cours, toujours aucun chiffre à reprendre
+
+- E022 v2 / Slurm `969521` audite les onze sorties PPR existantes sans les recalculer. E021 v2 / Slurm `969522` reprend uniquement les 13 unités manquantes depuis le snapshot local figé du reranker.
+- Les entrées E021 ont été revalidées avant soumission et aucune réponse historique n'a été modifiée. Attendre les rapports v2, leurs hashes et le contrôle de couverture par A avant toute modification du papier.
