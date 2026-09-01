@@ -1,0 +1,98 @@
+{
+  "k": 10,
+  "modality": "jp",
+  "families": {
+    "cosine_bge_m3": {
+      "expected_questions": 754,
+      "questions_with_gold": 754,
+      "valid_responses": 747,
+      "missing_questions": 7,
+      "missing_qids": [
+        "art_11_fasc_20_secret_de_l_instruction::L1_002_L2_C::q_3",
+        "art_20_a_29_fasc_20_police_judiciaire_agents_de_police_judiciaire_agents_de_police_judiciaire_adjoints_fonctionnaires_et_agents_charges_de_certaines_fonctions_de_police_judiciaire::eval_rich_v3plus_0001",
+        "art_230_32_a_230_44_fasc_20_geolocalisation::L1_002_L2_B::q_geoloc_motivation_qualite_agir",
+        "art_230_32_a_230_44_fasc_20_geolocalisation::eval_rich_v3plus_0002",
+        "art_393_a_397_7_fasc_20_comparution_immediate_comparution_a_delai_differe_convocation_par_proces_verbal::L1_002::q_4",
+        "art_706_3_a_706_15_fasc_20_recours_en_indemnite_ouvert_a_certaines_victimes_de_dommages_resultant_d_une_infraction::eval_rich_v3plus_0004",
+        "art_800_a_800_2_fasc_20_frais_de_justice_indemnite_en_cas_de_non_lieu_relaxe_ou_acquittement::L1_003::q_1"
+      ],
+      "coverage": 0.9907161803713528,
+      "status": "incomplete_missing_responses",
+      "metrics": {
+        "recall_at_10": 0.27074966532797856,
+        "official_hit_at_10": 0.27074966532797856,
+        "ndcg_at_10": 0.2195999266092675,
+        "mrr_at_10": 0.20652291706508574,
+        "exact_any_gold_at_10": 0.2824631860776439
+      },
+      "dispersion": {
+        "recall_at_10": 0.4383721651193616,
+        "official_hit_at_10": 0.4383721651193616,
+        "ndcg_at_10": 0.3809056369269477,
+        "mrr_at_10": 0.3769360232835336,
+        "exact_any_gold_at_10": 0.45049907942171036
+      },
+      "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+    },
+    "lightgcn": {
+      "expected_questions": 754,
+      "questions_with_gold": 754,
+      "valid_responses": 749,
+      "missing_questions": 5,
+      "missing_qids": [
+        "art_230_32_a_230_44_fasc_20_geolocalisation::L1_003::q_2",
+        "art_398_a_399_fasc_20_tribunal_correctionnel_composition_du_tribunal_tenue_des_audiences::eval_rich_v3plus_0001",
+        "art_695_11_a_695_51_fasc_20_entraide_judiciaire_internationale_mandat_d_arret_europeen::L1_003::q_mae_refus_et_delai_raisonnable",
+        "art_706_3_a_706_15_fasc_20_recours_en_indemnite_ouvert_a_certaines_victimes_de_dommages_resultant_d_une_infraction::eval_rich_v3plus_0001",
+        "art_747_3_et_747_4_fasc_20_ajournement_du_prononce_de_la_peine_avec_probation_et_avec_injonction::eval_rich_v3plus_0001"
+      ],
+      "coverage": 0.993368700265252,
+      "status": "incomplete_missing_responses",
+      "metrics": {
+        "recall_at_10": 0.2930574098798398,
+        "official_hit_at_10": 0.2930574098798398,
+        "ndcg_at_10": 0.2437210299977255,
+        "mrr_at_10": 0.23230815690762285,
+        "exact_any_gold_at_10": 0.308411214953271
+      },
+      "dispersion": {
+        "recall_at_10": 0.4480084150170406,
+        "official_hit_at_10": 0.4480084150170406,
+        "ndcg_at_10": 0.3969861944963405,
+        "mrr_at_10": 0.39498023079215056,
+        "exact_any_gold_at_10": 0.46214596125004176
+      },
+      "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+    },
+    "ppr": {
+      "expected_questions": 754,
+      "questions_with_gold": 754,
+      "valid_responses": 753,
+      "missing_questions": 1,
+      "missing_qids": [
+        "art_803_4_fasc_20_personnes_poursuivies_ou_condamnees_arretees_hors_du_territoire_national::L1_002::q_3"
+      ],
+      "coverage": 0.9986737400530504,
+      "status": "incomplete_missing_responses",
+      "metrics": {
+        "recall_at_10": 0.27689243027888444,
+        "official_hit_at_10": 0.27689243027888444,
+        "ndcg_at_10": 0.22835755874138852,
+        "mrr_at_10": 0.2167414996100255,
+        "exact_any_gold_at_10": 0.2908366533864542
+      },
+      "dispersion": {
+        "recall_at_10": 0.44054560563181216,
+        "official_hit_at_10": 0.44054560563181216,
+        "ndcg_at_10": 0.3876235636545792,
+        "mrr_at_10": 0.3848983077367182,
+        "exact_any_gold_at_10": 0.4544501776585544
+      },
+      "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+    }
+  },
+  "response_history": {
+    "latest_valid_unique_keys": 2249,
+    "invalid_records": 153
+  }
+}

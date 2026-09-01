@@ -1,0 +1,4 @@
+# These historical manifests are preserved byte-for-byte for auditability.
+# Their terminal blank line is part of the archived representation.
+05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2_repro_v1_cluster_gpu_runtime_v1.json whitespace=-blank-at-eof
+experiments/reranking-comparable/manifest_cluster_gpu_runtime_v1.json whitespace=-blank-at-eof

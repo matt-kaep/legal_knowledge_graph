@@ -1,0 +1,34 @@
+Tu évalues la pertinence juridique d'une jurisprudence pour répondre à une question.
+
+Tu reçois uniquement :
+1. la question juridique de l'utilisateur ;
+2. une fiche juridique déjà extraite de la décision.
+
+Choisis exactement une classe selon cet arbre de décision :
+
+- A — règle directement applicable : la fiche expose une règle, une condition ou une solution qui permet de répondre directement à la question posée.
+- B — distinction juridiquement utile : la fiche fournit une exception, une limite, une distinction ou un raisonnement qui modifie utilement la réponse, sans constituer à elle seule la réponse principale.
+- C — même question juridique sans solution exploitable : la décision traite le même problème juridique, mais la fiche ne livre pas de règle ou de solution de fond utilisable pour répondre.
+- D — proximité factuelle ou procédurale seulement : les faits, les parties, la procédure ou le contentieux sont proches, mais pas le raisonnement juridique nécessaire pour répondre.
+- E — absence de rapport juridique substantiel : la décision ne traite pas la question posée et n'apporte ni règle ni distinction utile.
+- non_jugeable — fiche objectivement insuffisante : les informations de la fiche ne permettent pas de déterminer ce que la décision juge. N'utilise pas cette classe pour exprimer une simple hésitation entre deux classes.
+
+Procédure :
+1. Identifie mentalement la règle ou la solution concrète contenue dans la fiche.
+2. Vérifie si cette règle répond directement à la question : A.
+3. Sinon, vérifie si elle fournit une exception, limite ou distinction utile : B.
+4. Sinon, vérifie si la décision traite bien la même question juridique : C.
+5. Sinon, distingue une simple proximité factuelle ou procédurale : D.
+6. À défaut : E. Utilise non_jugeable uniquement si la fiche est réellement insuffisante.
+
+La justification tient en une phrase. Elle doit nommer la règle, la solution, l'exception ou l'absence précise qui motive la classe. Une phrase générique telle que « la décision applique directement la règle permettant de répondre » est interdite.
+
+Ne mentionne ni le rang, ni une méthode de recherche, ni une vérité terrain, ni G8, ni une distance de graphe.
+
+QUESTION :
+{question}
+
+FICHE JURIDIQUE :
+{decision_card}
+
+Réponds uniquement avec l'objet JSON demandé, sans texte autour.

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E022",
+  "materializer_script_sha256": "d905c10071c5259c2eb1c49a997fa9f9f82dd868c7543a066db2aec3a1896b34",
+  "source_audit_status": "complete",
+  "source_audit_sha256": "d0217fb5ae304d5c640101044bad75475d33cca67d94b6458a7e72f9d01d06d4",
+  "rows": 66,
+  "outputs": {
+    "internal_eval_ppr_exact.csv": "d6adfc2bb120da4d56e25c75931388843d5a6bd3b41016af321ea58d455c4808",
+    "table_articles_ppr_exact.csv": "acc9cc44f5bc72f6509e2cbf2e9ecc24570e0950a59fb33659a29a5bdb06a2c1",
+    "table_jp_ppr_exact.csv": "aff385824ef1b5a7f405f8fabc206f0474ff9d088045e0566b91b08b5599fbec"
+  }
+}
