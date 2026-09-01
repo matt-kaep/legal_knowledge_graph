@@ -39,6 +39,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from etape1 import config  # noqa: E402
 from etape1 import graph_versions  # noqa: E402
 import metrics as M  # noqa: E402
+import benchmark_labels  # noqa: E402
 
 DEFAULT_BENCH_DIR = REPO / "05-Technique/benchmark/etape1_embedding_pur/data/global_bench"
 _POURVOI_RE = re.compile(r"\d{2}-\d{2}\.\d{3}")
@@ -385,6 +386,12 @@ def main(
     if limit_q is not None:
         questions = questions[:limit_q]
         Q = Q[:limit_q]
+    benchmark_labels.require_strict_candidate_coverage(
+        questions,
+        article_candidate_ids=art_pool_pks,
+        jp_candidate_ids=jp_pool_ids,
+        context=f"PPR metric input {bench_dir}",
+    )
     print(f"  questions évaluées : {len(questions)}")
     write_progress(
         progress_path,
@@ -444,12 +451,17 @@ def main(
                 },
             )
 
-        gt_s = q["gt_strict"] & pool_articles_set
-        gt_e = q["gt_ext"] & pool_articles_set
+        gt_s = q["gt_strict"]
+        gt_e = q["gt_ext"]
         gold_jp = (
             q["gold_jp_ids"]
             | {jid for p in q["pourvois"] for jid in pourvoi_map.get(p, [])}
-        ) & pool_jp_set
+        )
+        missing_expanded_jp = gold_jp - pool_jp_set
+        if missing_expanded_jp:
+            raise ValueError(
+                f"{q['id']}: JP labels absent from PPR candidate space: {sorted(missing_expanded_jp)}"
+            )
         if not gt_s and not gold_jp:
             n_skip += 1
             continue

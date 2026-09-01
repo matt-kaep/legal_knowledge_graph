@@ -21,12 +21,11 @@ if str(SCRIPT_DIR) not in sys.path:
 import graph_protocol  # noqa: E402
 
 
-FROZEN_TRAIN_SPLIT = "train_augmented_retrievable_strict_no_eval_overlap_v1"
-FROZEN_PROTOCOL_VERSION = "grouped_v3_no_eval_overlap_v1"
-SUPPORTED_PROTOCOLS_BY_SPLIT = {
-    graph_protocol.OFFICIAL_TRAIN_SPLIT: graph_protocol.PROTOCOL_VERSION,
-    FROZEN_TRAIN_SPLIT: FROZEN_PROTOCOL_VERSION,
-}
+FROZEN_TRAIN_SPLIT = graph_protocol.NO_EVAL_OVERLAP_TRAIN_SPLIT
+FROZEN_PROTOCOL_VERSION = graph_protocol.NO_EVAL_OVERLAP_PROTOCOL_VERSION
+CANDIDATE_COVERED_TRAIN_SPLIT = graph_protocol.CANDIDATE_COVERED_TRAIN_SPLIT
+CANDIDATE_COVERED_PROTOCOL_VERSION = graph_protocol.CANDIDATE_COVERED_PROTOCOL_VERSION
+SUPPORTED_PROTOCOLS_BY_SPLIT = graph_protocol.TRAIN_SPLIT_PROTOCOLS
 
 
 def normalize_question_text(text: object) -> str:

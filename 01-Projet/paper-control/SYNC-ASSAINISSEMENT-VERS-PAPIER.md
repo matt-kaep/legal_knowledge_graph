@@ -8,6 +8,13 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission prioritaire — Checkpoint A2 du 2026-09-02
+
+- **Aucun nouveau résultat de modèle n’est transmissible.** L’évaluation interne reste inchangée (754 questions, SHA-256 `850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59`) et aucun PPR, LightGCN, cosine, reranking, LLM direct ou juge automatique n’a été lancé sur le nouveau checkpoint.
+- L’option de retrait validée a été appliquée au train uniquement : 22 QID strictement non récupérables ont été retirés ; le nouveau train compte 5 578 questions. Cinq folds groupés seed 42 ont été régénérés (1 116 / 1 115 / 1 116 / 1 115 / 1 116), sans fuite de provenance ni de texte normalisé. Preuve : `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_candidate_coverage_v2.json`, SHA-256 `784928dd9a88670bf09ae3cc4cfc061629bd9ca5190d1d564d93d61d6bd56555`.
+- **Ne pas présenter ce snapshot comme prêt pour des résultats.** Les fichiers de graphe contiennent 23 859 Articles et 115 304 décisions uniques, mais les runners actuels ne peuvent scorer que 13 236 Articles et 114 851 décisions ayant une représentation. L’écart est explicite dans le manifeste ; il doit être résolu avant tout replay. La projection des positifs étendus LightGCN n’est pas interchangeable entre les deux univers et le code la bloque volontairement.
+- Formulation autorisée si nécessaire dans la méthode : « Les données d’entraînement ont été re-gelées après suppression des questions dont une référence stricte était absente de l’espace de candidats déclaré ; l’évaluation est restée inchangée. » Ne pas écrire qu’une campagne sur ce snapshot est terminée ou que les 23 859 / 115 304 identifiants ont tous été scorés.
+
 ## Transmission prioritaire — Checkpoint A du 2026-09-01
 
 - État : le checkpoint de données est terminé, mais les calculs sont volontairement non lancés. Ne modifier aucun tableau de résultats à partir de cette transmission.

@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -12,6 +13,11 @@ SCRIPT = (
 spec = importlib.util.spec_from_file_location("cv_lightgcn", SCRIPT)
 cv_lightgcn = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cv_lightgcn)
+
+SCRIPTS_DIR = Path(__file__).resolve().parents[1] / "scripts"
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+import benchmark_labels
 
 
 def test_validate_fold_assignments_rejects_duplicate_qids():
@@ -73,6 +79,44 @@ def test_build_subset_bench_keeps_requested_qids_and_aligned_arrays(tmp_path):
     assert [row["qid"] for row in out_payload["questions"]] == ["q1", "q3"]
     assert out_ids == ["q3", "q1"]
     assert out_emb.tolist() == [[3.0, 30.0], [1.0, 10.0]]
+
+
+def test_build_subset_bench_carries_a_hash_verified_lightgcn_projection(tmp_path):
+    src_dir = tmp_path / "src"
+    src_dir.mkdir()
+    questions = [
+        {
+            "qid": "q1",
+            "articles_attendus": ["article:1"],
+            "articles_attendus_etendu": ["article:1", "article:missing"],
+            "gold_jp_ids": ["jp:1"],
+        },
+        {
+            "qid": "q2",
+            "articles_attendus": ["article:2"],
+            "articles_attendus_etendu": ["article:2"],
+            "gold_jp_ids": ["jp:1"],
+        },
+    ]
+    (src_dir / "bench_global.json").write_text(json.dumps({"questions": questions}))
+    np.save(src_dir / "questions_ids.npy", np.array(["q1", "q2"], dtype=object))
+    np.save(src_dir / "questions_emb.npy", np.array([[1.0, 10.0], [2.0, 20.0]], dtype=np.float32))
+    benchmark_labels.write_lightgcn_article_positive_projection(
+        src_dir,
+        questions,
+        article_candidate_ids=["article:1", "article:2"],
+    )
+
+    dst_dir = tmp_path / "dst"
+    cv_lightgcn.build_subset_bench(src_dir, {"q1"}, dst_dir)
+
+    positives, projection, projection_hash = benchmark_labels.load_verified_lightgcn_article_positive_projection(
+        dst_dir,
+        article_candidate_ids=["article:1", "article:2"],
+    )
+    assert positives == {"q1": {"article:1"}}
+    assert projection["counts"]["extended_labels_absent"] == 1
+    assert len(projection_hash) == 64
 
 
 def test_select_champion_uses_official_metric_priority():
@@ -151,6 +195,12 @@ def test_summarize_cv_results_preserves_negative_sampling_strategy():
 def test_main_rejects_non_official_split():
     with pytest.raises(ValueError, match="train_augmented_retrievable_strict"):
         cv_lightgcn.main(["--split", "eval_rich_retrievable_strict"])
+
+
+def test_candidate_covered_snapshot_has_a_distinct_cv_protocol():
+    assert cv_lightgcn.protocol_version_for_split(
+        cv_lightgcn.CANDIDATE_COVERED_TRAIN_SPLIT
+    ) == cv_lightgcn.CANDIDATE_COVERED_PROTOCOL_VERSION
 
 
 def test_cv_summary_uses_only_checkpoint_selected_for_requested_target():

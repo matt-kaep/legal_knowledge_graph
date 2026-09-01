@@ -16,10 +16,19 @@ REPO = Path(os.environ.get(
 DATA_REPO = Path(os.environ.get("LKG_DATA_ROOT", str(REPO))).expanduser().resolve()
 BENCH_ROOT = DATA_REPO / "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench"
 OFFICIAL_TRAIN_SPLIT = "train_augmented_retrievable_strict"
+NO_EVAL_OVERLAP_TRAIN_SPLIT = "train_augmented_retrievable_strict_no_eval_overlap_v1"
+CANDIDATE_COVERED_TRAIN_SPLIT = "train_augmented_retrievable_strict_no_eval_overlap_candidate_covered_v2"
 OFFICIAL_N_FOLDS = 5
 SHARED_PROTOCOL_DIRNAME = "_protocol"
 LEGACY_GRAPH_ALIASES = {"G0", "canonical"}
 PROTOCOL_VERSION = "grouped_v2"
+NO_EVAL_OVERLAP_PROTOCOL_VERSION = "grouped_v3_no_eval_overlap_v1"
+CANDIDATE_COVERED_PROTOCOL_VERSION = "grouped_v4_no_eval_overlap_candidate_coverage_v2"
+TRAIN_SPLIT_PROTOCOLS = {
+    OFFICIAL_TRAIN_SPLIT: PROTOCOL_VERSION,
+    NO_EVAL_OVERLAP_TRAIN_SPLIT: NO_EVAL_OVERLAP_PROTOCOL_VERSION,
+    CANDIDATE_COVERED_TRAIN_SPLIT: CANDIDATE_COVERED_PROTOCOL_VERSION,
+}
 PRIMARY_METRICS = {"article": "recall_at_10", "jp": "hit_at_10"}
 SECONDARY_METRICS = ("ndcg_at_10", "mrr_at_10")
 T95_DF4 = 2.776
@@ -42,7 +51,9 @@ def resolve_graph_bench_dir(graph_version: str, split: str) -> Path:
     if graph_dir.exists():
         return graph_dir
     legacy_dir = BENCH_ROOT / split
-    if legacy_dir.exists() and graph_version in LEGACY_GRAPH_ALIASES:
+    if legacy_dir.exists() and (
+        graph_version in LEGACY_GRAPH_ALIASES or split in TRAIN_SPLIT_PROTOCOLS
+    ):
         return legacy_dir
     raise FileNotFoundError(
         "Missing bench directory for "
@@ -53,6 +64,15 @@ def resolve_graph_bench_dir(graph_version: str, split: str) -> Path:
 
 def resolve_official_train_bench_dir() -> Path:
     return BENCH_ROOT / OFFICIAL_TRAIN_SPLIT
+
+
+def protocol_version_for_train_split(split: str) -> str:
+    try:
+        return TRAIN_SPLIT_PROTOCOLS[split]
+    except KeyError as exc:
+        raise ValueError(
+            f"Unsupported train split for shared CV: {split}; allowed={sorted(TRAIN_SPLIT_PROTOCOLS)}"
+        ) from exc
 
 
 def resolve_shared_protocol_dir(

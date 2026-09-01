@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from etape1 import config  # noqa: E402
 from etape1 import graph_versions  # noqa: E402
 import metrics as M  # noqa: E402
+import benchmark_labels  # noqa: E402
 
 DATASET_DIR = (
     REPO
@@ -258,6 +259,12 @@ def eval_m1_m2(
     jpid_to_emb_idx = {jid: i for i, jid in enumerate(jp_order)}
     pool_articles = set(art_order.tolist())
     pool_jp = set(jp_order.tolist())
+    benchmark_labels.require_strict_candidate_coverage(
+        questions,
+        article_candidate_ids=art_order,
+        jp_candidate_ids=jp_order,
+        context=f"cosine metric input {out_dir}",
+    )
     print(f"  art_emb={art_emb.shape} jp_emb={jp_emb.shape} graph={graph.shape}")
 
     print("══ Encodage / cache questions")
@@ -277,9 +284,9 @@ def eval_m1_m2(
         if qi % 100 == 0:
             print(f"  q {qi}/{len(questions)} rows={len(rows)} t={time.time()-t0:.1f}s")
 
-        gt_s = set(q["articles_attendus"]) & pool_articles
-        gt_e = set(q["articles_attendus_etendu"]) & pool_articles
-        gold_jp = set(q["gold_jp_ids"]) & pool_jp
+        gt_s = set(q["articles_attendus"])
+        gt_e = set(q["articles_attendus_etendu"])
+        gold_jp = set(q["gold_jp_ids"])
         if not gt_s and not gold_jp:
             continue
 

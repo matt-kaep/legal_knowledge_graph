@@ -1,7 +1,9 @@
 import importlib.util
+import json
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 SCRIPT = (
     Path(__file__).resolve().parents[1] / "scripts" / "32_lightgcn_strict.py"
@@ -101,3 +103,30 @@ def test_similarity_batches_match_one_shot_product_without_full_score_matrix():
         np.vstack([scores for _, scores in batches]),
         (queries @ candidates.T).numpy(),
     )
+
+
+def test_lightgcn_rejects_strict_label_absent_before_training_positives(tmp_path: Path):
+    bench_dir = tmp_path / "bench"
+    bench_dir.mkdir()
+    (bench_dir / "bench_global.json").write_text(
+        json.dumps(
+            {
+                "questions": [
+                    {
+                        "qid": "q1",
+                        "articles_attendus": ["article:missing"],
+                        "articles_attendus_etendu": ["article:missing"],
+                        "gold_jp_ids": ["jp:1"],
+                    }
+                ]
+            }
+        )
+    )
+
+    with pytest.raises(ValueError, match="strict labels absent from candidate spaces"):
+        lightgcn.prepare_train_lightgcn_positives(
+            bench_dir,
+            [{"id": "q1", "gt_strict": {"article:missing"}, "gt_ext": {"article:missing"}, "gold_jp_ids": {"jp:1"}}],
+            article_candidate_ids=["article:1"],
+            jp_candidate_ids=["jp:1"],
+        )

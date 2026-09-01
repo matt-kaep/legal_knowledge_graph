@@ -1,12 +1,22 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: campaign-running
+status: checkpoint-a2-blocked
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
+
+## Checkpoint A2 — Données figées, calculs bloqués avant exécution
+
+Le 2 septembre 2026, l’option 1 validée a été appliquée sans toucher à l’évaluation : 22 questions train/CV dont un label strict Article ou JP n’était pas récupérable dans l’espace de nœuds du graphe ont été retirées. Le nouveau snapshot `train_augmented_retrievable_strict_no_eval_overlap_candidate_covered_v2` contient **5 578** questions ; `eval_rich_retrievable_strict` reste byte-for-byte identique à **754** questions (SHA-256 `850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59`). Les cinq folds seed 42 ont été régénérés : 1 116 / 1 115 / 1 116 / 1 115 / 1 116 questions, avec zéro fuite de provenance ou de texte normalisé.
+
+- Preuve versionnée : `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_candidate_coverage_v2.json` (SHA-256 `784928dd9a88670bf09ae3cc4cfc061629bd9ca5190d1d564d93d61d6bd56555`). Les artefacts locaux, leurs chemins relatifs et leurs hashes y sont listés ; `benchmark_freeze_no_eval_overlap_v1` reste immuable.
+- Les contrôles sur le nouvel instantané sont tous nuls : chevauchement train--évaluation par QID, chevauchement par texte normalisé, labels stricts Article absents et labels stricts JP absents. Ils passent dans l’univers de nœuds demandé (23 859 Articles ; 115 304 décisions uniques) comme dans l’univers réellement consommé aujourd’hui par les runners.
+- **Blocage matériel avant tout modèle :** `load_retrieval_view()` ne score actuellement que les identifiants disposant d’une représentation : 13 236 Articles et 114 851 décisions uniques, plutôt que les 23 859 / 115 304 nœuds du graphe. La projection LightGCN produite pour l’univers brut exclut 1 951 labels étendus ; le même audit dans l’univers réellement scoré en exclurait 4 531. Aucun entraînement ne peut donc démarrer sans choisir et documenter un seul univers de candidats. Le runner refuse désormais cette projection incompatible, plutôt que de filtrer des labels silencieusement.
+- Aucun calcul PPR, cosine/BGE-M3, LightGCN, reranking, LLM direct ou LLM-as-a-Judge n’a été lancé dans ce checkpoint. E024--E030 sont uniquement replanifiés et restent bloqués par E023/E031.
+- Validation logicielle : les 46 tests ciblant le freeze, les folds, PPR et LightGCN passent ; la suite entière reste bloquée à la collecte de deux tests historiques, car `45_run_final_champions.py` importe `24_build_global_table.py`, absent de cette branche propre. Le fichier existe seulement dans le checkout utilisateur sous une modification non suivie par cette branche ; il n’a pas été copié.
 
 ## Objectif
 
@@ -76,7 +86,7 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-08-12 — E019-A terminé : recouvrement top-K des 11 graphes E017, sur 55 paires, puis contrat E019-B préparé pour la comparaison réduite G0--G7 × méthodes JP. Résultats exploratoires ; audit avocat E016 toujours en attente.
+2026-09-02 — Checkpoint A2 : option 1 matérialisée (5 578 train, évaluation inchangée, cinq folds sans fuite), mais calculs volontairement bloqués par l’écart entre l’univers de nœuds du graphe (23 859 / 115 304) et l’univers effectivement scoré (13 236 / 114 851). Aucun modèle lancé.
 
 ### 2026-08-18 — Audit/export de reproductibilité et branche dédiée
 

@@ -44,11 +44,7 @@ def refresh_results_surfaces() -> None:
 
 
 def enforce_official_split(split: str) -> None:
-    if split != graph_protocol.OFFICIAL_TRAIN_SPLIT:
-        raise ValueError(
-            "CV wrappers support only "
-            f"split={graph_protocol.OFFICIAL_TRAIN_SPLIT}; got {split}"
-        )
+    graph_protocol.protocol_version_for_train_split(split)
 
 
 def validate_fold_assignments(df: pd.DataFrame, bench_qids: set[str]) -> pd.DataFrame:
@@ -67,8 +63,14 @@ def validate_fold_assignments(df: pd.DataFrame, bench_qids: set[str]) -> pd.Data
     return df
 
 
-def load_fold_assignments(bench_dir: Path, bench_qids: set[str]) -> tuple[pd.DataFrame, dict]:
-    df, metadata = graph_protocol.load_verified_grouped_fold_assignments(bench_dir)
+def load_fold_assignments(
+    bench_dir: Path,
+    bench_qids: set[str],
+    protocol_version: str = graph_protocol.PROTOCOL_VERSION,
+) -> tuple[pd.DataFrame, dict]:
+    df, metadata = graph_protocol.load_verified_grouped_fold_assignments(
+        bench_dir, version=protocol_version
+    )
     expected = set(range(graph_protocol.OFFICIAL_N_FOLDS))
     found = set(df["fold"].astype(int).unique().tolist())
     if found != expected:
@@ -212,6 +214,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--graph-version", default="canonical")
     parser.add_argument("--split", default=graph_protocol.OFFICIAL_TRAIN_SPLIT)
+    parser.add_argument("--protocol-version")
+    parser.add_argument("--bench-dir", type=Path)
     parser.add_argument("--out-dir", type=Path)
     parser.add_argument("--config", action="append")
     parser.add_argument("--control-fold-metrics", type=Path)
@@ -219,13 +223,23 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     enforce_official_split(args.split)
-    bench_dir = graph_protocol.resolve_graph_bench_dir(args.graph_version, args.split)
+    expected_protocol_version = graph_protocol.protocol_version_for_train_split(args.split)
+    protocol_version = args.protocol_version or expected_protocol_version
+    if protocol_version != expected_protocol_version:
+        raise ValueError(
+            f"split={args.split} requires protocol-version={expected_protocol_version}; got {protocol_version}"
+        )
+    bench_dir = args.bench_dir or graph_protocol.resolve_graph_bench_dir(args.graph_version, args.split)
     bench_questions = graph_protocol.load_bench_questions(bench_dir)
     bench_qids = {str(question["qid"]) for question in bench_questions}
-    folds, fold_metadata = load_fold_assignments(bench_dir, bench_qids)
+    folds, fold_metadata = load_fold_assignments(bench_dir, bench_qids, protocol_version)
     expected_qids_by_fold = graph_protocol.expected_qids_by_fold(folds)
     rows = []
-    out_dir = args.out_dir or (graph_protocol.cv_root(graph_protocol.BENCH_ROOT) / args.graph_version / "ppr")
+    out_dir = args.out_dir or (
+        graph_protocol.cv_root(graph_protocol.BENCH_ROOT, protocol_version)
+        / args.graph_version
+        / "ppr"
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
     progress_path = out_dir / "progress.json"
     for fold in sorted(folds["fold"].astype(int).unique()):

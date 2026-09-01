@@ -21,6 +21,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 import graph_protocol  # noqa: E402
+import benchmark_labels  # noqa: E402
 
 
 def _load_script_module(script_name: str, module_name: str):
@@ -33,6 +34,9 @@ def _load_script_module(script_name: str, module_name: str):
 
 
 lightgcn = _load_script_module("32_lightgcn_strict.py", "lightgcn_strict")
+
+CANDIDATE_COVERED_TRAIN_SPLIT = graph_protocol.CANDIDATE_COVERED_TRAIN_SPLIT
+CANDIDATE_COVERED_PROTOCOL_VERSION = graph_protocol.CANDIDATE_COVERED_PROTOCOL_VERSION
 
 
 def select_replay_epoch(history_df: pd.DataFrame, metric: str) -> int:
@@ -115,11 +119,11 @@ def refresh_results_surfaces() -> None:
 
 
 def enforce_official_split(split: str) -> None:
-    if split != graph_protocol.OFFICIAL_TRAIN_SPLIT:
-        raise ValueError(
-            "CV wrappers support only "
-            f"split={graph_protocol.OFFICIAL_TRAIN_SPLIT}; got {split}"
-        )
+    graph_protocol.protocol_version_for_train_split(split)
+
+
+def protocol_version_for_split(split: str) -> str:
+    return graph_protocol.protocol_version_for_train_split(split)
 
 
 def validate_fold_assignments(df: pd.DataFrame, bench_qids: set[str]) -> pd.DataFrame:
@@ -138,8 +142,14 @@ def validate_fold_assignments(df: pd.DataFrame, bench_qids: set[str]) -> pd.Data
     return df
 
 
-def load_fold_assignments(bench_dir: Path, bench_qids: set[str]) -> tuple[pd.DataFrame, dict]:
-    df, metadata = graph_protocol.load_verified_grouped_fold_assignments(bench_dir)
+def load_fold_assignments(
+    bench_dir: Path,
+    bench_qids: set[str],
+    protocol_version: str = graph_protocol.PROTOCOL_VERSION,
+) -> tuple[pd.DataFrame, dict]:
+    df, metadata = graph_protocol.load_verified_grouped_fold_assignments(
+        bench_dir, version=protocol_version
+    )
     expected = set(range(graph_protocol.OFFICIAL_N_FOLDS))
     found = set(df["fold"].astype(int).unique().tolist())
     if found != expected:
@@ -170,6 +180,13 @@ def build_subset_bench(src_dir: Path, qids: set[str], dst_dir: Path) -> None:
     )
     np.save(dst_dir / "questions_ids.npy", filtered_qids)
     np.save(dst_dir / "questions_emb.npy", filtered_emb)
+    source_projection = src_dir / benchmark_labels.LIGHTGCN_PROJECTION_FILENAME
+    if source_projection.exists():
+        benchmark_labels.write_subset_lightgcn_article_positive_projection(
+            src_dir,
+            dst_dir,
+            qids={str(qid) for qid in filtered_qids.tolist()},
+        )
 
 
 def run_lightgcn_config(
@@ -380,6 +397,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--graph-version", default="canonical")
     parser.add_argument("--split", default=graph_protocol.OFFICIAL_TRAIN_SPLIT)
+    parser.add_argument("--protocol-version")
     parser.add_argument(
         "--bench-dir",
         type=Path,
@@ -414,12 +432,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     enforce_official_split(args.split)
+    expected_protocol_version = protocol_version_for_split(args.split)
+    protocol_version = args.protocol_version or expected_protocol_version
+    if protocol_version != expected_protocol_version:
+        raise ValueError(
+            f"split={args.split} requires protocol-version={expected_protocol_version}; got {protocol_version}"
+        )
     bench_dir = args.bench_dir or graph_protocol.resolve_graph_bench_dir(
         args.graph_version, args.split
     )
     bench_questions = graph_protocol.load_bench_questions(bench_dir)
     bench_qids = {str(question["qid"]) for question in bench_questions}
-    folds, fold_metadata = load_fold_assignments(bench_dir, bench_qids)
+    folds, fold_metadata = load_fold_assignments(bench_dir, bench_qids, protocol_version)
     expected_qids_by_fold = graph_protocol.expected_qids_by_fold(folds)
 
     train_ks = args.train_ks or [2]
@@ -441,7 +465,11 @@ def main(argv: list[str] | None = None) -> int:
             negative_sampling_strategies,
         )
     )
-    out_dir = args.out_dir or (graph_protocol.cv_root(graph_protocol.BENCH_ROOT) / args.graph_version / "lightgcn")
+    out_dir = args.out_dir or (
+        graph_protocol.cv_root(graph_protocol.BENCH_ROOT, protocol_version)
+        / args.graph_version
+        / "lightgcn"
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
 
     raw_parts: list[pd.DataFrame] = []

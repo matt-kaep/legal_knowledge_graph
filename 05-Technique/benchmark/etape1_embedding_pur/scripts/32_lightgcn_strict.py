@@ -40,6 +40,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from etape1 import config  # noqa: E402
 from etape1 import graph_versions  # noqa: E402
 import metrics as M  # noqa: E402
+import benchmark_labels  # noqa: E402
 
 DEFAULT_BASE = ROOT / "data/doctrine_v3plus_bench"
 DEFAULT_TRAIN = DEFAULT_BASE / "train_augmented_retrievable_strict"
@@ -148,6 +149,35 @@ def load_split(bench_dir: Path, limit: int | None = None) -> tuple[list[dict], n
         if limit is not None and len(rows) >= limit:
             break
     return rows, np.asarray(q_embs, dtype=np.float32)
+
+
+def prepare_train_lightgcn_positives(
+    bench_dir: Path,
+    train_questions: list[dict],
+    *,
+    article_candidate_ids: list[object] | np.ndarray,
+    jp_candidate_ids: list[object] | np.ndarray,
+) -> tuple[dict[str, set[str]], dict, str]:
+    """Reject invalid strict labels before CV/loss and load sealed positives."""
+    benchmark_labels.require_strict_candidate_coverage(
+        train_questions,
+        article_candidate_ids=article_candidate_ids,
+        jp_candidate_ids=jp_candidate_ids,
+        context=f"LightGCN training input {bench_dir}",
+    )
+    positives, projection, projection_sha256 = (
+        benchmark_labels.load_verified_lightgcn_article_positive_projection(
+            bench_dir,
+            article_candidate_ids=article_candidate_ids,
+        )
+    )
+    requested_qids = {str(question["id"]) for question in train_questions}
+    missing_qids = sorted(requested_qids - set(positives))
+    if missing_qids:
+        raise ValueError(
+            f"LightGCN projection is missing training questions: {missing_qids[:5]}"
+        )
+    return {qid: positives[qid] for qid in requested_qids}, projection, projection_sha256
 
 
 class LightGCN(nn.Module):
@@ -503,6 +533,12 @@ def main(argv: list[str] | None = None) -> int:
 
     train_q, q_train_np = load_split(args.train_bench_dir, args.limit_train)
     eval_q, q_eval_np = load_split(args.eval_bench_dir, args.limit_eval)
+    benchmark_labels.require_strict_candidate_coverage(
+        eval_q,
+        article_candidate_ids=art_pool_pks,
+        jp_candidate_ids=jp_pool_ids,
+        context=f"LightGCN evaluation input {args.eval_bench_dir}",
+    )
     eval_qids = {q["id"] for q in eval_q}
     overlap = {q["id"] for q in train_q} & eval_qids
     if overlap and args.allow_overlap:
@@ -514,13 +550,22 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  ⚠ overlap train/eval qid exclu du train : {len(overlap)}")
     print(f"  train questions {len(train_q)}  eval questions {len(eval_q)}")
 
+    train_positives_by_qid, train_projection, train_projection_sha256 = (
+        prepare_train_lightgcn_positives(
+            args.train_bench_dir,
+            train_q,
+            article_candidate_ids=art_pool_pks,
+            jp_candidate_ids=jp_pool_ids,
+        )
+    )
+
     train_q_rows = []
     train_pos = []
     train_gold_items: dict[int, set[int]] = {}
     for qi, q in enumerate(train_q):
-        gts = (q["gt_ext"] or q["gt_strict"]) & pool_art_set
-        if not gts:
-            continue
+        gts = train_positives_by_qid[q["id"]]
+        if not gts <= pool_art_set:
+            raise AssertionError(f"LightGCN projection escaped graph candidate space: {q['id']}")
         local_qi = len(train_q_rows)
         train_q_rows.append(q_train_np[qi])
         train_gold_items[local_qi] = {art_pk_to_itemidx[pk] for pk in gts}
@@ -598,9 +643,9 @@ def main(argv: list[str] | None = None) -> int:
             with torch.no_grad():
                 sc_jp = (qn[start:stop] @ jp_final.T).cpu().numpy()
             for offset, q in enumerate(eval_q[start:stop]):
-                gt_s = q["gt_strict"] & pool_art_set
-                gt_e = q["gt_ext"] & pool_art_set
-                gold_jp = q["gold_jp_ids"] & pool_jp_set
+                gt_s = q["gt_strict"]
+                gt_e = q["gt_ext"]
+                gold_jp = q["gold_jp_ids"]
                 ranked_art = rowcol_top_k(sc_art[offset], art_pool_pks, k_out)
                 ranked_jp = rowcol_top_k(sc_jp[offset], jp_pool_ids, k_out)
                 rankings.extend(
@@ -797,6 +842,25 @@ def main(argv: list[str] | None = None) -> int:
     out_summary = args.eval_bench_dir / f"lightgcn_summary{suffix}.json"
     out_summary.write_text(json.dumps(summary, ensure_ascii=False, indent=2))
     print(f"✓ {out_summary}")
+
+    out_inputs = args.eval_bench_dir / f"lightgcn_inputs{suffix}.json"
+    out_inputs.write_text(
+        json.dumps(
+            {
+                "train_bench_sha256": benchmark_labels.sha256_file(args.train_bench_dir / "bench_global.json"),
+                "eval_bench_sha256": benchmark_labels.sha256_file(args.eval_bench_dir / "bench_global.json"),
+                "lightgcn_article_positive_projection_sha256": train_projection_sha256,
+                "lightgcn_article_positive_projection_counts": train_projection["counts"],
+                "article_candidate_sequence_sha256": train_projection["article_candidate_sequence_sha256"],
+                "strict_candidate_coverage_verified": True,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(f"✓ {out_inputs}")
 
     if history_rows:
         history_df = pd.DataFrame(history_rows)
