@@ -238,6 +238,37 @@ def test_main_rejects_non_official_split(tmp_path, monkeypatch):
         make_folds.main(["--split", "eval_rich_retrievable_strict"])
 
 
+def test_main_writes_folds_for_the_named_frozen_snapshot(tmp_path, monkeypatch):
+    bench_root = tmp_path / "doctrine_v3plus_bench"
+    split = make_folds.FROZEN_TRAIN_SPLIT
+    bench_dir = bench_root / split
+    bench_dir.mkdir(parents=True)
+    payload = {
+        "questions": [
+            {"qid": f"q{index}", "enonce": f"Question {index}", "n_articles_strict": 1, "n_jp_resolues": 1}
+            for index in range(10)
+        ]
+    }
+    (bench_dir / "bench_global.json").write_text(json.dumps(payload))
+    monkeypatch.setattr(make_folds.graph_protocol, "BENCH_ROOT", bench_root)
+
+    rc = make_folds.main(
+        [
+            "--split",
+            split,
+            "--protocol-version",
+            make_folds.FROZEN_PROTOCOL_VERSION,
+        ]
+    )
+
+    out_dir = bench_root / "_protocol" / make_folds.FROZEN_PROTOCOL_VERSION / split
+    metadata = json.loads((out_dir / "fold_metadata.json").read_text())
+    assert rc == 0
+    assert metadata["dataset_split"] == split
+    assert metadata["protocol_version"] == make_folds.FROZEN_PROTOCOL_VERSION
+    assert metadata["n_questions"] == 10
+
+
 def test_main_rejects_non_five_fold_count(tmp_path, monkeypatch):
     monkeypatch.setattr(make_folds.graph_protocol, "BENCH_ROOT", tmp_path)
 

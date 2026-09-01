@@ -14,6 +14,13 @@ Transformer les explorations existantes en un benchmark reproductible, comparabl
 
 ## État courant
 
+`CHECKPOINT_A_TERMINE_BLOQUE_SUR_COUVERTURE_TRAIN` — le 1er septembre, le train et l'évaluation ont été re-gelés sans chevauchement, en préservant strictement les 754 questions d'évaluation. Les trois QID/textes strictement identiques ont été retirés du train : 5 603 → 5 600 questions. Le nouveau protocole `grouped_v3_no_eval_overlap_v1` contient cinq folds de 1 120 questions, sans fuite de provenance ni de texte normalisé. La preuve versionnée est `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_v1.json`.
+
+- Aucun calcul de modèle n'est autorisé dans ce checkpoint : PPR, LightGCN, cosine/BGE-M3, LLM direct, reranking et juge automatique sont seulement listés comme replays à venir dans E024–E030.
+- L'évaluation est saine vis-à-vis de l'espace de candidats : 0/754 question avec référence Article ou jurisprudence absente. Les candidats sont dédoublonnés de façon stable avant score/métrique (23 859 Articles ; 115 304 décisions uniques, depuis 117 374 lignes).
+- Une anomalie historique distincte bloque volontairement la sélection : 22/5 600 questions train comportent une référence absente de ces espaces de candidats. Elle ne vient ni des trois retraits ni d'une différence entre graphes. Une décision de politique train/CV doit être enregistrée avant la moindre sélection de paramètres.
+- Les résultats E022 (PPR), E017 (LightGCN) et E021 (reranking) restent archivés et traçables, mais ne sont pas les sorties du snapshot `grouped_v3_no_eval_overlap_v1` ; ils ne doivent pas être mélangés aux futurs résultats E024–E030.
+
 `CAMPAIGN_RUNNING` — la méthode et les garde-fous sont préparés. Le 27 juillet, les baselines ont mesuré 2,95 Gio de pic RSS PPR sur une grille complète d'un fold, avec une observation orchestrée ponctuelle à ~3,45 Gio, et 9,05 Gio pour LightGCN sur le plus gros graphe confirmatoire. Le manifeste réserve 3,5 Gio et quatre CPU par PPR, puis 9,1 Gio et cinq CPU pour le profil maximal. Deux PPR peuvent tourner uniquement lorsque 7 Gio sont réellement disponibles ; LightGCN reste séquentiel.
 
 - Folds vérifiés : 5 603 QID uniques, cinq folds équilibrés, zéro fuite de provenance/texte normalisé.

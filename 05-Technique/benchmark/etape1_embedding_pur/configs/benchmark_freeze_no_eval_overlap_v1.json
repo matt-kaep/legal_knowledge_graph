@@ -1,0 +1,120 @@
+{
+  "schema_version": "benchmark-freeze-v1",
+  "freeze_id": "train-no-eval-overlap-v1",
+  "created_at": "2026-09-01",
+  "status": "blocked_pending_train_candidate_coverage_decision",
+  "purpose": "Freeze the exact internal-evaluation benchmark inputs after removing every verified train/evaluation overlap from training only.",
+  "main_protocol_graphs": [
+    "G1",
+    "G6-citation-AA-knn5",
+    "G6-citation-JJ-knn5",
+    "G7-citation-AA-cit1-sem025-knn5",
+    "G7-citation-AA-cit1-sem050-knn5",
+    "G7-citation-AA-cit1-sem100-knn5",
+    "G7-citation-AA-cit025-sem1-knn5",
+    "G7-citation-JJ-cit1-sem025-knn5",
+    "G7-citation-JJ-cit1-sem050-knn5",
+    "G7-citation-JJ-cit1-sem100-knn5",
+    "G7-citation-JJ-cit025-sem1-knn5"
+  ],
+  "generators": {
+    "scripts/91_freeze_no_overlap_benchmark.py": "ae487674845a07093f762c866dc8746213eaffeef86d9e4c8ec2e77232704823",
+    "scripts/41_make_kfold_assignments.py": "a3a5de7b1c308dad2d1909c19108f6f651f8754d41120ef26ec387857dbad6a3"
+  },
+  "overlap_policy": {
+    "evaluation": "Preserve eval_rich_retrievable_strict byte-for-byte.",
+    "training": "Remove a training question when its QID or normalized question text occurs in evaluation.",
+    "normalization": "Unicode NFKC, casefold, alphanumeric tokenization, and collapsed whitespace.",
+    "safety_check": "A shared QID with different normalized text, articles_attendus, or gold_jp_ids raises an error."
+  },
+  "sources": {
+    "training_before": {
+      "path": "data/doctrine_v3plus_bench/train_augmented_retrievable_strict",
+      "questions": 5603,
+      "bench_global_sha256": "7e6cf685dcf2c6d1794fbbd4cd46fbcf26ec9f6107a38c7ebf478b1450e9b9ac"
+    },
+    "evaluation": {
+      "path": "data/doctrine_v3plus_bench/eval_rich_retrievable_strict",
+      "questions": 754,
+      "bench_global_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59"
+    }
+  },
+  "frozen_training": {
+    "path": "data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_v1",
+    "questions": 5600,
+    "removed_qids": [
+      "art_74_2_fasc_20_recherche_des_personnes_en_fuite::L1_002::q_3",
+      "art_preliminaire_fasc_60_regime_procedural_derogatoire_applicable_pour_faire_face_a_l_epidemie_de_covid_19::L1_002_L2_A::q_2",
+      "art_preliminaire_fasc_60_regime_procedural_derogatoire_applicable_pour_faire_face_a_l_epidemie_de_covid_19::L1_002_L2_A::q_5"
+    ],
+    "files": {
+      "bench_global.json": "0ae7cfe6dbc0e46b9b8a59b520fe8a8d5e84a0b040a6b42db8d1c08e8e1ad73e",
+      "questions_ids.npy": "a06ba3226d5b2acc79343b64d62a30e59c70f63aba170e9e456ea4b03f6e0d26",
+      "questions_emb.npy": "d9d39527a0df4876313f4a9bcff09d72ff95f2b55546cb79d78311933f7bb0e5",
+      "stats.json": "6c829f7406243ea36f3d22e677b05ec8acb709354f329778380be06dcbbb1462",
+      "freeze_manifest.json": "1a84d59ab3b34353f0ff66154bd1f6d611cbcc2cdbf19cbb8f4f34ad7778b3f7"
+    }
+  },
+  "folds": {
+    "protocol": "grouped_v3_no_eval_overlap_v1",
+    "split": "train_augmented_retrievable_strict_no_eval_overlap_v1",
+    "seed": 42,
+    "fold_sizes": [1120, 1120, 1120, 1120, 1120],
+    "provenance_groups_crossing_folds": 0,
+    "normalized_text_groups_crossing_folds": 0,
+    "files": {
+      "fold_assignments.csv": "61f14f5675f56ec5e7af99c15c353ad0d222955c059bce5165d25013c04863aa",
+      "fold_metadata.json": "5c9341834bf9096004bbd107c77a788d2254374a07ce45f70ee2c54b4d698841"
+    }
+  },
+  "candidate_spaces": {
+    "scope": "All eleven main-protocol graph variants were loaded and expose these same candidate counts.",
+    "deduplication_rule": "Keep the first occurrence in the stored candidate order before scoring and before computing metrics.",
+    "articles": {
+      "source_path": "data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy",
+      "raw_rows": 23859,
+      "unique_ids": 23859,
+      "source_sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a",
+      "stable_unique_sequence_sha256": "e26a7f23faab0ee26a8d9a1b792d6767b02e871ea0fc46df6105558e4c0a7305"
+    },
+    "jurisprudence": {
+      "source_path": "data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy",
+      "raw_rows": 117374,
+      "unique_ids": 115304,
+      "duplicate_rows": 2070,
+      "source_sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f",
+      "stable_unique_sequence_sha256": "b7f33f8cfdd72d826b9afb7b29a054b654e24312265d78d8057ddef4741831c8"
+    }
+  },
+  "candidate_coverage": {
+    "evaluation_questions_with_missing_reference": 0,
+    "training_questions_with_missing_reference": 22,
+    "missing_article_ids": ["code_civil:21-23", "code_civil:2461"],
+    "missing_jurisprudence_ids": ["6079a85c9ba5988459c4cecc", "6079a86d9ba5988459c4d3bc"],
+    "affected_training_qids": [
+      "art_689_a_696_fasc_unique_effets_en_france_des_decisions_repressives_etrangeres_autorite_de_la_chose_jugee::L1_002_L2_A::q_5",
+      "art_689_a_696_fasc_unique_effets_en_france_des_decisions_repressives_etrangeres_autorite_de_la_chose_jugee::L1_002_L2_A::q_5::aug_v1",
+      "art_689_a_696_fasc_unique_effets_en_france_des_decisions_repressives_etrangeres_autorite_de_la_chose_jugee::L1_002_L2_A::q_5::aug_v2",
+      "art_689_a_696_fasc_unique_effets_en_france_des_decisions_repressives_etrangeres_autorite_de_la_chose_jugee::L1_002_L2_A::q_5::aug_v3",
+      "art_689_a_696_fasc_unique_effets_en_france_des_decisions_repressives_etrangeres_autorite_de_la_chose_jugee::L1_002_L2_A::q_5::aug_v4",
+      "art_689_a_696_fasc_unique_effets_en_france_des_decisions_repressives_etrangeres_autorite_de_la_chose_jugee::aug_composite_0002",
+      "art_706_148_a_706_158_fasc_20_des_saisies_penales_speciales_regimes_particuliers::L1_002_L2_E::q_5",
+      "art_706_148_a_706_158_fasc_20_des_saisies_penales_speciales_regimes_particuliers::L1_002_L2_E::q_5::aug_v1",
+      "art_706_148_a_706_158_fasc_20_des_saisies_penales_speciales_regimes_particuliers::L1_002_L2_E::q_5::aug_v2",
+      "art_706_148_a_706_158_fasc_20_des_saisies_penales_speciales_regimes_particuliers::L1_002_L2_E::q_5::aug_v3",
+      "art_706_148_a_706_158_fasc_20_des_saisies_penales_speciales_regimes_particuliers::L1_002_L2_E::q_5::aug_v4",
+      "art_739_a_747_fasc_20_sursis_avec_mise_a_l_epreuve::L1_002::q_2",
+      "art_739_a_747_fasc_20_sursis_avec_mise_a_l_epreuve::L1_002::q_2::aug_v1",
+      "art_739_a_747_fasc_20_sursis_avec_mise_a_l_epreuve::L1_002::q_2::aug_v2",
+      "art_739_a_747_fasc_20_sursis_avec_mise_a_l_epreuve::L1_002::q_2::aug_v3",
+      "art_739_a_747_fasc_20_sursis_avec_mise_a_l_epreuve::L1_002::q_2::aug_v4",
+      "art_739_a_747_fasc_20_sursis_avec_mise_a_l_epreuve::aug_composite_0001",
+      "art_7_a_9_3_fasc_20_action_publique_prescription::L1_001::q_delai_presse_vs_droit_commun",
+      "art_7_a_9_3_fasc_20_action_publique_prescription::L1_001::q_delai_presse_vs_droit_commun::aug_v1",
+      "art_7_a_9_3_fasc_20_action_publique_prescription::L1_001::q_delai_presse_vs_droit_commun::aug_v2",
+      "art_7_a_9_3_fasc_20_action_publique_prescription::L1_001::q_delai_presse_vs_droit_commun::aug_v3",
+      "art_7_a_9_3_fasc_20_action_publique_prescription::L1_001::q_delai_presse_vs_droit_commun::aug_v4"
+    ]
+  },
+  "next_gate": "Choose and document how training/CV handles the 22 non-retrievable training questions before running any model-selection campaign."
+}

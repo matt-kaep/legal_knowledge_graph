@@ -8,6 +8,15 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission prioritaire — Checkpoint A du 2026-09-01
+
+- État : le checkpoint de données est terminé, mais les calculs sont volontairement non lancés. Ne modifier aucun tableau de résultats à partir de cette transmission.
+- Split figé : `train_augmented_retrievable_strict_no_eval_overlap_v1` contient 5 600 questions ; trois questions identiques à l'évaluation ont été retirées du train. `eval_rich_retrievable_strict` reste exactement à 754 questions, sans modification. La règle, les QID retirés, les effectifs et tous les SHA-256 sont dans `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_v1.json`.
+- Folds : `grouped_v3_no_eval_overlap_v1`, cinq folds de 1 120 questions, seed 42, zéro groupe de provenance ou de texte normalisé réparti sur plusieurs folds. Les artefacts lourds locaux sont hashés dans ce manifeste.
+- Point bloquant scientifique : 22 questions du train gelé ont une référence absente de l'espace canonique de candidats ; 0 des 754 questions d'évaluation sont concernées. A ne choisira pas silencieusement de les retirer ou de les ignorer. La décision documentée est nécessaire avant PPR/LightGCN et toute sélection de paramètres.
+- Statut des anciens résultats : E022, E017 et E021 sont archivés et vérifiables, mais ne sont pas des résultats du nouveau snapshot. Ne pas les combiner avec E024–E030 ni les présenter comme les résultats du checkpoint.
+- Expériences prévues après ce gate : PPR (E024), LightGCN (E025), cosine/BGE-M3 (E026), LLM direct (E027), courbes par rang (E028), reranking comparable (E029) et LLM-as-a-Judge séparé (E030, exploratoire jusqu'à l'accord avocat).
+
 ## Résumé courant
 
 - Aucun résultat historique ne doit être présenté comme confirmatoire avant son enregistrement dans `REGISTRE-EXPERIENCES.csv`.

@@ -21,6 +21,14 @@ if str(SCRIPT_DIR) not in sys.path:
 import graph_protocol  # noqa: E402
 
 
+FROZEN_TRAIN_SPLIT = "train_augmented_retrievable_strict_no_eval_overlap_v1"
+FROZEN_PROTOCOL_VERSION = "grouped_v3_no_eval_overlap_v1"
+SUPPORTED_PROTOCOLS_BY_SPLIT = {
+    graph_protocol.OFFICIAL_TRAIN_SPLIT: graph_protocol.PROTOCOL_VERSION,
+    FROZEN_TRAIN_SPLIT: FROZEN_PROTOCOL_VERSION,
+}
+
+
 def normalize_question_text(text: object) -> str:
     normalized = unicodedata.normalize("NFKC", str(text)).casefold()
     alphanumeric = "".join(char if char.isalnum() else " " for char in normalized)
@@ -328,26 +336,30 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--protocol-version", default=graph_protocol.PROTOCOL_VERSION)
     args = parser.parse_args(argv)
-    if args.split != graph_protocol.OFFICIAL_TRAIN_SPLIT:
+    expected_protocol_version = SUPPORTED_PROTOCOLS_BY_SPLIT.get(args.split)
+    if expected_protocol_version is None:
         parser.error(
-            f"official folds must use split={graph_protocol.OFFICIAL_TRAIN_SPLIT}"
+            "unsupported train split for shared folds: "
+            f"{args.split}; allowed={sorted(SUPPORTED_PROTOCOLS_BY_SPLIT)}"
         )
     if args.n_folds != graph_protocol.OFFICIAL_N_FOLDS:
         parser.error(
             f"official folds must use n_folds={graph_protocol.OFFICIAL_N_FOLDS}"
         )
-    if args.protocol_version != graph_protocol.PROTOCOL_VERSION:
+    if args.protocol_version != expected_protocol_version:
         parser.error(
-            f"official folds must use protocol-version={graph_protocol.PROTOCOL_VERSION}"
+            f"split={args.split} must use protocol-version={expected_protocol_version}"
         )
     if args.seed != 42:
-        parser.error("official grouped_v2 folds must use seed=42")
+        parser.error("shared grouped folds must use seed=42")
     return args
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    bench_dir = graph_protocol.resolve_official_train_bench_dir()
+    bench_dir = graph_protocol.BENCH_ROOT / args.split
+    if not bench_dir.is_dir():
+        raise FileNotFoundError(f"missing train bench directory: {bench_dir}")
     questions = graph_protocol.load_bench_questions(bench_dir)
     assignments = build_fold_assignments(questions, n_folds=args.n_folds, seed=args.seed)
     out_csv, out_meta = graph_protocol.resolve_shared_fold_paths(
