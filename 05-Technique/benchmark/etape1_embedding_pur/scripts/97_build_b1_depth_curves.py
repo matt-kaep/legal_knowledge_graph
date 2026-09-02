@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 
@@ -36,6 +37,31 @@ def hit_at_k(ranking: list[str], gold: set[str], k: int) -> float:
     if not gold:
         raise ValueError("B1 Hit@K requires at least one strict gold label")
     return len(set(_deduplicated_prefix(ranking, k)) & gold) / float(min(len(gold), k))
+
+
+def mrr_at_k(ranking: list[str], gold: set[str], k: int) -> float:
+    """MRR with the same returned-position and deduplication convention as Hit@K."""
+    if not gold:
+        raise ValueError("B1 MRR@K requires at least one strict gold label")
+    for position, item in enumerate(_deduplicated_prefix(ranking, k), start=1):
+        if item in gold:
+            return 1.0 / position
+    return 0.0
+
+
+def ndcg_at_k(ranking: list[str], gold: set[str], k: int) -> float:
+    """Binary NDCG with the same returned-position and deduplication convention as Hit@K."""
+    if not gold:
+        raise ValueError("B1 NDCG@K requires at least one strict gold label")
+    ranked = _deduplicated_prefix(ranking, k)
+    dcg = sum(
+        1.0 / math.log2(position + 1)
+        for position, item in enumerate(ranked, start=1)
+        if item in gold
+    )
+    ideal_count = min(len(gold), k)
+    idcg = sum(1.0 / math.log2(position + 1) for position in range(1, ideal_count + 1))
+    return dcg / idcg
 
 
 def _ranking_groups(frame: pd.DataFrame, *, source: str) -> list[tuple[str, str, str, pd.DataFrame]]:
@@ -90,8 +116,16 @@ def score_ranking_group(
         if outside:
             raise ValueError(f"qid={qid}: candidate outside official universe: {sorted(outside)[:3]}")
         gold = {str(item) for item in questions[qid].get(gold_field, [])}
+        mrr_at_10 = mrr_at_k(ranked, gold, 10)
+        ndcg_at_10 = ndcg_at_k(ranked, gold, 10)
         for k in range(1, max_k + 1):
-            records.append({"qid": qid, "k": k, "hit_at_k": hit_at_k(ranked, gold, k)})
+            records.append({
+                "qid": qid,
+                "k": k,
+                "hit_at_k": hit_at_k(ranked, gold, k),
+                "mrr_at_10": mrr_at_10 if k == 10 else None,
+                "ndcg_at_10": ndcg_at_10 if k == 10 else None,
+            })
     return pd.DataFrame(records)
 
 
@@ -137,22 +171,67 @@ def derive_curves(payload: dict, sources: dict[str, Path], out_dir: Path) -> dic
         .sort_values(["target", "source", "k"], kind="stable")
     )
     curves["seed_std"] = curves["seed_std"].fillna(0.0)
+    per_seed_metrics = (
+        per_seed_df.loc[per_seed_df["k"].eq(10)]
+        .groupby(["source", "target", "seed"], as_index=False)
+        .agg(
+            hit_at_10=("hit_at_k", "mean"),
+            ndcg_at_10=("ndcg_at_10", "mean"),
+            mrr_at_10=("mrr_at_10", "mean"),
+        )
+        .sort_values(["target", "source", "seed"], kind="stable")
+    )
+    metrics_at_10 = (
+        per_seed_metrics.groupby(["source", "target"], as_index=False)
+        .agg(
+            hit_at_10=("hit_at_10", "mean"),
+            hit_at_10_seed_std=("hit_at_10", "std"),
+            ndcg_at_10=("ndcg_at_10", "mean"),
+            ndcg_at_10_seed_std=("ndcg_at_10", "std"),
+            mrr_at_10=("mrr_at_10", "mean"),
+            mrr_at_10_seed_std=("mrr_at_10", "std"),
+            seeds=("seed", "count"),
+        )
+        .sort_values(["target", "source"], kind="stable")
+    )
+    for column in ("hit_at_10_seed_std", "ndcg_at_10_seed_std", "mrr_at_10_seed_std"):
+        metrics_at_10[column] = metrics_at_10[column].fillna(0.0)
     out_dir.mkdir(parents=True, exist_ok=False)
     per_seed_path = out_dir / "depth_curves_per_seed.csv"
     curves_path = out_dir / "depth_curves.csv"
+    per_seed_metrics_path = out_dir / "ranking_metrics_at_10_per_seed.csv"
+    metrics_path = out_dir / "ranking_metrics_at_10.csv"
     report_path = out_dir / "depth_curves_manifest.json"
     per_seed_df.to_csv(per_seed_path, index=False)
     curves.to_csv(curves_path, index=False)
+    per_seed_metrics.to_csv(per_seed_metrics_path, index=False)
+    metrics_at_10.to_csv(metrics_path, index=False)
     report_path.write_text(json.dumps({
         "campaign_id": payload["campaign_id"],
+        "campaign_manifest_sha256": payload.get("_manifest_sha256"),
+        "a3_sha256": payload.get("a3", {}).get("sha256"),
+        "derivation_script_sha256": _sha256(Path(__file__)),
         "evaluation_sha256": payload["datasets"]["evaluation"]["sha256"],
         "sources": source_hashes,
+        "artifacts": {
+            "depth_curves_per_seed.csv": _sha256(per_seed_path),
+            "depth_curves.csv": _sha256(curves_path),
+            "ranking_metrics_at_10_per_seed.csv": _sha256(per_seed_metrics_path),
+            "ranking_metrics_at_10.csv": _sha256(metrics_path),
+        },
         "max_k": 100,
         "metric": "Hit@K = |dedup(R_K) intersect Y| / min(|Y|, K)",
+        "secondary_metrics": ["NDCG@10", "MRR@10"],
         "coverage": {"questions": len(questions), "articles": len(candidate_ids["articles"]), "jurisprudence": len(candidate_ids["jurisprudence"])},
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     _plot(curves, out_dir)
-    return {"curves": curves_path, "per_seed": per_seed_path, "manifest": report_path}
+    return {
+        "curves": curves_path,
+        "per_seed": per_seed_path,
+        "metrics_at_10": metrics_path,
+        "metrics_at_10_per_seed": per_seed_metrics_path,
+        "manifest": report_path,
+    }
 
 
 def _plot(curves: pd.DataFrame, out_dir: Path) -> None:
@@ -192,6 +271,7 @@ def main(argv: list[str] | None = None) -> int:
         if name in sources:
             parser.error(f"duplicate --source name: {name}")
         sources[name] = Path(path)
+    payload["_manifest_sha256"] = _sha256(args.manifest)
     out_dir = args.out_dir or _data_path(payload["outputs"]["depth_curves"])
     outputs = derive_curves(payload, sources, out_dir)
     print(json.dumps({key: str(value) for key, value in outputs.items()}, ensure_ascii=False))
