@@ -97,7 +97,7 @@ def _ppr_method(row: dict[str, Any]) -> str:
     return f"PPR-sweep-k{int(row['k_in'])}-{row['seed_variant']}-a{float(row['alpha']):g}"
 
 
-def freeze_family(payload: dict[str, Any], family: str) -> Path:
+def freeze_family(payload: dict[str, Any], family: str, *, manifest_sha256: str) -> Path:
     if family not in {"ppr", "lightgcn"}:
         raise ValueError(f"Unsupported B1 family={family}")
     contract = _load_script("b1_campaign_contract.py", "b1_contract")
@@ -145,7 +145,8 @@ def freeze_family(payload: dict[str, Any], family: str) -> Path:
         selected = cv.attach_replay_epochs(selected, history)
     frozen = {
         "campaign_id": payload["campaign_id"],
-        "manifest_sha256": _manifest_hash(payload),
+        "manifest_sha256": manifest_sha256,
+        "manifest_canonical_sha256": _manifest_hash(payload),
         "a3_sha256": payload["a3"]["sha256"],
         "family": family,
         "selection_data": "train_cv_only",
@@ -168,7 +169,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--family", choices=("ppr", "lightgcn"), required=True)
     args = parser.parse_args(argv)
     payload = json.loads(args.manifest.read_text(encoding="utf-8"))
-    print(freeze_family(payload, args.family))
+    print(freeze_family(payload, args.family, manifest_sha256=_sha256(args.manifest)))
     return 0
 
 

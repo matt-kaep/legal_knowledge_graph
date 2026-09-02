@@ -38,12 +38,12 @@ def _data_path(raw: str) -> Path:
     return path if path.is_absolute() else DATA_REPO / path
 
 
-def _load_frozen(payload: dict, family: str) -> dict:
+def _load_frozen(payload: dict, family: str, *, manifest_sha256: str) -> dict:
     path = _data_path(payload["outputs"]["root"]) / "frozen" / f"{family}_champions.json"
     frozen = json.loads(path.read_text(encoding="utf-8"))
     if frozen.get("campaign_id") != payload["campaign_id"]:
         raise ValueError("Frozen champion campaign_id mismatch")
-    if frozen.get("manifest_sha256") != _manifest_hash(payload):
+    if frozen.get("manifest_sha256") != manifest_sha256:
         raise ValueError("Frozen champion manifest hash mismatch")
     if frozen.get("a3_sha256") != payload["a3"]["sha256"]:
         raise ValueError("Frozen champion A3 hash mismatch")
@@ -59,8 +59,8 @@ def _write_outputs(out_dir: Path, *, family: str, metrics: pd.DataFrame, ranking
     pd.DataFrame(timings).to_csv(out_dir / f"{family}_timings.csv", index=False)
 
 
-def replay_ppr(payload: dict) -> Path:
-    frozen = _load_frozen(payload, "ppr")
+def replay_ppr(payload: dict, *, manifest_sha256: str) -> Path:
+    frozen = _load_frozen(payload, "ppr", manifest_sha256=manifest_sha256)
     replay = _load_script("45_run_final_champions.py", "b1_final_replay")
     eval_dir = _data_path(payload["datasets"]["evaluation"]["directory"])
     frames, ranking_frames, timings = [], [], []
@@ -85,8 +85,8 @@ def replay_ppr(payload: dict) -> Path:
     return out_dir
 
 
-def replay_lightgcn(payload: dict) -> Path:
-    frozen = _load_frozen(payload, "lightgcn")
+def replay_lightgcn(payload: dict, *, manifest_sha256: str) -> Path:
+    frozen = _load_frozen(payload, "lightgcn", manifest_sha256=manifest_sha256)
     replay = _load_script("45_run_final_champions.py", "b1_final_lightgcn")
     train_dir = _data_path(payload["datasets"]["train"]["directory"])
     eval_dir = _data_path(payload["datasets"]["evaluation"]["directory"])
@@ -129,7 +129,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--family", choices=("ppr", "lightgcn"), required=True)
     args = parser.parse_args(argv)
     payload = json.loads(args.manifest.read_text(encoding="utf-8"))
-    print(replay_ppr(payload) if args.family == "ppr" else replay_lightgcn(payload))
+    manifest_sha256 = hashlib.sha256(args.manifest.read_bytes()).hexdigest()
+    print(
+        replay_ppr(payload, manifest_sha256=manifest_sha256)
+        if args.family == "ppr"
+        else replay_lightgcn(payload, manifest_sha256=manifest_sha256)
+    )
     return 0
 
 

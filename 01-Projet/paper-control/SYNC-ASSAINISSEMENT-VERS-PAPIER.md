@@ -10,7 +10,7 @@ tags: [coordination, benchmark, papier]
 
 ## Transmission prioritaire — B1 autorisée sur A3, sans résultat à ce stade
 
-- La campagne B1 est gelée par `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json`, SHA-256 `b0a8c101f4b315241572939a7d635279ed532d264692b95cc5951798f4557236`. Elle référence exclusivement A3, SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3` : 5 578 questions train/CV, 754 questions d’évaluation, 13 236 candidats Articles et 114 851 candidats JP.
+- La campagne B1 est gelée par `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json`, SHA-256 `f1107b126e11b0457dc28a4fbe3db621b1c061a932e2acda1eb1368bac0be649`. Elle référence exclusivement A3, SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3` : 5 578 questions train/CV, 754 questions d’évaluation, 13 236 candidats Articles et 114 851 candidats JP.
 - E024 (PPR), E025 (LightGCN) et E026 (cosine/BGE-M3) sont autorisées et prêtes à être soumises sur Télécom. E028 produira les courbes uniquement à partir des rankings B1 gelés. E017, E021 et E022 sont explicitement exclus de B1 ; E027, E029 et E030 ne sont pas lancées.
 - **Rien de quantitatif n’est encore transmissible au papier.** Le préflight valide 50 entrées hashées et les 300 tests passent, mais aucun job B1 n’a encore produit de ranking ni de score.
 - Contrat de résultat à retenir : le tableau principal utilisera Hit@10 normalisé, après dédoublonnage. Pour les Articles, Hit@10 = Recall@10 dans ce benchmark (maximum vérifié de dix labels stricts par question). NDCG@10 et MRR@10 seront exportés distinctement. Ne pas confondre ce Hit@10 avec « au moins une réponse exacte ».
