@@ -85,8 +85,12 @@ def test_b1_depth_derivation_writes_versioned_exact_metrics_at_10(tmp_path, monk
     (tmp_path / "eval.json").write_text(json.dumps({"questions": [{
         "qid": "q1", "articles_attendus": ["a"], "gold_jp_ids": ["j"],
     }]}), encoding="utf-8")
-    np.save(tmp_path / "articles.npy", np.asarray(["a", *[f"a{i}" for i in range(1, 101)]], dtype=object))
-    np.save(tmp_path / "jp.npy", np.asarray(["j", *[f"j{i}" for i in range(1, 101)]], dtype=object))
+    article_ids = ["a", *[f"a{i}" for i in range(1, 101)]]
+    jp_ids = ["j", *[f"j{i}" for i in range(1, 101)]]
+    np.save(tmp_path / "articles.npy", np.asarray(["representation_only_article", *article_ids], dtype=object))
+    np.save(tmp_path / "jp.npy", np.asarray(["representation_only_jp", *jp_ids], dtype=object))
+    np.save(tmp_path / "graph_articles.npy", np.asarray(article_ids, dtype=object))
+    np.save(tmp_path / "graph_jp.npy", np.asarray(jp_ids, dtype=object))
     rows = []
     for modality, first, rest in (("art", "a", "a"), ("jp", "j", "j")):
         for rank in range(1, 101):
@@ -96,7 +100,12 @@ def test_b1_depth_derivation_writes_versioned_exact_metrics_at_10(tmp_path, monk
     payload = {
         "campaign_id": "test-b1",
         "datasets": {"evaluation": {"path": "eval.json", "questions": 1, "sha256": "test"}},
-        "candidate_inputs": {"articles_order": {"path": "articles.npy"}, "jurisprudence_order": {"path": "jp.npy"}},
+        "candidate_inputs": {
+            "articles_order": {"path": "articles.npy"},
+            "jurisprudence_order": {"path": "jp.npy"},
+            "shared_article_ids": {"path": "graph_articles.npy"},
+            "shared_jp_ids": {"path": "graph_jp.npy"},
+        },
         "candidate_universe": {"articles": {"count": 101}, "jurisprudence": {"count": 101}},
     }
 

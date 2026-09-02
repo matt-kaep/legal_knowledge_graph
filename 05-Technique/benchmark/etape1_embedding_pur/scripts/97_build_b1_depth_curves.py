@@ -28,6 +28,27 @@ def _data_path(raw: str) -> Path:
     return path if path.is_absolute() else DATA_REPO / path
 
 
+def _stable_unique(values: list[object]) -> list[str]:
+    seen: set[str] = set()
+    return [
+        identifier
+        for value in values
+        if (identifier := str(value)) not in seen and not seen.add(identifier)
+    ]
+
+
+def _stable_sequence_sha256(values: list[str]) -> str:
+    payload = json.dumps(_stable_unique(values), ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _effective_candidate_order(representation_order_path: Path, graph_ids_path: Path) -> list[str]:
+    """Rebuild A3's stable, graph-backed returnable order from sealed inputs."""
+    representation_order = np.load(representation_order_path, allow_pickle=True).tolist()
+    graph_ids = set(map(str, np.load(graph_ids_path, allow_pickle=True).tolist()))
+    return _stable_unique([value for value in representation_order if str(value) in graph_ids])
+
+
 def _deduplicated_prefix(ranking: list[str], k: int) -> list[str]:
     """B1 semantics: deduplicate the returned positions 1..K, not later ranks."""
     seen: set[str] = set()
@@ -137,15 +158,25 @@ def derive_curves(payload: dict, sources: dict[str, Path], out_dir: Path) -> dic
     if len(questions) != int(payload["datasets"]["evaluation"]["questions"]):
         raise ValueError("evaluation question count differs from B1 manifest")
     universe_paths = payload["candidate_inputs"]
-    candidate_ids = {
-        "articles": {str(item) for item in np.load(_data_path(universe_paths["articles_order"]["path"]), allow_pickle=True).tolist()},
-        "jurisprudence": {str(item) for item in np.load(_data_path(universe_paths["jurisprudence_order"]["path"]), allow_pickle=True).tolist()},
+    candidate_orders = {
+        "articles": _effective_candidate_order(
+            _data_path(universe_paths["articles_order"]["path"]),
+            _data_path(universe_paths["shared_article_ids"]["path"]),
+        ),
+        "jurisprudence": _effective_candidate_order(
+            _data_path(universe_paths["jurisprudence_order"]["path"]),
+            _data_path(universe_paths["shared_jp_ids"]["path"]),
+        ),
     }
+    candidate_ids = {target: set(order) for target, order in candidate_orders.items()}
     expected_counts = payload["candidate_universe"]
-    if len(candidate_ids["articles"]) != int(expected_counts["articles"]["count"]):
-        raise ValueError("Article candidate count differs from B1 manifest")
-    if len(candidate_ids["jurisprudence"]) != int(expected_counts["jurisprudence"]["count"]):
-        raise ValueError("JP candidate count differs from B1 manifest")
+    for target, label in (("articles", "Article"), ("jurisprudence", "JP")):
+        if len(candidate_orders[target]) != int(expected_counts[target]["count"]):
+            raise ValueError(f"{label} candidate count differs from B1 manifest")
+        expected_hash = expected_counts[target].get("order_sha256")
+        actual_hash = _stable_sequence_sha256(candidate_orders[target])
+        if expected_hash is not None and actual_hash != expected_hash:
+            raise ValueError(f"{label} candidate order differs from B1 manifest")
 
     per_seed: list[pd.DataFrame] = []
     source_hashes: dict[str, str] = {}
@@ -224,6 +255,9 @@ def derive_curves(payload: dict, sources: dict[str, Path], out_dir: Path) -> dic
         "metric": "Hit@K = |dedup(R_K) intersect Y| / min(|Y|, K)",
         "secondary_metrics": ["NDCG@10", "MRR@10"],
         "coverage": {"questions": len(questions), "articles": len(candidate_ids["articles"]), "jurisprudence": len(candidate_ids["jurisprudence"])},
+        "candidate_order_sha256": {
+            target: _stable_sequence_sha256(order) for target, order in candidate_orders.items()
+        },
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     _plot(curves, out_dir)
     return {
