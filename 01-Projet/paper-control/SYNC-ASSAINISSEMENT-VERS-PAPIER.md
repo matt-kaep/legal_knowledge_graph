@@ -8,11 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
-## Transmission prioritaire — B1 autorisée sur A3, sans résultat à ce stade
+## Transmission prioritaire — B1-r1 figée après incident technique, sans résultat à ce stade
 
-- La campagne B1 est gelée par `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json`, SHA-256 `f1107b126e11b0457dc28a4fbe3db621b1c061a932e2acda1eb1368bac0be649`. Elle référence exclusivement A3, SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3` : 5 578 questions train/CV, 754 questions d’évaluation, 13 236 candidats Articles et 114 851 candidats JP.
-- E024 (PPR, Slurm `977101`), E025 (LightGCN, Slurm `977102`) et E026 (cosine/BGE-M3, Slurm `977100`) sont en cours sur Télécom après préflight distant valide. E028 produira les courbes uniquement à partir des rankings B1 gelés. E017, E021 et E022 sont explicitement exclus de B1 ; E027, E029 et E030 ne sont pas lancées.
-- **Rien de quantitatif n’est encore transmissible au papier.** Les jobs viennent d’être soumis : aucun ranking ou score B1 n’est encore validé.
+- La soumission B1 initiale reste archivée par `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json`, SHA-256 `f1107b126e11b0457dc28a4fbe3db621b1c061a932e2acda1eb1368bac0be649`. PPR (`977101`) et LightGCN (`977102`) ont échoué avant toute sélection CV car les lanceurs cherchaient le chemin de folds historique au lieu du split A3 ; les tâches LightGCN restantes ont été annulées. Cosine (`977100`) a terminé comme sortie technique isolée. Ne pas utiliser ces sorties initiales dans le papier.
+- La reprise B1-r1 est gelée par `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r1.json`, SHA-256 `1b612a182742244dad59006e6d01b826a0285f01123aeeae67321b48c9de5e9a`. Elle référence exclusivement A3, SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3` : 5 578 questions train/CV, 754 questions d’évaluation, 13 236 candidats Articles et 114 851 candidats JP. Son préflight valide 50 entrées hashées.
+- E024 (PPR), E025 (LightGCN) et E026 (cosine/BGE-M3) sont prêtes à être relancées sur Télécom sous B1-r1. E028 produira les courbes uniquement à partir des rankings B1-r1 gelés. E017, E021 et E022 sont explicitement exclus ; E027, E029 et E030 ne sont pas lancées.
+- **Rien de quantitatif n’est encore transmissible au papier.** Aucun ranking ou score B1-r1 n’est encore validé.
 - Contrat de résultat à retenir : le tableau principal utilisera Hit@10 normalisé, après dédoublonnage. Pour les Articles, Hit@10 = Recall@10 dans ce benchmark (maximum vérifié de dix labels stricts par question). NDCG@10 et MRR@10 seront exportés distinctement. Ne pas confondre ce Hit@10 avec « au moins une réponse exacte ».
 - Formulation autorisée uniquement pour la méthode : « La campagne de comparaison a été pré-enregistrée sur le snapshot A3, avec sélection par validation croisée sur l’entraînement puis gel des configurations avant évaluation. » Attendre la transmission post-replay pour tout chiffre ou classement.
 

@@ -70,6 +70,36 @@ def test_ppr_uses_grouped_v2_fold_namespace(monkeypatch):
     assert captured["version"] == cv_ppr.graph_protocol.PROTOCOL_VERSION
 
 
+def test_ppr_passes_the_a3_split_to_the_grouped_fold_loader(monkeypatch):
+    captured = {}
+
+    def fake_load_verified_grouped_fold_assignments(bench_dir, split, version):
+        captured.update(bench_dir=bench_dir, split=split, version=version)
+        return (
+            pd.DataFrame({"qid": [f"q{fold}" for fold in range(5)], "fold": range(5)}),
+            {"protocol_version": version},
+        )
+
+    monkeypatch.setattr(
+        cv_ppr.graph_protocol,
+        "load_verified_grouped_fold_assignments",
+        fake_load_verified_grouped_fold_assignments,
+    )
+
+    cv_ppr.load_fold_assignments(
+        Path("/tmp/bench"),
+        {f"q{fold}" for fold in range(5)},
+        split=cv_ppr.graph_protocol.EFFECTIVE_RETRIEVAL_TRAIN_SPLIT,
+        protocol_version=cv_ppr.graph_protocol.EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION,
+    )
+
+    assert captured == {
+        "bench_dir": Path("/tmp/bench"),
+        "split": cv_ppr.graph_protocol.EFFECTIVE_RETRIEVAL_TRAIN_SPLIT,
+        "version": cv_ppr.graph_protocol.EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION,
+    }
+
+
 @pytest.mark.parametrize("mismatch_key", ["dataset_sha256", "fold_assignment_sha256"])
 def test_ppr_rejects_grouped_v2_fold_metadata_hash_mismatch(tmp_path, monkeypatch, mismatch_key):
     bench_root = tmp_path / "bench"

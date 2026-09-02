@@ -148,9 +148,10 @@ def load_fold_assignments(
     bench_dir: Path,
     bench_qids: set[str],
     protocol_version: str = graph_protocol.PROTOCOL_VERSION,
+    split: str = graph_protocol.OFFICIAL_TRAIN_SPLIT,
 ) -> tuple[pd.DataFrame, dict]:
     df, metadata = graph_protocol.load_verified_grouped_fold_assignments(
-        bench_dir, version=protocol_version
+        bench_dir, split=split, version=protocol_version
     )
     expected = set(range(graph_protocol.OFFICIAL_N_FOLDS))
     found = set(df["fold"].astype(int).unique().tolist())
@@ -445,7 +446,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     bench_questions = graph_protocol.load_bench_questions(bench_dir)
     bench_qids = {str(question["qid"]) for question in bench_questions}
-    folds, fold_metadata = load_fold_assignments(bench_dir, bench_qids, protocol_version)
+    folds, fold_metadata = load_fold_assignments(
+        bench_dir,
+        bench_qids,
+        split=args.split,
+        protocol_version=protocol_version,
+    )
     expected_qids_by_fold = graph_protocol.expected_qids_by_fold(folds)
 
     train_ks = args.train_ks or [2]

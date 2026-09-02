@@ -45,6 +45,36 @@ def test_validate_fold_assignments_rejects_missing_and_extra_qids():
         cv_lightgcn.validate_fold_assignments(folds, {"q1", "q2"})
 
 
+def test_lightgcn_passes_the_a3_split_to_the_grouped_fold_loader(monkeypatch):
+    captured = {}
+
+    def fake_load_verified_grouped_fold_assignments(bench_dir, split, version):
+        captured.update(bench_dir=bench_dir, split=split, version=version)
+        return (
+            pd.DataFrame({"qid": [f"q{fold}" for fold in range(5)], "fold": range(5)}),
+            {"protocol_version": version},
+        )
+
+    monkeypatch.setattr(
+        cv_lightgcn.graph_protocol,
+        "load_verified_grouped_fold_assignments",
+        fake_load_verified_grouped_fold_assignments,
+    )
+
+    cv_lightgcn.load_fold_assignments(
+        Path("/tmp/bench"),
+        {f"q{fold}" for fold in range(5)},
+        split=cv_lightgcn.EFFECTIVE_RETRIEVAL_TRAIN_SPLIT,
+        protocol_version=cv_lightgcn.EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION,
+    )
+
+    assert captured == {
+        "bench_dir": Path("/tmp/bench"),
+        "split": cv_lightgcn.EFFECTIVE_RETRIEVAL_TRAIN_SPLIT,
+        "version": cv_lightgcn.EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION,
+    }
+
+
 def test_build_subset_bench_keeps_requested_qids_and_aligned_arrays(tmp_path):
     src_dir = tmp_path / "src"
     src_dir.mkdir()

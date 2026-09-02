@@ -8,14 +8,14 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
-## Campagne B1 — contrat A3 figé et autorisé, avant soumission Télécom
+## Campagne B1 — reprise technique B1-r1 figée, avant relance Télécom
 
-Le 2 septembre 2026, la campagne B1 a été gelée sur le contrat A3, sans mélanger les sorties historiques E017, E021 ou E022. Le manifeste B1 est `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json` (SHA-256 fichier `f1107b126e11b0457dc28a4fbe3db621b1c061a932e2acda1eb1368bac0be649`) ; il référence explicitement A3 (SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`), les scripts, les données, les graphes, les grilles de CV, les ressources Slurm et les sorties nouvelles.
+La première soumission B1 du 2 septembre 2026 reste archivée par le manifeste `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json` (SHA-256 fichier `f1107b126e11b0457dc28a4fbe3db621b1c061a932e2acda1eb1368bac0be649`). Son préflight distant a validé 50 entrées hashées et le job cosine `977100` a terminé ; les onze PPR (`977101`) et huit LightGCN lancés (`977102`) ont échoué **avant tout calcul CV**. La cause vérifiée est un défaut de propagation du split A3 vers le chargeur de folds : les fichiers A3 étaient bien présents sur Télécom, mais les deux lanceurs demandaient le chemin historique par défaut. Les tâches LightGCN restantes ont été annulées après confirmation de la même erreur. Ces sorties ne fournissent aucun champion, aucune métrique CV ni résultat reportable.
 
-- Préflight local réussi : 50 entrées immuables vérifiées ; train de 5 578 questions, évaluation inchangée de 754 questions ; univers retournable commun de 13 236 Articles et 114 851 JP. Les 300 tests du benchmark passent (`19,04 s`), les scripts et wrappers Slurm compilent/valident, et `git diff --check` est vierge.
-- Le contrat métrique B1 utilise le Hit@K normalisé, après dédoublonnage du ranking. Pour les Articles, Hit@10 et Recall@10 sont identiques dans ce benchmark : le maximum vérifié est de dix labels stricts par question d’évaluation. NDCG@10 et MRR@10 restent exportés séparément.
-- E024 (PPR sur les onze graphes), E025 (LightGCN sur les onze graphes) et E026 (cosine/BGE-M3) sont **en cours sur Télécom** depuis le 2 septembre 2026 : Slurm `977101` (PPR, array 11 graphes), `977102` (LightGCN, array séquentiel A40) et `977100` (cosine). E028 (courbes K=1–100) dépend exclusivement des rankings B1 gelés ; E027, E029 et E030 ne sont pas autorisées dans B1.
-- Le préflight distant a validé les 50 entrées hashées avec le manifeste B1 ci-dessus. Aucun score B1 n’existe encore : les champions seront gelés exclusivement après lecture complète des CV train-only, puis avant le replay des 754 questions.
+- B1-r1 est un nouveau manifeste immuable : `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r1.json` (SHA-256 fichier `1b612a182742244dad59006e6d01b826a0285f01123aeeae67321b48c9de5e9a`). Il référence explicitement A3 (SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`), la tentative interrompue, les scripts corrigés, les données, les graphes, les grilles de CV, les ressources Slurm et un espace de sorties entièrement neuf.
+- Préflight local B1-r1 réussi : 50 entrées immuables vérifiées ; train de 5 578 questions, évaluation inchangée de 754 questions ; univers retournable commun de 13 236 Articles et 114 851 JP. Les 23 tests ciblés PPR/LightGCN/B1-r1 passent (`1,86 s`), les nouveaux wrappers Slurm valident et `git diff --check` est vierge. La suite complète est requise avant le commit et la relance.
+- Le contrat métrique B1-r1 utilise le Hit@K normalisé, après dédoublonnage du ranking. Pour les Articles, Hit@10 et Recall@10 sont identiques dans ce benchmark : le maximum vérifié est de dix labels stricts par question d’évaluation. NDCG@10 et MRR@10 restent exportés séparément.
+- E024 (PPR sur les onze graphes), E025 (LightGCN sur les onze graphes) et E026 (cosine/BGE-M3) sont **prêtes à être relancées sur Télécom sous B1-r1**. E028 (courbes K=1–100) dépend exclusivement des rankings B1-r1 gelés ; E027, E029 et E030 ne sont pas autorisées dans B1.
 
 ## Checkpoint A3 — Univers de candidats figé, sans campagne complète
 
@@ -108,7 +108,7 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-09-02 — B1 en cours sur Télécom après préflight distant valide : cosine `977100`, PPR-CV `977101`, LightGCN-CV `977102`. Aucun score B1 n’est encore reportable.
+2026-09-02 — la soumission B1 initiale a échoué techniquement avant CV pour PPR et LightGCN ; cosine seul a terminé. B1-r1 est figée après correctif testé et préflight local valide ; aucun score B1 n’est reportable.
 
 ### 2026-08-18 — Audit/export de reproductibilité et branche dédiée
 
