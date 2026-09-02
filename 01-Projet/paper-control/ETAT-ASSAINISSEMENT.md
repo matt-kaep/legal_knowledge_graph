@@ -15,7 +15,7 @@ La première soumission B1 du 2 septembre 2026 reste archivée par le manifeste 
 - B1-r1 est un nouveau manifeste immuable : `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r1.json` (SHA-256 fichier `1b612a182742244dad59006e6d01b826a0285f01123aeeae67321b48c9de5e9a`). Il référence explicitement A3 (SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`), la tentative interrompue, les scripts corrigés, les données, les graphes, les grilles de CV, les ressources Slurm et un espace de sorties entièrement neuf.
 - Préflight local B1-r1 réussi : 50 entrées immuables vérifiées ; train de 5 578 questions, évaluation inchangée de 754 questions ; univers retournable commun de 13 236 Articles et 114 851 JP. Les 23 tests ciblés PPR/LightGCN/B1-r1 passent (`1,86 s`), les nouveaux wrappers Slurm valident et `git diff --check` est vierge. La suite complète est requise avant le commit et la relance.
 - Le contrat métrique B1-r1 utilise le Hit@K normalisé, après dédoublonnage du ranking. Pour les Articles, Hit@10 et Recall@10 sont identiques dans ce benchmark : le maximum vérifié est de dix labels stricts par question d’évaluation. NDCG@10 et MRR@10 restent exportés séparément.
-- E026 (cosine/BGE-M3, Slurm `977124`) a terminé sous B1-r1 ; ses rankings et métriques attendent les contrôles de couverture/hash avant inscription au registre des résultats. Le smoke PPR isolé (`977125`) a couvert les cinq folds, les 5 578 QID et les deux modalités sur A3 ; E024 est désormais **en cours** sur les onze graphes (Slurm `977157`). Le smoke LightGCN isolé (`977158`, G1, cinq folds, une époque) est **en cours** avant la soumission de ses onze CV complets. E028 (courbes K=1–100) dépend exclusivement des rankings B1-r1 gelés ; E027, E029 et E030 ne sont pas autorisées dans B1.
+- E026 (cosine/BGE-M3, Slurm `977124`) a terminé sous B1-r1 ; ses rankings et métriques attendent les contrôles de couverture/hash avant inscription au registre des résultats. Le smoke PPR isolé (`977125`) a couvert les cinq folds, les 5 578 QID et les deux modalités sur A3 ; E024 est **en cours** sur les onze graphes (Slurm `977157`). Le smoke LightGCN isolé (`977158`, G1, cinq folds, une époque) a validé la même couverture et le gate mémoire ; E025 est **en cours** séquentiellement sur les onze graphes (Slurm `977184`). E028 (courbes K=1–100) dépend exclusivement des rankings B1-r1 gelés ; E027, E029 et E030 ne sont pas autorisées dans B1.
 
 ## Checkpoint A3 — Univers de candidats figé, sans campagne complète
 
@@ -108,7 +108,7 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-09-02 — B1 initiale a échoué techniquement avant CV pour PPR et LightGCN. B1-r1 est corrigée et préflightée à distance : cosine `977124` a terminé, smoke PPR `977125` valide, PPR complet `977157` en cours et smoke LightGCN `977158` en cours. Aucun score n’est encore reportable.
+2026-09-02 — B1 initiale a échoué techniquement avant CV pour PPR et LightGCN. B1-r1 est corrigée et préflightée à distance : cosine `977124`, smoke PPR `977125` et smoke LightGCN `977158` terminés et vérifiés ; PPR complet `977157` et LightGCN complet `977184` en cours. Aucun score n’est encore reportable.
 
 ### 2026-08-18 — Audit/export de reproductibilité et branche dédiée
 
