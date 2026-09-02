@@ -14,8 +14,8 @@ Le 2 septembre 2026, la campagne B1 a été gelée sur le contrat A3, sans méla
 
 - Préflight local réussi : 50 entrées immuables vérifiées ; train de 5 578 questions, évaluation inchangée de 754 questions ; univers retournable commun de 13 236 Articles et 114 851 JP. Les 300 tests du benchmark passent (`19,04 s`), les scripts et wrappers Slurm compilent/valident, et `git diff --check` est vierge.
 - Le contrat métrique B1 utilise le Hit@K normalisé, après dédoublonnage du ranking. Pour les Articles, Hit@10 et Recall@10 sont identiques dans ce benchmark : le maximum vérifié est de dix labels stricts par question d’évaluation. NDCG@10 et MRR@10 restent exportés séparément.
-- E024 (PPR sur les onze graphes), E025 (LightGCN sur les onze graphes) et E026 (cosine/BGE-M3) sont **autorisées**. E028 (courbes K=1–100) dépend exclusivement des rankings B1 gelés ; E027, E029 et E030 ne sont pas autorisées dans B1.
-- À cet instant, aucun job B1 n’a encore été soumis et aucun score B1 n’existe. La prochaine étape est la copie vérifiée dans un espace Télécom B1 distinct, un préflight distant, puis la soumission des CV/cosine. Les champions ne seront gelés qu’après CV, avant le replay des 754 questions.
+- E024 (PPR sur les onze graphes), E025 (LightGCN sur les onze graphes) et E026 (cosine/BGE-M3) sont **en cours sur Télécom** depuis le 2 septembre 2026 : Slurm `977101` (PPR, array 11 graphes), `977102` (LightGCN, array séquentiel A40) et `977100` (cosine). E028 (courbes K=1–100) dépend exclusivement des rankings B1 gelés ; E027, E029 et E030 ne sont pas autorisées dans B1.
+- Le préflight distant a validé les 50 entrées hashées avec le manifeste B1 ci-dessus. Aucun score B1 n’existe encore : les champions seront gelés exclusivement après lecture complète des CV train-only, puis avant le replay des 754 questions.
 
 ## Checkpoint A3 — Univers de candidats figé, sans campagne complète
 
@@ -108,7 +108,7 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-09-02 — B1 gelée et autorisée sur A3 : manifeste hashé, 50 entrées vérifiées, 300 tests verts. Soumission Télécom et calculs B1 encore absents à cette heure ; aucun score B1 n’est reportable.
+2026-09-02 — B1 en cours sur Télécom après préflight distant valide : cosine `977100`, PPR-CV `977101`, LightGCN-CV `977102`. Aucun score B1 n’est encore reportable.
 
 ### 2026-08-18 — Audit/export de reproductibilité et branche dédiée
 
