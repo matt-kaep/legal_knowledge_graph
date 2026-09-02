@@ -2,6 +2,8 @@ import importlib.util
 import json
 import math
 from pathlib import Path
+import shutil
+import tempfile
 
 import numpy as np
 import pandas as pd
@@ -17,6 +19,24 @@ def _load_module():
     assert spec.loader is not None
     spec.loader.exec_module(module)
     return module
+
+
+def test_b1_depth_honors_configured_repo_when_run_from_a_shallow_staging_path(monkeypatch):
+    staging_dir = Path(tempfile.mkdtemp(prefix="lkg-b1-depth-", dir="/tmp"))
+    try:
+        staged_script = staging_dir / "97_build_b1_depth_curves.py"
+        staged_script.write_text(SCRIPT.read_text(encoding="utf-8"), encoding="utf-8")
+        monkeypatch.setenv("LKG_REPO", str(staging_dir))
+        monkeypatch.setenv("LKG_DATA_ROOT", str(staging_dir))
+        spec = importlib.util.spec_from_file_location("staged_b1_depth_curves", staged_script)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+
+        assert module.CODE_REPO == staging_dir.resolve()
+        assert module.DATA_REPO == staging_dir.resolve()
+    finally:
+        shutil.rmtree(staging_dir)
 
 
 def test_b1_depth_hit_uses_only_the_returned_top_k_positions():

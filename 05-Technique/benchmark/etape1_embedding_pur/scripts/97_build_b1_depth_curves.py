@@ -12,7 +12,8 @@ import numpy as np
 import pandas as pd
 
 
-CODE_REPO = Path(os.environ.get("LKG_REPO", Path(__file__).resolve().parents[4])).resolve()
+_configured_repo = os.environ.get("LKG_REPO")
+CODE_REPO = Path(_configured_repo).resolve() if _configured_repo else Path(__file__).resolve().parents[4]
 DATA_REPO = Path(os.environ.get("LKG_DATA_ROOT", str(CODE_REPO))).resolve()
 ROOT = CODE_REPO / "05-Technique/benchmark/etape1_embedding_pur"
 DEFAULT_MANIFEST = ROOT / "configs/confirmatory_campaign_b1_a3.json"
