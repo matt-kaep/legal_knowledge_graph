@@ -242,6 +242,7 @@ def eval_m1_m2(
     question_cache_dir: Path | None = None,
     graph_version: str = "canonical",
     top_k_out: int = K_ART,
+    direct_cosine_only: bool = False,
 ) -> None:
     t0 = time.time()
     if qid_filter is not None:
@@ -249,8 +250,8 @@ def eval_m1_m2(
     if limit is not None:
         questions = questions[:limit]
         print(f"  mode limit : {len(questions)} questions")
-    k_ins = list(ks_in or KS_IN)
-    if not k_ins:
+    k_ins = [] if direct_cosine_only else list(ks_in or KS_IN)
+    if not k_ins and not direct_cosine_only:
         raise ValueError("ks_in must contain at least one value")
     k_art = int(top_k_out)
     k_jp = int(top_k_out)
@@ -305,7 +306,7 @@ def eval_m1_m2(
 
     rows = []
     rankings = []
-    max_k_in = max(max(k_ins), k_art, k_jp)
+    max_k_in = max([*k_ins, k_art, k_jp])
     print("══ Évaluation M1/M2/Hit/MRR/NDCG")
     for qi, q in enumerate(questions):
         if qi % 100 == 0:
@@ -501,19 +502,42 @@ def main() -> int:
     parser.add_argument("--limit", type=int)
     parser.add_argument("--graph-version", default="canonical")
     parser.add_argument("--top-k-out", type=int, default=K_ART)
+    parser.add_argument(
+        "--bench-dir",
+        type=Path,
+        help="Use an already frozen benchmark directory instead of rebuilding a split.",
+    )
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        help="Write outputs to an explicit fresh directory rather than the split namespace.",
+    )
+    parser.add_argument(
+        "--direct-cosine-only",
+        action="store_true",
+        help="Evaluate only the two direct cosine rankings (Articles and JP).",
+    )
     args = parser.parse_args()
 
-    out_dir = OUT_ROOT / args.split
-    print(f"══ Build bench v3+ : {args.split}")
-    questions = build_bench(args.split, out_dir)
+    out_dir = args.out_dir or (OUT_ROOT / args.split)
+    if args.bench_dir is not None:
+        questions = json.loads((args.bench_dir / "bench_global.json").read_text())["questions"]
+        question_cache_dir = args.bench_dir
+        print(f"══ Frozen bench v3+ : {args.bench_dir}")
+    else:
+        print(f"══ Build bench v3+ : {args.split}")
+        questions = build_bench(args.split, out_dir)
+        question_cache_dir = None
     print(f"  questions={len(questions)} out={out_dir}")
     if not args.build_only:
         eval_m1_m2(
             questions,
             out_dir,
             limit=args.limit,
+            question_cache_dir=question_cache_dir,
             graph_version=args.graph_version,
             top_k_out=args.top_k_out,
+            direct_cosine_only=args.direct_cosine_only,
         )
     return 0
 

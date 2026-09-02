@@ -8,6 +8,15 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## Campagne B1 — contrat A3 figé et autorisé, avant soumission Télécom
+
+Le 2 septembre 2026, la campagne B1 a été gelée sur le contrat A3, sans mélanger les sorties historiques E017, E021 ou E022. Le manifeste B1 est `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json` (SHA-256 fichier `b0a8c101f4b315241572939a7d635279ed532d264692b95cc5951798f4557236`) ; il référence explicitement A3 (SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`), les scripts, les données, les graphes, les grilles de CV, les ressources Slurm et les sorties nouvelles.
+
+- Préflight local réussi : 50 entrées immuables vérifiées ; train de 5 578 questions, évaluation inchangée de 754 questions ; univers retournable commun de 13 236 Articles et 114 851 JP. Les 300 tests du benchmark passent (`19,04 s`), les scripts et wrappers Slurm compilent/valident, et `git diff --check` est vierge.
+- Le contrat métrique B1 utilise le Hit@K normalisé, après dédoublonnage du ranking. Pour les Articles, Hit@10 et Recall@10 sont identiques dans ce benchmark : le maximum vérifié est de dix labels stricts par question d’évaluation. NDCG@10 et MRR@10 restent exportés séparément.
+- E024 (PPR sur les onze graphes), E025 (LightGCN sur les onze graphes) et E026 (cosine/BGE-M3) sont **autorisées**. E028 (courbes K=1–100) dépend exclusivement des rankings B1 gelés ; E027, E029 et E030 ne sont pas autorisées dans B1.
+- À cet instant, aucun job B1 n’a encore été soumis et aucun score B1 n’existe. La prochaine étape est la copie vérifiée dans un espace Télécom B1 distinct, un préflight distant, puis la soumission des CV/cosine. Les champions ne seront gelés qu’après CV, avant le replay des 754 questions.
+
 ## Checkpoint A3 — Univers de candidats figé, sans campagne complète
 
 Le 2 septembre 2026, la décision scientifique « option 2 » a été matérialisée sans modifier l’évaluation. L’univers structurel du graphe reste **23 859 Articles** et **115 304 décisions uniques**. L’univers officiel de candidats retournables, commun à cosine, PPR et LightGCN, est maintenant l’intersection stable entre les représentations et les nœuds du graphe : **13 236 Articles** (ordre SHA-256 `c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c`) et **114 851 décisions uniques** (ordre SHA-256 `065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a`).
@@ -99,7 +108,7 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
-2026-09-02 — Checkpoint A2 : option 1 matérialisée (5 578 train, évaluation inchangée, cinq folds sans fuite), mais calculs volontairement bloqués par l’écart entre l’univers de nœuds du graphe (23 859 / 115 304) et l’univers effectivement scoré (13 236 / 114 851). Aucun modèle lancé.
+2026-09-02 — B1 gelée et autorisée sur A3 : manifeste hashé, 50 entrées vérifiées, 300 tests verts. Soumission Télécom et calculs B1 encore absents à cette heure ; aucun score B1 n’est reportable.
 
 ### 2026-08-18 — Audit/export de reproductibilité et branche dédiée
 
