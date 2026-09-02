@@ -151,7 +151,13 @@ def score_ranking_group(
     return pd.DataFrame(records)
 
 
-def derive_curves(payload: dict, sources: dict[str, Path], out_dir: Path) -> dict[str, Path]:
+def derive_curves(
+    payload: dict,
+    sources: dict[str, Path],
+    out_dir: Path,
+    *,
+    render_plots: bool = False,
+) -> dict[str, Path]:
     eval_path = _data_path(payload["datasets"]["evaluation"]["path"])
     questions_list = json.loads(eval_path.read_text(encoding="utf-8"))["questions"]
     questions = {str(question["qid"]): question for question in questions_list}
@@ -238,6 +244,19 @@ def derive_curves(payload: dict, sources: dict[str, Path], out_dir: Path) -> dic
     curves.to_csv(curves_path, index=False)
     per_seed_metrics.to_csv(per_seed_metrics_path, index=False)
     metrics_at_10.to_csv(metrics_path, index=False)
+    if render_plots:
+        _plot(curves, out_dir)
+    artifact_paths = {
+        "depth_curves_per_seed.csv": per_seed_path,
+        "depth_curves.csv": curves_path,
+        "ranking_metrics_at_10_per_seed.csv": per_seed_metrics_path,
+        "ranking_metrics_at_10.csv": metrics_path,
+    }
+    if render_plots:
+        artifact_paths |= {
+            "depth_curves.png": out_dir / "depth_curves.png",
+            "depth_curves.pdf": out_dir / "depth_curves.pdf",
+        }
     report_path.write_text(json.dumps({
         "campaign_id": payload["campaign_id"],
         "campaign_manifest_sha256": payload.get("_manifest_sha256"),
@@ -245,12 +264,8 @@ def derive_curves(payload: dict, sources: dict[str, Path], out_dir: Path) -> dic
         "derivation_script_sha256": _sha256(Path(__file__)),
         "evaluation_sha256": payload["datasets"]["evaluation"]["sha256"],
         "sources": source_hashes,
-        "artifacts": {
-            "depth_curves_per_seed.csv": _sha256(per_seed_path),
-            "depth_curves.csv": _sha256(curves_path),
-            "ranking_metrics_at_10_per_seed.csv": _sha256(per_seed_metrics_path),
-            "ranking_metrics_at_10.csv": _sha256(metrics_path),
-        },
+        "artifacts": {name: _sha256(path) for name, path in artifact_paths.items()},
+        "plots_rendered": render_plots,
         "max_k": 100,
         "metric": "Hit@K = |dedup(R_K) intersect Y| / min(|Y|, K)",
         "secondary_metrics": ["NDCG@10", "MRR@10"],
@@ -259,7 +274,6 @@ def derive_curves(payload: dict, sources: dict[str, Path], out_dir: Path) -> dic
             target: _stable_sequence_sha256(order) for target, order in candidate_orders.items()
         },
     }, ensure_ascii=False, indent=2), encoding="utf-8")
-    _plot(curves, out_dir)
     return {
         "curves": curves_path,
         "per_seed": per_seed_path,
@@ -296,6 +310,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--source", action="append", required=True, metavar="NAME=RANKINGS_PARQUET")
     parser.add_argument("--out-dir", type=Path)
+    parser.add_argument("--render-plots", action="store_true")
     args = parser.parse_args(argv)
     payload = json.loads(args.manifest.read_text(encoding="utf-8"))
     sources: dict[str, Path] = {}
@@ -308,7 +323,7 @@ def main(argv: list[str] | None = None) -> int:
         sources[name] = Path(path)
     payload["_manifest_sha256"] = _sha256(args.manifest)
     out_dir = args.out_dir or _data_path(payload["outputs"]["depth_curves"])
-    outputs = derive_curves(payload, sources, out_dir)
+    outputs = derive_curves(payload, sources, out_dir, render_plots=args.render_plots)
     print(json.dumps({key: str(value) for key, value in outputs.items()}, ensure_ascii=False))
     return 0
 

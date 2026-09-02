@@ -109,10 +109,16 @@ def test_b1_depth_derivation_writes_versioned_exact_metrics_at_10(tmp_path, monk
         "candidate_universe": {"articles": {"count": 101}, "jurisprudence": {"count": 101}},
     }
 
-    outputs = curves.derive_curves(payload, {"cosine": ranking_path}, tmp_path / "validated")
+    outputs = curves.derive_curves(
+        payload,
+        {"cosine": ranking_path},
+        tmp_path / "validated",
+        render_plots=False,
+    )
     exported = pd.read_csv(outputs["metrics_at_10"])
 
     assert set(exported["target"]) == {"articles", "jurisprudence"}
     assert exported["hit_at_10"].tolist() == pytest.approx([1.0, 1.0])
     assert exported["ndcg_at_10"].tolist() == pytest.approx([1 / math.log2(3)] * 2)
     assert exported["mrr_at_10"].tolist() == pytest.approx([0.5, 0.5])
+    assert not (tmp_path / "validated" / "depth_curves.png").exists()
