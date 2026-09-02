@@ -37,6 +37,8 @@ lightgcn = _load_script_module("32_lightgcn_strict.py", "lightgcn_strict")
 
 CANDIDATE_COVERED_TRAIN_SPLIT = graph_protocol.CANDIDATE_COVERED_TRAIN_SPLIT
 CANDIDATE_COVERED_PROTOCOL_VERSION = graph_protocol.CANDIDATE_COVERED_PROTOCOL_VERSION
+EFFECTIVE_RETRIEVAL_TRAIN_SPLIT = graph_protocol.EFFECTIVE_RETRIEVAL_TRAIN_SPLIT
+EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION = graph_protocol.EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION
 
 
 def select_replay_epoch(history_df: pd.DataFrame, metric: str) -> int:

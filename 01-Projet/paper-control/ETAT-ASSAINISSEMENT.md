@@ -1,12 +1,25 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: checkpoint-a2-blocked
+status: checkpoint-a3-complete-no-full-campaign
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
+
+## Checkpoint A3 — Univers de candidats figé, sans campagne complète
+
+Le 2 septembre 2026, la décision scientifique « option 2 » a été matérialisée sans modifier l’évaluation. L’univers structurel du graphe reste **23 859 Articles** et **115 304 décisions uniques**. L’univers officiel de candidats retournables, commun à cosine, PPR et LightGCN, est maintenant l’intersection stable entre les représentations et les nœuds du graphe : **13 236 Articles** (ordre SHA-256 `c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c`) et **114 851 décisions uniques** (ordre SHA-256 `065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a`).
+
+- Preuve versionnée : `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json` (SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`) et manifeste local de snapshot A3 (SHA-256 `92af5d04ef2cfea473bf37d187570ebb890b7d4537c49ecae72c800e13456a6b`). A2 et les versions antérieures restent immuables.
+- Le nouveau snapshot train est `train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3`, avec **5 578** questions. L’évaluation `eval_rich_retrievable_strict` est byte-for-byte identique, avec **754** questions et SHA-256 `850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59`. Les folds `grouped_v5_no_eval_overlap_effective_retrieval_v3`, seed 42, contiennent 1 116 / 1 115 / 1 116 / 1 115 / 1 116 questions ; aucune provenance ni aucun texte normalisé ne traverse plusieurs folds.
+- Contrôles stricts : zéro chevauchement train--évaluation ; zéro label strict Article ou JP absent dans le train ou l’évaluation. Pour les labels Article étendus utilisés par LightGCN : 51 137 occurrences, 46 606 conservées, 4 531 exclues explicitement, zéro question sans positif récupérable.
+- Les nœuds restants sont explicitement `auxiliary_non_returnable_nodes` : 10 623 Articles et 453 décisions. Ils peuvent propager de l’information dans les graphes, mais ne peuvent ni être classés ni être retournés. Les onze graphes ont été vérifiés directement : mêmes effectifs et même ordre de candidats.
+- Des garde-fous de code refusent maintenant tout candidat hors univers officiel, tout doublon de ranking et toute projection LightGCN non explicitement documentée. La baseline cosine sait aussi extraire correctement l’incidence Article--JP d’un graphe hybride carré.
+- Validation reproductible : **295 tests passent** (`16,00 s`) avec les données A3, les onze scripts modifiés compilent, `git diff --check` est vierge et les CSV/manifeste/hashes sont cohérents. Les deux tests historiques de replay ont été réparés sans copier la version modifiée du checkout utilisateur : `24_build_global_table.py` provient d’un blob Git compatible et les manifests historiques restent scellés.
+- Seuls trois tests de fumée techniques ont été exécutés : cosine (2 questions), PPR sur un graphe (2 questions) et LightGCN sur un graphe, un fold et une époque (2 questions). Ils ont produit exclusivement des rankings dans l’univers officiel. **Aucun run complet E024--E030, aucune sélection de champion et aucune métrique de modèle reportable n’a été lancée.**
+- Une première tentative A3 ayant oublié l’intersection avec les nœuds du graphe a été conservée, sans suppression, dans `data/doctrine_v3plus_bench/_invalid_attempts/`; elle n’a exécuté aucun modèle et est explicitement invalide.
 
 ## Checkpoint A2 — Données figées, calculs bloqués avant exécution
 

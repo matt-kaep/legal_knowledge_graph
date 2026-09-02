@@ -203,6 +203,12 @@ def test_candidate_covered_snapshot_has_a_distinct_cv_protocol():
     ) == cv_lightgcn.CANDIDATE_COVERED_PROTOCOL_VERSION
 
 
+def test_effective_retrieval_snapshot_has_a_distinct_cv_protocol():
+    assert cv_lightgcn.protocol_version_for_split(
+        cv_lightgcn.EFFECTIVE_RETRIEVAL_TRAIN_SPLIT
+    ) == cv_lightgcn.EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION
+
+
 def test_cv_summary_uses_only_checkpoint_selected_for_requested_target():
     rows = []
     for target in ("art", "jp"):

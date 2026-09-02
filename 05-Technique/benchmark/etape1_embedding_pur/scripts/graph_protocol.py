@@ -18,16 +18,19 @@ BENCH_ROOT = DATA_REPO / "05-Technique/benchmark/etape1_embedding_pur/data/doctr
 OFFICIAL_TRAIN_SPLIT = "train_augmented_retrievable_strict"
 NO_EVAL_OVERLAP_TRAIN_SPLIT = "train_augmented_retrievable_strict_no_eval_overlap_v1"
 CANDIDATE_COVERED_TRAIN_SPLIT = "train_augmented_retrievable_strict_no_eval_overlap_candidate_covered_v2"
+EFFECTIVE_RETRIEVAL_TRAIN_SPLIT = "train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3"
 OFFICIAL_N_FOLDS = 5
 SHARED_PROTOCOL_DIRNAME = "_protocol"
 LEGACY_GRAPH_ALIASES = {"G0", "canonical"}
 PROTOCOL_VERSION = "grouped_v2"
 NO_EVAL_OVERLAP_PROTOCOL_VERSION = "grouped_v3_no_eval_overlap_v1"
 CANDIDATE_COVERED_PROTOCOL_VERSION = "grouped_v4_no_eval_overlap_candidate_coverage_v2"
+EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION = "grouped_v5_no_eval_overlap_effective_retrieval_v3"
 TRAIN_SPLIT_PROTOCOLS = {
     OFFICIAL_TRAIN_SPLIT: PROTOCOL_VERSION,
     NO_EVAL_OVERLAP_TRAIN_SPLIT: NO_EVAL_OVERLAP_PROTOCOL_VERSION,
     CANDIDATE_COVERED_TRAIN_SPLIT: CANDIDATE_COVERED_PROTOCOL_VERSION,
+    EFFECTIVE_RETRIEVAL_TRAIN_SPLIT: EFFECTIVE_RETRIEVAL_PROTOCOL_VERSION,
 }
 PRIMARY_METRICS = {"article": "recall_at_10", "jp": "hit_at_10"}
 SECONDARY_METRICS = ("ndcg_at_10", "mrr_at_10")

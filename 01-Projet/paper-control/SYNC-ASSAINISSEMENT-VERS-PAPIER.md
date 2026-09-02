@@ -8,6 +8,15 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission prioritaire — Checkpoint A3 du 2026-09-02
+
+- **Aucun résultat de modèle ni chiffre de performance nouveau n’est transmissible.** A3 fige le contrat des candidats et vérifie les runners ; les trois tests de fumée ne sont pas des expériences reportables. E024--E030 restent non lancées.
+- L’univers structurel de chaque graphe est **23 859 Articles** et **115 304 décisions uniques**. L’univers officiel de candidats retournables est désormais **13 236 Articles** et **114 851 décisions uniques**, avec un ordre commun hashé : Articles `c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c`, JP `065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a`. Les nœuds structurels restants sont auxiliaires de propagation et ne peuvent pas apparaître dans un ranking.
+- Le nouveau train `train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3` contient 5 578 questions. L’évaluation reste inchangée à 754 questions, SHA-256 `850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59`. Les cinq folds groupés seed 42 font 1 116 / 1 115 / 1 116 / 1 115 / 1 116 questions, sans fuite de provenance ni de texte normalisé.
+- Les labels stricts Article et JP sont tous présents dans l’univers officiel, pour le train comme pour l’évaluation. Pour LightGCN, la projection hashée conserve 46 606 des 51 137 occurrences de labels Article étendus, exclut explicitement 4 531 occurrences non récupérables et laisse zéro question d’entraînement sans positif récupérable.
+- Preuve : `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json`, SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`; manifeste local A3 SHA-256 `92af5d04ef2cfea473bf37d187570ebb890b7d4537c49ecae72c800e13456a6b`. Les 295 tests du benchmark passent ; ce contrôle de code ne crée aucun nouveau résultat de modèle.
+- Formulation autorisée, uniquement pour la méthode : « Les graphes conservent des nœuds auxiliaires pour la propagation, tandis que les trois méthodes sont évaluées sur un même univers ordonné de candidats retournables. » Ne pas annoncer de résultat de performance ou de campagne terminée avant la transmission post-E024/E025.
+
 ## Transmission prioritaire — Checkpoint A2 du 2026-09-02
 
 - **Aucun nouveau résultat de modèle n’est transmissible.** L’évaluation interne reste inchangée (754 questions, SHA-256 `850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59`) et aucun PPR, LightGCN, cosine, reranking, LLM direct ou juge automatique n’a été lancé sur le nouveau checkpoint.

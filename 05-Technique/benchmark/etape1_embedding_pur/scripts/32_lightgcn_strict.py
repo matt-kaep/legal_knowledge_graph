@@ -648,6 +648,16 @@ def main(argv: list[str] | None = None) -> int:
                 gold_jp = q["gold_jp_ids"]
                 ranked_art = rowcol_top_k(sc_art[offset], art_pool_pks, k_out)
                 ranked_jp = rowcol_top_k(sc_jp[offset], jp_pool_ids, k_out)
+                benchmark_labels.require_ranked_ids_within_candidate_universe(
+                    ranked_art,
+                    candidate_ids=art_order,
+                    context=f"LightGCN ranking method={method} modality=art qid={q['id']}",
+                )
+                benchmark_labels.require_ranked_ids_within_candidate_universe(
+                    ranked_jp,
+                    candidate_ids=jp_order,
+                    context=f"LightGCN ranking method={method} modality=jp qid={q['id']}",
+                )
                 rankings.extend(
                     ranking_rows(
                         q["id"],

@@ -207,6 +207,18 @@ def top_sorted(sim_row: np.ndarray, k: int) -> np.ndarray:
     return idx
 
 
+def jp_article_incidence(graph: sp.csr_matrix, *, n_jp: int, n_articles: int) -> sp.csr_matrix:
+    """Expose the JP-to-Article block for either supported graph representation."""
+    if graph.shape == (n_jp, n_articles):
+        return graph
+    if graph.shape == (n_jp + n_articles, n_jp + n_articles):
+        return graph[:n_jp, n_jp:].tocsr()
+    raise ValueError(
+        "Unsupported graph shape for JP-to-Article retrieval incidence: "
+        f"graph={graph.shape}, n_jp={n_jp}, n_articles={n_articles}"
+    )
+
+
 def ranking_rows(qid, method, k_in, modality, ranked, k):
     return [
         {
@@ -254,6 +266,11 @@ def eval_m1_m2(
     graph = view.graph
     jp_ids_graph = view.jp_ids_graph
     article_ids_graph = view.article_ids_graph
+    incidence = jp_article_incidence(
+        graph,
+        n_jp=len(jp_ids_graph),
+        n_articles=len(article_ids_graph),
+    )
 
     pk_to_emb_idx = {pk: i for i, pk in enumerate(art_order)}
     jpid_to_emb_idx = {jid: i for i, jid in enumerate(jp_order)}
@@ -266,6 +283,16 @@ def eval_m1_m2(
         context=f"cosine metric input {out_dir}",
     )
     print(f"  art_emb={art_emb.shape} jp_emb={jp_emb.shape} graph={graph.shape}")
+
+    def checked_ranking(
+        ranked: list[str], modality: str, method: str, qid: str
+    ) -> list[str]:
+        benchmark_labels.require_ranked_ids_within_candidate_universe(
+            ranked,
+            candidate_ids=art_order if modality == "art" else jp_order,
+            context=f"cosine ranking method={method} modality={modality} qid={qid}",
+        )
+        return ranked
 
     print("══ Encodage / cache questions")
     q_emb = encode_questions(questions, out_dir, question_cache_dir=question_cache_dir)
@@ -293,7 +320,9 @@ def eval_m1_m2(
         top_art_max = top_sorted(sim_art[qi], max_k_in)
         top_jp_max = top_sorted(sim_jp[qi], max_k_in)
 
-        ranked_art = list(art_order[top_art_max[:k_art]])
+        ranked_art = checked_ranking(
+            list(art_order[top_art_max[:k_art]]), "art", "B2-a", q["qid"]
+        )
         rows.append(
             {
                 "qid": q["qid"],
@@ -306,7 +335,9 @@ def eval_m1_m2(
         )
         rankings.extend(ranking_rows(q["qid"], "B2-a", None, "art", ranked_art, k_art))
 
-        ranked_jp = list(jp_order[top_jp_max[:k_jp]])
+        ranked_jp = checked_ranking(
+            list(jp_order[top_jp_max[:k_jp]]), "jp", "B3-a", q["qid"]
+        )
         rows.append(
             {
                 "qid": q["qid"],
@@ -327,7 +358,7 @@ def eval_m1_m2(
             top_jp_ids = set(jp_order[top_jp_emb_idx].tolist())
             top_jp_rows = jp_to_row[top_jp_emb_idx]
 
-            jp_count_arr = np.asarray((graph[:, top_art_cols] != 0).sum(axis=1)).ravel()
+            jp_count_arr = np.asarray((incidence[:, top_art_cols] != 0).sum(axis=1)).ravel()
             a_jp_ids = set(jp_ids_graph[jp_count_arr >= 1].tolist())
             jp_citation_count = {
                 jid: int(jp_count_arr[i])
@@ -335,7 +366,7 @@ def eval_m1_m2(
                 if jp_count_arr[i] >= 1
             }
 
-            art_count = np.asarray((graph[top_jp_rows, :] != 0).sum(axis=0)).ravel()
+            art_count = np.asarray((incidence[top_jp_rows, :] != 0).sum(axis=0)).ravel()
             b_art_cols = np.where(art_count >= 1)[0]
             b_art_pks = set(article_ids_graph[b_art_cols].tolist())
 
@@ -350,6 +381,7 @@ def eval_m1_m2(
                     ranked = list(art_order[arr[order]])
                 else:
                     ranked = []
+                ranked = checked_ranking(ranked, "art", method, q["qid"])
                 rows.append(
                     {
                         "qid": q["qid"],
@@ -374,6 +406,7 @@ def eval_m1_m2(
                     ranked = list(jp_order[arr[order]])
                 else:
                     ranked = []
+                ranked = checked_ranking(ranked, "jp", method, q["qid"])
                 rows.append(
                     {
                         "qid": q["qid"],
@@ -403,6 +436,7 @@ def eval_m1_m2(
                 candidates,
                 key=lambda j: (-rrf_score(j), -float(sim_jp[qi, jpid_to_emb_idx[j]])),
             )
+            ranked = checked_ranking(ranked, "jp", "B4-e", q["qid"])
             rows.append(
                 {
                     "qid": q["qid"],
@@ -422,6 +456,7 @@ def eval_m1_m2(
                     -float(sim_jp[qi, jpid_to_emb_idx[j]]),
                 ),
             )
+            ranked = checked_ranking(ranked, "jp", "B4-f", q["qid"])
             rows.append(
                 {
                     "qid": q["qid"],

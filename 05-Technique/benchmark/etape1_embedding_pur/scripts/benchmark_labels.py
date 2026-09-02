@@ -96,6 +96,31 @@ def require_strict_candidate_coverage(
         )
 
 
+def require_ranked_ids_within_candidate_universe(
+    ranked_ids: Iterable[object],
+    *,
+    candidate_ids: Iterable[object],
+    context: str,
+) -> None:
+    """Reject invalid or repeated output identifiers before metrics and export."""
+    candidates = set(stable_unique_strings(candidate_ids))
+    ranked = [str(identifier) for identifier in ranked_ids]
+    outside = [identifier for identifier in ranked if identifier not in candidates]
+    if outside:
+        raise ValueError(
+            f"{context}: ranked candidates outside the official retrieval candidate universe: "
+            f"{outside[:5]}"
+        )
+    seen: set[str] = set()
+    duplicates: list[str] = []
+    for identifier in ranked:
+        if identifier in seen:
+            duplicates.append(identifier)
+        seen.add(identifier)
+    if duplicates:
+        raise ValueError(f"{context}: duplicate candidate in ranking: {duplicates[:5]}")
+
+
 def _projection_counts(rows: Sequence[Mapping[str, object]]) -> dict[str, int]:
     return {
         "questions": len(rows),

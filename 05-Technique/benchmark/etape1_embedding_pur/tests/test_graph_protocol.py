@@ -59,15 +59,12 @@ def test_resolve_graph_bench_dir_falls_back_to_legacy_split_layout_for_g0(tmp_pa
     assert out == legacy_dir
 
 
-def test_resolve_graph_bench_dir_rejects_unknown_graph_on_legacy_layout(tmp_path, monkeypatch):
+def test_resolve_graph_bench_dir_uses_shared_legacy_train_layout_for_any_graph(tmp_path, monkeypatch):
     monkeypatch.setattr(graph_protocol, "BENCH_ROOT", tmp_path)
     legacy_dir = tmp_path / "train_augmented_retrievable_strict"
     legacy_dir.mkdir(parents=True)
     (legacy_dir / "bench_global.json").write_text(json.dumps({"questions": []}))
 
-    try:
-        graph_protocol.resolve_graph_bench_dir("G2", "train_augmented_retrievable_strict")
-    except FileNotFoundError as exc:
-        assert "graph_version=G2" in str(exc)
-    else:
-        raise AssertionError("Expected FileNotFoundError for missing graph-specific bench dir")
+    out = graph_protocol.resolve_graph_bench_dir("G2", "train_augmented_retrievable_strict")
+
+    assert out == legacy_dir

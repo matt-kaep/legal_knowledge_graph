@@ -100,3 +100,21 @@ def test_lightgcn_projection_records_extended_labels_excluded_from_training(tmp_
             "excluded_extended_article_ids": ["article:missing"],
         }
     ]
+
+
+def test_ranking_validation_rejects_a_candidate_outside_the_official_universe():
+    with pytest.raises(ValueError, match="outside the official retrieval candidate universe"):
+        benchmark_labels.require_ranked_ids_within_candidate_universe(
+            ["art-1", "art-outside"],
+            candidate_ids=["art-1", "art-2"],
+            context="test ranking",
+        )
+
+
+def test_ranking_validation_rejects_duplicate_candidate_after_first_occurrence():
+    with pytest.raises(ValueError, match="duplicate candidate"):
+        benchmark_labels.require_ranked_ids_within_candidate_universe(
+            ["jp-1", "jp-1"],
+            candidate_ids=["jp-1", "jp-2"],
+            context="test ranking",
+        )

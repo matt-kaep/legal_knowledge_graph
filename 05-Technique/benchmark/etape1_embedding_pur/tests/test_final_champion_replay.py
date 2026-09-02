@@ -117,20 +117,38 @@ def test_target_specific_replay_epochs_are_not_deduplicated():
     assert {row["replay_epochs"] for row in unique} == {7, 11}
 
 
-def test_direct_grouped_replay_revalidates_campaign_inputs():
+def test_direct_grouped_replay_propagates_preflight_input_hash_failure(monkeypatch):
     manifest_path = Path(__file__).resolve().parents[1] / "configs" / "confirmatory_campaign_grouped_v2_repro_v1.json"
     campaign = json.loads(manifest_path.read_text())
     campaign["datasets"]["internal_eval"]["sha256"] = "0" * 64
+    message = "sha256 mismatch: internal_eval"
+
+    def fail_preflight(_campaign, *, verify_hashes):
+        assert verify_hashes is True
+        raise ValueError(message)
+
+    monkeypatch.setattr(final_replay.confirmatory_runner, "preflight", fail_preflight)
 
     with pytest.raises(ValueError, match="sha256 mismatch"):
         final_replay.validate_campaign_provenance(campaign)
 
 
-def test_direct_grouped_replay_honors_resource_gate():
+def test_direct_grouped_replay_honors_resource_gate_without_local_corpus(monkeypatch):
     manifest_path = Path(__file__).resolve().parents[1] / "configs" / "confirmatory_campaign_grouped_v2_repro_v1.json"
     campaign = json.loads(manifest_path.read_text())
     campaign["code_bundle"]["final_replay"]["sha256"] = hashlib.sha256(SCRIPT.read_bytes()).hexdigest()
     campaign["resources"]["ram_minimum_gb_per_graph_job"] = None
+    monkeypatch.setattr(
+        final_replay.confirmatory_runner,
+        "preflight",
+        lambda _campaign, *, verify_hashes: {
+            "scientific_inputs_ok": True,
+            "resource_assessment": {
+                "compatible": False,
+                "insufficient": ["ram_minimum_unmeasured"],
+            },
+        },
+    )
 
     with pytest.raises(RuntimeError, match="ram_minimum_unmeasured"):
         final_replay.validate_campaign_provenance(campaign)

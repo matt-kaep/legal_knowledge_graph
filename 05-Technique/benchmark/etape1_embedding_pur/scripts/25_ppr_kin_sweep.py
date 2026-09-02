@@ -485,6 +485,16 @@ def main(
 
             ranked_art = top_k_labels(R_art_pool[:, col], art_pool_pks, top_k_out)
             ranked_jp = top_k_labels(R_jp_pool[:, col], jp_pool_ids, top_k_out)
+            benchmark_labels.require_ranked_ids_within_candidate_universe(
+                ranked_art,
+                candidate_ids=art_order,
+                context=f"PPR ranking method={method_name} modality=art qid={q['id']}",
+            )
+            benchmark_labels.require_ranked_ids_within_candidate_universe(
+                ranked_jp,
+                candidate_ids=jp_order,
+                context=f"PPR ranking method={method_name} modality=jp qid={q['id']}",
+            )
             if dump_rankings:
                 rankings.extend(
                     ranking_rows(q["id"], method_name, k_in, "art", ranked_art, top_k_out)

@@ -102,6 +102,16 @@ def test_load_retrieval_view_filters_embeddings_to_variant_ids(monkeypatch):
         raise AssertionError(path)
 
     monkeypatch.setattr(graph_versions.np, "load", fake_np_load)
+    monkeypatch.setattr(
+        graph_versions,
+        "load_effective_retrieval_candidate_universe",
+        lambda: graph_versions.EffectiveRetrievalCandidateUniverse(
+            article_ids=np.array(["a1", "a3"], dtype=str),
+            article_embeddings=art_emb[[0, 2]],
+            jp_ids=np.array(["j2", "j4"], dtype=str),
+            jp_embeddings=jp_emb[[1, 3]],
+        ),
+    )
     graph_versions.load_retrieval_view.cache_clear()
 
     view = graph_versions.load_retrieval_view("G1")

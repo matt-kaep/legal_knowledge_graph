@@ -52,21 +52,12 @@ def test_manifest_freezes_protocol_metrics_and_grids():
     assert payload["lightgcn"]["robustness"]["seed"] == [42, 43, 44]
 
 
-def test_preflight_verifies_real_manifest_inputs_and_hashes():
+def test_historical_manifest_detects_code_hash_drift_without_rewriting_it():
     runner = _load_runner()
     payload = runner.load_manifest(MANIFEST)
 
-    report = runner.preflight(payload, verify_hashes=True)
-
-    assert report["scientific_inputs_ok"] is True
-    assert report["n_graphs"] == 11
-    assert report["n_train_questions"] == 5603
-    assert report["n_eval_questions"] == 754
-    assert report["n_folds"] == 5
-    assert report["immutable_inputs_verified"] == len(payload["immutable_inputs"])
-    assert report["code_files_verified"] == len(payload["code_bundle"])
-    assert report["graph_input_copies_verified"] == 84
-    assert report["runtime_verified"] is True
+    with pytest.raises(ValueError, match="code bundle ppr_engine"):
+        runner.preflight(payload, verify_hashes=True)
 
 
 def test_resource_assessment_blocks_when_minimum_ram_is_unmeasured():
@@ -527,6 +518,7 @@ def test_freeze_dry_run_never_calls_writer(tmp_path, monkeypatch):
         "sources": [],
     }))
     monkeypatch.setattr(runner, "campaign_shortlist_path", lambda _payload: shortlist_path)
+    monkeypatch.setattr(runner, "preflight", lambda *_args, **_kwargs: {"ok": True})
     monkeypatch.setattr(
         runner,
         "freeze_lightgcn_champions",

@@ -11,6 +11,11 @@ import scipy.sparse as sp
 
 from . import config
 from .normalize import legi_num_candidates, parse_pair_key
+from .retrieval_candidate_universe import (
+    EffectiveRetrievalCandidateUniverse,
+    load_effective_retrieval_candidate_universe,
+    require_graph_covers_effective_retrieval_universe,
+)
 
 
 G3_REMOVE_PAIR_KEYS = {
@@ -322,23 +327,19 @@ def load_graph_variant(graph_version: str) -> GraphVariant:
 @lru_cache(maxsize=None)
 def load_retrieval_view(graph_version: str) -> RetrievalView:
     variant = load_graph_variant(graph_version)
-    art_emb_full = np.load(config.EMB_ARTICLES_ALL).astype(np.float32)
-    art_order_full = np.load(config.ARTICLES_ORDER_ALL, allow_pickle=True).astype(str)
-    jp_emb_full = np.load(config.EMB_JP_SYNTHESE).astype(np.float32)
-    jp_order_full = np.load(config.JP_SUMMARY_ORDER, allow_pickle=True).astype(str)
+    universe: EffectiveRetrievalCandidateUniverse = load_effective_retrieval_candidate_universe()
+    require_graph_covers_effective_retrieval_universe(
+        graph_version=variant.graph_version,
+        graph_article_ids=variant.article_ids,
+        graph_jp_ids=variant.jp_ids,
+        universe=universe,
+    )
 
     art_index = variant.article_index_by_key
     jp_index = variant.jp_index_by_id
-
-    art_keep = np.array([pk in art_index for pk in art_order_full.tolist()], dtype=bool)
-    jp_keep = np.array([jid in jp_index for jid in jp_order_full.tolist()], dtype=bool)
-
-    art_order = art_order_full[art_keep]
-    art_emb = art_emb_full[art_keep]
+    art_order = universe.article_ids
     p2col = np.asarray([art_index[str(pk)] for pk in art_order.tolist()], dtype=np.int64)
-
-    jp_order = jp_order_full[jp_keep]
-    jp_emb = jp_emb_full[jp_keep]
+    jp_order = universe.jp_ids
     jp_to_row = np.asarray([jp_index[str(jid)] for jid in jp_order.tolist()], dtype=np.int64)
 
     return RetrievalView(
@@ -347,10 +348,10 @@ def load_retrieval_view(graph_version: str) -> RetrievalView:
         jp_ids_graph=variant.jp_ids,
         article_ids_graph=variant.article_ids,
         article_codes_graph=variant.article_codes,
-        art_emb=art_emb,
+        art_emb=universe.article_embeddings,
         art_order=art_order,
         p2col=p2col,
-        jp_emb=jp_emb,
+        jp_emb=universe.jp_embeddings,
         jp_order=jp_order,
         jp_to_row=jp_to_row,
     )
