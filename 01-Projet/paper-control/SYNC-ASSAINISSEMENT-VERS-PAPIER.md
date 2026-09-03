@@ -342,3 +342,13 @@ Utilisez la branche `paper/ecir-2027-reproducibility-clean` (PR brouillon : http
 4. **À ne pas utiliser pour soutenir une conclusion.** `internal_eval_jp_llm_as_a_judge.csv` est une métrique d'évaluation séparée, non le reranker ; elle reste exploratoire tant que l'audit avocat n'a pas produit `lawyer_agreement.json`. Ne pas l'employer pour une revendication de supériorité.
 
 Règles de rédaction : ne pas publier les identifiants internes d'expérience ; ne pas appeler `exact_any_gold_at_10` le Hit@10 officiel ; ne pas présenter une comparaison G6/G7 comme une ablation causale. Pour chaque chiffre, reprendre la valeur exacte depuis le CSV et conserver séparés Articles, Jurisprudence, métriques exactes et métrique par juge automatique.
+
+### 2026-09-03 — PPR B1-r1 final : résultats exacts désormais disponibles
+
+Le replay PPR B1-r1 a terminé sur Télécom (`978600`, `0:0`, 4 min 55 s) après le gel train/CV des champions. Il est indépendant des sorties historiques E017/E021/E022. La preuve racine est `.../_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_final_exact_metrics_v1/depth_curves_manifest.json`, SHA-256 `851b9f771a45cf1c633900dd84a8922cfd0ea67d99e5142180827a89cb65732d`. Elle relie le manifeste B1-r1, A3, le script de dérivation et le ranking top-100 source (SHA-256 `8f15c4d3e1ba465af7030e24f0e78772cae776fe8f12f5020f578d600964a938`). Les 754 questions de chaque tâche ont 100 positions, sans doublon ni candidat hors des univers A3 de 13 236 Articles et 114 851 décisions.
+
+- Articles, champion PPR `G6-citation-AA-knn5` avec configuration gelée `k_in=50`, graines `both`, `alpha=0,5` : Hit/Recall@10 `0,5768809734326976`, NDCG@10 `0,39573594882260704`, MRR@10 `0,3735463769946528`.
+- Jurisprudence, champion PPR `G7-citation-AA-cit1-sem025-knn5` avec la même configuration : Hit@10 officiel `0,23065870910698497`, NDCG@10 `0,142981907459661`, MRR@10 `0,11715506715506716`. Ne pas substituer à ce Hit@10 l'indicateur binaire `exact_any_gold_at_10`.
+- Les valeurs et le hash sont dans `REGISTRE-RESULTATS.csv` (lignes `R-E024-B1R1-PPR-*`). Les courbes PPR K=1–100 existent également en CSV (SHA-256 `a52373c8f1c027244f4369149f2bbcb50f57f2635c5d988ecb70bf550f0f5258`). La figure comparative doit attendre LightGCN B1-r2, qui n'est pas encore calculé.
+
+Formulation utilisable : « Après sélection des configurations exclusivement sur les cinq folds d'entraînement, nous avons gelé un champion PPR distinct par tâche et l'avons rejoué sur les 754 questions d'évaluation. » Ne pas présenter les valeurs train/CV de sélection comme résultats d'évaluation, ne pas mélanger les expériences historiques et ne pas annoncer de comparaison PPR–LightGCN avant le run LightGCN B1-r2.
