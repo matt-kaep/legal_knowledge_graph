@@ -14,7 +14,7 @@ set -euo pipefail
 
 ROOT="$LKG_REPO/05-Technique/benchmark/etape1_embedding_pur"
 PARENT_MANIFEST="$ROOT/configs/confirmatory_campaign_b1_a3_r1.json"
-DISPATCH_MANIFEST="$ROOT/configs/b1_a3_r1_ppr_replay_dispatch.json"
+DISPATCH_MANIFEST="${LKG_B1_PPR_REPLAY_DISPATCH:-$ROOT/configs/b1_a3_r1_ppr_replay_dispatch.json}"
 FINAL_ROOT="$LKG_DATA_ROOT/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_final"
 
 if [[ -d "$FINAL_ROOT" ]] && find "$FINAL_ROOT" -mindepth 1 -print -quit | grep -q .; then

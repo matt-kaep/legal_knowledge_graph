@@ -52,3 +52,4 @@ def test_ppr_replay_wrapper_runs_only_the_frozen_parent_campaign():
     assert "confirmatory_campaign_b1_a3_r1.json" in script
     assert "--family ppr" in script
     assert "96_replay_b1_a3_champions.py" in script
+    assert "LKG_B1_PPR_REPLAY_DISPATCH" in script
