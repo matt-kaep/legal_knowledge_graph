@@ -8,6 +8,13 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission prioritaire — B1-r2 LightGCN préparée, aucun nouveau score
+
+- E025 est prête à être exécutée, mais **aucun résultat LightGCN B1-r2 n’existe encore** : aucun champion de validation croisée, aucun replay final, aucun classement des 754 questions et aucune comparaison PPR--LightGCN à reprendre dans le papier.
+- La preuve de préparation est `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r2.json`, SHA-256 `9427430f436ca5fc1e2d2bdc9858880c7ed45daaaf48d6b88ca170df614e440c`. Il hérite de B1-r1 par hash et conserve A3 : 5 578 questions train/CV, 754 questions d’évaluation, 13 236 candidats Articles, 114 851 candidats JP, onze graphes et cinq folds groupés.
+- La seule modification opérationnelle est l’exécution : 1 320 tâches CUDA atomiques, une par combinaison graphe/fold/configuration/cible, avec reçu hashé. L’agrégateur refuse toute sélection de champion si la couverture n’est pas totale. Le préflight technique local a vérifié 52 entrées immuables ; il n’a calculé aucune métrique de modèle. La sonde GPU et la campagne attendent la résolution de la route SSH Télécom dans la session scientifique.
+- Les résultats exacts B1-r1 cosine et PPR restent inchangés et transmissibles selon les sections ci-dessous. Ne pas utiliser E017, E021, E022, les quatre historiques LightGCN B1-r1, ni la préparation B1-r2 comme résultats.
+
 ## Transmission prioritaire — CV PPR B1-r1 terminée et gelée ; replay final en attente
 
 - La soumission B1 initiale reste archivée par `05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3.json`, SHA-256 `f1107b126e11b0457dc28a4fbe3db621b1c061a932e2acda1eb1368bac0be649`. PPR (`977101`) et LightGCN (`977102`) ont échoué avant toute sélection CV car les lanceurs cherchaient le chemin de folds historique au lieu du split A3 ; les tâches LightGCN restantes ont été annulées. Cosine (`977100`) a terminé comme sortie technique isolée. Ne pas utiliser ces sorties initiales dans le papier.

@@ -49,7 +49,7 @@ DEFAULT_EVAL = DEFAULT_BASE / "eval_rich_retrievable_strict"
 K_OUT = 10
 N_LAYERS_TO_EVAL = (1, 2, 3)
 TAU = 0.1
-DEVICE = "cpu"
+DEFAULT_DEVICE = "cpu"
 NEGATIVE_RANDOM = "random"
 HARD_NEGATIVE_PREFIX = "hard_negative_cosine_top"
 SEMI_HARD_NEGATIVE_PREFIX = "semi_hard_cosine_rank"
@@ -62,6 +62,19 @@ def rowcol_top_k(scores: np.ndarray, labels: np.ndarray, k: int) -> list:
         cand = np.argpartition(-scores, k - 1)[:k]
         order = cand[np.argsort(-scores[cand])]
     return list(labels[order])
+
+
+def resolve_device(requested: str) -> torch.device:
+    """Resolve an explicit runtime device without silently downgrading CUDA."""
+    if requested == "cpu":
+        return torch.device("cpu")
+    if requested == "cuda":
+        if not torch.cuda.is_available():
+            raise RuntimeError("CUDA was requested but is not available on this worker")
+        return torch.device("cuda")
+    if requested == "auto":
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    raise ValueError(f"Unsupported device request: {requested!r}")
 
 
 def ranking_rows(qid, method, k_in, modality, ranked, k, negative_sampling_strategy):
@@ -373,6 +386,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit-eval", type=int)
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument(
+        "--device",
+        choices=("cpu", "cuda", "auto"),
+        default=DEFAULT_DEVICE,
+        help="CPU preserves historical runs; B1-r2 requires cuda and rejects a silent fallback.",
+    )
+    parser.add_argument(
         "--checkpoint-selection",
         choices=("validation_best", "fixed_final_epoch"),
         default="validation_best",
@@ -452,6 +471,7 @@ def main(argv: list[str] | None = None) -> int:
     negative_strategy_kind, negative_strategy_param = parse_negative_sampling_strategy(
         args.negative_sampling_strategy
     )
+    device = resolve_device(args.device)
 
     t0 = time.time()
     torch.manual_seed(args.seed)
@@ -482,8 +502,11 @@ def main(argv: list[str] | None = None) -> int:
             f"Unsupported graph shape for LightGCN: graph={G.shape}, "
             f"n_jp={n_jp}, n_art={n_art}"
         )
-    adj = sparse_scipy_to_torch(normalize_adjacency(G_full, args.adj_normalization)).to(DEVICE)
-    print(f"  adj {args.adj_normalization} ready  (t={time.time()-t0:.1f}s)")
+    adj = sparse_scipy_to_torch(normalize_adjacency(G_full, args.adj_normalization)).to(device)
+    print(
+        f"  adj {args.adj_normalization} ready on {device}  "
+        f"(t={time.time()-t0:.1f}s)"
+    )
 
     artid_to_graphcol = {aid: i for i, aid in enumerate(article_ids_graph)}
     jpid_to_graphrow = {jid: i for i, jid in enumerate(jp_ids_graph)}
@@ -576,15 +599,15 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  train positives {len(train_pos):,} over {len(train_q_rows):,} questions")
 
     pos_q_np = np.asarray([p[0] for p in train_pos], dtype=np.int64)
-    q_train_t = torch.tensor(np.asarray(train_q_rows), dtype=torch.float32, device=DEVICE)
-    pos_q = torch.tensor(pos_q_np, dtype=torch.long, device=DEVICE)
-    pos_item = torch.tensor([p[1] for p in train_pos], dtype=torch.long, device=DEVICE)
-    q_eval_t = torch.tensor(q_eval_np, dtype=torch.float32, device=DEVICE)
-    e0_t = torch.tensor(e0, dtype=torch.float32, device=DEVICE)
-    e0_zero_t = torch.tensor(e0_zero, dtype=torch.float32, device=DEVICE)
-    art_pool_idx_t = torch.tensor(art_pool_graph_idx, dtype=torch.long, device=DEVICE)
-    jp_pool_idx_t = torch.tensor(jp_pool_graph_idx, dtype=torch.long, device=DEVICE)
-    anchor_idx = torch.tensor(np.where(has_init)[0], dtype=torch.long, device=DEVICE)
+    q_train_t = torch.tensor(np.asarray(train_q_rows), dtype=torch.float32, device=device)
+    pos_q = torch.tensor(pos_q_np, dtype=torch.long, device=device)
+    pos_item = torch.tensor([p[1] for p in train_pos], dtype=torch.long, device=device)
+    q_eval_t = torch.tensor(q_eval_np, dtype=torch.float32, device=device)
+    e0_t = torch.tensor(e0, dtype=torch.float32, device=device)
+    e0_zero_t = torch.tensor(e0_zero, dtype=torch.float32, device=device)
+    art_pool_idx_t = torch.tensor(art_pool_graph_idx, dtype=torch.long, device=device)
+    jp_pool_idx_t = torch.tensor(jp_pool_graph_idx, dtype=torch.long, device=device)
+    anchor_idx = torch.tensor(np.where(has_init)[0], dtype=torch.long, device=device)
     hard_negative_pools: dict[int, np.ndarray] | None = None
     hard_pool_stats = {
         "hard_negative_pool_mean": float("nan"),
@@ -701,7 +724,7 @@ def main(argv: list[str] | None = None) -> int:
     history_rows: list[dict] = []
 
     def train_model(n_layers: int) -> torch.Tensor:
-        model = LightGCN(e0_t, n_layers).to(DEVICE)
+        model = LightGCN(e0_t, n_layers).to(device)
         opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.0)
         n_pos = pos_q.shape[0]
         e0_ref = e0_t[anchor_idx].detach().clone()
@@ -717,7 +740,7 @@ def main(argv: list[str] | None = None) -> int:
                 rng,
                 hard_negative_pools=hard_negative_pools,
             )
-            neg_item = torch.tensor(neg_item_np, dtype=torch.long, device=DEVICE)
+            neg_item = torch.tensor(neg_item_np, dtype=torch.long, device=device)
             bpr = bpr_loss(q_train_t[pos_q], item_final, pos_item, neg_item)
             anchor = ((model.emb[anchor_idx] - e0_ref) ** 2).sum(1).mean()
             loss = bpr + args.lambda_anchor * anchor
@@ -808,7 +831,7 @@ def main(argv: list[str] | None = None) -> int:
 
         print("══ Eval untrained propagation ─────────────────────────────")
         for k in N_LAYERS_TO_EVAL:
-            model = LightGCN(e0_zero_t, k).to(DEVICE)
+            model = LightGCN(e0_zero_t, k).to(device)
             with torch.no_grad():
                 final = model.propagate(adj)
             rows, rk = evaluate(final, f"untrained_K{k}")
@@ -863,6 +886,15 @@ def main(argv: list[str] | None = None) -> int:
                 "lightgcn_article_positive_projection_counts": train_projection["counts"],
                 "article_candidate_sequence_sha256": train_projection["article_candidate_sequence_sha256"],
                 "strict_candidate_coverage_verified": True,
+                "requested_device": args.device,
+                "resolved_device": str(device),
+                "torch_version": torch.__version__,
+                "cuda_available": bool(torch.cuda.is_available()),
+                "cuda_device_name": (
+                    torch.cuda.get_device_name(device)
+                    if device.type == "cuda"
+                    else None
+                ),
             },
             ensure_ascii=False,
             indent=2,

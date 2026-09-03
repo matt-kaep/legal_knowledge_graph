@@ -69,6 +69,104 @@ def selection_metric_for_target(target: str) -> str:
     raise ValueError(f"Unsupported LightGCN selection target: {target}")
 
 
+def _atomic_task_component(value: object) -> str:
+    return format(value, "g").replace("-", "m").replace(".", "p") if isinstance(value, float) else str(value)
+
+
+def build_atomic_task_specs(
+    *,
+    graph_versions: list[str],
+    folds: list[int],
+    train_ks: list[int],
+    seeds: list[int],
+    lrs: list[float],
+    epochs_list: list[int],
+    lambda_anchors: list[float],
+    negative_sampling_strategies: list[str],
+    selection_targets: list[str],
+) -> list[dict]:
+    """Expand the sealed CV grid into one write-isolated training task each."""
+    tasks: list[dict] = []
+    for graph_version, fold, selection_target, config in itertools.product(
+        graph_versions,
+        folds,
+        selection_targets,
+        itertools.product(
+            train_ks,
+            seeds,
+            lrs,
+            epochs_list,
+            lambda_anchors,
+            negative_sampling_strategies,
+        ),
+    ):
+        train_k, seed, lr, epochs, lambda_anchor, negative_sampling_strategy = config
+        task = {
+            "graph_version": graph_version,
+            "fold": int(fold),
+            "train_k": int(train_k),
+            "seed": int(seed),
+            "lr": float(lr),
+            "epochs": int(epochs),
+            "lambda_anchor": float(lambda_anchor),
+            "negative_sampling_strategy": str(negative_sampling_strategy),
+            "selection_target": str(selection_target),
+        }
+        task["task_id"] = "__".join(
+            [
+                str(graph_version),
+                f"f{fold}",
+                str(selection_target),
+                f"k{train_k}",
+                f"s{seed}",
+                f"lr{_atomic_task_component(float(lr))}",
+                f"e{epochs}",
+                f"la{_atomic_task_component(float(lambda_anchor))}",
+                f"neg{negative_sampling_strategy}",
+            ]
+        )
+        tasks.append(task)
+    task_ids = [str(task["task_id"]) for task in tasks]
+    if len(task_ids) != len(set(task_ids)):
+        raise ValueError("atomic LightGCN CV grid produced duplicate task IDs")
+    return tasks
+
+
+def validate_atomic_task_receipts(
+    expected_tasks: list[dict], receipts: list[dict]
+) -> None:
+    """Require exactly one successful receipt for every sealed atomic CV task."""
+    expected_ids = [str(task["task_id"]) for task in expected_tasks]
+    expected = set(expected_ids)
+    receipt_ids = [str(receipt.get("task_id", "")) for receipt in receipts]
+    duplicate_receipts = sorted(
+        task_id for task_id in set(receipt_ids) if receipt_ids.count(task_id) > 1
+    )
+    if duplicate_receipts:
+        raise ValueError(
+            "duplicate atomic LightGCN CV receipts: " + ", ".join(duplicate_receipts)
+        )
+    unknown = sorted(set(receipt_ids) - expected)
+    if unknown:
+        raise ValueError(
+            "unexpected atomic LightGCN CV receipts: " + ", ".join(unknown)
+        )
+    incomplete = sorted(expected - set(receipt_ids))
+    if incomplete:
+        raise ValueError(
+            "incomplete atomic LightGCN CV tasks: missing=" + ", ".join(incomplete)
+        )
+    failed = sorted(
+        str(receipt["task_id"])
+        for receipt in receipts
+        if receipt.get("status") != "complete"
+    )
+    if failed:
+        raise ValueError(
+            "atomic LightGCN CV tasks are not complete: " + ", ".join(failed)
+        )
+
+
 def attach_replay_epochs(
     champions: dict[str, dict], history_df: pd.DataFrame
 ) -> dict[str, dict]:
@@ -207,6 +305,7 @@ def run_lightgcn_config(
     selection_target: str,
     include_baselines: bool,
     train_variant: bool,
+    device: str = lightgcn.DEFAULT_DEVICE,
 ) -> tuple[pd.DataFrame, pd.DataFrame | None]:
     suffix = (
         f"fold{fold}_{selection_target}_k{train_k}_s{seed}_lr{lr:g}_e{epochs}_la{lambda_anchor:g}_neg{negative_sampling_strategy}"
@@ -233,6 +332,8 @@ def run_lightgcn_config(
         negative_sampling_strategy,
         "--selection-metric",
         selection_metric_for_target(selection_target),
+        "--device",
+        device,
         "--output-suffix",
         suffix,
     ]

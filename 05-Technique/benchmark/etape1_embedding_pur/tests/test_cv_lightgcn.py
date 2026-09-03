@@ -45,6 +45,47 @@ def test_validate_fold_assignments_rejects_missing_and_extra_qids():
         cv_lightgcn.validate_fold_assignments(folds, {"q1", "q2"})
 
 
+def test_build_atomic_task_specs_covers_each_fold_configuration_and_target_once():
+    tasks = cv_lightgcn.build_atomic_task_specs(
+        graph_versions=["G1", "G2"],
+        folds=[0, 1],
+        train_ks=[1, 2],
+        seeds=[42],
+        lrs=[5e-4, 1e-3],
+        epochs_list=[30],
+        lambda_anchors=[0.5],
+        negative_sampling_strategies=["random"],
+        selection_targets=["art", "jp"],
+    )
+
+    assert len(tasks) == 32
+    assert len({task["task_id"] for task in tasks}) == 32
+    assert tasks[0] == {
+        "task_id": "G1__f0__art__k1__s42__lr0p0005__e30__la0p5__negrandom",
+        "graph_version": "G1",
+        "fold": 0,
+        "train_k": 1,
+        "seed": 42,
+        "lr": 5e-4,
+        "epochs": 30,
+        "lambda_anchor": 0.5,
+        "negative_sampling_strategy": "random",
+        "selection_target": "art",
+    }
+    assert tasks[-1]["task_id"] == "G2__f1__jp__k2__s42__lr0p001__e30__la0p5__negrandom"
+
+
+def test_validate_atomic_task_receipts_rejects_missing_fold_configuration():
+    expected_tasks = [
+        {"task_id": "G1__f0__art__k1__s42__lr0p001__e30__la1__negrandom"},
+        {"task_id": "G1__f1__art__k1__s42__lr0p001__e30__la1__negrandom"},
+    ]
+    receipts = [{"task_id": expected_tasks[0]["task_id"], "status": "complete"}]
+
+    with pytest.raises(ValueError, match="incomplete atomic LightGCN CV tasks.*f1"):
+        cv_lightgcn.validate_atomic_task_receipts(expected_tasks, receipts)
+
+
 def test_lightgcn_passes_the_a3_split_to_the_grouped_fold_loader(monkeypatch):
     captured = {}
 

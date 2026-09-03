@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
@@ -82,6 +83,13 @@ def test_replay_epoch_tie_prefers_earlier_epoch():
 def test_selection_metric_is_target_specific():
     assert cv_lightgcn.selection_metric_for_target("art") == "val_recall"
     assert cv_lightgcn.selection_metric_for_target("jp") == "val_hit_jp"
+
+
+def test_resolve_device_rejects_requested_cuda_without_cuda(monkeypatch):
+    monkeypatch.setattr(lightgcn.torch.cuda, "is_available", lambda: False)
+
+    with pytest.raises(RuntimeError, match="CUDA was requested"):
+        lightgcn.resolve_device("cuda")
 
 
 def test_attach_replay_epochs_uses_only_matching_champion_history():

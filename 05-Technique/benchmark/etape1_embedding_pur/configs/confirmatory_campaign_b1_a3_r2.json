@@ -1,0 +1,88 @@
+{
+  "manifest_id": "confirmatory-campaign-b1-a3-effective-retrieval-r2-cuda-atomic-2026-09-03",
+  "campaign_id": "b1-a3-effective-retrieval-r2-cuda-atomic-2026-09-03",
+  "schema_version": "b1-a3-r2-cuda-atomic.v1",
+  "status": "authorized_gpu_probe_then_resumable_cv",
+  "purpose": "Execute only E025 LightGCN CV from B1-r1 on the immutable A3 inputs, with explicit CUDA execution and write-isolated resumable tasks.",
+  "parent_campaign": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r1.json",
+    "sha256": "1b612a182742244dad59006e6d01b826a0285f01123aeeae67321b48c9de5e9a",
+    "immutable": true
+  },
+  "execution": {
+    "lightgcn": {
+      "device": "cuda",
+      "fallback": "forbidden",
+      "task_unit": "graph_version × validation_fold × hyperparameter_configuration × selection_target",
+      "task_count": 1320,
+      "task_plan_schema": "b1-a3-r2-lightgcn-atomic-task-plan.v1",
+      "task_receipt_schema": "b1-a3-r2-lightgcn-atomic-task-receipt.v1",
+      "aggregation_rule": "refuse_missing_duplicate_failed_or_hash_mismatched_task_before_cv_summary_or_champion_selection",
+      "probe_task_index": 0,
+      "probe_scope": "one complete 30-epoch task from the sealed grid; technical throughput and CUDA verification only",
+      "selection_scope": "train_cv_only",
+      "evaluation_access": "forbidden_during_cv"
+    }
+  },
+  "resources": {
+    "lightgcn": {
+      "partition": "A40",
+      "gpu": 1,
+      "cpus": 5,
+      "memory_gb": 20,
+      "array_parallelism": 32,
+      "minimum_available_memory_gib": 9.1,
+      "time_limit": "08:00:00"
+    }
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903",
+    "cosine": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/cosine",
+    "ppr_cv": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/ppr_cv",
+    "lightgcn_cv": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_cv",
+    "ppr_final": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/ppr_final",
+    "lightgcn_final": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_final",
+    "depth_curves": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/depth_curves",
+    "graph_characterization": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/graph_characterization",
+    "lightgcn_task_plan": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_cv/task_plan.json",
+    "lightgcn_preflight": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_cv/preflight.json",
+    "lightgcn_task_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_cv/tasks"
+  },
+  "code_bundle": {
+    "lightgcn": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/32_lightgcn_strict.py",
+      "sha256": "45c034f9b8a7b5e5ad6a972c590c0c88b686fb18c56e0634504399856512ec35"
+    },
+    "cv_lightgcn": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/44_run_cv_lightgcn.py",
+      "sha256": "54d8e6135e9c28e4df8df89205ff8a36e610064bf13791ce5bfe2717d028f92e"
+    },
+    "atomic_lightgcn_cv": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/97_run_b1_a3_r2_lightgcn_tasks.py",
+      "sha256": "182eaef82396b00bf0d43ca52366c3f3a121ca51917a01af510c356689a9b0d8"
+    },
+    "slurm_lightgcn": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b1_a3_r2_lightgcn_cv.sh",
+      "sha256": "47717cda29a04fd0ae6369c18b66e287bd302b0745ab2e72e143047e72d08d6c"
+    },
+    "slurm_lightgcn_gpu_probe": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b1_a3_r2_lightgcn_gpu_probe.sh",
+      "sha256": "c85ddc292d6aee10955d8507de88c638191cd897d95e4fefde5bb95036e9e594"
+    }
+  },
+  "excluded_prior_attempts": [
+    {
+      "campaign": "b1-a3-effective-retrieval-r1-2026-09-02",
+      "lightgcn_cv_job": "977185",
+      "status": "stopped_partial_cpu_execution",
+      "reason": "four partial histories only; no complete CV, no champion and no reportable metric"
+    }
+  ],
+  "not_authorized": [
+    "E024_recalculation",
+    "E026_recalculation",
+    "E027",
+    "E029",
+    "E030"
+  ]
+}
