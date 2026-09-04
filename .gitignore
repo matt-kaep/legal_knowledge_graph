@@ -34,6 +34,11 @@ wheels/
 venv/
 ENV/
 env/
+.repro-test-venv*/
+
+# Reproducibility audits are regenerated locally; only curated aggregate
+# exports in results/ are versioned.
+reproducibility-artifacts/
 
 # ═══════════════════════════════════════════════════════════════════════
 # Jupyter
@@ -46,6 +51,7 @@ env/
 # ═══════════════════════════════════════════════════════════════════════
 05-Technique/benchmark/results/
 05-Technique/benchmark/logs/
+05-Technique/benchmark/etape1_embedding_pur/data/
 *.pid
 *.log
 

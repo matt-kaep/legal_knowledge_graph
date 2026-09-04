@@ -1,0 +1,134 @@
+{
+  "manifest_id": "confirmatory-campaign-b1-a3-effective-retrieval-2026-09-02",
+  "schema_version": "confirmatory-b1-a3.v1",
+  "campaign_id": "b1-a3-effective-retrieval-2026-09-02",
+  "status": "frozen_authorized",
+  "purpose": "Run cosine, PPR and LightGCN under the A3 candidate, split and fold contract; preserve all historical experiments as excluded archives.",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "manifest_id": "checkpoint-a3-effective-retrieval-universe-2026-09-02",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3"
+  },
+  "protocol_version": "grouped_v5_no_eval_overlap_effective_retrieval_v3",
+  "datasets": {
+    "train": {
+      "split": "train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3",
+      "directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/bench_global.json",
+      "questions": 5578,
+      "sha256": "5ca7f54b944456cb318c028978c35430571b302785d2581348a35db81f8285f5"
+    },
+    "evaluation": {
+      "split": "eval_rich_retrievable_strict",
+      "directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+      "questions": 754,
+      "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+      "byte_for_byte_identical_to_a3": true
+    }
+  },
+  "folds": {
+    "count": 5,
+    "seed": 42,
+    "sha256": "cc872759b5cc2f93aceb54ac2ac5c5c396e236e7198982f720978e82b3920f59",
+    "metadata_sha256": "ace15f32d7c4d3cf0c592dbec1512a94aa9fcbfa20d0ef77bd5a8bbb5888690e"
+  },
+  "fold_inputs": {
+    "assignments": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v5_no_eval_overlap_effective_retrieval_v3/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/fold_assignments.csv",
+      "sha256": "cc872759b5cc2f93aceb54ac2ac5c5c396e236e7198982f720978e82b3920f59"
+    },
+    "metadata": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v5_no_eval_overlap_effective_retrieval_v3/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/fold_metadata.json",
+      "sha256": "ace15f32d7c4d3cf0c592dbec1512a94aa9fcbfa20d0ef77bd5a8bbb5888690e"
+    }
+  },
+  "candidate_universe": {
+    "articles": {
+      "count": 13236,
+      "order_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c"
+    },
+    "jurisprudence": {
+      "count": 114851,
+      "order_sha256": "065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a"
+    }
+  },
+  "candidate_inputs": {
+    "train_question_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/questions_ids.npy", "sha256": "5fcaa3dfc259b53d9186a6f4a7f4ad0dda4955fa357ed2456c4140e23e75d12b"},
+    "train_question_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/questions_emb.npy", "sha256": "d33f8734fee9cd23a464ef8933278e392c8304daad246897fdd5b6f6d8be1634"},
+    "train_stats": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/stats.json", "sha256": "f391d6d2f1f450256e89b7bc22294f5199a9084bf8bcdc9bf5fa13ef3654ccdb"},
+    "lightgcn_extended_projection": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/lightgcn_article_positive_projection.json", "sha256": "54fe65d633234be1854ad99d2ff016c79858f1f4d5cb141197da922cdaa0545a"},
+    "evaluation_question_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/questions_ids.npy", "sha256": "5c6e23ec283e955aa8a304765a8381688c2c4f28be0a50a9be40438cb2574753"},
+    "evaluation_question_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/questions_emb.npy", "sha256": "513f24dd1afe2d284d1a266982ecad68c1a461a94725c9bcd83e3784cbf7727c"},
+    "articles_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_order_all.npy", "sha256": "06f5551d6a38f8f7887d760461b7f7460b2e738e062a8bed4b9c598b34c0fbb0"},
+    "articles_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_articles_all.npy", "sha256": "9d10884944d7184aeeb95d64dfec79bc97044c3364c6e40ee60e940f61c1c944"},
+    "jurisprudence_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summary_order.npy", "sha256": "985e83bfbee610117fcf8873b8a58eb61ffd1e35bf1423f95985a375a3012c5b"},
+    "jurisprudence_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_jp_synthese.npy", "sha256": "1f7eb3f6723c956d745dbdfc851730eba8af37a3dfea06c8354d191f433eead9"},
+    "shared_jp_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy", "sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f"},
+    "shared_article_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy", "sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a"},
+    "shared_article_codes": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_codes.npy", "sha256": "277296b7f16858594672db01ce78ff5e7a9aa0be6451c90651d8bd4c1254e6d7"},
+    "shared_node_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/node_ids.npy", "sha256": "7b8ff47d50ad7a154a062049cbb0c447f7d68136c449a2515f2b081105e7cbc2"}
+  },
+  "graphs": ["G1", "G6-citation-AA-knn5", "G6-citation-JJ-knn5", "G7-citation-AA-cit1-sem025-knn5", "G7-citation-AA-cit1-sem050-knn5", "G7-citation-AA-cit1-sem100-knn5", "G7-citation-AA-cit025-sem1-knn5", "G7-citation-JJ-cit1-sem025-knn5", "G7-citation-JJ-cit1-sem050-knn5", "G7-citation-JJ-cit1-sem100-knn5", "G7-citation-JJ-cit025-sem1-knn5"],
+  "graph_inputs": {
+    "g1_graph": {"path": "05-Technique/benchmark/baseline_b2/penal_bundle/graph_penal.npz", "sha256": "4f371b94181a3f2792e8ec8d971b6eaa23f5f448dd7bb04f58dd34d4942c2a4c"},
+    "g1_legi_sqlite": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/legi/legi.sqlite", "sha256": "f78a1dd850a65477d88a59406dafc6da29cb52d624911fc0fdca56dbf40e91fd"},
+    "g6_aa": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/graph_hybrid_mixed.npz", "sha256": "d5acb4dd93b33e9d8f50fb2a7ef72d4e17d688f1b7177fe41c1c665f4858c81c"},
+    "g6_jj": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-JJ-knn5/graph_hybrid_mixed.npz", "sha256": "402ef5f9d36ff534437cc4a1db47009359237b03bf50617eff6727491d88fd72"},
+    "g7_aa_025": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem025-knn5/graph_hybrid_mixed.npz", "sha256": "442f68064cee51ec3495a6bac8d193a9f4cb613fbb4064ed83adb0e81a01ce79"},
+    "g7_aa_050": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem050-knn5/graph_hybrid_mixed.npz", "sha256": "a209ca4fe38f0808058419cee1f31f40f65a7c3cd906fe9a77444d7c589677ab"},
+    "g7_aa_100": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem100-knn5/graph_hybrid_mixed.npz", "sha256": "55cce8f19215a0e30decb283550ac3fa58236169cb7281749c26d80f5a5e1f9d"},
+    "g7_aa_025_100": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit025-sem1-knn5/graph_hybrid_mixed.npz", "sha256": "87d192000e5bfc5594442bafd840c8ddce3671d3bdc2f9c302aa0d6602f3f07f"},
+    "g7_jj_025": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem025-knn5/graph_hybrid_mixed.npz", "sha256": "4d777bb404f05d52dc8c5c4005ebf6948a7e829fee830b2b601aa2e40ba3ddee"},
+    "g7_jj_050": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem050-knn5/graph_hybrid_mixed.npz", "sha256": "e633dc4be9896d5e1d198d82fe3a405fb1f9a4ad44d231e7e2ba962886447a12"},
+    "g7_jj_100": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem100-knn5/graph_hybrid_mixed.npz", "sha256": "34249e1f92697a0e7be4b2885b72a6ad583aef1450482acf158ecd841dc74f85"},
+    "g7_jj_025_100": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit025-sem1-knn5/graph_hybrid_mixed.npz", "sha256": "5b1098e69d1bf9f4f3c4e38dc3f2f291f1f0324a43c6f98a5efb2027f85e3c6e"}
+  },
+  "parameters": {
+    "cosine": {"top_k_out": 100, "tasks": ["articles", "jurisprudence"]},
+    "ppr": {"k_in": [5, 10, 20, 50], "seed_variant": ["art_only", "jp_only", "both"], "alpha": [0.5, 0.7, 0.85, 0.95], "top_k_out": 100},
+    "lightgcn": {"cv_seeds": [42], "final_seeds": [42, 43, 44], "train_k": [1, 2, 3], "learning_rate": [0.0005, 0.001], "lambda_anchor": [0.5, 1.0], "epochs": 30, "negative_sampling_strategy": ["random"], "top_k_out": 100}
+  },
+  "metrics": {
+    "primary": "normalized_hit_at_k",
+    "formula": "dedup_intersection_over_min_gold_k",
+    "article_hit_equals_recall_at_10": true,
+    "secondary": ["ndcg_at_10", "mrr_at_10"],
+    "forbidden_alias": "exact_any_gold_at_10"
+  },
+  "selection": {"scope": "train_cv_only", "articles": ["normalized_hit_at_10", "ndcg_at_10", "mrr_at_10"], "jurisprudence": ["normalized_hit_at_10", "ndcg_at_10", "mrr_at_10"], "freeze_before_evaluation": true},
+  "resources": {"ppr": {"partition": "CPU", "cpus": 4, "memory_gb": 12, "array_parallelism": 11}, "lightgcn": {"partition": "A40", "gpu": 1, "cpus": 5, "memory_gb": 20, "array_parallelism": 1, "minimum_available_memory_gib": 9.1}},
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902",
+    "cosine": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902/cosine",
+    "ppr_cv": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902/ppr_cv",
+    "lightgcn_cv": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902/lightgcn_cv",
+    "ppr_final": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902/ppr_final",
+    "lightgcn_final": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902/lightgcn_final",
+    "depth_curves": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902/depth_curves",
+    "graph_characterization": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_20260902/graph_characterization"
+  },
+  "historical_experiments_excluded": ["E017", "E021", "E022"],
+  "not_authorized": ["E027", "E029", "E030"],
+  "code_bundle": {
+    "benchmark_labels": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/benchmark_labels.py", "sha256": "9d8d6d8a5203fe728cc220c3d4c506f2b4d2eafc57a2658e547bf0bbd213d2f4"},
+    "metrics": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/metrics.py", "sha256": "be49ebee481ea4713861cde1723f17bac619bfd0445c155fb3f36587fe5b9137"},
+    "runtime_paths": {"path": "05-Technique/benchmark/etape1_embedding_pur/etape1/config.py", "sha256": "2ac2a2a5403be5bc4ef3907d49f80b9e9d1e80bfdfc0a2639aa709f3601b3eb2"},
+    "b1_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/94_run_b1_a3_campaign.py", "sha256": "4a633a0d8fb83f78d6ea90f958873fac9b21e87ff0bcbc19e6bda2702d9bc8ea"},
+    "b1_contract": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/b1_campaign_contract.py", "sha256": "6819173d0b7e4f5783e2e9500566890a525a87d97460469e433d69b91905ca20"},
+    "freeze_champions": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/95_freeze_b1_a3_champions.py", "sha256": "69e4898a6e5d3a4b5a10525e7e3e65449b3338f1e758baabdec4c1e9743781ee"},
+    "final_replay": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/96_replay_b1_a3_champions.py", "sha256": "96bd6a2c8c56960d80049393d6e82bc19ffb8befe4aa8a4feed4c697e5a6435b"},
+    "cosine": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/26_eval_doctrine_v3plus_m1_m2.py", "sha256": "0316764a5b0eb854e19c4c6aead0734d838f8ac0f5ad90dea150cac56a4fb3ae"},
+    "ppr": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py", "sha256": "b998b384f6cf5dcc0fee7a944d97034d5e2f5e515d2fc4b034b4479c2399a47e"},
+    "lightgcn": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/32_lightgcn_strict.py", "sha256": "886a682e8118c35d795901d39cb4cb3dd8b19f0ea5ca018e4a4f8fa9e0725661"},
+    "cv_ppr": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/43_run_cv_ppr.py", "sha256": "3acef2e7a73303693802875d392437109a9f0fca0c4c8090c79f7ab99ac255d3"},
+    "cv_lightgcn": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/44_run_cv_lightgcn.py", "sha256": "634b90d84ae564d56ecb9ba1acc409eaa9d551f60bc1c95a90f14df996044ee0"},
+    "replay_helper": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py", "sha256": "e8a037894ebfd0b8bb1231add1e9795263697ef741b75642564c8ab47a76feb1"},
+    "protocol": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/graph_protocol.py", "sha256": "2d254890dfabeeb8952e251b4112be60f96a5d4f60cf9358c7e624978a35e336"},
+    "graph_loader": {"path": "05-Technique/benchmark/etape1_embedding_pur/etape1/graph_versions.py", "sha256": "c96b7cc7b0a3dc32aacca40ca8831731ad9ca54ba2b131f50b6663486859783b"},
+    "candidate_loader": {"path": "05-Technique/benchmark/etape1_embedding_pur/etape1/retrieval_candidate_universe.py", "sha256": "6c0c6a22f03bc6507d32946feda8f19b468868b05dba9301901df2de754c6a77"},
+    "slurm_cosine": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b1_a3_cosine.sh", "sha256": "00a7bfb377aa0da20c42ba763438f50ce05036ef8d21172fd8ed504d11d3b0e4"},
+    "slurm_ppr": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b1_a3_ppr_cv.sh", "sha256": "1a9bb1eb548134292d9204157a6ec0f897edca1aa972ac582b226c7c212f2742"},
+    "slurm_lightgcn": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b1_a3_lightgcn_cv.sh", "sha256": "cda400a2159c3dfc7186ac1f4753eff0eac17bd325e440cfe3f1c6fba7c3314f"}
+  }
+}

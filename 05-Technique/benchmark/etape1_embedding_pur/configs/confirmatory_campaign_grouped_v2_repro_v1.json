@@ -1,0 +1,129 @@
+{
+  "schema_version": 2,
+  "campaign_id": "confirmatory-g1-g6-g7-grouped-v2-repro-v1-2026-08-18",
+  "manifest_kind": "portable_reproduction",
+  "parent_manifest": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2.json",
+  "parent_manifest_sha256": "501619b153e27941361c15e16b11bc078cf88d6f152aca5f274f8cd8dd415565",
+  "protocol_version": "grouped_v2",
+  "datasets": {
+    "train": {
+      "split": "train_augmented_retrievable_strict",
+      "questions": 5603,
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict/bench_global.json",
+      "sha256": "7e6cf685dcf2c6d1794fbbd4cd46fbcf26ec9f6107a38c7ebf478b1450e9b9ac"
+    },
+    "internal_eval": {
+      "split": "eval_rich_retrievable_strict",
+      "questions": 754,
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+      "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+      "status": "already_consulted_internal_evaluation"
+    }
+  },
+  "folds": {
+    "count": 5,
+    "seed": 42,
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v2/train_augmented_retrievable_strict/fold_assignments.csv",
+    "metadata_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v2/train_augmented_retrievable_strict/fold_metadata.json",
+    "metadata_sha256": "eb6398ef80f8a0897a7112170bbdcbb25a9455d077170e03978665d88b5dbf78",
+    "sha256": "70b3d1fba45b3ce45386e97277319d5ca7e3802c60d361eb5a9d90461577c1ad"
+  },
+  "selection": {
+    "article": ["recall_at_10", "ndcg_at_10", "mrr_at_10"],
+    "jp": ["hit_at_10", "ndcg_at_10", "mrr_at_10"],
+    "complete_fold_and_question_coverage_required": true,
+    "paired_graph_differences": true
+  },
+  "shared_hybrid_ids": {
+    "jp_ids": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy",
+      "sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f"
+    },
+    "article_ids": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy",
+      "sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a"
+    },
+    "node_ids": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/node_ids.npy",
+      "sha256": "7b8ff47d50ad7a154a062049cbb0c447f7d68136c449a2515f2b081105e7cbc2"
+    },
+    "article_codes": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_codes.npy",
+      "sha256": "277296b7f16858594672db01ce78ff5e7a9aa0be6451c90651d8bd4c1254e6d7"
+    }
+  },
+  "immutable_inputs": {
+    "train_question_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict/questions_emb.npy", "sha256": "3e749f1de000a056ac568cb62b1a9e73e3b733e8e821c36b27d93779082e5aa1"},
+    "train_question_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict/questions_ids.npy", "sha256": "915adef51049b312f36f990b88b0eae27485966dea5cb26d3d458b8cd6a7de31", "legacy_object_dtype": true},
+    "eval_question_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/questions_emb.npy", "sha256": "513f24dd1afe2d284d1a266982ecad68c1a461a94725c9bcd83e3784cbf7727c"},
+    "eval_question_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/questions_ids.npy", "sha256": "5c6e23ec283e955aa8a304765a8381688c2c4f28be0a50a9be40438cb2574753", "legacy_object_dtype": true},
+    "article_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_articles_all.npy", "sha256": "9d10884944d7184aeeb95d64dfec79bc97044c3364c6e40ee60e940f61c1c944"},
+    "article_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_order_all.npy", "sha256": "06f5551d6a38f8f7887d760461b7f7460b2e738e062a8bed4b9c598b34c0fbb0", "legacy_object_dtype": true},
+    "jp_embeddings": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_jp_synthese.npy", "sha256": "1f7eb3f6723c956d745dbdfc851730eba8af37a3dfea06c8354d191f433eead9"},
+    "jp_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summary_order.npy", "sha256": "985e83bfbee610117fcf8873b8a58eb61ffd1e35bf1423f95985a375a3012c5b", "legacy_object_dtype": true},
+    "legi_sqlite_for_g1": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/legi/legi.sqlite", "sha256": "f78a1dd850a65477d88a59406dafc6da29cb52d624911fc0fdca56dbf40e91fd"}
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "packages": {"numpy": "2.2.6", "pandas": "2.2.2", "psutil": "5.9.8", "scipy": "1.14.0", "torch": "2.12.0"}
+  },
+  "code_bundle": {
+    "ppr_engine": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py", "sha256": "874aeacb3d4f9c66807679798c6a1c81ef1c7de3d0e7a14859ec33acb210148b"},
+    "cosine_engine": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/26_eval_doctrine_v3plus_m1_m2.py", "sha256": "ee7bd373c558e4eea15e6ff8e061e6390dffb08c37254fe9425d91247df3b0a7"},
+    "lightgcn_engine": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/32_lightgcn_strict.py", "sha256": "31ae5494f759e77bf2c470c7e67dd43d96ec6efc1cd2863e9c703cb3c300d951"},
+    "fold_builder": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/41_make_kfold_assignments.py", "sha256": "295d2a33ccbb26cb399927220ae12cab14f07bc1def02d8bab4572f689747761"},
+    "cosine_cv": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/42_run_cv_b3_b4.py", "sha256": "ae19cf0d9203921c4cca68785d3a3c140a5f7d5837206fedbb0584473514e66e"},
+    "ppr_cv": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/43_run_cv_ppr.py", "sha256": "e92852b4a14af045a076fe9ffea687610e385b77c7b31fcb4802b3f343765c01"},
+    "lightgcn_cv": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/44_run_cv_lightgcn.py", "sha256": "d7867e0de6aa64064cbd8ab1c497222df2b2177e90ddc7c43ca1ee0411ecb27d"},
+    "final_replay": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py", "sha256": "a62005b8ecf4431c72b7f4fb7590af133c381d9cb1e8ae9026e3503d83dec81b"},
+    "campaign_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/64_run_confirmatory_campaign.py", "sha256": "246b12366318a5d539906c58bf62ad2493f7743946fda88f6f20ab051d4d697a"},
+    "shortlist": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/65_select_lightgcn_shortlist.py", "sha256": "b8a0ed6f931d30b3412d4087d4dc4404d620a21009f046daaa1b469b2a85ae45"},
+    "exports": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/66_export_confirmatory_results.py", "sha256": "ac9df285d6bc04507dfbda1de8abda64403c22c4bcd53ac584eeb5a8bb51f05c"},
+    "protocol": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/graph_protocol.py", "sha256": "a1689e57b215cff0b225a09ca241e78928ca51a51b739c648c318ae462797f90"},
+    "metrics": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/metrics.py", "sha256": "be49ebee481ea4713861cde1723f17bac619bfd0445c155fb3f36587fe5b9137"},
+    "graph_versions": {"path": "05-Technique/benchmark/etape1_embedding_pur/etape1/graph_versions.py", "sha256": "c426ca72e3c4d5dfe4a50edf7464b9888f351b06e536caf75c455dac4fe82a29"},
+    "graph_config": {"path": "05-Technique/benchmark/etape1_embedding_pur/etape1/config.py", "sha256": "2ac2a2a5403be5bc4ef3907d49f80b9e9d1e80bfdfc0a2639aa709f3601b3eb2"},
+    "normalization": {"path": "05-Technique/benchmark/etape1_embedding_pur/etape1/normalize.py", "sha256": "2a3e9027673eba9bcc256145b7db69a0792ae95a967d3f2631e71ecff28f0e24"}
+  },
+  "graphs": [
+    {"graph_id": "G1", "family": "control", "semantic_block": null, "citation_weight": 1.0, "semantic_weight": 0.0, "knn_k": null, "matrix_path": "05-Technique/benchmark/baseline_b2/penal_bundle/graph_penal.npz", "matrix_sha256": "4f371b94181a3f2792e8ec8d971b6eaa23f5f448dd7bb04f58dd34d4942c2a4c", "materialization": "derived_G1_filter"},
+    {"graph_id": "G6-citation-AA-knn5", "family": "control", "semantic_block": "AA", "citation_weight": 1.0, "semantic_weight": 1.0, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "d5acb4dd93b33e9d8f50fb2a7ef72d4e17d688f1b7177fe41c1c665f4858c81c"},
+    {"graph_id": "G6-citation-JJ-knn5", "family": "control", "semantic_block": "JJ", "citation_weight": 1.0, "semantic_weight": 1.0, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-JJ-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "402ef5f9d36ff534437cc4a1db47009359237b03bf50617eff6727491d88fd72"},
+    {"graph_id": "G7-citation-AA-cit1-sem025-knn5", "family": "experimental", "semantic_block": "AA", "citation_weight": 1.0, "semantic_weight": 0.25, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem025-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "442f68064cee51ec3495a6bac8d193a9f4cb613fbb4064ed83adb0e81a01ce79"},
+    {"graph_id": "G7-citation-AA-cit1-sem050-knn5", "family": "experimental", "semantic_block": "AA", "citation_weight": 1.0, "semantic_weight": 0.5, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem050-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "a209ca4fe38f0808058419cee1f31f40f65a7c3cd906fe9a77444d7c589677ab"},
+    {"graph_id": "G7-citation-AA-cit1-sem100-knn5", "family": "experimental", "semantic_block": "AA", "citation_weight": 1.0, "semantic_weight": 1.0, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit1-sem100-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "55cce8f19215a0e30decb283550ac3fa58236169cb7281749c26d80f5a5e1f9d"},
+    {"graph_id": "G7-citation-AA-cit025-sem1-knn5", "family": "experimental", "semantic_block": "AA", "citation_weight": 0.25, "semantic_weight": 1.0, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-AA-cit025-sem1-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "87d192000e5bfc5594442bafd840c8ddce3671d3bdc2f9c302aa0d6602f3f07f"},
+    {"graph_id": "G7-citation-JJ-cit1-sem025-knn5", "family": "experimental", "semantic_block": "JJ", "citation_weight": 1.0, "semantic_weight": 0.25, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem025-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "4d777bb404f05d52dc8c5c4005ebf6948a7e829fee830b2b601aa2e40ba3ddee"},
+    {"graph_id": "G7-citation-JJ-cit1-sem050-knn5", "family": "experimental", "semantic_block": "JJ", "citation_weight": 1.0, "semantic_weight": 0.5, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem050-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "e633dc4be9896d5e1d198d82fe3a405fb1f9a4ad44d231e7e2ba962886447a12"},
+    {"graph_id": "G7-citation-JJ-cit1-sem100-knn5", "family": "experimental", "semantic_block": "JJ", "citation_weight": 1.0, "semantic_weight": 1.0, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit1-sem100-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "34249e1f92697a0e7be4b2885b72a6ad583aef1450482acf158ecd841dc74f85"},
+    {"graph_id": "G7-citation-JJ-cit025-sem1-knn5", "family": "experimental", "semantic_block": "JJ", "citation_weight": 0.25, "semantic_weight": 1.0, "knn_k": 5, "matrix_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G7-citation-JJ-cit025-sem1-knn5/graph_hybrid_mixed.npz", "matrix_sha256": "5b1098e69d1bf9f4f3c4e38dc3f2f291f1f0324a43c6f98a5efb2027f85e3c6e"}
+  ],
+  "ppr": {
+    "k_in": [5, 10, 20, 50],
+    "seed_variant": ["art_only", "jp_only", "both"],
+    "alpha": [0.5, 0.7, 0.85, 0.95]
+  },
+  "lightgcn": {
+    "screen": {"train_k": [2], "learning_rate": [0.001], "lambda_anchor": [1.0], "seed": [42], "epochs": 30, "negative_sampling_strategy": ["random"], "selection_targets": ["art", "jp"]},
+    "tune": {"train_k": [1, 2, 3], "learning_rate": [0.0005, 0.001], "lambda_anchor": [0.5, 1.0], "seed": [42], "epochs": 30, "negative_sampling_strategy": ["random"], "selection_targets": ["art", "jp"]},
+    "robustness": {"seed": [42, 43, 44], "negative_sampling_strategy": ["random"], "selection_targets": ["art", "jp"]},
+    "shortlist": {"always_include": ["G1", "G6-citation-AA-knn5", "G6-citation-JJ-knn5"], "max_graphs": 5}
+  },
+  "outputs": {
+    "cv_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_cv_grouped_v2",
+    "final_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_final_grouped_v2",
+    "status_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v2/status",
+    "log_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v2/logs",
+    "export_root": "06-Analyses/comparatifs/benchmark-confirmatoire-grouped-v2"
+  },
+  "resources": {
+    "threads_per_process": 2,
+    "cpu_per_graph_job": 5,
+    "cpu_per_ppr_job": 4,
+    "ram_minimum_gb_per_graph_job": 9.1,
+    "ram_minimum_gb_per_ppr_job": 3.5,
+    "ram_observed_upper_bound_gb_per_graph_job": 45,
+    "max_parallel_graph_jobs": 2,
+    "gpu_required": false
+  }
+}
