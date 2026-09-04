@@ -1,0 +1,10 @@
+penal_bundle/
+penal_bundle.tar.gz
+jp_index*.parquet
+jp_embeddings*.npy
+jp_order*.npy
+embed_state*.json
+*.log
+embeddings/
+__pycache__/
+results/per_question/

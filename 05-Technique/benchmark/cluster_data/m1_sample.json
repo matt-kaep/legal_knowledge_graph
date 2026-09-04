@@ -1,142 +1,181 @@
 [
   {
     "id": "M1-S-001",
-    "specialisation": "inconnu",
-    "question": "Effectivement, j'ai une question sur la répartition des parts dans une SAS : comment procéder pour bien encadrer les droits entre deux associés majoritaires, s'il vous plaît ?",
-    "gold_answer": "Effectivement, j'ai une question sur la répartition des parts dans une SAS : comment procéder pour bien encadrer les droits entre deux associés majoritaires, s'il vous plaît ?",
-    "gold_articles": [],
+    "specialisation": "company_formation",
+    "question": "Effectivement, j'aurais besoin de savoir, s'il vous plaît, comment structurer une nouvelle entreprise au niveau du régime fiscal, pour éviter des erreurs dès le départ. Bon, est-ce que le choix du régime réel simplifié pourrait convenir dans ce cas ?",
+    "gold_answer": "[ACTION_REQUISE] Choisir le régime fiscal adapté, tel que le régime réel simplifié, parce que l'article 302 septies A du Code général des impôts permet aux entreprises relevant de la TVA de bénéficier d'une gestion simplifiée si leur chiffre d'affaires respecte les seuils légaux.\n\n[DELAI_LEGAL] Déclarer le choix du régime fiscal lors de l'immatriculation de l'entreprise ou au plus tard avant le 1er février de l'année d'application, parce que l'article 50-0 du Code général des impôts fixe ce délai pour les options fiscales.\n\n[DOCUMENTS_OBLIGATOIRES] Fournir le formulaire de déclaration de début d'activité (formulaire P0 ou M0 selon la forme juridique) et indiquer le régime fiscal choisi, parce que l'article 286 du Code général des impôts impose la déclaration des obligations fiscales dès la création.\n\n[IMPACT_FINANCIER] Le régime réel simplifié entraîne des obligations de paiement de la TVA semestriellement et une comptabilité simplifiée, ce qui peut réduire les frais administratifs, parce que l'article 302 septies A du Code général des impôts prévoit des modalités de paiement adaptées.\n\n[CONSEQUENCES_NON_CONFORMITE] En cas de non-respect des obligations déclaratives ou d'une erreur dans le choix du régime fiscal, l'entreprise peut être soumise à des pénalités financières et des redressements fiscaux, parce que l'article 1728 du Code général des impôts prévoit des sanctions pour défaut ou retard de déclaration.",
+    "gold_articles": [
+      "article 302 septies A",
+      "article 50-0",
+      "article 286",
+      "article 1728"
+    ],
     "gold_keywords": [
-      "effectivement",
-      "question",
-      "répartition",
-      "comment",
-      "procéder"
+      "choisir",
+      "régime",
+      "fiscal",
+      "adapté",
+      "simplifié"
     ]
   },
   {
     "id": "M1-S-002",
-    "specialisation": "inconnu",
-    "question": "Bon, je me pose la question suivante : concrètement, comment on s’assure qu’un contrat avec un fournisseur pharma respecte bien toutes les obligations légales sans se noyer dans un bazar administratif ?",
-    "gold_answer": "Bon, je me pose la question suivante : concrètement, comment on s’assure qu’un contrat avec un fournisseur pharma respecte bien toutes les obligations légales sans se noyer dans un bazar administratif ?",
-    "gold_articles": [],
+    "specialisation": "company_formation",
+    "question": "Bon, j'avoue que je suis un peu perdu sur comment structurer l'entreprise pour optimiser les taxes sans être hors des clous, t'aurais une idée par où commencer ?",
+    "gold_answer": "[ACTION_REQUISE] Structurer l'entreprise sous une forme juridique adaptée (ex. SAS, SARL) et envisager des opérations d'apport de titres à une société soumise à l'impôt sur les sociétés parce que l'article 150-0 B ter du Code général des impôts permet de différer l'imposition des plus-values dans ce cadre.\n\n[DELAI_LEGAL] Déclarer l'opération d'apport ou d'échange de titres dans le délai de dépôt de la déclaration annuelle des revenus ou des résultats parce que l'article 150-0 A du Code général des impôts impose cette obligation.\n\n[DOCUMENTS_OBLIGATOIRES] Fournir les statuts de la société, le rapport d'évaluation des apports, et les justificatifs des titres échangés ou apportés parce que ces documents sont requis pour valider l'opération auprès de l'administration fiscale (articles L123-9 et suivants du Code de commerce).\n\n[IMPACT_FINANCIER] Réduction ou report de l'imposition des plus-values réalisées sur les apports ou échanges de titres parce que l'article 150-0 B ter du Code général des impôts prévoit un mécanisme de neutralité fiscale sous conditions.\n\n[CONSEQUENCES_NON_CONFORMITE] Imposition immédiate des plus-values réalisées et application de pénalités fiscales (10 % à 40 % selon la gravité) parce que l'article 1729 du Code général des impôts sanctionne les omissions ou erreurs déclaratives.",
+    "gold_articles": [
+      "article 150-0 B",
+      "article 150-0 A",
+      "article 1729"
+    ],
     "gold_keywords": [
-      "question",
-      "suivante",
-      "concrètement",
-      "comment",
-      "s’assure"
+      "structurer",
+      "l'entreprise",
+      "juridique",
+      "adaptée",
+      "envisager"
     ]
   },
   {
     "id": "M1-S-003",
-    "specialisation": "inconnu",
-    "question": "Écoute, j'ai un souci avec le choix entre l’IS et l’IR pour une nouvelle structure, en fait, t’as une règle simple pour trancher rapidement selon la taille et l’activité ?",
-    "gold_answer": "Écoute, j'ai un souci avec le choix entre l’IS et l’IR pour une nouvelle structure, en fait, t’as une règle simple pour trancher rapidement selon la taille et l’activité ?",
-    "gold_articles": [],
+    "specialisation": "consumer_dispute",
+    "question": "Bon, franchement, je galère un peu sur les obligations qu’on a en termes de protection du consommateur quand on répond à un appel d’offres public, surtout sur la partie garanties… on doit pousser jusqu’où exactement ?",
+    "gold_answer": "[ACTION_REQUISE] Fournir des garanties suffisantes pour la protection du consommateur, notamment en matière de conformité des produits/services, parce que l'article L2141-2 du Code de la commande publique impose des obligations de solvabilité et de fiabilité aux candidats.\n\n[DELAI_LEGAL] Les garanties doivent être constituées avant la date de décision sur la recevabilité de la candidature, parce que l'article L2141-2 du Code de la commande publique fixe ce moment comme limite.\n\n[DOCUMENTS_OBLIGATOIRES] Fournir les justificatifs de garanties financières ou techniques (ex. attestations fiscales, sociales, ou garanties bancaires), parce que ces éléments sont requis pour démontrer la conformité à l'article L2141-2 du Code de la commande publique.\n\n[IMPACT_FINANCIER] Les coûts liés à la constitution de garanties (ex. frais bancaires ou d'assurance) peuvent être significatifs, parce que ces garanties doivent être jugées suffisantes par les organismes compétents selon l'article L2141-2.\n\n[CONSEQUENCES_NON_CONFORMITE] Exclusion de la procédure de passation du marché public, parce que l'article L2141-2 du Code de la commande publique prévoit cette sanction en cas de non-respect des obligations.",
+    "gold_articles": [
+      "article L2141-2"
+    ],
     "gold_keywords": [
-      "écoute",
-      "nouvelle",
-      "structure",
-      "simple",
-      "trancher"
+      "fournir",
+      "garanties",
+      "suffisantes",
+      "protection",
+      "consommateur"
     ]
   },
   {
     "id": "M1-S-004",
-    "specialisation": "inconnu",
-    "question": "Écoute, j'ai besoin de comprendre rapidement pour savoir comment on protège nos droits sur une idée qu'on a développée en interne, mais qui pourrait être utilisée par un partenaire. Ça marche comment, concrètement ?",
-    "gold_answer": "Écoute, j'ai besoin de comprendre rapidement pour savoir comment on protège nos droits sur une idée qu'on a développée en interne, mais qui pourrait être utilisée par un partenaire. Ça marche comment, concrètement ?",
-    "gold_articles": [],
+    "specialisation": "consumer_dispute",
+    "question": "Concrètement, dans ma situation, si un client veut contester un marché qu’on a validé dans le cadre d’un appel d’offres public, je me demande comment on doit procéder pour lui répondre dans les règles, tout en protégeant l’entreprise ?",
+    "gold_answer": "[ACTION_REQUISE] Répondre au client par écrit en justifiant la validité du marché conformément aux dispositions du Code de la commande publique, notamment en expliquant les critères de sélection et le respect des procédures d’appel d’offres, parce que l’article L2197-6 du Code de la commande publique impose la transparence et la justification des décisions dans les marchés publics.\n\n[DELAI_LEGAL] Répondre dans un délai raisonnable, généralement sous 2 mois, parce que l’absence de réponse prolongée pourrait être interprétée comme un manquement au devoir de bonne foi dans l’exécution des contrats publics (principe général du droit administratif).\n\n[DOCUMENTS_OBLIGATOIRES] Fournir les documents relatifs à l’appel d’offres, tels que le cahier des charges, le procès-verbal de sélection et les critères d’attribution, parce que ces éléments sont nécessaires pour démontrer la régularité de la procédure conformément au Code de la commande publique.\n\n[IMPACT_FINANCIER] Les coûts peuvent inclure des frais juridiques ou d’arbitrage si le litige évolue, parce que l’article L2197-6 du Code de la commande publique permet le recours à l’arbitrage pour les litiges liés à l’exécution des marchés publics.\n\n[CONSEQUENCES_NON_CONFORMITE] En cas de non-réponse ou de réponse insuffisante, l’entreprise risque une annulation du marché, des pénalités financières ou une mise en cause de sa responsabilité contractuelle, parce que le non-respect des obligations de transparence et de justification peut entraîner des sanctions administratives ou judiciaires.",
+    "gold_articles": [
+      "article L2197-6"
+    ],
     "gold_keywords": [
-      "écoute",
-      "besoin",
-      "comprendre",
-      "rapidement",
-      "savoir"
+      "répondre",
+      "client",
+      "justifiant",
+      "validité",
+      "marché"
     ]
   },
   {
     "id": "M1-S-005",
-    "specialisation": "inconnu",
-    "question": "J’hésite un peu, mais j’aimerais savoir, pour structurer une boîte en France, est-ce qu’il vaut mieux partir sur une SAS ou sur une SARL, niveau flexibilité et responsabilités ?",
-    "gold_answer": "J’hésite un peu, mais j’aimerais savoir, pour structurer une boîte en France, est-ce qu’il vaut mieux partir sur une SAS ou sur une SARL, niveau flexibilité et responsabilités ?",
-    "gold_articles": [],
+    "specialisation": "contract_negotiation",
+    "question": "Bon, comment procéder pour bien verrouiller les droits de propriété intellectuelle quand on bosse avec un sous-traitant, s'il vous plaît ?",
+    "gold_answer": "[ACTION_REQUISE] Inclure une clause de cession des droits de propriété intellectuelle dans le contrat de sous-traitance parce que l'article L131-3 du Code de la propriété intellectuelle exige une cession expresse et écrite des droits d'exploitation.\n\n[DELAI_LEGAL] La cession des droits doit être prévue avant le début de la prestation parce que l'article L131-3 impose que la cession soit clairement définie dès la création de l'œuvre.\n\n[DOCUMENTS_OBLIGATOIRES] Contrat de sous-traitance détaillant les droits cédés (nature, durée, étendue, territoire) parce que l'article L131-3 exige une précision sur ces éléments pour éviter toute ambiguïté juridique.\n\n[IMPACT_FINANCIER] Paiement d'une rémunération proportionnelle au sous-traitant pour la cession des droits parce que l'article L131-4 du Code de la propriété intellectuelle impose une rémunération équitable pour l'auteur.\n\n[CONSEQUENCES_NON_CONFORMITE] Risque de nullité de la cession des droits et revendication des droits par le sous-traitant parce que l'article L131-3 prévoit que toute cession non conforme est juridiquement invalide.",
+    "gold_articles": [
+      "article L131-3",
+      "article L131-4"
+    ],
     "gold_keywords": [
-      "j’hésite",
-      "j’aimerais",
-      "savoir",
-      "structurer",
-      "france"
+      "inclure",
+      "clause",
+      "cession",
+      "droits",
+      "propriété"
     ]
   },
   {
     "id": "M1-S-006",
-    "specialisation": "inconnu",
-    "question": "Alors, dis donc, tu peux m’expliquer comment je fais pour m’assurer que toutes nos déclarations financières sont bien en règle avec la nouvelle loi, là ? Parce que bon sang, c’est un vrai casse-tête, cette histoire !",
-    "gold_answer": "Alors, dis donc, tu peux m’expliquer comment je fais pour m’assurer que toutes nos déclarations financières sont bien en règle avec la nouvelle loi, là ? Parce que bon sang, c’est un vrai casse-tête, cette histoire !",
-    "gold_articles": [],
+    "specialisation": "contract_negotiation",
+    "question": "Effectivement, j'aurais besoin de savoir, concrètement, comment procéder pour sécuriser un contrat de travail tout en restant conforme aux dernières évolutions du droit du travail, s'il vous plaît ?",
+    "gold_answer": "[ACTION_REQUISE] Rédiger un contrat de travail conforme aux dispositions du Code du travail, incluant les clauses essentielles (durée, rémunération, poste, période d'essai) et veiller à intégrer des mesures favorisant l'égalité professionnelle entre les femmes et les hommes, parce que l'article L1142-4 du Code du travail permet des mesures temporaires pour remédier aux inégalités de fait.\n\n[DELAI_LEGAL] Le contrat de travail doit être remis au salarié avant le début de la prestation de travail, parce que l'article L1221-1 du Code du travail impose la formalisation écrite pour certains types de contrats (CDD, contrats à temps partiel, etc.).\n\n[DOCUMENTS_OBLIGATOIRES] Inclure le contrat de travail signé, les annexes éventuelles (clauses spécifiques, règlement intérieur), et tout document relatif aux mesures d'égalité professionnelle, parce que l'article L1142-4 exige la mise en œuvre de plans ou accords collectifs pour l'égalité.\n\n[IMPACT_FINANCIER] Les coûts liés à la rédaction, à la mise en conformité et à la mise en œuvre des mesures d'égalité professionnelle peuvent inclure des honoraires juridiques et des investissements en formation ou organisation interne, parce que ces mesures peuvent découler d'accords collectifs ou réglementations spécifiques (article L1142-4).\n\n[CONSEQUENCES_NON_CONFORMITE] En cas de non-respect des obligations légales, l'employeur risque des sanctions civiles (nullité du contrat, dommages et intérêts) et pénales (amendes), parce que l'article L1142-4 et les articles relatifs à l'égalité professionnelle imposent des obligations strictes et prévoient des sanctions en cas de discrimination ou non-respect.",
+    "gold_articles": [
+      "article L1142-4",
+      "article L1221-1"
+    ],
     "gold_keywords": [
-      "alors",
-      "m’expliquer",
-      "comment",
-      "m’assurer",
-      "toutes"
+      "rédiger",
+      "contrat",
+      "travail",
+      "conforme",
+      "dispositions"
     ]
   },
   {
     "id": "M1-S-007",
-    "specialisation": "inconnu",
-    "question": "Bon, concrètement, que dois-je faire pour structurer une entreprise en respectant les obligations en droit des assurances, s'il vous plaît ?",
-    "gold_answer": "Bon, concrètement, que dois-je faire pour structurer une entreprise en respectant les obligations en droit des assurances, s'il vous plaît ?",
-    "gold_articles": [],
+    "specialisation": "corporate_governance",
+    "question": "Effectivement, j'aurais besoin de savoir, s'il vous plaît, comment on applique précisément le Code des impôts pour les avantages en nature dans une exploitation agricole ? Vous avez déjà eu le cas ?",
+    "gold_answer": "[ACTION_REQUISE] Identifier et évaluer les avantages en nature accordés aux dirigeants ou salariés de l'exploitation agricole parce que l'article 80 ter du Code général des impôts (CGI) impose leur intégration dans le revenu imposable.\n\n[DELAI_LEGAL] Déclarer les avantages en nature dans la déclaration annuelle des revenus (formulaire 2042) avant la date limite fixée par l'administration fiscale parce que l'article 170 du CGI impose cette obligation pour éviter tout retard ou omission.\n\n[DOCUMENTS_OBLIGATOIRES] Fournir les justificatifs des avantages en nature (ex. évaluation des biens ou services fournis, contrats de travail, fiches de paie) parce que l'article L102 B du Livre des procédures fiscales impose la conservation des pièces justificatives en cas de contrôle fiscal.\n\n[IMPACT_FINANCIER] Les avantages en nature sont soumis à l'impôt sur le revenu et aux cotisations sociales, ce qui peut augmenter la charge fiscale de l'exploitation agricole parce que l'article 80 ter du CGI les assimile à une forme de rémunération imposable.\n\n[CONSEQUENCES_NON_CONFORMITE] En cas de non-déclaration ou de sous-évaluation des avantages en nature, l'exploitation agricole s'expose à des redressements fiscaux, des pénalités de 10 % à 80 %, et des intérêts de retard (0,20 % par mois) parce que l'article 1729 du CGI prévoit ces sanctions pour insuffisance ou omission déclarative.",
+    "gold_articles": [
+      "article 80 ter",
+      "article 170",
+      "article L102 B",
+      "article 1729"
+    ],
     "gold_keywords": [
-      "concrètement",
-      "dois-je",
-      "structurer",
-      "entreprise",
-      "respectant"
+      "identifier",
+      "évaluer",
+      "avantages",
+      "nature",
+      "accordés"
     ]
   },
   {
     "id": "M1-S-008",
-    "specialisation": "inconnu",
-    "question": "Bon sang, j'arrive pas à comprendre, dis donc, avec cette histoire de loi financière là, tu peux m'expliquer comment on sécurise un contrat sans se retrouver à payer des pénalités dans tous les sens ? Parce que franchement, ça me rend fou cette affaire !",
-    "gold_answer": "Bon sang, j'arrive pas à comprendre, dis donc, avec cette histoire de loi financière là, tu peux m'expliquer comment on sécurise un contrat sans se retrouver à payer des pénalités dans tous les sens ? Parce que franchement, ça me rend fou cette affaire !",
-    "gold_articles": [],
+    "specialisation": "corporate_governance",
+    "question": "J'aimerais savoir précisément comment procéder pour vérifier que notre contrat d'assurance couvre bien les risques liés à la responsabilité des administrateurs de la société ?",
+    "gold_answer": "[ACTION_REQUISE] Examiner les clauses spécifiques du contrat d'assurance, notamment celles relatives à la \"responsabilité des dirigeants\" et vérifier si elles incluent les risques liés à la gestion et à la gouvernance de la société, parce que l'article L. 113-1 du Code des assurances impose une interprétation stricte des garanties contractuelles.\n\n[DELAI_LEGAL] Réaliser cette vérification avant la signature ou le renouvellement du contrat d'assurance, parce que l'article L. 112-4 du Code des assurances exige que les conditions générales et particulières soient communiquées avant la conclusion du contrat.\n\n[DOCUMENTS_OBLIGATOIRES] Obtenir une copie intégrale des conditions générales et particulières du contrat d'assurance, ainsi que tout avenant ou clause additionnelle, parce que l'article L. 112-3 du Code des assurances impose la remise de ces documents à l'assuré.\n\n[IMPACT_FINANCIER] Les primes d'assurance peuvent augmenter si une extension de garantie est nécessaire pour couvrir les risques liés à la responsabilité des administrateurs, parce que l'article L. 113-3 du Code des assurances autorise l'assureur à ajuster les primes en fonction des garanties souscrites.\n\n[CONSEQUENCES_NON_CONFORMITE] En cas de non-couverture des risques liés à la responsabilité des administrateurs, la société pourrait être exposée à des poursuites judiciaires sans protection financière, parce que l'article L. 124-1 du Code des assurances limite l'indemnisation aux risques effectivement couverts par le contrat.",
+    "gold_articles": [
+      "article L. 113-1",
+      "article L. 112-4",
+      "article L. 112-3",
+      "article L. 113-3",
+      "article L. 124-1"
+    ],
     "gold_keywords": [
-      "j'arrive",
-      "comprendre",
-      "histoire",
-      "financière",
-      "m'expliquer"
+      "examiner",
+      "clauses",
+      "spécifiques",
+      "contrat",
+      "d'assurance"
     ]
   },
   {
     "id": "M1-S-009",
-    "specialisation": "inconnu",
-    "question": "Concrètement, dans ma situation, comment je fais pour vérifier que mes contrats commerciaux sont bien conformes aux dernières réglementations sans devoir tout refaire à zéro ?",
-    "gold_answer": "Concrètement, dans ma situation, comment je fais pour vérifier que mes contrats commerciaux sont bien conformes aux dernières réglementations sans devoir tout refaire à zéro ?",
-    "gold_articles": [],
+    "specialisation": "employment_issue",
+    "question": "Bon alors, j'ai besoin de comprendre rapidement pour un licenciement économique, c’est quoi exactement les étapes obligatoires pour pas se planter au niveau légal ?",
+    "gold_answer": "[ACTION_REQUISE] Réaliser une consultation des représentants du personnel et établir un plan de sauvegarde de l’emploi (PSE) si le licenciement concerne au moins 10 salariés sur 30 jours, parce que l’article L1233-61 du Code du travail impose ces démarches pour garantir l’information et la protection des salariés.\n\n[DELAI_LEGAL] Respecter un délai de 15 jours minimum entre la convocation à l’entretien préalable et la notification du licenciement, parce que l’article L1233-13 du Code du travail fixe ce délai pour permettre au salarié de préparer sa défense.\n\n[DOCUMENTS_OBLIGATOIRES] Fournir une lettre de licenciement précisant le motif économique et les efforts de reclassement effectués, parce que l’article L1233-16 du Code du travail exige une justification écrite et détaillée.\n\n[IMPACT_FINANCIER] Prévoir le versement des indemnités légales de licenciement et des éventuelles indemnités compensatrices de préavis, parce que l’article L1234-9 du Code du travail impose ces paiements en cas de rupture du contrat de travail.\n\n[CONSEQUENCES_NON_CONFORMITE] Risque d’annulation du licenciement et condamnation à des dommages et intérêts pour licenciement abusif, parce que l’article L1235-3 du Code du travail prévoit ces sanctions en cas de non-respect des procédures légales.",
+    "gold_articles": [
+      "article L1233-61",
+      "article L1233-13",
+      "article L1233-16",
+      "article L1234-9",
+      "article L1235-3"
+    ],
     "gold_keywords": [
-      "concrètement",
-      "situation",
-      "comment",
-      "vérifier",
-      "contrats"
+      "réaliser",
+      "consultation",
+      "représentants",
+      "personnel",
+      "établir"
     ]
   },
   {
     "id": "M1-S-010",
-    "specialisation": "inconnu",
-    "question": "Dis donc, tu peux m’aider pour un truc ? On a un salarié qui veut voir ses horaires changés, mais ça chamboulerait tout le planning de l’équipe... je fais comment pour gérer ça sans créer un bazar ?",
-    "gold_answer": "Dis donc, tu peux m’aider pour un truc ? On a un salarié qui veut voir ses horaires changés, mais ça chamboulerait tout le planning de l’équipe... je fais comment pour gérer ça sans créer un bazar ?",
-    "gold_articles": [],
+    "specialisation": "employment_issue",
+    "question": "Bon sang, j'arrive pas à comprendre, dis donc, avec ces nouvelles règles sur les appels d'offres publics, on fait comment pour être sûrs de rester dans les clous côté droit du travail sans que ça nous bouffe tout notre temps, hein ?",
+    "gold_answer": "[ACTION_REQUISE] Vérifier que les clauses sociales et les obligations liées au droit du travail (ex. respect des conventions collectives, égalité professionnelle) sont intégrées dans l'offre parce que l'article L. 2151-1 du Code de la commande publique impose la conformité avec les règles sociales et environnementales.\n\n[DELAI_LEGAL] Soumettre l'offre complète avant la date limite précisée dans l'appel d'offres parce que le non-respect des délais entraîne l’irrecevabilité de l’offre selon les dispositions générales du Code de la commande publique.\n\n[DOCUMENTS_OBLIGATOIRES] Fournir les attestations de conformité sociale (URSSAF, déclaration de travailleurs étrangers, etc.) et les justificatifs de respect des obligations en matière de droit du travail parce que ces documents sont requis par l'article L. 2351-1 du Code de la commande publique.\n\n[IMPACT_FINANCIER] Prévoir des coûts liés à la mise en conformité sociale (ex. audits internes, frais administratifs) parce que le respect des obligations légales peut nécessiter des ajustements organisationnels et financiers.\n\n[CONSEQUENCES_NON_CONFORMITE] Rejet de l'offre ou résiliation du marché en cas de non-respect des obligations sociales et du droit du travail parce que l'article L. 2151-1 prévoit des sanctions pour les offres non conformes aux exigences légales.",
+    "gold_articles": [
+      "article L. 2151-1",
+      "article L. 2351-1"
+    ],
     "gold_keywords": [
-      "m’aider",
-      "salarié",
-      "horaires",
-      "changés",
-      "chamboulerait"
+      "vérifier",
+      "clauses",
+      "sociales",
+      "obligations",
+      "travail"
     ]
   }
 ]

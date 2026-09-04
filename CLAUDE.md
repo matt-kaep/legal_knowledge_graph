@@ -19,6 +19,18 @@ Ce vault Obsidian est un projet de recherche sur la construction d'un Knowledge 
 
 ## Conventions
 
+### Convention benchmark scientifique
+
+Le protocole officiel de comparaison des graphes et méthodes suit les règles suivantes :
+
+1. `train_augmented_retrievable_strict` sert uniquement à l'apprentissage et à la sélection des hyperparamètres. `eval_rich_retrievable_strict` ne doit jamais servir à choisir un poids, un seed, un nombre de couches ou un epoch.
+2. Le tuning utilise un K-fold à 5 folds partagé par tous les graphes. Toutes les questions issues de la même provenance `(source, doc_id, section_id)`, ainsi que tous les énoncés identiques après normalisation, restent dans le même fold.
+3. Une configuration est classée d'abord par la moyenne validation de `Recall@10` Articles ou `Hit@10` JP selon la cible, puis par `NDCG@10` et `MRR@10`. Les deux modalités sont toujours reportées et une forte régression de l'autre modalité ne peut pas être masquée par un gain marginal.
+4. Pour LightGCN, le meilleur epoch est choisi uniquement dans les folds de validation. Le replay final utilise un nombre d'epochs figé avant de lire l'eval ; aucun early stopping ni choix de checkpoint n'est autorisé sur l'eval.
+5. Les graphes sont comparés à protocole égal : mêmes questions, folds, espaces de candidats, seeds, budgets de tuning, métriques et règles de sélection. Une ablation ne change qu'un facteur causal à la fois.
+6. `eval_rich_retrievable_strict` ayant déjà été consulté pendant les explorations, il est considéré comme benchmark d'évaluation interne et non comme lockbox inédit. Une nouvelle lockbox non consultée sera nécessaire pour les affirmations finales de l'article.
+7. Tout run qui ne respecte pas ces règles doit porter explicitement le statut `exploratoire` dans ses artefacts, tableaux, slides et conclusions.
+
 ### Nommage
 - Fichiers : `Nom-En-Kebab-Case.md`
 - Tags : `#kebab-case`

@@ -1,0 +1,416 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2024 - Droit des obligations",
+    "source_path": "data/cnb-crfpa/2024/droit-obligations.pdf",
+    "source_ref": "24CRFPA-DO1",
+    "session": "Mercredi 4 septembre 2024",
+    "duree": "3 heures",
+    "coefficient": 2,
+    "generated_by": "Claude (general-purpose subagent)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "notes": "Sujet 2024 : deux cas pratiques. Cas I (triangle AlphaDot/CUK/SOFISPE, contrats interdependants apres cyberattaque - 15 points). Cas II (enfant de 13 ans blesse en escaladant un toit prive avec panneaux d'interdiction - 5 points). Trois questions extraites (Q1 et Q2 du cas I, Q3 du cas II)."
+  },
+  "questions": [
+    {
+      "id": "CNB-OBLIG-2024-Q1",
+      "branche": "civil",
+      "specialisation": "Droit des contrats - Inexecution et resolution",
+      "question": "Un fournisseur de solutions de cybersecurite (AlphaDot) a conclu avec un client (CUK) un contrat de services (fourniture de logiciels de securite, maintenance, formation) sous forme d'abonnement pluriannuel soumis a la loi francaise. Une cyberattaque survient, non stoppee par les systemes livres, et detruit une partie des donnees du client. Le client notifie la rupture immediate du contrat et reclame la restitution des sommes versees ainsi que des dommages-interets. Quels sont les moyens de defense et les risques juridiques d'AlphaDot face a cette rupture unilaterale et a ces demandes d'indemnisation ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualification : contrat de prestation de services soumis au droit commun des contrats (reforme de 2016) et a la loi francaise en vertu de la clause d'election de droit.",
+            "linked_article": "code_civil:1103"
+          },
+          {
+            "text": "La rupture unilaterale du contrat par CUK doit s'analyser soit comme une resolution pour inexecution, soit comme une resiliation fautive. La resolution judiciaire ou unilaterale est prevue en cas d'inexecution suffisamment grave.",
+            "linked_article": "code_civil:1224"
+          },
+          {
+            "text": "Resolution par notification (unilaterale) : elle est autorisee en cas d'inexecution suffisamment grave, aux risques et perils du creancier, a condition d'une mise en demeure prealable sauf urgence.",
+            "linked_article": "code_civil:1226"
+          },
+          {
+            "text": "Determiner la nature de l'obligation d'AlphaDot (obligation de moyens ou obligation de resultat) : en matiere de cybersecurite, la jurisprudence retient generalement une obligation de moyens renforcee, car il est impossible de garantir l'absence totale d'attaque.",
+            "linked_article": "code_civil:1231-1"
+          },
+          {
+            "text": "Consequences de la resolution : restitutions reciproques des prestations echangees, selon les regles des restitutions.",
+            "linked_article": "code_civil:1229"
+          },
+          {
+            "text": "Responsabilite contractuelle : le debiteur est condamne au paiement de dommages-interets a raison de l'inexecution, sauf s'il justifie que celle-ci provient d'une cause etrangere qui ne peut lui etre imputee.",
+            "linked_article": "code_civil:1231-1"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Exigence de mise en demeure prealable (sauf urgence) avant la resolution par notification - l'absence de mise en demeure prealable par CUK peut rendre la resolution unilaterale irreguliere et transformer la rupture en resiliation fautive.",
+            "linked_article": "code_civil:1226"
+          },
+          {
+            "text": "Force majeure comme cause d'exoneration eventuelle : la cyberattaque peut etre qualifiee de force majeure si elle est exterieure, imprevisible et irresistible - argumentation classique mais aleatoire car les attaques informatiques sont generalement considerees comme previsibles pour un professionnel de la cybersecurite.",
+            "linked_article": "code_civil:1218"
+          },
+          {
+            "text": "Effets de la resolution : restitutions integrales pour les contrats a execution instantanee ; pour les contrats a execution successive, seules les prestations non executees utilement donnent lieu a restitution (resolution equivaut alors a resiliation pour l'avenir).",
+            "linked_article": "code_civil:1229"
+          },
+          {
+            "text": "Possibilite pour AlphaDot d'invoquer une clause limitative ou exoneratoire de responsabilite, si elle figure au contrat - validite de principe sauf faute lourde ou dolosive, ou si la clause prive de sa substance l'obligation essentielle du debiteur.",
+            "linked_article": "code_civil:1170"
+          },
+          {
+            "text": "Le creancier peut refuser l'execution et solliciter la reduction du prix (exception d'inexecution ou reduction de prix proportionnelle).",
+            "linked_article": "code_civil:1223"
+          },
+          {
+            "text": "Arret Chronopost/Faurecia : les clauses limitatives qui contredisent la portee de l'obligation essentielle sont reputees non ecrites.",
+            "ref": "Com., 22 octobre 1996 (Chronopost)",
+            "uncertainty_note": "Date et principe connus, numero de pourvoi approximatif (n 93-18.632), ECLI non certifie."
+          }
+        ],
+        "expert": [
+          {
+            "text": "Articulation entre resolution unilaterale (art. 1226) et clause resolutoire eventuelle (art. 1225) : si le contrat prevoit une clause resolutoire, celle-ci prime et ses conditions formelles (mise en demeure visant la clause) doivent etre respectees.",
+            "linked_article": "code_civil:1225"
+          },
+          {
+            "text": "Charge de la preuve : dans le regime de l'obligation de moyens, c'est au creancier (CUK) de prouver la faute d'AlphaDot dans l'execution (defaut de diligence dans le choix, le deploiement ou la maintenance des solutions).",
+            "linked_article": "code_civil:1353"
+          },
+          {
+            "text": "Devoir d'information et de conseil du prestataire informatique specialise : un manquement a ce devoir engage sa responsabilite precontractuelle et/ou contractuelle - important si CUK invoque un defaut d'adequation des solutions a ses besoins.",
+            "linked_article": "code_civil:1112-1"
+          },
+          {
+            "text": "Principe de reparation integrale : AlphaDot repond des dommages previsibles au moment de la formation du contrat (sauf dol ou faute lourde ou il repond aussi des dommages imprevisibles).",
+            "linked_article": "code_civil:1231-3"
+          },
+          {
+            "text": "Limitation des dommages : le creancier ne peut reclamer reparation des consequences aggravees par son propre fait, notamment en cas de manquement a l'obligation de moderation du dommage (mitigation of damages - non consacre expressement mais present en jurisprudence).",
+            "linked_article": "code_civil:1231-2"
+          },
+          {
+            "text": "Qualification possible d'un defaut de conformite ou d'une garantie contractuelle specifique si le contrat detaille les niveaux de service (SLA) - peut concurrencer le regime de droit commun.",
+            "linked_article": "code_civil:1217"
+          },
+          {
+            "text": "Responsabilite deliberement pensee comme contractuelle : non-cumul des responsabilites contractuelle et delictuelle entre cocontractants pour les dommages causes par l'inexecution du contrat (principe prevu par la jurisprudence constante).",
+            "linked_jp": "Cass. civ. 1re, 11 janvier 1922 (principe de non-cumul)",
+            "uncertainty_note": "Principe classique tres ancien, date et ref exacte non certifiee."
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1103",
+          "code_civil:1224",
+          "code_civil:1226",
+          "code_civil:1229",
+          "code_civil:1231-1"
+        ],
+        "optionnels": [
+          "code_civil:1218",
+          "code_civil:1223",
+          "code_civil:1170",
+          "code_civil:1225",
+          "code_civil:1353",
+          "code_civil:1112-1",
+          "code_civil:1231-3",
+          "code_civil:1231-2",
+          "code_civil:1217"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Com., 22 octobre 1996 (Chronopost)",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "why": "Principe selon lequel une clause limitative de responsabilite qui contredit l'obligation essentielle du debiteur est reputee non ecrite - pertinent si AlphaDot veut invoquer une clause limitative.",
+          "uncertainty_note": "Date (22 octobre 1996) et nom de l'arret (Chronopost) connus, ECLI et numero de pourvoi (n 93-18.632) non certifies avec precision."
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. com., 29 juin 2010 (Faurecia II)",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "why": "Confirmation et precision de la jurisprudence Chronopost sur les clauses limitatives en matiere informatique.",
+          "uncertainty_note": "Nom et annee connus (revirement Faurecia), date exacte et numero de pourvoi non certifies - a verifier."
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [
+          "code_civil:1147",
+          "code_civil:1184"
+        ],
+        "not_to_cite_jp": []
+      },
+      "source_extract": "Fin 2023, CUK a alerte AlphaDot qu'elle etait victime d'une cyberattaque d'ampleur que les systemes de cybersecurite n'avaient pas stoppee. [...] Furieux, le dirigeant de CUK met fin immediatement au contrat 'Services' conclu avec AlphaDot et demande le remboursement de toutes les sommes payees au titre de ce contrat ainsi que des dommages et interets pour le prejudice subi. AlphaDot vous consulte sur sa situation vis-a-vis de CUK. (8 points)"
+    },
+    {
+      "id": "CNB-OBLIG-2024-Q2",
+      "branche": "civil",
+      "specialisation": "Droit des contrats - Groupes de contrats / Indivisibilite",
+      "question": "Trois contrats ont ete conclus le meme jour dans une operation financiere de fourniture informatique : (1) un contrat de services entre un fournisseur (AlphaDot) et le client utilisateur (CUK), (2) un contrat de vente du materiel entre AlphaDot et une societe financiere specialisee (SOFISPE), (3) un contrat de location du materiel entre SOFISPE et CUK. Apres une cyberattaque et la destruction de donnees, le client utilisateur met fin au contrat de services et cesse le paiement des loyers a la societe financiere. Quelle est la situation juridique de la societe financiere (SOFISPE) vis-a-vis du client (CUK) et du fournisseur (AlphaDot) : peut-elle exiger le paiement des loyers, et dispose-t-elle de recours contre le fournisseur ?",
+      "perspective": "defense",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualification de l'operation : ensemble de contrats concomitants concourant a une meme operation economique - il s'agit d'un groupe de contrats (schema typique de credit-bail ou location financiere) necessitant d'examiner leur interdependance.",
+            "linked_article": "code_civil:1186"
+          },
+          {
+            "text": "Principe de l'effet relatif des contrats : en principe, CUK n'est pas partie au contrat de vente entre AlphaDot et SOFISPE, et SOFISPE n'est pas partie au contrat de services. Mais ce principe est attenue par l'interdependance contractuelle.",
+            "linked_article": "code_civil:1199"
+          },
+          {
+            "text": "Caducite du contrat interdependant : lorsque plusieurs contrats concourent a une meme operation, la disparition de l'un rend caducs les autres dont l'execution est impossible ou qui etaient une condition determinante du consentement.",
+            "linked_article": "code_civil:1186"
+          },
+          {
+            "text": "Si le contrat de services est resolu ou resilie pour inexecution imputable a AlphaDot, la caducite du contrat de location de materiel liant SOFISPE et CUK peut etre prononcee - CUK peut opposer cette caducite a SOFISPE pour cesser le paiement des loyers."
+          },
+          {
+            "text": "Recours de SOFISPE contre AlphaDot : si la caducite est constatee, SOFISPE subit un prejudice (perte des loyers) et peut rechercher la responsabilite d'AlphaDot sur le fondement de l'inexecution du contrat de vente du materiel ou d'un manquement a un devoir d'information.",
+            "linked_article": "code_civil:1231-1"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Critere de l'interdependance : les contrats doivent s'inserer dans une meme operation et leur execution doit etre necessaire a la realisation de cette operation economique d'ensemble - apprecie par le juge au cas par cas.",
+            "linked_article": "code_civil:1186"
+          },
+          {
+            "text": "La caducite ne s'impose que si la partie qui l'invoque demontre que l'operation d'ensemble etait connue de tous les contractants (conscience du groupe) - element determinant ici puisque le montage tripartite etait initie par AlphaDot.",
+            "linked_article": "code_civil:1186"
+          },
+          {
+            "text": "Clauses divisibles / d'autonomie : une stipulation contraire prevue au contrat de location peut neutraliser la caducite automatique, mais la jurisprudence reputera ces clauses non ecrites si elles contredisent l'interdependance objective (jurisprudence Chambre mixte 17 mai 2013).",
+            "linked_jp": "Cass. ch. mixte, 17 mai 2013"
+          },
+          {
+            "text": "Effet de la caducite : elle met fin aux contrats ex nunc (pour l'avenir), mais peut donner lieu a restitutions pour les prestations deja executees et qui n'ont plus de cause.",
+            "linked_article": "code_civil:1187"
+          },
+          {
+            "text": "SOFISPE peut egalement agir contre AlphaDot sur le fondement de la garantie des vices caches ou du defaut de conformite du materiel vendu, si les serveurs presentaient un defaut intrinseque (independamment de l'echec des logiciels de cybersecurite).",
+            "linked_article": "code_civil:1641"
+          },
+          {
+            "text": "Action directe du sous-acquereur en garantie des vices : CUK, sous-locataire/utilisateur, pourrait disposer d'une action directe contre AlphaDot (vendeur initial) sur le fondement de la garantie des vices caches attachee a la chose vendue.",
+            "linked_jp": "Cass. ass. plen., 7 fevrier 1986 (actions directes en garantie)",
+            "uncertainty_note": "Principe d'action directe consacre par une serie d'arrets, date exacte de l'arret Ass. plen. 1986 a verifier."
+          }
+        ],
+        "expert": [
+          {
+            "text": "Jurisprudence de la Chambre mixte du 17 mai 2013 : dans un ensemble contractuel forme d'un contrat principal et d'un contrat de location financiere finance, les clauses de divisibilite entre les contrats sont reputees non ecrites. La consecration legislative est intervenue avec l'ordonnance de 2016 (art. 1186).",
+            "linked_jp": "Cass. ch. mixte, 17 mai 2013, n 11-22.768 et n 11-22.927",
+            "uncertainty_note": "Date (17 mai 2013) et formation (Chambre mixte) certaines ; numeros de pourvoi plausibles mais a verifier."
+          },
+          {
+            "text": "Distinction fondamentale : groupe de contrats translatifs (chaine) vs. groupe de contrats non translatifs (ensemble) - ici on a un ensemble, pas une chaine de vente - le regime applicable est celui de l'art. 1186 (caducite) et non celui de la responsabilite contractuelle de l'action directe.",
+            "linked_article": "code_civil:1186"
+          },
+          {
+            "text": "Possibilite pour SOFISPE d'exciper de l'exception d'inexecution uniquement dans les rapports bilateraux : SOFISPE doit executer sa propre obligation de mise a disposition du materiel pour exiger les loyers (art. 1219) - probablement deja executee ici.",
+            "linked_article": "code_civil:1219"
+          },
+          {
+            "text": "Responsabilite de SOFISPE en qualite de mandataire apparent ou de cocontractant implicite vis-a-vis de CUK : peu probable dans ce montage de location financiere classique, mais a ecarter explicitement.",
+            "linked_article": "code_civil:1240"
+          },
+          {
+            "text": "Articulation avec le droit de la consommation : exclu ici car CUK est une personne morale professionnelle - pas d'application des regles protectrices du consommateur (notamment l'art. L.312-55 C. consommation sur l'interdependance credit/operation principale).",
+            "linked_article": "code_de_la_consommation:L312-55"
+          },
+          {
+            "text": "Recours subroge eventuel de SOFISPE : si SOFISPE doit rembourser le materiel a CUK apres caducite, elle peut exercer un recours subrogatoire contre AlphaDot sur le fondement du contrat de vente.",
+            "linked_article": "code_civil:1346"
+          },
+          {
+            "text": "Influence potentielle de l'internationalite (client base a Kiev) - ici neutralisee par la clause d'election de droit francais (loi francaise applicable au contrat de services) - mais attention : cette clause ne lie pas necessairement tous les contrats du groupe (notamment celui entre SOFISPE et CUK si aucune clause analogue)."
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1186",
+          "code_civil:1199",
+          "code_civil:1231-1"
+        ],
+        "optionnels": [
+          "code_civil:1187",
+          "code_civil:1641",
+          "code_civil:1219",
+          "code_civil:1346",
+          "code_de_la_consommation:L312-55"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. ch. mixte, 17 mai 2013, n 11-22.768",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "why": "Arret de principe consacrant l'interdependance des contrats concomitants concourant a une meme operation et neutralisant les clauses de divisibilite - fondement jurisprudentiel de l'art. 1186 actuel.",
+          "uncertainty_note": "Date (17 mai 2013) et Chambre mixte certaines, numero de pourvoi a verifier."
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. ass. plen., 7 fevrier 1986 (garantie sous-acquereur)",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "why": "Possibilite pour le sous-acquereur (ou utilisateur final) d'exercer une action directe en garantie des vices caches contre le vendeur initial.",
+          "uncertainty_note": "Principe certain, date et numero de pourvoi de l'Ass. plen. a verifier."
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [
+          "code_civil:1134",
+          "code_civil:1165"
+        ],
+        "not_to_cite_jp": []
+      },
+      "source_extract": "Par un autre contrat conclu avec AlphaDot le meme jour, SOFISPE acquiert par ailleurs l'ensemble des materiels informatiques. Enfin, par un dernier contrat, toujours date du 10 juin 2023, SOFISPE loue ces derniers a la societe CUK moyennant 250 000 euros par an pour une duree de six ans. [...] Il met egalement fin au contrat le liant a SOFISPE pour le materiel et cesse le paiement des loyers. SOFISPE vous consulte egalement sur sa situation vis-a-vis de CUK et d'AlphaDot. (7 points)"
+    },
+    {
+      "id": "CNB-OBLIG-2024-Q3",
+      "branche": "civil",
+      "specialisation": "Responsabilite civile extracontractuelle - Fait des choses / Batiment en ruine",
+      "question": "Une mineure de 13 ans grimpe sur le toit d'un garage appartenant a une societe, dont l'entretien est irregulier. Des tuiles mal entretenues se descellent sous son poids et provoquent sa chute, causant des blessures graves. Des panneaux d'interdiction d'entree, parfaitement visibles, etaient positionnes a l'entree du batiment. Sur quels fondements la mineure (representee par son pere) peut-elle obtenir reparation de ses prejudices, et quelles causes d'exoneration la societe proprietaire peut-elle invoquer ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Fondement principal : responsabilite du fait des choses - le gardien de la chose inanimee est responsable de plein droit des dommages causes par elle.",
+            "linked_article": "code_civil:1242"
+          },
+          {
+            "text": "Determination du gardien : le proprietaire (societe TITI) est presume gardien de la chose (presomption simple qui peut etre renversee en cas de transfert de garde).",
+            "linked_article": "code_civil:1242"
+          },
+          {
+            "text": "Conditions : (1) fait d'une chose, (2) role actif/causal de la chose dans la production du dommage, (3) existence d'un dommage - toutes remplies ici (chute de tuiles = role actif)."
+          },
+          {
+            "text": "Fondement alternatif (specifique) : responsabilite du proprietaire d'un batiment en ruine - responsabilite speciale pour les dommages causes par la ruine d'un batiment resultant d'un defaut d'entretien ou d'un vice de construction.",
+            "linked_article": "code_civil:1244"
+          },
+          {
+            "text": "Causes d'exoneration de la responsabilite du fait des choses : force majeure, fait du tiers ou faute de la victime. Ici, la societe TITI invoquera la faute de la victime (intrusion malgre les panneaux d'interdiction).",
+            "linked_article": "code_civil:1242"
+          },
+          {
+            "text": "La faute de la victime, pour etre totalement exoneratoire, doit presenter les caracteres de la force majeure (imprevisible et irresistible) ; a defaut, elle est seulement partiellement exoneratoire."
+          }
+        ],
+        "expected": [
+          {
+            "text": "Articulation entre art. 1242 al. 1 (fait des choses) et art. 1244 (batiment en ruine) : l'art. 1244 est un regime special qui ecarte en principe l'art. 1242 al. 1 lorsqu'il s'applique (ruine d'un batiment par defaut d'entretien ou vice de construction).",
+            "linked_article": "code_civil:1244"
+          },
+          {
+            "text": "Article 1244 : la responsabilite pese sur le proprietaire (et non le gardien) et suppose la preuve que la ruine provient d'un defaut d'entretien ou d'un vice de construction - la victime doit rapporter cette preuve.",
+            "linked_article": "code_civil:1244"
+          },
+          {
+            "text": "Appreciation in abstracto de la faute de la victime : une faute d'imprudence ou de negligence est generalement retenue contre une personne qui entre malgre une interdiction visible - mais consequence attenuee s'agissant d'une mineure.",
+            "linked_article": "code_civil:1241"
+          },
+          {
+            "text": "Jurisprudence Derguini et Lemaire (Ass. plen., 9 mai 1984) : la faute de la victime mineure est appreciee objectivement (sans tenir compte de son discernement), ce qui permet d'opposer a la mineure sa propre imprudence.",
+            "linked_jp": "Cass. ass. plen., 9 mai 1984, n 80-93.031 (Derguini) et n 80-93.481 (Lemaire)",
+            "uncertainty_note": "Noms des arrets (Derguini / Lemaire) et date (9 mai 1984) certains ; numeros de pourvoi plausibles mais a verifier."
+          },
+          {
+            "text": "Partage de responsabilite : si la faute de la victime n'a pas les caracteres de la force majeure, elle entraine seulement une exoneration partielle (reduction de l'indemnisation) - principe classique en matiere de responsabilite du fait des choses.",
+            "linked_jp": "Cass. civ. 2e, Desmares, 21 juillet 1982 (revire par la suite)",
+            "uncertainty_note": "Arret Desmares historique ; la jurisprudence est revenue a l'exoneration partielle classique ensuite."
+          }
+        ],
+        "expert": [
+          {
+            "text": "Jurisprudence sur les tuiles et elements de batiment : la distinction entre ruine du batiment (art. 1244) et chute d'un element accessoire relevant de l'art. 1242 al. 1 est subtile et decisive pour choisir le fondement.",
+            "linked_article": "code_civil:1244"
+          },
+          {
+            "text": "Regime d'option ou de cumul : la victime peut cumuler les fondements de l'art. 1242 al. 1 et de l'art. 1244 ? La jurisprudence traditionnelle ecarte le cumul : l'art. 1244 est exclusif de l'art. 1242 al. 1 lorsque ses conditions sont reunies.",
+            "linked_article": "code_civil:1244"
+          },
+          {
+            "text": "Role de la signalisation (panneaux d'interdiction) : elle aggrave la faute de la victime qui y contrevient, mais ne dispense pas le proprietaire de son obligation d'entretien - la faute de la societe TITI (entretien irregulier) persiste.",
+            "linked_article": "code_civil:1242"
+          },
+          {
+            "text": "Acceptation des risques : theorie jurisprudentielle utilisee principalement dans le cadre sportif, ecartee dans le cadre d'une intrusion delictueuse. La cyberescalade de Jeanne n'entre pas dans une acceptation organisee des risques.",
+            "uncertainty_note": "Principe connu, pas de ref specifique requise."
+          },
+          {
+            "text": "Representation de la mineure : Jeanne etant mineure (13 ans), l'action en reparation est exercee par son pere Alphonse en qualite d'administrateur legal (art. 382 et suivants du Code civil).",
+            "linked_article": "code_civil:382"
+          },
+          {
+            "text": "Qualification penale possible : l'intrusion peut constituer une violation de domicile (art. 226-4 C. penal) ou une intrusion dans les locaux d'une entreprise (art. L.2165-5 C. du travail pour certains cas) - mais les mineurs de moins de 13 ans ne sont pas penalement responsables ; a 13 ans, responsabilite penale attenuee (ordonnance 1945).",
+            "linked_article": "code_penal:226-4",
+            "uncertainty_note": "Article 226-4 C. penal concerne la violation de domicile ; a confirmer pour un garage."
+          },
+          {
+            "text": "Jurisprudence Fullenwarth et Gabillet (Ass. plen., 9 mai 1984) : meme principe d'appreciation objective de la faute etendu a l'imputabilite de la faute aux mineurs - contexte d'extension globale de la responsabilite objective en 1984.",
+            "linked_jp": "Cass. ass. plen., 9 mai 1984 (Fullenwarth, Gabillet)",
+            "uncertainty_note": "Meme date (9 mai 1984) - salve d'arrets de principe Ass. plen. sur la responsabilite civile et la faute du mineur."
+          },
+          {
+            "text": "Nuance : la Cour de cassation a dans certaines decisions retenu une exoneration totale en cas d'imprudence caracterisee de la victime face a un danger apparent - portee pratique du caractere imprevisible/irresistible de la faute victimaire.",
+            "uncertainty_note": "Principe constant mais pas de ref specifique mobilisee sans verification."
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_civil:1242",
+          "code_civil:1244"
+        ],
+        "optionnels": [
+          "code_civil:1241",
+          "code_civil:382",
+          "code_penal:226-4"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. ass. plen., 9 mai 1984 (Derguini et Lemaire)",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "why": "Appreciation objective de la faute de la victime mineure, permettant d'opposer a Jeanne sa propre imprudence malgre son jeune age.",
+          "uncertainty_note": "Date et noms d'arrets certains, numeros de pourvoi a verifier precisement."
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 2e, Desmares, 21 juillet 1982",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "why": "Arret historique (revire) qui excluait le partage de responsabilite - sert a retracer l'evolution de la doctrine sur la faute de la victime.",
+          "uncertainty_note": "Arret Desmares (historique), revire par la suite."
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [
+          "code_civil:1382",
+          "code_civil:1383",
+          "code_civil:1384"
+        ],
+        "not_to_cite_jp": []
+      },
+      "source_extract": "Jeanne, agee de 13 ans. Jeanne a une passion atypique. Elle adore escalader les murs et vagabonder sur les toits. En juillet 2024, alors qu'elle courait sur le toit d'un garage, propriete de la societe TITI, elle s'est grievement blessee. Des tuiles se sont descellees sous son poids et l'ont entrainee dans leur chute. [...] Alphonse se demande si Jeanne peut obtenir reparation des prejudices qu'elle a subis. (5 points)"
+    }
+  ]
+}

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Étape 1 — Note pédagogique</title>
+<style>
+  :root{
+    --ink:#1a1d24; --ink-soft:#3c4250; --paper:#faf8f3; --card:#ffffff;
+    --line:#e3ddd0; --accent:#7c2d2d; --accent-soft:#a8453f;
+    --ok:#2f6f4f; --warn:#9a6b1e; --mute:#8a8474;
+    --code-bg:#f3efe6; --tint:#fbf3ec;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:17px/1.65 ui-serif,"Iowan Old Style",Georgia,"Times New Roman",serif;
+    padding:0 24px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:64px 0 96px}
+
+  header{border-bottom:2px solid var(--ink);padding-bottom:32px;margin-bottom:24px}
+  .kicker{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-size:2.6rem;line-height:1.1;margin:0 0 18px;letter-spacing:-.015em}
+  .sub{font-size:1.12rem;color:var(--ink-soft);margin:0;max-width:64ch;line-height:1.5}
+  .meta{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px;
+    font:500 12.5px/1 ui-sans-serif,system-ui,sans-serif}
+  .meta span{background:var(--card);border:1px solid var(--line);
+    padding:7px 11px;border-radius:999px;color:var(--ink-soft)}
+
+  h2{font-size:1.7rem;margin:64px 0 8px;letter-spacing:-.01em;
+    padding-bottom:10px;border-bottom:1px solid var(--line);font-weight:700}
+  h2 .num{font:800 .75em ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    margin-right:.55em;letter-spacing:.04em}
+  h3{font:600 1.08rem/1.4 ui-sans-serif,system-ui,sans-serif;margin:30px 0 8px;color:var(--ink)}
+  p{margin:14px 0}
+  .lead{font-size:1.12rem;color:var(--ink-soft);max-width:62ch}
+
+  code{font:13.5px/1.5 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    background:var(--code-bg);padding:1.5px 6px;border-radius:5px;color:var(--accent-soft)}
+  em{color:var(--ink)}
+  strong{color:var(--ink)}
+
+  .tldr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:22px 26px;margin:32px 0}
+  .tldr h3{margin:0 0 8px;color:var(--accent);font-size:.78rem;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:800}
+  .tldr p{margin:0;font-size:1.08rem;line-height:1.55}
+
+  .stat{display:flex;gap:22px;margin:24px 0;flex-wrap:wrap}
+  .stat figure{flex:1;min-width:200px;margin:0;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;padding:18px 20px;text-align:left}
+  .stat .big{font:800 2.4rem/1 ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    letter-spacing:-.02em;display:block;margin-bottom:6px}
+  .stat .cap{font:13px/1.45 ui-sans-serif,system-ui,sans-serif;color:var(--mute)}
+
+  figure.diagram{margin:34px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:30px 24px 20px}
+  figcaption{font:500 13px/1.55 ui-sans-serif,system-ui,sans-serif;
+    color:var(--mute);text-align:center;margin-top:14px;max-width:64ch;
+    margin-left:auto;margin-right:auto}
+  svg{display:block;width:100%;height:auto}
+
+  .callout{margin:26px 0;padding:20px 22px;border-radius:10px;
+    background:var(--tint);border:1px solid #ecd9c4}
+  .callout b{font:700 11.5px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--warn);display:block;margin-bottom:10px}
+  .callout p{margin:6px 0}
+  .callout.note{background:var(--card);border-color:var(--line)}
+  .callout.note b{color:var(--ink)}
+
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:24px 0}
+  .twocol > div{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px}
+  .twocol h3{margin-top:0}
+  @media (max-width: 720px){ .twocol{grid-template-columns:1fr} }
+
+  ul{margin:14px 0;padding-left:24px}
+  li{margin:8px 0}
+  ul.tight li{margin:4px 0}
+
+  .terms dt{font:600 14px/1.4 ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    margin-top:14px}
+  .terms dd{margin:4px 0 0 0;color:var(--ink-soft);font-size:15px}
+
+  footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);
+    font:13px/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--mute)}
+  footer a{color:var(--accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Knowledge Graph juridique · Note pédagogique</p>
+  <h1>Étape 1 — Embedding pur, sans graphe</h1>
+  <p class="sub">Ce qu'on mesure, pourquoi maintenant, comment on s'y prend. Pour
+  comprendre l'expérience en une lecture, avant d'ouvrir le code.</p>
+  <div class="meta">
+    <span>2026-05-20</span>
+    <span>8 questions CRFPA</span>
+    <span>8 085 articles · 4 codes pénaux</span>
+    <span>~93 k JP cassation</span>
+    <span>BGE-M3 · 1 024 dim · 8 192 tok</span>
+  </div>
+</header>
+
+<div class="tldr">
+  <h3>En une phrase</h3>
+  <p>On veut savoir <strong>jusqu'à quel point un bon encodeur de texte, seul,
+  retrouve les bons articles et les bonnes décisions de jurisprudence pour une question
+  juridique</strong> — avant d'invoquer la moindre exploitation du graphe.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§1</span>L'objet du plan</h2>
+
+<p class="lead">L'expérience est un instrument de mesure. On lui passe en entrée
+une question juridique, et on regarde dans quel ordre il sort les articles du Code pénal
+et les arrêts de la Cour de cassation. Si les bons documents (ceux qu'un correcteur
+CRFPA attendrait) remontent en tête, l'instrument est précis. Sinon, il faut comprendre
+pourquoi avant d'ajouter de la complexité.</p>
+
+<p>Concrètement : on encode tout (les 8 085 articles des codes pénaux, ~93 000 résumés
+de jurisprudence, et chaque question) en vecteurs avec le même modèle (BGE-M3), on
+calcule des similarités cosinus, on classe, et on mesure le <em>recall@K</em>. Aucun
+graphe utilisé à cette étape — c'est exactement ce qui fait l'intérêt scientifique
+de la mesure.</p>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§2</span>Pourquoi maintenant ?</h2>
+
+<p class="lead">Trois raisons cumulatives, qui font de cette étape la
+<strong>première sur le chemin critique</strong>.</p>
+
+<h3>1. Le 5 mai a établi que l'embedding était le bottleneck</h3>
+<p>Sur la baseline B2 (embedding <code>multilingual-e5-base</code> sur 118 k JP pénales),
+on a regardé à quel rang remontent les arrêts gold pour chaque question. Le résultat
+était sans appel :</p>
+
+<div class="stat">
+  <figure>
+    <span class="big">76 782</span>
+    <span class="cap">rang médian des arrêts gold<br>sur 118 112 candidats</span>
+  </figure>
+  <figure>
+    <span class="big">100 %</span>
+    <span class="cap">couverture : tous les gold<br><em>sont</em> dans le corpus</span>
+  </figure>
+  <figure>
+    <span class="big">0 / 16</span>
+    <span class="cap">gold remontés en top-10<br>par l'embedding e5-base</span>
+  </figure>
+</div>
+
+<p>Le corpus est complet et bien constitué. Le retrieval est cassé parce que
+l'<strong>encodeur ne comprend pas la sémantique juridique française</strong> —
+les résumés CC en MAJUSCULES (« STATUANT SUR LA RESPONSABILITÉ… ») sont sémantiquement
+loin des questions modernes formulées en langue courante. Un encodeur généraliste
+multilingue n'a jamais vu ce type de texte à l'entraînement.</p>
+
+<h3>2. Avant d'exploiter le graphe, il faut un plancher honnête</h3>
+<p>L'Étape 2 (complétion d'embeddings via le laplacien du graphe) et l'Étape 3
+(GNN link prediction sur un benchmark étendu) supposent toutes deux que les embeddings
+de base portent du signal sémantique. <strong>Si l'encodeur est mauvais, le graphe
+amplifie le bruit, pas le signal</strong> — c'est exactement ce qu'on a vu le 5 mai
+avec le multi-hop M=2 (recall articles 89 %, mais 9 189 articles retournés pour
+8 attendus, précision 0,06 %).</p>
+
+<h3>3. Diagnostic avant optimisation</h3>
+<p>Il ne sert à rien d'entraîner un GNN si un meilleur encodeur off-the-shelf suffit
+à passer de « catastrophique » à « acceptable ». C'est la règle qu'on s'est donnée :
+<em>mesurer avant d'optimiser</em>. L'Étape 1 produit le plancher contre lequel toutes
+les méthodes ultérieures se comparent.</p>
+
+<div class="callout note">
+  <b>Le principe directeur</b>
+  <p>Diagnostic-first. À chaque étape lourde (embedding du corpus, complétion par
+  optimisation, entraînement de GNN), on précède d'un test peu coûteux qui peut
+  l'invalider. Ici : on mesure la longueur en tokens <em>avant</em> d'embedder, on
+  mesure le taux de résolution <code>pair_key</code>→LEGI <em>avant</em> d'évaluer.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§3</span>Comment — l'expérience en image</h2>
+
+<p class="lead">Le schéma ci-dessous est l'instrument de mesure. Une seule question
+juridique entre à gauche, deux <em>K*</em> sortent en bas : l'un dit « combien d'articles
+faut-il regarder pour récupérer l'essentiel des bons articles », l'autre la même chose
+côté arrêts.</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 960 580" role="img" aria-label="Schéma expérimental de l'Étape 1">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7c2d2d"/>
+    </marker>
+    <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8a8474"/>
+    </marker>
+    <style>
+      .hd{font:700 14px ui-sans-serif,system-ui,sans-serif;fill:#1a1d24}
+      .tx{font:12px ui-sans-serif,system-ui,sans-serif;fill:#3c4250}
+      .mono{font:11.5px ui-monospace,monospace;fill:#7c2d2d}
+      .ln{stroke:#7c2d2d;stroke-width:1.6;fill:none;marker-end:url(#ar)}
+      .ln2{stroke:#8a8474;stroke-width:1.3;fill:none;marker-end:url(#ar2);stroke-dasharray:4 3}
+      .lbl{font:italic 11px ui-sans-serif,system-ui,sans-serif;fill:#8a8474}
+      .stamp{font:800 10px ui-sans-serif,system-ui,sans-serif;fill:#7c2d2d;letter-spacing:.08em}
+    </style>
+  </defs>
+
+  <!-- Question source -->
+  <rect x="370" y="20" width="220" height="76" rx="10" fill="#fff" stroke="#1a1d24" stroke-width="1.5"/>
+  <text class="stamp" x="382" y="38">QUESTION CRFPA</text>
+  <text class="tx" x="382" y="58" font-style="italic">« Quelles sont les conditions</text>
+  <text class="tx" x="382" y="74" font-style="italic">de la garde à vue ? »</text>
+  <text class="lbl" x="382" y="90">1 question parmi 8</text>
+
+  <!-- BGE-M3 encoder shared -->
+  <rect x="370" y="118" width="220" height="44" rx="22" fill="#7c2d2d" stroke="#7c2d2d"/>
+  <text x="480" y="146" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">BGE-M3 · 1 024 dim</text>
+
+  <!-- Question vector -->
+  <text class="lbl" x="480" y="184" text-anchor="middle">vecteur q ∈ ℝ¹⁰²⁴</text>
+  <line class="ln" x1="480" y1="96" x2="480" y2="116"/>
+  <line class="ln" x1="480" y1="162" x2="480" y2="178"/>
+
+  <!-- Split -->
+  <line class="ln" x1="480" y1="194" x2="240" y2="230"/>
+  <line class="ln" x1="480" y1="194" x2="720" y2="230"/>
+
+  <!-- ARTICLES TRACK ─────────────────────────────────── -->
+  <g>
+    <rect x="40" y="234" width="400" height="180" rx="12" fill="#fbf3ec" stroke="#9a6b1e" stroke-width="1.3"/>
+    <text class="stamp" x="56" y="254" fill="#9a6b1e">SIDE A · ARTICLES</text>
+
+    <!-- corpus -->
+    <text class="hd" x="56" y="278">Corpus encodé</text>
+    <text class="tx" x="56" y="296">8 085 articles pénaux (texte intégral LEGI)</text>
+    <g transform="translate(56,308)">
+      <circle cx="6" cy="6" r="4" fill="#7c2d2d"/>
+      <circle cx="22" cy="3" r="3" fill="#a8453f"/>
+      <circle cx="40" cy="9" r="3.5" fill="#a8453f"/>
+      <circle cx="58" cy="4" r="3" fill="#a8453f"/>
+      <circle cx="76" cy="10" r="3.5" fill="#a8453f"/>
+      <circle cx="94" cy="5" r="2.8" fill="#a8453f"/>
+      <circle cx="112" cy="8" r="3" fill="#a8453f"/>
+      <text class="lbl" x="130" y="9">→ 8 085 vecteurs</text>
+    </g>
+
+    <!-- similarity → ranked -->
+    <text class="hd" x="56" y="346">Score &amp; classement</text>
+    <text class="tx" x="56" y="364">cos(q, art_i) pour chaque article</text>
+    <text class="mono" x="56" y="382">→ top-K articles, classés</text>
+
+    <!-- metric -->
+    <text class="lbl" x="56" y="402">gold : articles_attendus.obligatoires</text>
+  </g>
+
+  <!-- JP TRACK ───────────────────────────────────────── -->
+  <g>
+    <rect x="520" y="234" width="400" height="180" rx="12" fill="#f3efe6" stroke="#8a8474" stroke-width="1.3"/>
+    <text class="stamp" x="536" y="254" fill="#3c4250">SIDE B · JURISPRUDENCE</text>
+
+    <text class="hd" x="536" y="278">Corpus encodé</text>
+    <text class="tx" x="536" y="296">~93 k résumés JP cassation (champ summary)</text>
+    <g transform="translate(536,308)">
+      <circle cx="6" cy="6" r="4" fill="#3c4250"/>
+      <circle cx="22" cy="3" r="3" fill="#8a8474"/>
+      <circle cx="40" cy="9" r="3.5" fill="#8a8474"/>
+      <circle cx="58" cy="4" r="3" fill="#8a8474"/>
+      <circle cx="76" cy="10" r="3.5" fill="#8a8474"/>
+      <circle cx="94" cy="5" r="2.8" fill="#8a8474"/>
+      <circle cx="112" cy="8" r="3" fill="#8a8474"/>
+      <text class="lbl" x="130" y="9">→ ~93 k vecteurs</text>
+    </g>
+
+    <text class="hd" x="536" y="346">Score &amp; classement</text>
+    <text class="tx" x="536" y="364">cos(q, jp_j) pour chaque arrêt</text>
+    <text class="mono" x="536" y="382">→ top-K arrêts, classés</text>
+
+    <text class="lbl" x="536" y="402">gold : jp_attendues (pourvoi résolu)</text>
+  </g>
+
+  <!-- Recall@K box ─────────────────────────────────── -->
+  <rect x="40" y="438" width="400" height="120" rx="12" fill="#fff" stroke="#7c2d2d" stroke-width="1.5"/>
+  <text class="stamp" x="56" y="458">MESURE · CÔTÉ ARTICLES</text>
+  <text class="hd" x="56" y="480">recall@K =</text>
+  <text class="tx" x="160" y="480">|top-K ∩ gold| / |gold|</text>
+  <text class="tx" x="56" y="502">Courbe K = 1, 3, 5, 10, 20, 50, 100…</text>
+  <text class="hd" x="56" y="528" fill="#2f6f4f">K*<tspan baseline-shift="sub" font-size="10">art</tspan> = min K tel que recall@K ≥ 0,5</text>
+  <text class="lbl" x="56" y="544">« combien d'articles regarder pour la moitié du gold »</text>
+
+  <rect x="520" y="438" width="400" height="120" rx="12" fill="#fff" stroke="#7c2d2d" stroke-width="1.5"/>
+  <text class="stamp" x="536" y="458">MESURE · CÔTÉ JP</text>
+  <text class="hd" x="536" y="480">recall@K =</text>
+  <text class="tx" x="640" y="480">|top-K ∩ gold| / |gold|</text>
+  <text class="tx" x="536" y="502">Courbe K = 1, 3, 5, 10, 20, 50, 100…</text>
+  <text class="hd" x="536" y="528" fill="#2f6f4f">K*<tspan baseline-shift="sub" font-size="10">jp</tspan> = min K tel que recall@K ≥ 0,5</text>
+  <text class="lbl" x="536" y="544">« combien d'arrêts regarder pour la moitié du gold »</text>
+
+  <!-- Side-track arrows -->
+  <line class="ln" x1="240" y1="414" x2="240" y2="436"/>
+  <line class="ln" x1="720" y1="414" x2="720" y2="436"/>
+</svg>
+<figcaption>L'expérience est symétrique : une question encodée par BGE-M3 produit
+un vecteur, qu'on confronte à deux corpus indépendants (articles, jurisprudence).
+Sur chacun, on classe par similarité cosinus, on intersecte avec le gold CRFPA,
+on en tire un <em>K*</em>.</figcaption>
+</figure>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§4</span>Le pipeline en 4 étages</h2>
+
+<p class="lead">Le schéma précédent montre <em>la mesure</em>. Le pipeline ci-dessous
+montre <em>comment on la produit</em>, en quatre temps. Chaque étage peut invalider
+le suivant — c'est volontaire.</p>
+
+<div class="twocol">
+  <div>
+    <h3>① Diagnostic de longueurs</h3>
+    <p>On tokenise les 8 085 articles et les ~93 k résumés avec le tokenizer BGE-M3.
+    Si tout tient en 8 192 tokens (le contexte du modèle), on peut embedder
+    <strong>sans aucune troncature</strong>. Sinon, on documente l'exception et on
+    applique un fallback chunk + mean-pool aux seuls dépassements.</p>
+    <p><em>Pourquoi en premier ?</em> Parce que la promesse « zéro troncature »
+    de Johnny doit être vérifiée empiriquement avant d'investir dans l'encodage.</p>
+  </div>
+  <div>
+    <h3>② Ingestion LEGI + linkage</h3>
+    <p>Aujourd'hui on n'a que les <em>identifiants</em> d'articles
+    (<code>code_penal:222-23</code>), pas le texte. On télécharge le dump ouvert
+    DILA et on le charge via <code>legi.py</code> dans une SQLite locale. Puis on
+    résout chaque <code>pair_key</code> → texte.</p>
+    <p><em>Le diagnostic critique :</em> taux de résolution sur les 8 085 articles
+    et plus particulièrement sur les 51 articles gold. Un gold non résolu plafonne
+    artificiellement le recall.</p>
+  </div>
+  <div>
+    <h3>③ Embedding</h3>
+    <p>Une seule passe avec BGE-M3 sur Mac MPS (~20 min). Sortie : deux matrices
+    <code>(N, 1024)</code> alignées sur l'ordre des nœuds du graphe — un vecteur
+    par article, un vecteur par résumé.</p>
+    <p><em>L'invariant</em> : chaque ligne d'embedding correspond exactement à une
+    colonne (article) ou ligne (JP) de la matrice du graphe. Voir §5.</p>
+  </div>
+  <div>
+    <h3>④ Évaluation sans graphe</h3>
+    <p>Pour chacune des 8 questions CRFPA, on calcule la similarité avec tous les
+    articles, on classe, on regarde quel rang remontent les gold, on en tire le
+    recall@K et K*. On répète côté JP.</p>
+    <p><em>Le mot-clef est sans graphe :</em> c'est le plancher de comparaison contre
+    lequel toutes les étapes futures se mesureront.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§5</span>L'invariant — la clé <code>pair_key</code></h2>
+
+<p class="lead">Un détail technique, mais central. Sans cet invariant, l'Étape 2
+(complétion d'embeddings sur le graphe) demanderait une jointure fragile a posteriori.
+Avec lui, c'est de l'alignement positionnel pur.</p>
+
+<figure class="diagram" style="padding:24px 24px 18px">
+<svg viewBox="0 0 880 220" role="img" aria-label="Triple alignement pair_key">
+  <defs>
+    <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7c2d2d"/>
+    </marker>
+  </defs>
+  <style>
+    .b{font:700 13.5px ui-sans-serif,system-ui,sans-serif;fill:#1a1d24}
+    .m{font:12px ui-monospace,monospace;fill:#3c4250}
+    .l{font:italic 11.5px ui-sans-serif,system-ui,sans-serif;fill:#8a8474}
+    .ln3{stroke:#7c2d2d;stroke-width:1.6;fill:none;marker-end:url(#ar3)}
+  </style>
+
+  <!-- pair_key central -->
+  <rect x="340" y="80" width="200" height="60" rx="12" fill="#7c2d2d"/>
+  <text x="440" y="106" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">pair_key</text>
+  <text x="440" y="126" text-anchor="middle" fill="#fff" font-size="12" font-style="italic">la clé canonique</text>
+
+  <!-- left: graph node -->
+  <rect x="20" y="60" width="240" height="100" rx="10" fill="#fff" stroke="#1a1d24" stroke-width="1.5"/>
+  <text class="b" x="36" y="84">Nœud du graphe</text>
+  <text class="m" x="36" y="104">article_ids[col] = pair_key</text>
+  <text class="l" x="36" y="124">colonne du graphe biparti</text>
+  <text class="l" x="36" y="140">(JP × articles, 87 821 cols)</text>
+
+  <!-- top: text -->
+  <rect x="340" y="10" width="200" height="48" rx="10" fill="#fff" stroke="#1a1d24" stroke-width="1.5"/>
+  <text class="b" x="440" y="32" text-anchor="middle">Texte LEGI</text>
+  <text class="l" x="440" y="48" text-anchor="middle">via legi.py (dump DILA)</text>
+
+  <!-- right: embedding row -->
+  <rect x="620" y="60" width="240" height="100" rx="10" fill="#fff" stroke="#1a1d24" stroke-width="1.5"/>
+  <text class="b" x="636" y="84">Ligne d'embedding</text>
+  <text class="m" x="636" y="104">emb_articles.npy[i]</text>
+  <text class="l" x="636" y="124">ligne i de la matrice</text>
+  <text class="l" x="636" y="140">(8 085 × 1 024)</text>
+
+  <!-- bottom: artifact -->
+  <rect x="280" y="170" width="320" height="40" rx="8" fill="#fbf3ec" stroke="#9a6b1e" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text class="m" x="440" y="195" text-anchor="middle" fill="#7c2d2d">articles_order.npy · pairkey_to_graphcol.npy</text>
+
+  <!-- arrows -->
+  <line class="ln3" x1="260" y1="100" x2="338" y2="100"/>
+  <line class="ln3" x1="440" y1="58" x2="440" y2="78"/>
+  <line class="ln3" x1="618" y1="100" x2="542" y2="100"/>
+  <line class="ln3" x1="440" y1="142" x2="440" y2="168"/>
+</svg>
+<figcaption>La clé <code>pair_key</code> (ex. <code>code_penal:222-23</code>) est l'index
+canonique qui relie le nœud du graphe, le texte LEGI, et la ligne d'embedding. L'ordre
+des lignes de <code>emb_articles.npy</code> est exactement celui des nœuds du graphe —
+aucun mapping à reconstruire en aval.</figcaption>
+</figure>
+
+<dl class="terms">
+  <dt>pair_key</dt>
+  <dd>Format <code>&lt;code_slug&gt;:&lt;num_article&gt;</code>. Produit par le regex V5
+  appliqué au texte des arrêts, déjà utilisé pour construire le graphe biparti.</dd>
+
+  <dt>articles_order.npy</dt>
+  <dd>La liste des pair_keys dans l'ordre exact des lignes de l'embedding. Permet
+  de retrouver « quel article est à la ligne 7 ? ».</dd>
+
+  <dt>pairkey_to_graphcol.npy</dt>
+  <dd>L'application inverse : pour chaque ligne d'embedding, l'indice de colonne
+  correspondant dans le graphe biparti complet (87 821 articles, tous codes confondus).
+  Utile à l'Étape 2 pour brancher les embeddings sur le laplacien.</dd>
+</dl>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§6</span>Ce qu'on saura à la fin</h2>
+
+<ul class="tight">
+  <li><strong>Distribution de longueur</strong> des articles et résumés en tokens
+  BGE-M3 (p50/p90/p99/p100) — confirme ou infirme la politique « zéro troncature ».</li>
+  <li><strong>Taux de résolution</strong> <code>pair_key</code>→LEGI : combien des
+  8 085 articles trouvent leur texte ; combien des 51 articles gold trouvent leur texte.
+  Plafond explicite du recall.</li>
+  <li><strong>Pour chaque question, K*</strong> côté articles et côté JP — la métrique
+  centrale que Johnny a demandée : « combien faut-il regarder pour la moitié du gold ».</li>
+  <li><strong>Les courbes recall@K</strong> complètes (de K=1 à K=1 000) — utiles pour
+  visualiser si la chute est franche ou progressive.</li>
+  <li><strong>Les artefacts d'alignement</strong> (<code>articles_order</code>,
+  <code>pairkey_to_graphcol</code>) — réutilisables tels quels par les Étapes 2 et 3.</li>
+</ul>
+
+<div class="callout">
+  <b>La question qui valide l'étape</b>
+  <p>Comment se compare le K* mesuré avec BGE-M3 à la baseline e5-base du 5 mai
+  (rang médian gold ≈ 76 800) ? Un facteur 10 d'amélioration validerait que le bottleneck
+  était bien l'encodeur. Un facteur 2-3 dirait qu'il faut aussi creuser le graphe et le
+  fine-tuning. Aucun progrès dirait qu'il faut un modèle légal-spécialisé (voyage-law,
+  fine-tuning juridique FR).</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§7</span>Limitations connues — assumées, pas masquées</h2>
+
+<ul>
+  <li><strong>Plafond par construction côté gold articles : 98 %.</strong> Un article
+  attendu (<code>code_penal:222-26-2</code>) n'est cité par aucune JP du corpus, donc
+  pas un nœud du graphe, donc inatteignable par l'embedding article. À reporter dans
+  les résultats.</li>
+
+  <li><strong>Éval côté JP biaisée par le format du gold.</strong> Le champ
+  <code>jp_attendues.ref</code> est <code>null</code> dans <code>rubrics_penal.json</code> ;
+  on doit extraire le numéro de pourvoi (« n° 18-82.829 ») par regex puis le retrouver
+  dans le corpus. Ce format ne fonctionne que pour les arrêts de cassation (CC) ;
+  pour CA/TJ, l'éval n'est pas exploitable. C'est une limitation déjà identifiée le 5 mai.</li>
+
+  <li><strong>8 questions = échantillon faible.</strong> Statistiquement, les K*
+  observés ont une variance importante. C'est exactement ce que l'Étape 3 corrigera
+  en générant un benchmark étendu via la doctrine.</li>
+
+  <li><strong>LEGI = droit actuel.</strong> Un article ancien abrogé ou renuméroté
+  depuis la date d'une JP ne matchera pas. Documenté dans le diagnostic d'ingestion.</li>
+</ul>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<h2><span class="num">§8</span>Pour aller plus loin</h2>
+
+<ul class="tight">
+  <li><strong>Le design technique :</strong>
+  <a href="Plan-Etape1-Embedding-Pur-2026-05-19.html">Plan-Etape1-Embedding-Pur-2026-05-19.html</a>
+  — décisions d'architecture, SVG du pipeline, tableau des alternatives écartées.</li>
+  <li><strong>Le plan d'exécution :</strong>
+  <code>05-Technique/benchmark/etape1_embedding_pur/PLAN.md</code>
+  — 9 tâches en TDD, scripts numérotés, à exécuter par un ingénieur ou un subagent.</li>
+  <li><strong>Le constat du 5 mai :</strong>
+  <code>01-Projet/journal/2026-05-05.md</code>
+  — l'analyse complète qui a motivé cette étape.</li>
+  <li><strong>La roadmap Johnny :</strong> §7 du même journal — les 3 étapes, leurs
+  dépendances et leur ordre.</li>
+</ul>
+
+<footer>
+  Note pédagogique · 2026-05-20 · Étape 1/3 de la roadmap Johnny ·
+  Document destiné à la compréhension du projet, complémentaire au plan technique.
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{
+  "schema_version": 3,
+  "experiment_id": "E021-reranking-comparable-v1-cluster-gpu-runtime-v5-resume-v3-2026-09-01",
+  "parent_manifest": "experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5_resume_v2.json",
+  "parent_manifest_sha256": "d699e3896f537c1d5ad6ea39b8101b60dadae7dee2fb0197bddd0cb9bd0a8f00",
+  "status": "prepared_for_invalid_duplicate_response_recovery",
+  "scientific_status": "exploratory_pending_complete_coverage",
+  "purpose": "Resume only the eleven invalid E021 family/question units. Preserve the frozen model, prompt, candidate pools and input hashes; deterministically normalize repeated model identifiers using the frozen candidate-pool order.",
+  "dataset_split": "eval_rich_retrievable_strict",
+  "dataset_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+  "candidate_families": ["cosine_bge_m3", "ppr", "lightgcn"],
+  "questions_per_family": 754,
+  "k_in": 20,
+  "k_out": 10,
+  "jobs": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_jobs/E021-cluster-gpu-runtime-v5/jobs.jsonl",
+    "sha256": "36f03198d39ec764095d3340ea1f8dc006b941e585245e30bd8e4c14a0a5afdf",
+    "count": 2262
+  },
+  "response_history": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_jobs/E021-cluster-gpu-runtime-v5/responses.jsonl",
+    "sha256_before_resume": "fe318254dc20a91b532e599ea4316f3495a43891b11862e2258b7e7d19766410",
+    "append_only": true,
+    "resume_unit": "family/question"
+  },
+  "reranker": {
+    "model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "model_revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "model_snapshot_path": "$HOME/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/4033b16200f4152e55e100ea12dc388c537df622",
+    "remote_model_resolution": "disabled",
+    "temperature": 0,
+    "max_tokens": 256,
+    "max_model_len": 16384,
+    "max_num_seqs": 2,
+    "gpu_memory_utilization": 0.9,
+    "response_format": "json_schema_items_enum_without_uniqueItems",
+    "local_parser": "strict_json_subset_then_stable_dedup_and_pool_order_completion",
+    "duplicate_response_policy": "retain each model-selected identifier at first occurrence; fill each vacant rank from the original duplicate-free candidate pool in ascending source order; record the fallback identifiers per response"
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_jobs/E021-cluster-gpu-runtime-v5/resume_v3",
+    "metrics": "metrics.json",
+    "completion_receipt": "completion_receipt.json",
+    "server_log": "vllm.log"
+  },
+  "cluster": {
+    "partition": "L40S",
+    "gpus": 1,
+    "cpus_per_task": 8,
+    "memory": "48G",
+    "time_limit": "06:00:00"
+  },
+  "scripts": {
+    "runner": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/68_run_e021_reranking.py",
+      "sha256": "52835ab623949ecdda012744a658720eb5c7798fdfcbe53120500bdeeb68a0e5"
+    },
+    "aggregator": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/70_aggregate_e021_metrics.py",
+      "sha256": "6d6b76d6b56b4b88aa16961bd46bf9935f347ced514b60cc78f8100ad8b4bbfc"
+    },
+    "finalizer": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/72_finalize_e021_resume.py",
+      "sha256": "73a957396b8f2e7a82bc1db63d5afd0625cf290c6cd6ffd83227e7b9586c327d"
+    },
+    "batch": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_e021_reranking_resume.sh",
+      "sha256": "61b741eb29a85bdaf89826f968bd525b9c9a1b461bbff511002d1947256d060d"
+    },
+    "launcher": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/run_telecom_reproducibility.sh",
+      "sha256": "b9cc4c48bf805d923567f1430ec733f225663ed29386faf84a784e2482d270d1"
+    }
+  }
+}

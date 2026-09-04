@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan — Étape 1 : Embedding pur, sans graphe</title>
+<style>
+  :root{
+    --ink:#1a1d24; --ink-soft:#3c4250; --paper:#faf8f3; --card:#ffffff;
+    --line:#e3ddd0; --accent:#7c2d2d; --accent-soft:#a8453f;
+    --ok:#2f6f4f; --warn:#9a6b1e; --mute:#8a8474;
+    --code-bg:#f3efe6;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:16px/1.6 ui-serif,"Iowan Old Style",Georgia,"Times New Roman",serif;
+    padding:0 24px;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:64px 0 96px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:8px}
+  .kicker{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h1{font-size:2.45rem;line-height:1.12;margin:0 0 14px;letter-spacing:-.01em}
+  .sub{font-size:1.05rem;color:var(--ink-soft);margin:0;max-width:62ch}
+  .meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px;
+    font:500 12.5px/1 ui-sans-serif,system-ui,sans-serif}
+  .meta span{background:var(--card);border:1px solid var(--line);
+    padding:7px 11px;border-radius:999px;color:var(--ink-soft)}
+  h2{font-size:1.5rem;margin:58px 0 6px;letter-spacing:-.01em;
+    padding-bottom:8px;border-bottom:1px solid var(--line)}
+  h3{font:600 1.02rem/1.4 ui-sans-serif,system-ui,sans-serif;margin:26px 0 6px}
+  p{margin:12px 0}
+  .lead{font-size:1.06rem;color:var(--ink-soft)}
+  code{font:13.5px/1.5 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    background:var(--code-bg);padding:1.5px 6px;border-radius:5px;color:var(--accent-soft)}
+  .roadmap{display:flex;gap:0;margin:26px 0 8px;border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;background:var(--card)}
+  .roadmap div{flex:1;padding:16px 18px;font:500 13px/1.45 ui-sans-serif,system-ui,sans-serif;
+    color:var(--mute);border-right:1px solid var(--line)}
+  .roadmap div:last-child{border-right:0}
+  .roadmap div.now{background:var(--ink);color:#fff}
+  .roadmap b{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    margin-bottom:6px;opacity:.7}
+  .roadmap div.now b{color:#e9b8b0;opacity:1}
+  figure{margin:30px 0;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:26px 20px 18px}
+  figcaption{font:500 12.5px/1.5 ui-sans-serif,system-ui,sans-serif;
+    color:var(--mute);text-align:center;margin-top:14px}
+  svg{display:block;width:100%;height:auto}
+  table{border-collapse:collapse;width:100%;margin:20px 0;
+    font:14.5px/1.5 ui-sans-serif,system-ui,sans-serif}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);
+    border-bottom:1.5px solid var(--ink)}
+  tr td:first-child{font-weight:600;white-space:nowrap}
+  .pick{color:var(--ok);font-weight:700}
+  .stage{display:flex;gap:18px;margin:18px 0;padding:20px 22px;background:var(--card);
+    border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px}
+  .stage .n{font:800 1.5rem/1 ui-sans-serif,system-ui,sans-serif;color:var(--accent);
+    min-width:34px}
+  .stage h3{margin:0 0 6px}
+  .stage p{margin:6px 0}
+  .stage small{display:block;margin-top:8px;color:var(--mute);
+    font:13px/1.5 ui-monospace,monospace}
+  ul{margin:12px 0;padding-left:22px}
+  li{margin:7px 0}
+  .callout{margin:22px 0;padding:18px 20px;border-radius:10px;
+    background:#fbf3ec;border:1px solid #ecd9c4}
+  .callout.limit{background:#fbf0f0;border-color:#e9cccc}
+  .callout b{font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--warn);display:block;margin-bottom:8px}
+  .callout.limit b{color:var(--accent)}
+  .callout ul{margin:6px 0 0}
+  footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);
+    font:13px/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--mute)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Knowledge Graph juridique · Roadmap Johnny · Design validé</p>
+  <h1>Étape 1 — Embedding pur, sans graphe</h1>
+  <p class="sub">Mesurer ce qu'on peut récupérer avec un seul encodeur généraliste long-contexte,
+  articles et JP, <em>avant</em> toute exploitation du graphe — et établir un plancher de performance propre.</p>
+  <div class="meta">
+    <span>2026-05-19</span>
+    <span>8 085 articles · 4 codes</span>
+    <span>BGE-M3 · 8 192 tok</span>
+    <span>Clé canonique : pair_key</span>
+    <span>8 questions CRFPA</span>
+    <span>Diagnostic-first</span>
+  </div>
+</header>
+
+<div class="roadmap">
+  <div class="now"><b>Étape 1 — ici</b>Embedding pur (articles + JP), recall top-K sans graphe</div>
+  <div><b>Étape 2</b>Combler les JP sans summary (LLM&nbsp;/ Laplacien)</div>
+  <div><b>Étape 3</b>Benchmark étendu via doctrine + GNN link prediction</div>
+</div>
+
+<p class="lead">L'ordre n'est pas arbitraire : l'Étape 1 fixe le plancher sans graphe ;
+chaque étape lève le verrou de la suivante.</p>
+
+<h2>1. Approche retenue</h2>
+<p>Objectif d'Étape 1 = <strong>plancher de performance</strong>, pas un concours de modèles —
+le multi-modèles était déjà le cadrage raté de Phase&nbsp;B. Un seul encodeur, baseline propre.</p>
+
+<table>
+  <thead><tr><th>Option</th><th>Décision</th><th>Raison</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>A. BGE-M3 seul</td>
+      <td class="pick">✓ Retenu</td>
+      <td>8 192 tokens, multilingue, self-hosted, sorties dense/sparse/ColBERT utiles plus tard.
+      Satisfait <em>toutes</em> les contraintes, dont « ne jamais tronquer ».</td>
+    </tr>
+    <tr>
+      <td>B. BGE-M3 + Jina-v3</td>
+      <td>Écarté (YAGNI)</td>
+      <td>2× compute, comparaison ambiguë. Jina-v3 (CC-BY-NC, SOTA long-doc)
+      reste le <strong>challenger n°1</strong> si le plancher est insuffisant.</td>
+    </tr>
+    <tr>
+      <td>C. voyage-law-2</td>
+      <td>Hors périmètre</td>
+      <td>Légal-spécialisé, 16k — mais API payante, incompatible avec le choix
+      dump ouvert / self-hosted. Noté comme <strong>plafond de référence</strong> futur.</td>
+    </tr>
+  </tbody>
+</table>
+<p><strong>Scope cut explicite :</strong> 1 modèle. Challenger ajouté <em>seulement</em>
+si BGE-M3 sous-performe au regard du recall@K.</p>
+
+<h2>2. Pipeline — 4 étages</h2>
+
+<figure>
+<svg viewBox="0 0 1000 500" role="img" aria-label="Diagramme du pipeline en 4 étages avec couche de linkage">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7c2d2d"/>
+    </marker>
+    <style>
+      .box{fill:#fff;stroke:#1a1d24;stroke-width:1.5;rx:10}
+      .hd{font:700 14px ui-sans-serif,system-ui,sans-serif;fill:#1a1d24}
+      .tx{font:12px ui-sans-serif,system-ui,sans-serif;fill:#3c4250}
+      .mono{font:11px ui-monospace,monospace;fill:#7c2d2d}
+      .num{font:800 13px ui-sans-serif,system-ui,sans-serif;fill:#7c2d2d}
+      .ln{stroke:#7c2d2d;stroke-width:1.6;fill:none;marker-end:url(#arr)}
+      .lbl{font:italic 11px ui-sans-serif,system-ui,sans-serif;fill:#8a8474}
+      .dia{fill:#fbf3ec;stroke:#9a6b1e;stroke-width:1.5}
+    </style>
+  </defs>
+
+  <!-- Stage 1 -->
+  <rect class="box" x="20" y="36" width="208" height="112" rx="10"/>
+  <text class="num" x="36" y="60">1</text>
+  <text class="hd" x="54" y="60">Diagnostic longueurs</text>
+  <text class="tx" x="36" y="82">Tokenise articles + summaries</text>
+  <text class="tx" x="36" y="100">→ p50/p90/p99/p100</text>
+  <text class="tx" x="36" y="118">décision : tronquer ou non</text>
+  <text class="mono" x="36" y="138">01_token_stats.py</text>
+
+  <!-- Stage 2 -->
+  <rect class="box" x="262" y="36" width="248" height="112" rx="10"/>
+  <text class="num" x="278" y="60">2</text>
+  <text class="hd" x="296" y="60">Ingestion + linkage LEGI</text>
+  <text class="tx" x="278" y="82">legi.py → SQLite → texte</text>
+  <text class="tx" x="278" y="100">normalisation n° d'article</text>
+  <text class="tx" x="278" y="118">+ couverture pair_key→LEGI</text>
+  <text class="mono" x="278" y="138">02_fetch_articles.py</text>
+
+  <!-- Stage 3 -->
+  <rect class="box" x="544" y="36" width="236" height="112" rx="10"/>
+  <text class="num" x="560" y="60">3</text>
+  <text class="hd" x="578" y="60">Embedding BGE-M3</text>
+  <text class="tx" x="560" y="82">1 vecteur / unité, sans tronc.</text>
+  <text class="tx" x="560" y="100">aligné sur article_ids / jp_ids</text>
+  <text class="tx" x="560" y="118">local Mac MPS (cluster repli)</text>
+  <text class="mono" x="560" y="138">03_embed.py</text>
+
+  <!-- graph alignment input -->
+  <rect x="604" y="176" width="176" height="62" rx="10" fill="#f3efe6" stroke="#8a8474" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text class="hd" x="620" y="200" font-size="13">graph_penal.npz</text>
+  <text class="tx" x="620" y="218" font-size="10.5">article_ids = 8 085</text>
+  <text class="tx" x="620" y="232" font-size="10.5">nœuds (pair_key)</text>
+
+  <!-- Linkage band -->
+  <rect x="262" y="260" width="518" height="60" rx="10" fill="#fff" stroke="#7c2d2d" stroke-width="1.5"/>
+  <text class="hd" x="278" y="284" fill="#7c2d2d">Couche de linkage — clé canonique pair_key</text>
+  <text class="mono" x="278" y="306">articles_order.npy · pairkey_to_graphcol.npy · emb ⟂ article_ids</text>
+
+  <!-- Stage 4 -->
+  <rect class="box" x="262" y="356" width="518" height="128" rx="10"/>
+  <text class="num" x="278" y="380">4</text>
+  <text class="hd" x="296" y="380">Éval recall top-K — sans graphe</text>
+  <line x1="525" y1="396" x2="525" y2="470" stroke="#e3ddd0" stroke-width="1.5"/>
+  <text class="tx" x="278" y="406">question ↔ article</text>
+  <text class="lbl" x="278" y="424" font-style="normal" font-size="10.5">gold propre — pair_keys</text>
+  <text class="lbl" x="278" y="438" font-style="normal" font-size="10.5">obligatoires / optionnels</text>
+  <text class="tx" x="544" y="406">question ↔ JP</text>
+  <text class="lbl" x="544" y="424" font-style="normal" font-size="10.5">short_ref → corpus, regex</text>
+  <text class="lbl" x="544" y="438" font-style="normal" font-size="10.5">pourvoi (CC-only, ref:null)</text>
+  <text class="mono" x="278" y="462">04_eval_recall.py  →  K* + recall_curves.csv</text>
+
+  <!-- gold input -->
+  <rect x="20" y="392" width="214" height="58" rx="10" fill="#f3efe6" stroke="#8a8474" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text class="hd" x="36" y="416" font-size="13">rubrics_penal.json</text>
+  <text class="tx" x="36" y="436" font-size="11">8 q · articles_attendus + jp_attendues</text>
+
+  <!-- flows -->
+  <line class="ln" x1="228" y1="92" x2="260" y2="92"/>
+  <line class="ln" x1="510" y1="92" x2="542" y2="92"/>
+  <line class="ln" x1="692" y1="176" x2="692" y2="150"/>
+  <line class="ln" x1="386" y1="150" x2="386" y2="258"/>
+  <text class="lbl" x="396" y="210">texte + n° normalisé</text>
+  <line class="ln" x1="566" y1="150" x2="566" y2="258"/>
+  <text class="lbl" x="500" y="210">vecteurs alignés</text>
+  <line class="ln" x1="521" y1="322" x2="521" y2="354"/>
+  <line class="ln" x1="234" y1="421" x2="260" y2="421"/>
+</svg>
+<figcaption>Flux du pipeline. La <em>couche de linkage</em> (rouge) garantit que chaque vecteur
+se rattache au bon nœud du graphe via la clé canonique <code>pair_key</code> ; l'étage 1
+reste <em>diagnostic-first</em>.</figcaption>
+</figure>
+
+<div class="callout">
+  <b>Couche de linkage — l'invariant central</b>
+  <p style="margin:4px 0 8px">Les articles du KG sont des nœuds identifiés par
+  <code>pair_key</code> (<code>code_penal:222-23</code>), pas par l'identifiant LEGI.
+  Le graphe <code>graph_penal.npz</code> définit déjà l'ordre canonique des colonnes :
+  <code>article_ids[col] = pair_key</code> (<strong>8 085 nœuds pénaux</strong>). Tout
+  repose sur trois alignements :</p>
+  <ul>
+    <li><strong>pair_key ↔ texte LEGI</strong> — normalisation du n° d'article
+    (forme compacte <code>L743-7</code> ↔ LEGI <code>L. 743-7</code>) ; taux de
+    résolution mesuré comme diagnostic (cf. <code>coverage_check</code> du 5 mai).</li>
+    <li><strong>texte ↔ ligne d'embedding</strong> — <code>emb_articles.npy</code>
+    rangé dans l'ordre de <code>article_ids</code> ; <code>emb_jp.npy</code> dans
+    l'ordre de <code>jp_ids</code> (symétrie avec la convention <code>jp_order</code>).</li>
+    <li><strong>ligne ↔ nœud graphe</strong> — artefact <code>pairkey_to_graphcol.npy</code> :
+    alignement positionnel lossless, donc l'Étape 2 (complétion Laplacien sur le graphe)
+    récupère des embeddings indexés sur les nœuds <em>sans aucune jointure</em>.</li>
+  </ul>
+</div>
+
+<div class="stage">
+  <div class="n">1</div>
+  <div>
+    <h3>Diagnostic longueurs — falsifiable avant tout embedding</h3>
+    <p>Tokeniser les <strong>8 085</strong> articles pénaux (nœuds du graphe) et les
+    ~93 k summaries JP (CC, ~95 % du sous-graphe pénal) avec le tokenizer BGE-M3,
+    sortir la distribution (p50/p90/p99/p100).
+    <strong>Décision conditionnelle :</strong> si p100 &lt; 8192 → contrainte « zéro
+    troncature » native, aucun cas limite. Sinon → fallback chunk + mean-pool
+    appliqué <em>uniquement</em> aux dépassements (information préservée, pas tronquée).</p>
+    <small>01_token_stats.py → token_stats.json</small>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="n">2</div>
+  <div>
+    <h3>Ingestion LEGI + résolution du linkage pair_key → texte</h3>
+    <p>Via la librairie <code>legi</code> (Legilibre) : archive DILA
+    <code>echanges.dila.gouv.fr/LEGI/</code> → SQLite, extraire le texte des 4 codes
+    (CP, CPP, route, CJPM). <strong>Pas de parsing XML manuel.</strong> Cœur de l'étage :
+    une <strong>fonction de normalisation</strong> qui résout les 8 085 <code>pair_key</code>
+    du graphe vers leur article LEGI (préfixes <code>L/R/D/A</code>, suffixes latins,
+    renumérotations). Produit un <strong>diagnostic de couverture</strong> — taux de
+    résolution global + spécifiquement sur les 51 articles gold (analogue au
+    <code>coverage_check</code> du 5 mai). Un gold non résolu plafonne le recall :
+    on veut le savoir <em>avant</em> d'embedder.</p>
+    <small>02_fetch_articles.py → articles_penal.parquet (pair_key, texte) + articles_coverage.json</small>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="n">3</div>
+  <div>
+    <h3>Embedding BGE-M3 — un vecteur par unité, sans troncature</h3>
+    <p>Deux corpus encodés séparément, <strong>chaque matrice rangée dans l'ordre
+    des nœuds du graphe</strong> : <code>emb_articles.npy</code> (8 085 × 1024) ⟂
+    <code>article_ids</code>, <code>emb_jp.npy</code> (~93 k × 1024) ⟂ <code>jp_ids</code>,
+    plus <code>articles_order.npy</code> / <code>pairkey_to_graphcol.npy</code> pour
+    rendre le linkage lossless. Volume léger → <strong>local Mac MPS viable</strong>,
+    ce qui contourne la fragilité env cluster ; L40S = repli. Choix explicite.</p>
+    <small>03_embed.py → emb_articles.npy, emb_jp.npy, articles_order.npy, pairkey_to_graphcol.npy</small>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="n">4</div>
+  <div>
+    <h3>Éval recall top-K sans graphe — la métrique de Johnny</h3>
+    <p>Pour chacune des 8 questions : cosinus question↔article et question↔JP ;
+    courbe <strong>recall@K</strong> (K = 10, 20, 30, 50, 100, …) ; sortir le
+    <strong>K* à partir duquel la majorité du gold est récupérée</strong>.
+    Article-side = gold propre (<code>articles_attendus.obligatoires/optionnels</code>).
+    JP-side = résolution <code>short_ref</code> → corpus par regex pourvoi.</p>
+    <small>04_eval_recall.py → recall_curves.csv + K* par question</small>
+  </div>
+</div>
+
+<h2>3. Livrables</h2>
+<ul>
+  <li><strong>Code</strong> — 4 scripts numérotés dans
+  <code>05-Technique/benchmark/etape1_embedding_pur/</code></li>
+  <li><strong>Données</strong> — <code>articles_penal.parquet</code>,
+  <code>emb_articles.npy</code>, <code>emb_jp.npy</code></li>
+  <li><strong>Linkage</strong> — <code>articles_order.npy</code>,
+  <code>pairkey_to_graphcol.npy</code> (alignement lossless vers le graphe)</li>
+  <li><strong>Résultats</strong> — <code>token_stats.json</code>,
+  <code>articles_coverage.json</code> (taux de résolution pair_key→LEGI),
+  <code>recall_curves.csv</code>, K* par question (article-side &amp; JP-side)</li>
+  <li><strong>Ce document</strong> — plan HTML + diagramme SVG du pipeline</li>
+</ul>
+
+<div class="callout limit">
+  <b>Limitations connues — assumées, pas masquées</b>
+  <ul>
+    <li><strong>Plafond par construction :</strong> l'ensemble embeddé = les nœuds
+    article du graphe. Un gold qui n'est cité par aucune JP n'est pas un nœud, donc
+    inatteignable — déjà 1/51 (<code>code_penal:222-26-2</code>, ~98 % de couverture
+    gold→graphe). Le recall article est borné par ce 98 %, à reporter explicitement.</li>
+    <li>Le taux de résolution <code>pair_key</code> → texte LEGI (mesuré étage 2)
+    plafonne aussi le recall : normalisations de numérotation imparfaites = articles
+    sans texte donc non embeddables.</li>
+    <li>Éval JP biaisée : <code>jp_attendues</code> a <code>ref:null</code> → résolution
+    par regex pourvoi <strong>CC-only</strong> (fragilité héritée du 5 mai). 1 question
+    sur 8 a 0 JP gold.</li>
+    <li>8 questions = échantillon faible — c'est précisément ce que l'Étape 3 corrigera.</li>
+    <li>LEGI = droit <em>actuel</em> : un article abrogé / renuméroté depuis une JP
+    ancienne peut ne pas matcher → à tracer dans le diagnostic d'ingestion.</li>
+  </ul>
+</div>
+
+<div class="callout">
+  <b>Principe directeur — diagnostic-first</b>
+  <p style="margin:4px 0 0">Chaque étape lourde est précédée d'un test peu coûteux qui
+  peut l'invalider. L'étage 1 mesure avant d'embedder ; l'éval mesure le recall
+  intrinsèque <em>avant</em> toute exploitation du graphe. Cohérent avec la
+  méthodologie « vérifier sur preuve, pas supposition ».</p>
+</div>
+
+<footer>
+  Design validé le 2026-05-19 · Roadmap Johnny, point du 5 mai 2026 ·
+  Étape 1/3 · Prochaine action : plan d'implémentation détaillé (writing-plans).
+</footer>
+
+</div>
+</body>
+</html>

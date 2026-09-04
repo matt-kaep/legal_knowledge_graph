@@ -1,0 +1,931 @@
+% !TEX program = pdflatex
+% Plan detaille du papier Legal Knowledge Graph -- 2026-07-28
+% Support de discussion avant redaction du manuscrit.
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{footnote}{size=\tiny}
+
+\definecolor{accent}{RGB}{41, 92, 155}
+\definecolor{accentsoft}{RGB}{230, 238, 247}
+\definecolor{ok}{RGB}{30, 130, 70}
+\definecolor{crosscol}{RGB}{110, 60, 130}
+\definecolor{warning}{RGB}{190, 95, 0}
+
+\newcommand{\keybox}[1]{%
+  \begin{center}
+  \colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\warnbox}[1]{%
+  \begin{center}
+  \colorbox{red!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\decisionbox}[1]{%
+  \begin{center}
+  \colorbox{orange!14}{\parbox{0.92\linewidth}{\centering\color{warning} #1}}
+  \end{center}}
+\newcommand{\validated}{\textcolor{ok}{\textbf{Validé}}}
+\newcommand{\conditional}{\textcolor{red!75!black}{\textbf{Conditionnel}}}
+\newcommand{\todecide}{\textcolor{warning}{\textbf{À décider}}}
+\newcommand{\papersection}[1]{%
+  {\scriptsize\textcolor{accent}{\textbf{Section du papier -- #1}}}\par\vspace{0.55em}}
+
+\title[Plan papier KG juridique FR]{Construction d'un Knowledge Graph juridique français}
+\subtitle{Un plan guidé par les questions du reviewer}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{28 juillet 2026}
+
+\begin{document}
+
+% 1
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% 2
+\begin{frame}{Comment lire ce plan ?}
+  \papersection{Vue d'ensemble}
+  \footnotesize
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.27\textwidth}
+      \centering
+      \colorbox{accentsoft}{\parbox{0.90\linewidth}{\centering\vspace{1.0em}
+      \textbf{Question du reviewer}\\[0.45em]
+      Ce qu'il doit comprendre
+      \vspace{1.0em}}}
+    \end{column}
+    \begin{column}{0.06\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.27\textwidth}
+      \centering
+      \colorbox{green!10}{\parbox{0.90\linewidth}{\centering\vspace{1.0em}
+      \textbf{Réponse du projet}\\[0.45em]
+      Ce que nous pouvons défendre
+      \vspace{1.0em}}}
+    \end{column}
+    \begin{column}{0.06\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.27\textwidth}
+      \centering
+      \colorbox{orange!12}{\parbox{0.90\linewidth}{\centering\vspace{1.0em}
+      \textbf{Section du papier}\\[0.45em]
+      Où la preuve sera portée
+      \vspace{1.0em}}}
+    \end{column}
+  \end{columns}
+
+  \vspace{1.0em}
+  \keybox{\scriptsize Le fil du deck suit les questions proposées par les guides d'écriture CVPR,
+  puis les relie au plan concret de notre manuscrit.}
+
+  {\tiny Sources méthodologiques : Lepetit, pp.~29--30 ; Freeman, pp.~15, 18 et 25--29.}
+\end{frame}
+
+% 3
+\begin{frame}{Quelles sections devront répondre à ces questions ?}
+  \papersection{Vue d'ensemble du manuscrit}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{enumerate}\setlength{\itemsep}{0.55em}
+        \item \textbf{Introduction}\\importance, difficulté, idée et contributions ;
+        \item \textbf{Related Work}\\solutions existantes et manque précis ;
+        \item \textbf{Task and Benchmark}\\sorties, données, golds et périmètre ;
+        \item \textbf{Method}\\graphes, retrieval et LLM reranking.
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{enumerate}\setcounter{enumi}{4}\setlength{\itemsep}{0.55em}
+        \item \textbf{Experiments}\\protocole, baselines et ablations ;
+        \item \textbf{Results}\\preuves, diagnostics et résultats négatifs ;
+        \item \textbf{Discussion and Limitations}\\portée et menaces à la validité ;
+        \item \textbf{Conclusion}\\message soutenu par les preuves finales.
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% 4
+\begin{frame}{Pourquoi ce problème est-il important ?}
+  \papersection{1. Introduction -- Motivation}
+  \footnotesize
+  \textbf{Un avocat, un professionnel du droit ou un particulier cherche à répondre à une question juridique.}
+
+  \vspace{0.65em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.46\textwidth}
+      \textbf{\color{accent}1. Les articles : la règle}
+      \begin{itemize}\setlength{\itemsep}{0.38em}
+        \item Ils définissent le cadre normatif applicable.
+        \item Ils indiquent les conditions, exceptions et sanctions prévues par le droit.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \textbf{\color{ok}2. Les jurisprudences : l'application}
+      \begin{itemize}\setlength{\itemsep}{0.38em}
+        \item Elles montrent comment les règles sont interprétées.
+        \item Elles relient le texte à des situations concrètes et à des arguments précis.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.85em}
+  \keybox{\scriptsize Répondre correctement suppose de retrouver les deux fondements :
+  la règle de droit et son application jurisprudentielle.}
+\end{frame}
+
+% 5
+\begin{frame}{Pourquoi ce problème est-il difficile ?}
+  \papersection{1. Introduction -- Difficultés}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.23\textwidth}
+      \textbf{\color{accent}Expertise juridique}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item vocabulaire spécialisé ;
+        \item qualifications dépendantes du contexte ;
+        \item interprétation experte nécessaire.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.23\textwidth}
+      \textbf{\color{ok}Échelle et cas particuliers}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item grand volume de textes et décisions ;
+        \item exceptions nombreuses ;
+        \item configurations factuelles variées.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.23\textwidth}
+      \textbf{\color{crosscol}Organisation du droit}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item domaines et sous-domaines ;
+        \item hiérarchies et renvois ;
+        \item citations et évolutions temporelles.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.23\textwidth}
+      \textbf{\color{warning}Limites de la similarité}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item termes proches, solutions opposées ;
+        \item régimes distincts, vocabulaire commun ;
+        \item relations absentes du texte local.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.65em}
+  \keybox{\scriptsize La proximité sémantique est utile, mais elle ne suffit pas à représenter
+  les oppositions juridiques, les hiérarchies et les liens entre sources.}
+\end{frame}
+
+% 6
+\begin{frame}{Pourquoi le retrieval est-il indispensable aux assistants juridiques ?}
+  \papersection{1. Introduction -- Motivation système}
+  \footnotesize
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.19\textwidth}\centering
+      \colorbox{accentsoft}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{Question juridique}\vspace{0.65em}}}
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.20\textwidth}\centering
+      \colorbox{accentsoft}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{Retriever}\\sources candidates\vspace{0.65em}}}
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.20\textwidth}\centering
+      \colorbox{green!10}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{LLM}\\sélection et synthèse\vspace{0.65em}}}
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.20\textwidth}\centering
+      \colorbox{green!10}{\parbox{0.90\linewidth}{\centering\vspace{0.65em}\textbf{Réponse ancrée}\\articles + JP\vspace{0.65em}}}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.9em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \textbf{Sans sources pertinentes}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item réponse juridiquement fragile ;
+        \item citations inexactes ou inexistantes ;
+        \item impossibilité de vérifier le fondement.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{Notre périmètre}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item améliorer d'abord le retrieval ;
+        \item mesurer ensuite la sélection par le LLM ;
+        \item ne pas revendiquer encore une réponse juridique autonome.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \keybox{\scriptsize En droit, le grounding n'est pas un confort : la source doit être retrouvée,
+  identifiable et vérifiable.}
+\end{frame}
+
+% 7
+\begin{frame}{Que sait-on faire en français sur les textes juridiques et les articles ?}
+  \papersection{2. Related Work -- Français et statutory retrieval}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.22}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{3.0cm} L{4.8cm} L{5.2cm}@{}}
+    \toprule
+    \textbf{Travail} & \textbf{Apport} & \textbf{Limite pour notre problème} \\
+    \midrule
+    JuriBERT (2021) & modèle adapté au français juridique & représentation linguistique, pas benchmark de retrieval \\
+    BSARD (2022) & questions françaises vers articles belges & articles seulement ; droit belge \\
+    Finding the Law (2023) & GNN sur la structure hiérarchique des lois & retrieval statutaire, sans jurisprudence \\
+    Open French Law RAG (2024) & étude RAG sur un corpus de droit français & étude de cas, pas benchmark conjoint Articles--JP \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.55em}
+  \keybox{\scriptsize Le français juridique et le retrieval d'articles disposent déjà de ressources ;
+  le lien systématique avec la jurisprudence reste absent de ces travaux.}
+
+  {\tiny Douka et al., NLLP 2021 ; Louis et Spanakis, ACL 2022 ; Louis et al., EACL 2023 ; Harvard LIL, 2024.}
+\end{frame}
+
+% 8
+\begin{frame}{Que sait-on faire pour retrouver des jurisprudences ?}
+  \papersection{2. Related Work -- Legal case retrieval}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.22}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{2.7cm} L{5.0cm} L{5.3cm}@{}}
+    \toprule
+    \textbf{Travail} & \textbf{Apport} & \textbf{Limite pour notre problème} \\
+    \midrule
+    CaseHOLD (2021) & sélection du holding pertinent parmi des candidats & QCM de compréhension ; common law américaine \\
+    CaseLink (2024) & graphe inductif pour le retrieval de cas similaires & cas vers cas ; autre système juridique \\
+    LePaRD (2024) & retrieval de passages issus de précédents & droit américain ; passages jurisprudentiels uniquement \\
+    CLERC (2025) & retrieval de décisions puis génération d'analyse & droit américain ; aucun couple Articles--JP français \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.55em}
+  \keybox{\scriptsize Le case retrieval est un champ actif : notre différence ne peut pas être
+  « retrouver des jurisprudences », mais le contexte français et l'articulation avec les articles.}
+
+  {\tiny Zheng et al., ICAIL 2021 ; Tang et al., SIGIR 2024 ; Mahari et al., ACL 2024 ; Hou et al., NAACL 2025.}
+\end{frame}
+
+% 9
+\begin{frame}{Que sait-on faire avec des graphes juridiques ?}
+  \papersection{2. Related Work -- Graphes et réseaux de citations}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.22}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{3.0cm} L{4.8cm} L{5.2cm}@{}}
+    \toprule
+    \textbf{Travail} & \textbf{Apport} & \textbf{Limite pour notre problème} \\
+    \midrule
+    Finding the Law (2023) & hiérarchie législative intégrée à un GNN & graphe d'articles uniquement \\
+    CaseLink (2024) & graphe global pour le retrieval de cas & une seule cible documentaire \\
+    LeCNet (2025) & réseau de citations judiciaires et link prediction & droit indien ; prédiction de liens \\
+    Belikov et Raoult (2025) & KG de pourvois pénaux de la Cour de cassation & construction de KG, pas benchmark conjoint \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.55em}
+  \keybox{\scriptsize Les relations juridiques sont déjà exploitées, mais rarement comparées
+  comme facteurs contrôlés dans une tâche de retrieval à deux cibles.}
+
+  {\tiny Louis et al., EACL 2023 ; Tang et al., SIGIR 2024 ; Harde et al., JustNLP 2025 ; Belikov et Raoult, 2025.}
+\end{frame}
+
+% 10
+\begin{frame}{Quel manque précis reste à établir ?}
+  \papersection{1--2. Introduction et Related Work -- Gap}
+  \footnotesize
+  \keybox{\small Les travaux existants étudient séparément la représentation du français juridique,
+  le retrieval d'articles, le retrieval de jurisprudences ou la construction de graphes.}
+
+  \vspace{0.7em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{accent}Contexte}
+      \begin{itemize}\setlength{\itemsep}{0.35em}
+        \item droit français ;
+        \item sources ouvertes ;
+        \item benchmark pénal actuel.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{ok}Deux cibles}
+      \begin{itemize}\setlength{\itemsep}{0.35em}
+        \item articles applicables ;
+        \item jurisprudences pertinentes ;
+        \item même question juridique.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \textbf{\color{crosscol}Relations évaluées}
+      \begin{itemize}\setlength{\itemsep}{0.35em}
+        \item citations ;
+        \item proximité sémantique ;
+        \item architectures hybrides.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.7em}
+  \decisionbox{\scriptsize Gap candidat : aucun benchmark ouvert identifié en droit français
+  ne réunit ces trois propriétés. L'affirmation de nouveauté reste à consolider par la bibliographie primaire.}
+\end{frame}
+
+% 11
+\begin{frame}{Quelle est notre idée principale ?}
+  \papersection{1. Introduction -- Key idea et teaser}
+  \footnotesize
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.24\textwidth}
+      \centering\textbf{Question $q$}\\[0.4em]
+      \small langage naturel
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.36\textwidth}
+      \centering
+      \colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering\vspace{0.8em}
+      \textbf{Graphe juridique typé}\\[0.35em]
+      citations + proximités sémantiques\\
+      Articles + jurisprudences
+      \vspace{0.8em}}}
+    \end{column}
+    \begin{column}{0.05\textwidth}\centering$\Longrightarrow$\end{column}
+    \begin{column}{0.24\textwidth}
+      \centering\textbf{Deux classements}\\[0.4em]
+      \small sources normatives\\et jurisprudentielles
+    \end{column}
+  \end{columns}
+
+  \vspace{0.9em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \textbf{Stage 1 -- Retrieval}\\
+      Comparer cosine, PPR et LightGCN sur plusieurs graphes contrôlés.
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{Stage 2 -- LLM reranking}\\
+      Séparer la couverture du vivier et la capacité du LLM à sélectionner les golds.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% 12
+\begin{frame}{Quelle question scientifique testons-nous ?}
+  \papersection{1. Introduction -- Question et portée}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.66\textwidth}
+      \textbf{\color{accent}Question centrale}
+
+      \vspace{0.45em}
+      \large
+      Dans quelle mesure la structure relationnelle du droit français,
+      en particulier les citations entre jurisprudences et articles,
+      améliore-t-elle la recherche conjointe des sources normatives et
+      jurisprudentielles pertinentes, au-delà de la similarité sémantique seule ?
+    \end{column}
+    \begin{column}{0.30\textwidth}
+      \textbf{Portée empirique}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item droit français ;
+        \item benchmark pénal ;
+        \item Articles et JP séparés ;
+        \item aucun score fusionné ;
+        \item future lockbox finale.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.7em}
+  \keybox{\scriptsize Le framework vise le droit français ; les conclusions empiriques
+  restent limitées au droit pénal français.}
+\end{frame}
+
+% 13
+\begin{frame}{Que revendiquons-nous exactement ?}
+  \papersection{1. Introduction -- Contributions}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{accent}1. Benchmark pénal français}
+      \begin{itemize}\setlength{\itemsep}{0.32em}
+        \item Dataset d'entraînement et évaluation interne.
+        \item Articles et JP retrouvés séparément depuis une même question.
+        \item Protocole reproductible.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{ok}2. Architectures de graphes}
+      \begin{itemize}\setlength{\itemsep}{0.32em}
+        \item Citations et proximités sémantiques.
+        \item Graphes citationnels, sémantiques et hybrides.
+        \item Relations uniformes, typées ou pondérées.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \textbf{\color{crosscol}3. Pipeline retrieval--LLM}
+      \begin{itemize}\setlength{\itemsep}{0.32em}
+        \item Comparaison de plusieurs retrievers.
+        \item Sélection LLM contrôlée sous distracteurs.
+        \item Couverture du vivier séparée de l'échec du reranker.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.8em}
+  \keybox{\scriptsize Le papier revendique les ressources, le protocole et l'étude comparative ;
+  les conclusions de performance seront formulées après validation des expériences correspondantes.}
+\end{frame}
+
+% 8
+\begin{frame}{Quelle tâche évaluons-nous ?}
+  \papersection{3. Task and Benchmark -- Définition de la tâche}
+  \footnotesize
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.28\textwidth}
+      \begin{center}
+        \colorbox{accentsoft}{\parbox{0.86\linewidth}{\centering
+        \vspace{1.1em}
+        \textbf{Question juridique $q$}\\[0.5em]
+        énoncée en langage naturel
+        \vspace{1.1em}}}
+      \end{center}
+    \end{column}
+    \begin{column}{0.08\textwidth}
+      \centering
+      $\Longrightarrow$
+    \end{column}
+    \begin{column}{0.60\textwidth}
+      \begin{center}
+      \renewcommand{\arraystretch}{1.4}
+      \setlength{\tabcolsep}{5pt}
+      \begin{tabular}{@{}L{2.9cm} L{4.4cm}@{}}
+        \toprule
+        \textbf{Sortie} & \textbf{Évaluation} \\
+        \midrule
+        $R_A^K(q)$ : articles & Recall@10, NDCG@10, MRR@10 \\
+        \midrule
+        $R_J^K(q)$ : décisions & Hit@10, NDCG@10, MRR@10 \\
+        \bottomrule
+      \end{tabular}
+      \end{center}
+    \end{column}
+  \end{columns}
+
+  \vspace{1.0em}
+  \keybox{\scriptsize Espaces candidats, gold sets, métriques et résultats restent séparés
+  par modalité. Aucun score global ne fusionne Articles et JP.}
+\end{frame}
+
+% 9
+\begin{frame}{Comment le benchmark français est-il construit ?}
+  \papersection{3. Task and Benchmark -- Données et protocole de construction}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.32}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}c L{2.8cm} L{3.0cm} L{3.0cm} L{3.0cm}@{}}
+    \toprule
+    & \textbf{Questions + golds} & \textbf{Corpus d'articles} & \textbf{Corpus de décisions} & \textbf{Filtre strict} \\
+    \midrule
+    \textbf{1} & origine, génération, augmentation & version, période, licence & source ouverte, normalisation & références réellement récupérables \\
+    \midrule
+    \textbf{2} & extraction des références & identifiants et textes & identifiants, dates et textes & inventaire des exclusions \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.7em}
+  \textbf{À documenter dans la section :}
+  \begin{itemize}\setlength{\itemsep}{0.25em}
+    \item statistiques et distribution du nombre de golds ;
+    \item provenance, licences et versions des trois composants ;
+    \item comptes avant/après filtrage et motifs d'exclusion ;
+    \item périmètre pénal, questions générées ou augmentées et gold potentiellement incomplet.
+  \end{itemize}
+
+  \decisionbox{\scriptsize À décider : quelles statistiques entrent dans le tableau principal,
+  et lesquelles passent au supplément ?}
+\end{frame}
+
+% 10
+\begin{frame}{Quels graphes comparons-nous ?}
+  \papersection{4. Method -- Inventaire du design space $G_0$ à $G_7$}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.12}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}L{1.0cm} L{2.7cm} L{4.3cm} L{3.0cm} L{2.0cm}@{}}
+    \toprule
+    \textbf{ID} & \textbf{Signal} & \textbf{Construction} & \textbf{Rôle} & \textbf{Statut} \\
+    \midrule
+    $G_0$ & citation brute & graphe JP $\times$ Articles & référence historique & exploratoire \\
+    $G_1$ & citation nettoyée & retrait des isolés et non courants & base citationnelle & confirmatoire \\
+    $G_2$ & citation sans hubs & $G_1$ moins les plus gros hubs & contrôle hubs & historique \\
+    $G_3$ & citation filtrée & $G_2$ moins articles procéduraux & contrôle nettoyage & historique \\
+    $G_4$ & sémantique & kNN Article--Article, JP--JP, Article--JP & baseline sémantique & exploratoire \\
+    $G_5$ & union naïve & maximum citation + sémantique & contrôle naïf & exploratoire \\
+    $G_6/G_{6U}$ & hybride typé & blocs normalisés / contrôle uniforme & structure et contrôle & campagne \\
+    $G_7$ & hybride pondéré & poids distincts par famille & régime pondéré & campagne \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize Un second tableau exhaustif liera chaque instance concrète
+  à ses paramètres, son \texttt{experiment\_id} et son statut scientifique.}
+\end{frame}
+
+% 11
+\begin{frame}{Comment le droit est-il représenté ?}
+  \papersection{4. Method -- Définition formelle du graphe typé}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.58\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.66\textheight,keepaspectratio]{../specs/graph-visuals-penal-only-2026-06-19/fig_penal_bipartite_sample.png}
+
+      {\tiny Exemple structurel : sous-graphe biparti Articles--JP.}
+    \end{column}
+    \begin{column}{0.39\textwidth}
+      \textbf{Nœuds}
+      \begin{itemize}\setlength{\itemsep}{0.25em}
+        \item Articles $A$ ;
+        \item décisions $J$ ;
+        \item attributs textuels et identifiants normalisés.
+      \end{itemize}
+
+      \vspace{0.5em}
+      \textbf{Relations}
+      \begin{itemize}\setlength{\itemsep}{0.25em}
+        \item citation Article--JP ;
+        \item proximité Article--Article ;
+        \item proximité JP--JP ;
+        \item proximité Article--JP sémantique.
+      \end{itemize}
+
+      \vspace{0.4em}
+      \textbf{Paramètres}
+      \begin{itemize}\setlength{\itemsep}{0.25em}
+        \item poids par famille ;
+        \item normalisation par bloc ;
+        \item voisinage $k$NN.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.05em}
+  \decisionbox{\tiny À décider : notation finale des matrices par bloc et de leur combinaison.}
+\end{frame}
+
+% 12
+\begin{frame}{Comment le premier étage classe-t-il les sources ?}
+  \papersection{4. Method -- Stage 1 : retrieval}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{accent}Cosine}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item Similarité question--document.
+        \item Aucun usage du graphe.
+        \item Baseline commune à tous les espaces candidats.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \textbf{\color{ok}Personalized PageRank}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item Seeds issus du signal sémantique.
+        \item Propagation non apprise.
+        \item Hyperparamètres choisis sur validation.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \textbf{\color{crosscol}LightGCN}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item Propagation apprise.
+        \item Epoch et paramètres sélectionnés sur les folds.
+        \item Replay final sans early stopping sur l'eval.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.9em}
+  \keybox{\scriptsize Le negative sampling est une composante ou une ablation de LightGCN,
+  pas une quatrième méthode de retrieval.}
+
+  \vspace{0.35em}
+  \decisionbox{\scriptsize À décider : statut du contrôle LightGCN non entraîné
+  dans le tableau principal.}
+\end{frame}
+
+% 13
+\begin{frame}{Le LLM sait-il sélectionner les golds sous distracteurs ?}
+  \papersection{4--5. Method and Experiments -- Étude LLM contrôlée}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.58\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.64\textheight,keepaspectratio]{../../06-Analyses/comparatifs/llm-rag-rag-k-sweep-2026-07-01/score_vs_rag_k_articles.png}
+
+      {\tiny \color{red!75!black}\textbf{Exploratoire :} forme de courbe servant uniquement à motiver le nouveau contrôle.}
+    \end{column}
+    \begin{column}{0.39\textwidth}
+      \textbf{\color{accent}Contrôle}
+      \begin{itemize}\setlength{\itemsep}{0.25em}
+        \item Tous les golds restent présents.
+        \item Les viviers sont imbriqués.
+      \end{itemize}
+
+      \textbf{\color{ok}Difficulté}
+      \begin{itemize}\setlength{\itemsep}{0.25em}
+        \item Distracteurs issus d'un retriever.
+        \item Taille de vivier entre $K=10$ et $K=100$.
+      \end{itemize}
+
+      \textbf{\color{warning}Mesure}
+      \begin{itemize}\setlength{\itemsep}{0.25em}
+        \item Rappel des golds par le LLM.
+        \item Rangs et scores masqués.
+        \item Ordre randomisé, seeds contrôlés.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \decisionbox{\tiny À décider : grille exacte de $K$, représentation textuelle,
+  budget de contexte et répétitions.}
+\end{frame}
+
+% 14
+\begin{frame}{Le signal graphe reste-t-il utile après reranking ?}
+  \papersection{4--5. Method and Experiments -- Pipeline end-to-end}
+  \footnotesize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.45}
+  \setlength{\tabcolsep}{6pt}
+  \begin{tabular}{@{}c c c c c c c@{}}
+    \colorbox{accentsoft}{\parbox{2.15cm}{\centering\textbf{Question}\\$q$}}
+    & $\Longrightarrow$ &
+    \colorbox{accentsoft}{\parbox{2.15cm}{\centering\textbf{Retriever}\\cosine ou graphe}}
+    & $\Longrightarrow$ &
+    \colorbox{accentsoft}{\parbox{2.15cm}{\centering\textbf{Vivier top-$K$}\\sans injection}}
+    & $\Longrightarrow$ &
+    \colorbox{green!12}{\parbox{1.7cm}{\centering\textbf{Top-10}\\sortie LLM}}
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.9em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}L{4.0cm} L{8.5cm}@{}}
+    \toprule
+    \textbf{Comparaison} & \textbf{Question répondue} \\
+    \midrule
+    Retriever seul & Quel top-10 produit le premier étage ? \\
+    LLM + baseline cosine & Que gagne le reranking sans graphe ? \\
+    LLM + meilleur retriever graphe & Le signal relationnel reste-t-il utile après reranking ? \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.55em}
+  \keybox{\scriptsize Deux causes d'échec séparées : gold absent du vivier,
+  ou gold présent mais non sélectionné par le LLM.}
+\end{frame}
+
+% 15
+\begin{frame}{Comment rendons-nous les hypothèses falsifiables ?}
+  \papersection{5. Experiments -- Protocole confirmatoire}
+  \footnotesize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.4}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}L{3.0cm} L{3.2cm} L{3.2cm} L{3.2cm}@{}}
+    \toprule
+    \textbf{1. Folds groupés} & \textbf{2. Champion gelé} & \textbf{3. Eval interne} & \textbf{4. Lockbox} \\
+    \midrule
+    train + validation & paramètres et epochs figés & déjà consultée & future et inédite \\
+    même provenance dans un fold & aucun choix sur l'eval & confirmation interne & affirmation finale \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.8em}
+  \textbf{Contrat commun à tous les graphes}
+  \begin{itemize}\setlength{\itemsep}{0.3em}
+    \item mêmes questions, folds et espaces candidats ;
+    \item mêmes seeds, budgets de tuning, métriques et règles de sélection ;
+    \item une ablation ne change qu'un facteur causal à la fois ;
+    \item tout run non conforme reste explicitement exploratoire.
+  \end{itemize}
+
+  \warnbox{\scriptsize \texttt{eval\_rich\_retrievable\_strict} est une confirmation interne,
+  jamais une lockbox finale.}
+\end{frame}
+
+% 16
+\begin{frame}{Quelles comparaisons peuvent soutenir nos affirmations ?}
+  \papersection{5. Experiments -- Métriques, baselines et ablations}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.25}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{2.4cm} L{3.5cm} L{3.5cm} L{3.9cm}@{}}
+    \toprule
+    & \textbf{Articles} & \textbf{JP} & \textbf{LLM reranking} \\
+    \midrule
+    Métrique primaire & Recall@10 & Hit@10 & gold recall conditionnel à définir \\
+    Métriques secondaires & NDCG@10, MRR@10 & NDCG@10, MRR@10 & top-10 final, perte à l'oracle \\
+    Diagnostic & couverture selon $K$ & couverture selon $K$ & robustesse selon taille du vivier \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.65em}
+  \textbf{Ablations attendues}
+  \begin{itemize}\setlength{\itemsep}{0.25em}
+    \item citation seule vs sémantique seule ;
+    \item union naïve vs blocs typés ;
+    \item poids de familles et contrôles uniformes ;
+    \item negative sampling au sein de LightGCN ;
+    \item retriever seul vs LLM + cosine vs LLM + graphe.
+  \end{itemize}
+
+  \decisionbox{\scriptsize À décider : métrique primaire de l'étude LLM contrôlée
+  et correction pour comparaisons multiples.}
+\end{frame}
+
+% 17
+\begin{frame}{Quels tableaux répondront à quelles affirmations ?}
+  \papersection{6. Results -- Programme des tableaux}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.2}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}L{0.8cm} L{2.8cm} L{5.1cm} L{3.8cm}@{}}
+    \toprule
+    \textbf{ID} & \textbf{Tableau} & \textbf{Comparaison} & \textbf{Question répondue} \\
+    \midrule
+    R1 & Retriever principal & cosine / PPR / LightGCN & performance Articles et JP \\
+    R2 & Graph design & $G_1$ / contrôles / hybrides & effet des signaux \\
+    R3 & Ablations causales & un facteur à la fois & interprétation du gain \\
+    R4 & LLM contrôlé & viviers $K=10$ à $100$ & robustesse au contexte \\
+    R5 & End-to-end & retriever $\rightarrow$ LLM & top-10 final \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.65em}
+  \warnbox{\scriptsize Aucun tableau de résultats n'est rempli avant réception
+  des exports validés et de leurs \texttt{experiment\_id}.}
+
+  \vspace{0.35em}
+  {\scriptsize Les résultats négatifs seront conservés lorsqu'ils expliquent
+  une limite ou réfutent une hypothèse du design space.}
+\end{frame}
+
+% 21
+\begin{frame}{Quelles figures doivent raconter l'argument ?}
+  \papersection{6. Results -- Programme visuel}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.49\textheight,keepaspectratio]{../specs/graph-g0-g1-g2-visuals-2026-06-19/fig_g0_g1_g2_compare.png}
+
+      {\tiny Maquette structurelle : comparaison de familles de graphes.}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.49\textheight,keepaspectratio]{../../06-Analyses/comparatifs/llm-reranking-depth-2026-07-16/figures/candidate_coverage_articles.png}
+
+      {\tiny \color{red!75!black}\textbf{Exploratoire :} forme de courbe de couverture à reprendre après validation.}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3em}
+  \textbf{Visuels candidats pour le papier}
+  \begin{itemize}\setlength{\itemsep}{0.22em}
+    \item pipeline benchmark et définition des deux tâches ;
+    \item tableau synthétique $G_0$--$G_7$ et inventaire des instances ;
+    \item courbes de couverture selon $K$ ;
+    \item courbe de capacité contrôlée du LLM ;
+    \item ablations des relations et poids.
+  \end{itemize}
+
+  \decisionbox{\tiny À décider : quelles figures entrent dans les 8 pages et lesquelles passent au supplément ?}
+\end{frame}
+
+% 22
+\begin{frame}{Que pourra-t-on honnêtement conclure ?}
+  \papersection{7. Discussion and Limitations}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.25}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}L{2.2cm} L{5.0cm} L{2.2cm} L{4.2cm}@{}}
+    \toprule
+    \textbf{Limite} & \textbf{Conséquence} & \textbf{Limite} & \textbf{Conséquence} \\
+    \midrule
+    \textcolor{red!75!black}{Causalité} & $G_6$ et $G_7$ changent plusieurs facteurs simultanément & Golds & annotations incomplètes ou clairsemées \\
+    Validation & évaluation interne déjà consultée & Portée & droit pénal français uniquement \\
+    LLM & sensibilité au prompt, modèle, ordre et contexte & Données & licences, versions et biais de collecte \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.8em}
+  \textbf{Règles d'interprétation}
+  \begin{itemize}\setlength{\itemsep}{0.3em}
+    \item une comparaison $G_6$--$G_7$ directe ne mesure pas l'effet isolé d'un seul poids ;
+    \item une absence du gold dans le vivier ne doit pas être imputée au reranker ;
+    \item la confirmation interne et la future validation lockbox doivent rester distinctes.
+  \end{itemize}
+
+  \decisionbox{\scriptsize À discuter : quelles limites doivent apparaître avec le résultat principal,
+  plutôt qu'être reléguées en fin de papier ?}
+\end{frame}
+
+% 23
+\begin{frame}{Que diront la conclusion et l'abstract ?}
+  \papersection{8. Conclusion, puis Abstract écrit en dernier}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \textbf{\color{accent}Conclusion}
+      \begin{itemize}\setlength{\itemsep}{0.45em}
+        \item répondre directement à la question de recherche ;
+        \item distinguer ce qui est confirmé, réfuté ou encore conditionnel ;
+        \item expliquer ce que les résultats changent pour le retrieval juridique ;
+        \item ne pas terminer par une liste de travaux non réalisés.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \textbf{\color{ok}Abstract -- seulement à la fin}
+      \begin{itemize}\setlength{\itemsep}{0.45em}
+        \item problème important et encore insuffisamment traité ;
+        \item idée principale et entrées/sorties explicites ;
+        \item benchmark, méthode et protocole ;
+        \item résultats appuyés par leurs \texttt{experiment\_id}.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.7em}
+  \warnbox{\scriptsize Aucun résumé final ni conclusion quantitative ne sera rédigé avant
+  réception des preuves confirmatoires validées par la tâche A.}
+\end{frame}
+
+% 24
+\begin{frame}{Quelles décisions restent à prendre ?}
+  {\scriptsize\textcolor{accent}{\textbf{Sortie de la discussion -- Décisions avant rédaction}}}\par\vspace{0.55em}
+  \footnotesize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.35}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}c L{11.8cm}@{}}
+    \toprule
+    \textbf{Ordre} & \textbf{Décision} \\
+    \midrule
+    \rowcolor{accentsoft}
+    \textbf{1} & \textbf{Nom et portée exacte de la contribution méthodologique} \\
+    \textbf{2} & Définition formelle du graphe typé, des blocs et des poids \\
+    \textbf{3} & Grille $K$, format de contexte et répétitions LLM \\
+    \textbf{4} & Baselines, ablations et métriques du reranking \\
+    \textbf{5} & Programme final de figures et tableaux \\
+    \textbf{6} & Preuves tâche A nécessaires avant rédaction des résultats \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.8em}
+  \keybox{\scriptsize Ordre du papier : Introduction $\rightarrow$ Related Work $\rightarrow$
+  Task and Benchmark $\rightarrow$ Method $\rightarrow$ Experiments $\rightarrow$ Results
+  $\rightarrow$ Discussion ; Conclusion et Abstract en dernier.}
+\end{frame}
+
+\end{document}

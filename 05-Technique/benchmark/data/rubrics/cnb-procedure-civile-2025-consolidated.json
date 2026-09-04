@@ -1,0 +1,575 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Procedure civile, MARD et MARD (consolide)",
+    "source_path": "data/cnb-crfpa/2025/procedures.pdf (section Procedure civile)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Procedure civile et MARD (diffusion Cap'Barreau / IEJ) - file: data/cnb-crfpa/2025-grilles/grille-procedure-civile.pdf",
+      "Meilleures copies IEJ Strasbourg 2025 - copie 48 (manuscrite, OCR partiel)",
+      "Meilleures copies IEJ Strasbourg 2025 - copie 122 (manuscrite, OCR partiel)",
+      "Meilleures copies IEJ Strasbourg 2025 - copie 139 (manuscrite, OCR partiel)"
+    ],
+    "generated_by": "Claude (subagent - consolidation run Procedure civile)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-04",
+      "duree_heures": 2,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "I_rupture_concubinage_ARA": 6,
+        "II_modes_de_preuve_appel": 6,
+        "III_curatelle_regularisation_appel": 8
+      }
+    },
+    "note_reforme": "Le decret n 2025-??? du 18 juillet 2025 (entree en vigueur au 1er septembre 2025) a reorganise les dispositions du CPC relatives aux modes amiables. Les articles 774 et s. (ancien CPC) sont abroges et remplaces par les articles 1528 et s., 1532 a 1532-3 nouveaux. La grille precise que 'les candidats qui citeraient les anciens articles pourront se voir accorder une partie mais pas la totalite des points'. La date de l'epreuve (4 septembre 2025) postule donc le droit nouveau.",
+    "anti_hallucination_policy": "Toutes les references citees ici sont issues soit de la grille CNB officielle (sources=grille_cnb, avec extrait litteral), soit d'indices tres degrades dans les copies IEJ manuscrites OCR'ees (sources=copie_iej, avec uncertainty_note). Aucun ECLI n'a ete synthetise : les champs 'ref' (ECLI) sont laisses a null par defaut, la reference courte reste la cle. Les numeros de pourvoi cites sont ceux de la grille CNB."
+  },
+  "questions": [
+    {
+      "id": "CNB-PROCCIV-2025-Q1",
+      "branche": "civil",
+      "specialisation": "Procedure civile - MARD / Audience de reglement amiable (ARA) et conciliation judiciaire",
+      "question": "Juliette Xaver a exerce une action en justice contre Pierre Jasmin (son ex-concubin) pour obtenir 7000 euros de dommages et interets a la suite de la rupture brutale de leur relation juste avant leur mariage. Elle aimerait, en presence d'un juge, trouver un accord amiable. (a) Que lui conseiller ? (b) Le juge ayant finalement mis fin a la tentative d'accord amiable, Juliette souhaite contester cette decision. Quelles sont ses voies de recours ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Identifier le principe generique : l'article 1528 nouveau CPC prevoit que les personnes qu'un differend oppose peuvent tenter de le resoudre a l'amiable avec l'aide d'un juge, d'un conciliateur de justice, d'un mediateur, ou dans le cadre d'une procedure participative via leurs avocats",
+            "linked_article": "code_de_procedure_civile:1528",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aux termes de l'article 1528 nouveau du Code de procedure civile, Les personnes qu'un differend oppose peuvent, dans les conditions prevues par le present livre, tenter de le resoudre de facon amiable avec l'aide d'un juge, d'un conciliateur de justice, d'un mediateur ou, dans le cadre d'une procedure participative, de leurs avocats"
+          },
+          {
+            "text": "Ecarter successivement les MARD inadaptes : l'arbitrage (juge prive), la mediation (mediateur tiers), la procedure participative (avocats sans juge) - aucun ne correspond a la demande de Juliette qui veut la presence du juge dans une instance deja engagee",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Dans la mesure ou l'instance est deja initiee et ou Juliette Xaver souhaite tout de meme la presence du juge, on peut ecarter d'emblee l'arbitrage (qui fait intervenir un juge prive), la mediation (qui fait intervenir un mediateur tiers), ou encore la procedure participative (qui fait intervenir les avocats a l'exclusion du juge)"
+          },
+          {
+            "text": "Qualifier la voie adequate : l'audience de reglement amiable (ARA) est la forme que prend la conciliation judiciaire lorsqu'elle est menee par le juge (et non deleguee a un tiers conciliateur) - cf. nouveau plan du CPC et article 1528-1",
+            "linked_article": "code_de_procedure_civile:1528-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la conciliation judiciaire prend la forme, lorsqu'elle est menee par le juge et non deleguee a un tiers conciliateur, d'une audience de reglement amiable (voir l'article 1528-1 et le nouveau plan du CPC)"
+          },
+          {
+            "text": "Exposer la finalite et le regime de l'ARA (art. 1532-1 nouveau CPC) : resolution amiable du differend par confrontation equilibree des points de vue, evaluation des besoins/positions/interets, comprehension des principes juridiques applicables",
+            "linked_article": "code_de_procedure_civile:1532-1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Art. 1532-1. - L'audience de reglement amiable a pour finalite la resolution amiable du differend entre les parties, par la confrontation equilibree de leurs points de vue, l'evaluation de leurs besoins, positions et interets respectifs, ainsi que la comprehension des principes juridiques applicables au litige"
+          },
+          {
+            "text": "Juge de l'ARA distinct du juge saisi du litige : pour respecter l'impartialite et la confidentialite, le juge charge de l'ARA ne doit pas sieger dans la formation de jugement",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En raison d'imperatifs lies a sa necessaire impartialite ainsi qu'a la confidentialite qui entoure l'ARA, ce juge, distinct du juge saisi du litige, ne doit pas sieger dans la formation de jugement"
+          },
+          {
+            "text": "Mode de declenchement de l'ARA : le juge saisi du litige peut y recourir a la demande d'une partie ou d'office apres avoir recueilli l'avis des parties - citer le nouvel article 21 CPC (en vigueur au 1er septembre 2025) qui pose que le juge a mission de concilier les parties et de determiner avec elles le mode de resolution du litige le plus adapte",
+            "linked_article": "code_de_procedure_civile:21",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "si celui-ci ne le faisait pas sur le fondement du nouvel article 21 du CPC qui est entre en vigueur au 1er septembre et dispose qu' : Il entre dans la mission du juge de concilier les parties et de determiner avec elles le mode de resolution du litige le plus adapte a l'affaire. Les parties peuvent a tout moment convenir de resoudre a l'amiable tout ou partie du litige"
+          },
+          {
+            "text": "Appliquer au cas d'espece : la demande de Juliette (dommages et interets suite a rupture de concubinage) porte sur des droits dont les parties ont la libre disposition - l'ARA est donc ouverte (art. 1528-2)",
+            "linked_article": "code_de_procedure_civile:1528-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Demeure une limite, aux termes de l'article 1528-2 : Sous reserve des dispositions du premier alinea de l'article 2067 du code civil, l'accord auquel parviennent les parties ne peut porter que sur des droits dont elles ont la libre disposition... En l'espece, la demande de Juliette Xaver, tendant au versement de dommages et interets suite a la rupture du concubinage, n'entre pas dans la categorie des droits indisponibles. Cela permet la mise en place de l'ARA"
+          },
+          {
+            "text": "Sur la contestation de la decision de mettre fin a l'ARA : le juge de l'ARA peut y mettre fin a tout moment (art. 1532-2 dernier al. CPC) - cette decision est expressement qualifiee de mesure d'administration judiciaire",
+            "linked_article": "code_de_procedure_civile:1532-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aux termes de l'article 1532-2 du CPC, dans son dernier alinea, la decision par laquelle le juge de l'ARA decide d'y mettre fin est une mesure d'administration judiciaire... A tout moment, le juge charge de l'audience de reglement amiable peut y mettre fin. Cette decision est une mesure d'administration judiciaire"
+          },
+          {
+            "text": "Consequence procedurale : selon l'article 537 CPC, les mesures d'administration judiciaire ne sont pas susceptibles de recours. Juliette ne pourra pas contester la decision du juge de l'ARA qui y met fin ; l'instance classique (mise en etat) reprend",
+            "linked_article": "code_de_procedure_civile:537",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Or, selon les dispositions de l'article 537 du code de procedure civile, les mesures d'administration judiciaire ne sont pas susceptibles de recours. En fait, elles ne sont pas considerees comme des decisions juridictionnelles et elles n'affectent pas les droits des parties. Ainsi, Juliette Xaver ne pourra pas contester la decision du juge de l'ARA de mettre fin a l'ARA s'il estime que les conditions de la negociation ne sont plus reunies. L'instance classique (mise en etat) se poursuivra"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Champ d'application de l'ARA etendu par le decret du 18 juillet 2025 et la circulaire du 19 juillet 2025 : l'ARA n'est plus circonscrite a la procedure ecrite ordinaire ni aux referes, elle s'applique desormais a toutes les juridictions, quelle que soit la nature du contentieux et le degre de juridiction",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Toutefois, depuis le decret precite du 18 juillet 2025 et la circulaire du 19 juillet 2025, ces restrictions n'ont pas ete reprises. Ainsi, les dispositions relatives a l'ARA sont deplacees du livre II au livre V du CPC. Le champ d'application de l'ARA s'etend desormais a toutes les juridictions et n'est donc plus circonscrit a certaines procedures devant le tribunal judiciaire ou le tribunal de commerce"
+          },
+          {
+            "text": "Historique normatif : l'ARA a ete creee par le decret n 2023-686 du 29 juillet 2023 et s'applique aux instances introduites a compter du 1er novembre 2023 ; le champ initial etait limite (procedure ecrite ordinaire, referes) et les textes historiques etaient les articles 774-1 a 774-4 du CPC, aujourd'hui abroges",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "La nouvelle audience de reglement amiable (ARA), organisee par le decret du 29 juillet 2023, s'applique aux instances introduites a compter du 1er novembre 2023 (article 6 du decret n 2023-686 du 29 juillet 2023 portant mesures favorisant le reglement amiable des litiges devant le tribunal judiciaire) ; L'audience de reglement amiable (ARA) connaissait un champ d'application doublement limite... (ancien articles 774-1 a 774-4 CPC - articles 1532 a 1532-3 nouveau CPC)"
+          },
+          {
+            "text": "Regime de la convocation et du deroulement de l'ARA (art. 1532-2 CPC) : convocation par tous moyens, comparution en personne, assistance obligatoire par avocat lorsque la representation est obligatoire, audience en chambre du conseil hors presence du greffe, possibilite d'entendre les parties separement",
+            "linked_article": "code_de_procedure_civile:1532-2",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Les parties sont convoquees a l'audience de reglement amiable par tous moyens. La convocation precise que les parties doivent comparaitre en personne. Lorsqu'elles ne sont pas dispensees de representation obligatoire, les parties comparaissent assistees de leur avocat... L'audience se tient en chambre du conseil, hors la presence du greffe, selon les modalites fixees par le juge charge de l'audience de reglement amiable"
+          },
+          {
+            "text": "Qualification negative du recours : une mesure d'administration judiciaire n'est pas une decision juridictionnelle et n'affecte pas les droits des parties - c'est pour cela qu'elle echappe aux voies de recours",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En fait, elles ne sont pas considerees comme des decisions juridictionnelles et elles n'affectent pas les droits des parties"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Evoquer la conciliation judiciaire non deleguee en plus de l'ARA : les deux formes de conciliation judiciaire coexistent, le juge peut concilier lui-meme les parties (art. 21 CPC) en plus de la voie specifique de l'ARA (complement de grille du CNB)",
+            "linked_article": "code_de_procedure_civile:21",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "La conciliation judiciaire peut etre evoquee en plus de l'ARA (qui est une forme de conciliation judiciaire). Toutefois, il est attendu des etudiants que cette derniere soit davantage developpee au regard du nombre de dispositions l'encadrant... Il n'en reste pas moins que les deux formes de conciliation judiciaire coexistent, et que le juge peut concilier lui-meme les parties"
+          },
+          {
+            "text": "Application dans le temps du decret du 18 juillet 2025 : applicable au 1er septembre 2025 y compris aux instances en cours (article 25 du decret) - a citer car la date de l'epreuve (4 sept. 2025) commande l'application du droit nouveau ; les anciens articles 774 et s. ne rapportent qu'une partie des points",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "le decret du 18 juillet 2025 est applicable au 1er septembre 2025 y compris aux instances en cours (article 25 du decret), et est donc applicable lors de l'epreuve. S'il ne change pas ou peu les reponses sur le fond, il opere une reorganisation des dispositions a laquelle il convient de prendre garde... [Les candidats qui citeraient les anciens articles pourront se voir accorder une partie mais pas la totalite des points]"
+          },
+          {
+            "text": "Suppression de l'exigence d'un acte de reprise d'instance a l'issue de l'ARA (decret de 2025) : il n'est plus necessaire que les parties accomplissent un acte formel de reprise ; l'instance continue automatiquement. La grille initiale mentionnait une reprise d'instance par conclusions, mention supprimee par le complement officiel",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Les termes un acte de reprise d'instance est necessaire ont ete supprimes en application du decret de 2025. La phrase du corrigee precisant que : L'instance se poursuit alors, mais necessite pour ce faire un acte de reprise d'instance (en principe des conclusions suffisent) doit donc etre supprimee"
+          },
+          {
+            "text": "Articulation avec l'article 750-1 CPC sur la tentative prealable obligatoire de conciliation, mediation ou procedure participative pour certaines petites demandes : en l'espece non pertinent (instance deja initiee), mais indice vu dans copie IEJ",
+            "linked_article": "code_de_procedure_civile:750-1",
+            "sources": ["copie_iej"],
+            "why": "Indice releve dans l'OCR de la copie 122 (mention 'av 750-1 MA'). L'article 750-1 n'apparait pas dans la grille officielle pour cette question ; pertinence limitee au regard du cas d'espece (instance deja engagee)",
+            "uncertainty_note": "OCR manuscrit degrade - a lire avec prudence"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_civile:1528",
+          "code_de_procedure_civile:1528-1",
+          "code_de_procedure_civile:1528-2",
+          "code_de_procedure_civile:1532-1",
+          "code_de_procedure_civile:1532-2",
+          "code_de_procedure_civile:21",
+          "code_de_procedure_civile:537"
+        ],
+        "optionnels": [
+          "code_de_procedure_civile:1532-3",
+          "code_de_procedure_civile:750-1",
+          "code_civil:2067"
+        ]
+      },
+      "jp_attendues": [],
+      "pieges": {
+        "not_to_cite_articles": [
+          "code_de_procedure_civile:774",
+          "code_de_procedure_civile:774-1",
+          "code_de_procedure_civile:774-2",
+          "code_de_procedure_civile:774-3",
+          "code_de_procedure_civile:774-4"
+        ],
+        "not_to_cite_jp": [],
+        "notes": "Les anciens articles 774 et s. du CPC (ARA avant le decret du 18 juillet 2025) sont abroges au 1er septembre 2025. Les candidats qui s'y refereraient au titre du droit positif perdent une partie des points. La grille prevoit neanmoins une tolerance partielle. Piege secondaire : ne pas orienter la reponse vers la mediation ou l'arbitrage, inadaptes ici. Ne pas developper a tort l'acte de reprise d'instance (point supprime par complement de grille)."
+      },
+      "source_extract": "Juliette Xaver est en couple avec Pierre Jasmin, ils prevoient de se marier... Pierre met fin a leur relation juste avant leur mariage. Juliette... exerce une action en justice contre Pierre afin d'obtenir des dommages et interets a hauteur de 7000 euros. Bien que la situation soit toujours conflictuelle, elle aimerait, en la presence d'un juge, trouver un accord. Que pouvez-vous lui conseiller ? La situation s'averant extremement delicate et aucun compromis ne semblant pouvoir etre trouve, le juge decide de mettre fin a cette tentative d'accord amiable. Juliette Xaver veut contester cette decision et vous demande conseil. (6 points)",
+      "consolidation_notes": "Question technique tres liee a la reforme du 18 juillet 2025. L'ARA est l'axe principal de la grille (4 points sur les MARD + 2 points sur le recours). Aucune jurisprudence attendue explicitement : tout se joue sur les articles (1528, 1528-1, 1528-2, 1532-1, 1532-2, 21 nouveau, 537). Les copies IEJ (48, 122, 139) identifient globalement l'ARA comme piste correcte (OCR fait apparaitre 1528, 1532, 'audience de reglement amiable'). Copie 122 suggere aussi un renvoi a l'article 750-1 (non present dans la grille)."
+    },
+    {
+      "id": "CNB-PROCCIV-2025-Q2",
+      "branche": "civil",
+      "specialisation": "Procedure civile - Appel : preuves nouvelles, loyaute et liceite de la preuve",
+      "question": "Juliette Xaver, deboutee en premiere instance, fait appel. Elle souhaite produire en appel (i) un SMS recu de son ex-compagnon et (ii) des enregistrements d'appels et videos captes a son insu via sa webcam. Peut-elle se servir de ces preuves en appel ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Recevabilite des preuves nouvelles en appel : l'article 563 CPC autorise les parties a invoquer des moyens nouveaux, produire de nouvelles pieces ou proposer de nouvelles preuves pour justifier les pretentions soumises au premier juge",
+            "linked_article": "code_de_procedure_civile:563",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Aux termes de l'article 563 du code de procedure civile : Pour justifier en appel les pretentions qu'elles avaient soumises au premier juge, les parties peuvent invoquer des moyens nouveaux, produire de nouvelles pieces ou proposer de nouvelles preuves"
+          },
+          {
+            "text": "Qualifier l'invocation en appel du motif tire de l'absence de volonte matrimoniale de Pierre : il ne s'agit pas d'une pretention nouvelle (prohibee par les art. 564 et s. CPC) mais d'un simple argument supplementaire au soutien de la meme demande indemnitaire",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "elle entend fonder sa demande en appel sur le fait qu'il n'a jamais reellement voulu se marier. Il ne s'agit pas la d'une pretention nouvelle, mais d'un argument supplementaire pour appuyer la meme demande qu'en premiere instance"
+          },
+          {
+            "text": "Principe de legalite de la preuve : article 9 CPC - il incombe a chaque partie de prouver conformement a la loi les faits necessaires au succes de sa pretention",
+            "linked_article": "code_de_procedure_civile:9",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'article 9 du code de procedure civile dispose qu'il incombe a chaque partie de prouver conformement a la loi les faits necessaires au succes de sa pretention"
+          },
+          {
+            "text": "Principe de loyaute de la preuve pose par Ass. plen. 7 janvier 2011, n 09-14.316 / 09-14.667 - double visa art. 9 CPC et art. 6 1 CEDH - a propos d'un enregistrement telephonique clandestin",
+            "linked_article": "code_de_procedure_civile:9",
+            "linked_jp": "Cass. ass. plen., 7 janvier 2011, n 09-14.316 et 09-14.667",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Dans un arret du 7 janvier 2011, rendu au double visa des articles 9 du code de procedure civile et 6 1 de la CEDH, l'Assemblee pleniere de la Cour de cassation a pose le principe de loyaute de la preuve a propos d'un enregistrement telephonique clandestin (Ass. plen. 7 janv. 2011, n 09-14.316 et 09-14.667)"
+          },
+          {
+            "text": "Revirement de jurisprudence : Ass. plen. 22 decembre 2023, n 20-20.648 et 21-11.330 - l'illiceite ou la deloyaute dans l'obtention ou la production d'un moyen de preuve ne conduit plus necessairement a l'ecarter. Le juge doit apprecier si la preuve porte atteinte au caractere equitable de la procedure dans son ensemble, en mettant en balance le droit a la preuve et les droits antinomiques en presence",
+            "linked_jp": "Cass. ass. plen., 22 decembre 2023, n 20-20.648 et 21-11.330",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Dans une decision de l'assemblee pleniere du 22 decembre 2023, la cour affirme que desormais, dans un proces civil, l'illiceite ou la deloyaute dans l'obtention ou la production d'un moyen de preuve ne conduit pas necessairement a l'ecarter des debats. Le juge doit, lorsque cela lui est demandee, apprecier si une telle preuve porte une atteinte au caractere equitable de la procedure dans son ensemble, en mettant en balance le droit a la preuve et les droits antinomiques en presence"
+          },
+          {
+            "text": "Conditions cumulatives du controle de proportionnalite : la preuve illicite ou deloyale n'est admise que si (i) sa production est indispensable a l'exercice du droit a la preuve et (ii) l'atteinte est strictement proportionnee au but poursuivi",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le droit a la preuve pouvant justifier la production d'elements portant atteinte a d'autres droits a condition que cette production soit indispensable a son exercice et que l'atteinte soit strictement proportionnee au but poursuivi"
+          },
+          {
+            "text": "Qualification des preuves litigieuses : (i) les enregistrements d'appels et videos webcam sont deloyaux car obtenus par stratageme a l'insu de l'adversaire, et illicites car portant atteinte a la vie privee de Pierre (art. 9 C. civ.) - (ii) le SMS recu normalement est recevable car loyal",
+            "linked_article": "code_civil:9",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "une preuve deloyale est une preuve obtenue par le biais d'un stratageme, a l'insu de la partie adverse. La preuve presentee est donc manifestement deloyale. Au demeurant, en captant des conversations privees, elle porte egalement atteinte a la vie privee de son ex-compagnon, et est en ce sens illicite"
+          },
+          {
+            "text": "Application du controle de proportionnalite : les enregistrements et videos sont non indispensables (le SMS prouve deja l'absence de volonte matrimoniale et la brutalite de la rupture) et disproportionnes (atteinte majeure a la vie privee via plusieurs appareils connectes) ; la Cour d'appel devrait les ecarter - seul le SMS sera retenu",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "cette preuve deloyale, et meme illicite, ne soit pas necessaire. En effet, elle dispose deja d'un sms... les moyens deloyaux mis en oeuvre semblent donc clairement etre trop importants au regard du but poursuivi... ces elements de preuve (videos, enregistrement d'appel) seront ecartes"
+          }
+        ],
+        "expected": [
+          {
+            "text": "JP anterieure au revirement de 2023 sur preuve loyale mais illicite (atteinte a la vie privee) : recevabilite possible si la preuve est necessaire et que l'atteinte n'est pas disproportionnee (Cass. soc. 30 sept. 2020, n 19-12.058 ; Cass. civ. 1re, 5 avril 2012, n 11-14.177)",
+            "linked_jp": "Cass. soc., 30 septembre 2020, n 19-12.058",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la Cour de cassation a pu juger auparavant qu'une preuve loyale mais illicite car portant atteinte au droit au respect de la vie privee etait recevable si elle est necessaire et qu'elle ne porte pas une atteinte disproportionnee aux interets antinomiques en presence (Soc. 30 sept. 2020, n 19-12.058 ; Civ. 1re, 5 avr. 2012, n 11-14.177)"
+          },
+          {
+            "text": "Second arret cite : Cass. civ. 1re, 5 avril 2012, n 11-14.177 - preuve illicite mais loyale admise sous controle de proportionnalite",
+            "linked_jp": "Cass. civ. 1re, 5 avril 2012, n 11-14.177",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Soc. 30 sept. 2020, n 19-12.058 ; Civ. 1re, 5 avr. 2012, n 11-14.177"
+          },
+          {
+            "text": "Illustration du SMS comme mode de preuve admis : la recevabilite du SMS comme preuve (entre non-employeurs) relevait deja de la JP Cass. soc. 23 mai 2007, n 06-43.209, evoquee par la grille a l'appui du caractere dispensable des preuves deloyales",
+            "linked_jp": "Cass. soc., 23 mai 2007, n 06-43.209",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "prouver l'absence de participation aux frais du mariage et la brutalite de la rupture deja admise par le compagnon dans son sms qui constitue une preuve recevable (Soc, 23 mai 2007, n 06 43209)"
+          },
+          {
+            "text": "Alignement depuis 2023 : la deloyaute est desormais traitee comme l'illiceite, soumise au meme controle de proportionnalite - harmonisation du regime probatoire",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la deloyaute de la preuve n'est plus en elle-meme un obstacle a son administration. Un controle de proportionnalite doit donc etre opere. La question de la deloyaute de la preuve est donc desormais alignee sur celle de son illiceite"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Subsidiarite du droit a la preuve / lien avec l'article 6 1 CEDH (droit a un proces equitable) : le fondement conventionnel justifie l'admission exceptionnelle d'une preuve deloyale lorsque l'indispensable l'emporte sur l'atteinte",
+            "sources": ["grille_cnb", "llm_intrinsic"],
+            "why": "La grille cite expressement le double visa art. 9 CPC + art. 6 1 CEDH dans la JP fondatrice de 2011. Point structurant pour le raisonnement meme si non scorable en tant que tel"
+          },
+          {
+            "text": "Distinction prohibition des pretentions nouvelles en appel (art. 564 CPC) et admission des moyens / pieces nouvelles (art. 563 CPC) - piege classique",
+            "linked_article": "code_de_procedure_civile:564",
+            "sources": ["llm_intrinsic"],
+            "why": "Connaissance intrinseque de procedure civile utile pour eviter l'ecueil de qualifier l'argument de 'absence de volonte matrimoniale' comme pretention nouvelle - la grille le traite implicitement"
+          },
+          {
+            "text": "Fondement substantiel du droit au respect de la vie privee : art. 9 du Code civil - atteinte caracterisee par la captation de conversations et de videos a l'insu de la personne",
+            "linked_article": "code_civil:9",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "en captant des conversations privees, elle porte egalement atteinte a la vie privee de son ex-compagnon, et est en ce sens illicite"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_civile:9",
+          "code_de_procedure_civile:563"
+        ],
+        "optionnels": [
+          "code_de_procedure_civile:564",
+          "code_civil:9"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. ass. plen., 7 janvier 2011, n 09-14.316 et 09-14.667",
+          "sens_vs_question": "defavorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret fondateur du principe de loyaute de la preuve en procedure civile, double visa art. 9 CPC + art. 6 1 CEDH - point de depart historique du raisonnement",
+          "uncertainty_note": "ECLI non verifie ; reference courte conservee telle quelle dans la grille"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. ass. plen., 22 decembre 2023, n 20-20.648 et 21-11.330",
+          "sens_vs_question": "nuance",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret pivot de revirement : la deloyaute / illiceite ne conduit plus necessairement a ecarter la preuve, soumise au controle de proportionnalite. Favorable au principe mais defavorable au cas d'espece (les preuves seront ecartees car non indispensables)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 30 septembre 2020, n 19-12.058",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "JP anterieure au revirement de 2023 : preuve loyale mais illicite admise si necessaire et proportionnee",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 1re, 5 avril 2012, n 11-14.177",
+          "sens_vs_question": "nuance",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "JP illustrant le controle de proportionnalite pour les preuves illicites portant atteinte a la vie privee",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. soc., 23 mai 2007, n 06-43.209",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["grille_cnb"],
+          "why": "Le SMS constitue une preuve recevable - illustre pourquoi les preuves deloyales ne sont pas indispensables en l'espece",
+          "uncertainty_note": "ECLI non verifie ; cite par la grille comme Soc, 23 mai 2007, n 06 43209"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Piege principal : qualifier l'argument de 'absence de volonte matrimoniale' comme pretention nouvelle (inadmissible en appel) - c'est seulement un moyen / fait supporting la meme pretention indemnitaire. Piege secondaire : ignorer le revirement du 22 dec. 2023 et rester sur l'ancienne jurisprudence 2011 qui ecartait automatiquement la preuve deloyale. Piege tertiaire : confondre deloyaute (stratageme) et illiceite (atteinte a un droit substantiel) - les deux sont desormais alignees mais conceptuellement distinctes."
+      },
+      "source_extract": "N'ayant pas obtenu en premiere instance les dommages et interets esperes, Juliette fait appel... elle decide ainsi d'employer de nouveaux elements. Elle a en effet reussi, avec l'aide d'un genie de l'informatique, a enregistrer les appels de son compagnon. Elle a egalement des videos obtenues en activant a distance la camera de l'ordinateur de son compagnon... Pensez-vous qu'elle pourrait se servir de ces nouvelles preuves lors du proces en appel ? (6 points)",
+      "consolidation_notes": "Question equilibree (6 pts) et bien balisee par la grille. Deux axes : (i) recevabilite en appel via art. 563 CPC, (ii) application du nouveau regime de proportionnalite Ass. plen. 22 dec. 2023 au double moyen de preuve litigieux. Les OCR des copies IEJ (48, 122, 139) font apparaitre 'article 9', 'article 563', 'Cass' dans des passages fragmentaires qui coincident avec la structure attendue. La copie 122 evoque un 'Cass. Soc 20 sept [2020]' cle avec le 19-12.058 (OCR tres degrade mais conforme a la grille)."
+    },
+    {
+      "id": "CNB-PROCCIV-2025-Q3",
+      "branche": "civil",
+      "specialisation": "Procedure civile - Interruption d'instance, capacite du majeur en curatelle, delai et regularisation d'appel",
+      "question": "Christian Xaver, en instance contre son voisin devant le TJ de Versailles, est place sous curatelle simple le 7 juillet 2025, apres cloture de l'instruction (12 mai) et audience de plaidoiries (13 juin). Le TJ rend un jugement defavorable le 21 juillet 2025, notifie le 24 juillet. Son avocat saisit par erreur la Cour d'appel de Bourges (incompetente territorialement) le 22 aout 2025. (a) Le placement sous curatelle a-t-il interrompu la procedure ? Affecte-t-il la capacite d'ester en justice ? (b) Quelle est la regularite de l'appel et les possibilites de regularisation ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Interruption d'instance par perte de la capacite a ester en justice : article 370 CPC - a compter de la notification a l'autre partie, l'instance est interrompue par la perte par une partie de la capacite d'ester en justice",
+            "linked_article": "code_de_procedure_civile:370",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "aux termes de l'article 370 du code de procedure civile : A compter de la notification qui en est faite a l'autre partie, l'instance est interrompue par la perte par une partie de la capacite d'ester en justice"
+          },
+          {
+            "text": "Exception : article 371 CPC - en aucun cas l'instance n'est interrompue si l'evenement survient ou est notifie apres l'ouverture des debats. En l'espece, la curatelle a ete prononcee (7 juillet) apres l'audience de plaidoiries (13 juin) : pas d'interruption possible",
+            "linked_article": "code_de_procedure_civile:371",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Toutefois, l'article 371 du meme code prevoit : En aucun cas l'instance n'est interrompue si l'evenement survient ou est notifie apres l'ouverture des debats. Des lors, meme si la notification avait ete faite de la perte de la capacite de Monsieur Xaver, l'instance n'aurait pas pu etre interrompue puisque l'evenement est intervenu apres l'ouverture des debats"
+          },
+          {
+            "text": "Regime de la capacite du majeur en curatelle : article 468 alinea 3 du Code civil - le majeur en curatelle ne peut, sans l'assistance du curateur, introduire une action en justice ou y defendre. La curatelle emporte donc une incapacite partielle d'ester en justice",
+            "linked_article": "code_civil:468",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le placement sous curatelle entraine une incapacite a ester en justice aux termes de l'article 468 alinea 3 du code civil : la personne en curatelle ne peut sans l'assistance du curateur introduire une action en justice ou y defendre"
+          },
+          {
+            "text": "Exception jurisprudentielle : mise sous curatelle en cours de delibere - l'assistance du curateur n'est pas requise des lors qu'au moment de l'introduction de l'action et jusqu'aux derniers actes de procedure le majeur avait sa pleine capacite juridique (Cass. civ. 1re, 24 juin 2020, n 19-16.337)",
+            "linked_article": "code_civil:468",
+            "linked_jp": "Cass. civ. 1re, 24 juin 2020, n 19-16.337",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "dans une decision du 24 juin 2020, la Cour de cassation a enonce que la regle issue de l'article 468, alinea 3, du code civil selon laquelle l'assistance du curateur est necessaire pour introduire l'action en justice ou pour y defendre ne s'applique pas a une mise en curatelle pendant le delibere devant la cour d'appel des lors qu'au moment ou il a fait appel le majeur, assiste de son avocat, avait sa pleine capacite juridique... (Civ. 1re, 24 juin 2020, n 19-16337)"
+          },
+          {
+            "text": "Delai de recours en cas de curatelle : article 530 CPC - le delai ne court contre le majeur en curatelle que du jour de la notification faite au curateur. Article 538 CPC - delai d'appel d'un mois en matiere contentieuse",
+            "linked_article": "code_de_procedure_civile:530",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Article 530 : Le delai ne court contre une personne en tutelle que du jour ou le jugement est notifie tant a son representant legal qu'au subrogee tuteur, s'il y a lieu, encore que celui-ci n'ait pas ete mis en cause. Le delai ne court contre le majeur en curatelle que du jour de la notification faite au curateur. Article 538 : Le delai de recours par une voie ordinaire est d'un mois en matiere contentieuse"
+          },
+          {
+            "text": "Application au cas : notification au curateur le 24 juillet 2025, appel forme le 22 aout 2025 - le delai d'un mois (art. 538 CPC) est respecte",
+            "linked_article": "code_de_procedure_civile:538",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, la notification de la decision a ete realisee le 24 juillet 2025, et le curateur s'est bien vu notifier la decision. Me Tartempion avait donc un mois pour faire appel. L'appel ayant ete fait le 22 aout, le delai a ete respecte"
+          },
+          {
+            "text": "Incompetence territoriale de la cour d'appel saisie : la cour d'appel de Bourges ne releve pas du ressort du TJ de Versailles ; l'appel vise devant une cour d'appel territorialement incompetente est irregulier. La regularisation est possible tant que le delai d'appel n'est pas expire : il suffit de saisir la cour d'appel competente (ici Versailles)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Si une cour d'appel est saisie d'un appel d'une decision rendue par une juridiction du premier degre ne relevant pas de son ressort territorial, l'appel n'est pas valable. Une regularisation est cependant possible tant que le delai d'appel n'est pas expire, il suffit de saisir la cour d'appel ayant le pouvoir de connaitre du recours (Cass. civ. 2e, 2 juill. 2020, n 19-14.086)",
+            "linked_jp": "Cass. civ. 2e, 2 juillet 2020, n 19-14.086"
+          },
+          {
+            "text": "Effet interruptif de la premiere declaration d'appel : l'article 2241 du Code civil dispose que la demande en justice interrompt le delai de prescription et de forclusion, y compris lorsqu'elle est portee devant une juridiction incompetente ou lorsque l'acte de saisine est annule par l'effet d'un vice de procedure",
+            "linked_article": "code_civil:2241",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "L'article 2241 du code civil prevoit que la demande en justice, meme en refere, interrompt le delai de prescription ainsi que le delai de forclusion. Il en est de meme lorsqu'elle est portee devant une juridiction incompetente ou lorsque l'acte de saisine de la juridiction est annule par l'effet d'un vice de procedure"
+          },
+          {
+            "text": "Revirement Cass. 2e civ., 3 juillet 2025 (complement de grille) : la saisine d'une cour d'appel territorialement incompetente n'est plus qualifiee de fin de non-recevoir mais d'exception d'incompetence. Des lors, l'article 2241 du Code civil suffit : la regularisation demeure possible, meme hors delai d'appel initial, tant qu'aucune decision n'est intervenue",
+            "linked_article": "code_civil:2241",
+            "linked_jp": "Cass. civ. 2e, 3 juillet 2025, n 2-23.979",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "un arret du 3 juillet 2025 (Cass. 2e civ, 2, n 2-23.979) a opere un revirement de jurisprudence sur la nature de la sanction de la saisine d'une cour d'appel territorialement incompetente. Il ne s'agit plus d'une fin de non-recevoir, mais d'une exception d'incompetence. Des lors, les developpements des deux derniers paragraphes de la grille de notation sur la regularisation de l'appel apres la decision d'irrecevabilite (question du respect du delai d'appel lors de la regularisation) n'ont plus lieu d'etre, l'article 2241 du Code civil suffisant dans ce cas",
+            "uncertainty_note": "Le numero de pourvoi cite dans le complement de grille (n 2-23.979) semble tronque ou typographiquement alter. A verifier avant usage dans le benchmark"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Principe general : les conditions de recevabilite de l'action s'apprecient au jour de l'introduction de l'instance - justifie que la capacite de Christian, pleine au jour de l'assignation, ne soit pas remise en cause par la curatelle posterieure",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En principe, les conditions de recevabilite de l'action s'apprecient au jour de l'introduction de l'instance"
+          },
+          {
+            "text": "Evolution antherieure au revirement de juillet 2025 : la Cass. 2e civ., 21 mars 2019, n 17-10.663 qualifiait la saisine d'une cour d'appel incompetente de fin de non-recevoir et considerait l'effet interruptif non avenu - regularisation impossible apres decision d'irrecevabilite",
+            "linked_jp": "Cass. civ. 2e, 21 mars 2019, n 17-10.663",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Dans un premier temps, la Cour de cassation estimait que la decision d'une cour d'appel qui declare un appel irrecevable rend non avenu l'effet interruptif de prescription attache a l'exercice de ce recours a effet retroactif, et donc que l'appel exerce devant la cour d'appel adequate, mais hors delai de recours initial, etait irrecevable (Cass. civ. 2e, 21 mars 2019, n 17-10.663)"
+          },
+          {
+            "text": "Revirement intermediaire : Cass. 2e civ., 5 octobre 2023, n 21-21.007 - regularisation possible si au jour de la regularisation, dans le delai d'appel interrompu par une premiere declaration d'appel formee devant une juridiction incompetente, aucune decision definitive d'irrecevabilite n'est intervenue",
+            "linked_jp": "Cass. civ. 2e, 5 octobre 2023, n 21-21.007",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Elle vient recemment d'operer un revirement de jurisprudence. En effet, la regularisation de la fin de non-recevoir tiree de la saisine d'une juridiction incompetente est desormais possible si, au jour ou elle intervient, dans le delai d'appel interrompu par une premiere declaration d'appel formee devant une juridiction incompetente, aucune decision definitive d'irrecevabilite n'est intervenue (2e civ., 5 octobre 2023, 21-21.007)"
+          },
+          {
+            "text": "Resolution pratique du cas : bien que le delai d'appel ait expire le 24 aout 2025, la declaration d'appel du 22 aout a interrompu ce delai ; la Cour d'appel de Bourges n'ayant pas encore statue, aucune decision definitive d'irrecevabilite n'est intervenue - Me Tartempion peut regulariser l'appel devant la cour d'appel de Versailles",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En l'espece, bien que le delai d'appel ait expire le 24 aout, l'interruption du delai d'appel par la declaration d'appel du 22 aout permet de regulariser l'appel devant la Cour d'appel competente. En effet, la Cour d'appel de Bourges n'ayant pas encore statue, aucune decision definitive d'irrecevabilite n'est intervenue"
+          },
+          {
+            "text": "Nature pedagogique du raisonnement attendu : meme si l'argument d'interruption doit etre ecarte in fine (curatelle tardive), il est attendu des candidats qu'ils examinent la question des articles 370 et 371 CPC",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Meme si cet argument doit etre ecarte, il est attendu des candidats qu'ils l'examinent au prealable"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Lecture synthetique du revirement de 2025 : la qualification en exception d'incompetence (au lieu de fin de non-recevoir) transfere le probleme sur le regime des exceptions de procedure (art. 73 et s. CPC) - la cour d'appel incompetente doit renvoyer devant la juridiction competente, le delai d'appel etant interrompu par la saisine initiale",
+            "linked_article": "code_de_procedure_civile:73",
+            "sources": ["llm_intrinsic"],
+            "why": "Implication doctrinale du revirement du 3 juillet 2025 - articule l'article 2241 C. civ. avec le regime des exceptions d'incompetence en procedure civile"
+          },
+          {
+            "text": "Prise en compte de l'article 528 CPC : le delai ne court pas tant que la decision n'a pas ete notifiee - l'implication dans l'articulation avec l'article 530 CPC en cas de curatelle",
+            "linked_article": "code_de_procedure_civile:528",
+            "sources": ["llm_intrinsic"],
+            "why": "Connaissance intrinseque de procedure civile, articulation non explicite dans la grille"
+          },
+          {
+            "text": "Articulation entre le regime des incapacites et les voies de recours : la notification au curateur est une condition de declenchement du delai (art. 530 CPC), la curatelle tardive en cours de delibere ne rompt pas la procedure (art. 371 CPC et Cass. 1re civ. 24 juin 2020)",
+            "linked_jp": "Cass. civ. 1re, 24 juin 2020, n 19-16.337",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Lorsqu'un majeur agissant en justice est place sous curatelle en cours de delibere, l'assistance du curateur n'est pas requise des lors qu'a la date des derniers actes de la procedure l'interesse disposait de sa pleine capacite juridique (Civ. 1re, 24 juin 2020, n 19-16337)"
+          },
+          {
+            "text": "Note de methodologie : la grille avertit que les candidats n'ayant pas tenu leur raisonnement a jour du revirement du 3 juillet 2025 ne pourront pas obtenir la totalite des points mais peuvent s'en voir attribuer 'quelques-uns'",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "La totalite des points ne pourra etre accordee aux etudiants qui n'auraient pas tenu un raisonnement a jour de ce revirement, mais quelques-uns peuvent leur etre attribues"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "code_de_procedure_civile:370",
+          "code_de_procedure_civile:371",
+          "code_de_procedure_civile:530",
+          "code_de_procedure_civile:538",
+          "code_civil:468",
+          "code_civil:2241"
+        ],
+        "optionnels": [
+          "code_de_procedure_civile:73",
+          "code_de_procedure_civile:528"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 1re, 24 juin 2020, n 19-16.337",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Arret de principe : la mise en curatelle en cours de delibere n'impose pas l'assistance du curateur des lors que le majeur avait sa pleine capacite jusqu'aux derniers actes de procedure. Directement applicable au cas",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 2e, 2 juillet 2020, n 19-14.086",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Fondement de la regularisation de l'appel devant la cour d'appel competente tant que le delai d'appel n'est pas expire",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 2e, 21 mars 2019, n 17-10.663",
+          "sens_vs_question": "defavorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Ancienne position : l'effet interruptif est non avenu retroactivement quand l'appel est declare irrecevable - regle renversee depuis",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 2e, 5 octobre 2023, n 21-21.007",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Revirement intermediaire : regularisation possible si aucune decision definitive d'irrecevabilite n'est intervenue dans le delai d'appel interrompu",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "Cass. civ. 2e, 3 juillet 2025, n 2-23.979",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb"],
+          "why": "Revirement le plus recent : la saisine d'une cour d'appel incompetente s'analyse comme une exception d'incompetence (et non plus comme une fin de non-recevoir) ; l'article 2241 C. civ. suffit a justifier la regularisation",
+          "uncertainty_note": "Le numero de pourvoi mentionne dans le complement de grille (n 2-23.979) semble tronque ou contenir une coquille. A verifier avant usage dans le benchmark"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Piege principal : conclure a une interruption d'instance sur le fondement de l'art. 370 CPC sans voir l'exception de l'art. 371 CPC (evenement posterieur a l'ouverture des debats). Piege secondaire : ignorer le revirement du 3 juillet 2025 et appliquer l'ancienne jurisprudence de 2019/2023 qui reposait sur la fin de non-recevoir - perte de points (la grille admet une tolerance partielle). Piege tertiaire : oublier que le delai d'appel ne court contre le majeur en curatelle qu'a compter de la notification au curateur (art. 530 CPC) - ici la notification du 24 juillet 2025 etait adressee dans le bon cadre."
+      },
+      "source_extract": "Christian Xaver, le pere de Juliette, qui vit a Versailles, a engage une procedure contre son voisin... La cloture de l'instruction a ete ordonnee le 12 mai et l'audience de plaidoiries s'est tenue le 13 juin. Cependant l'etat de Christian s'etant brusquement aggrave, le juge des tutelles l'a place sous le regime de la curatelle simple, le 7 juillet... Par une decision du 21 juillet, le tribunal judiciaire de Versailles a donne raison au voisin. Juliette et son pere s'interrogent sur l'eventuel effet que le placement sous curatelle aurait pu avoir sur cette procedure. Christian Xaver entend bien contester la decision... notifiee le 24 juillet 2025 et en fait part a son curateur, qui depuis a pleinement ete integre a la procedure. Son avocat, Me Tartempion, qui vient de preter serment, saisit la Cour d'appel de Bourges le 22 aout. A ce jour, celle-ci ne s'est toujours pas prononcee. Que pensez-vous de cette situation ? (8 points)",
+      "consolidation_notes": "Question la plus ponderee (8 pts). Deux volets imbriques : (1) curatelle et interruption d'instance [3 pts] - la grille attend l'examen de 370/371 CPC puis 468 al. 3 C. civ. puis Cass. 1re civ. 24 juin 2020 ; (2) regularisation d'appel devant cour incompetente [5 pts] - cumul des articles 530, 538 CPC et 2241 C. civ., plus la trilogie jurisprudentielle 21 mars 2019 / 5 oct. 2023 / 3 juillet 2025. Le complement de grille officiel signale expressement que la totalite des points ne peut etre accordee aux candidats n'ayant pas integre le revirement du 3 juillet 2025. Les copies IEJ (48, 122, 139) abordent visiblement la capacite en curatelle (mention de l'article 468 / articles en curatelle dans les OCR), mais la qualite de l'OCR ne permet pas de confirmer les details jurisprudentiels."
+    }
+  ]
+}

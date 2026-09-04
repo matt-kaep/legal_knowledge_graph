@@ -1,0 +1,114 @@
+{
+  "graph": {
+    "nodes": {
+      "article": 87821,
+      "jp": 118112,
+      "question": 1707
+    },
+    "edges": {
+      "jp_cite_article": 642450,
+      "question_gold_article": 2003,
+      "question_gold_jp": 1033
+    }
+  },
+  "gold_coverage": {
+    "n_articles_gold_total": 2023,
+    "n_articles_gold_resolved": 2003,
+    "pct_articles_resolved": 99.01,
+    "n_jp_gold_total": 1891,
+    "n_jp_gold_resolved": 1033,
+    "pct_jp_resolved": 54.63,
+    "n_q_with_any_article": 1694,
+    "n_q_with_any_jp": 971
+  },
+  "connectivity": {
+    "n_components_total_graph": 59981,
+    "main_component_size": 147609,
+    "main_component_pct": 71.09,
+    "n_questions_in_main": 1699,
+    "n_questions_isolated_no_neighbor": 7
+  },
+  "kcore_targets": {
+    "median_mean_core": 10.0,
+    "median_max_core": 12.0,
+    "p25_mean_core": 7.0,
+    "p75_mean_core": 12.0,
+    "max_observed_core": 32
+  },
+  "target_centrality": {
+    "buckets_mean_citation_targeted_articles": {
+      "<10": 140,
+      "10-100": 585,
+      "100-1000": 806,
+      ">1000": 161
+    },
+    "median_mean_citation": 134.25
+  },
+  "question_question_network": {
+    "n_pairs_sharing_article": 4412,
+    "n_components": 550,
+    "main_component_size": 143,
+    "n_isolated_questions": 305,
+    "top_clique_size": 38,
+    "n_cliques_ge3": 240
+  },
+  "doc_id_cohesion": {
+    "n_docs_with_ge2_questions": 178,
+    "mean_cohesion": 0.16809179597010174,
+    "median_cohesion": 0.09523809523809523,
+    "top5": [
+      {
+        "doc_id": "art_11_fasc_30_revelation_d_informations_issues_d_une_enquete_ou_d_une_instruction",
+        "n_q": 2,
+        "cohesion": 1.0
+      },
+      {
+        "doc_id": "art_376_a_380_fasc_20_cour_d_assises_jugement_arret_et_proces_verbal",
+        "n_q": 3,
+        "cohesion": 1.0
+      },
+      {
+        "doc_id": "art_53_a_73_fasc_20_crimes_et_delits_flagrants",
+        "n_q": 3,
+        "cohesion": 1.0
+      },
+      {
+        "doc_id": "art_601_a_604_fasc_20_pourvoi_en_cassation_instruction_des_recours_audiences",
+        "n_q": 2,
+        "cohesion": 1.0
+      },
+      {
+        "doc_id": "art_689_a_696_fasc_unique_effets_en_france_des_decisions_repressives_etrangeres_force_executoire_ou_execution",
+        "n_q": 2,
+        "cohesion": 1.0
+      }
+    ],
+    "bottom5": [
+      {
+        "doc_id": "art_75_a_78_fasc_15_les_regles_applicables_a_l_enquete_preliminaire_apres_les_lois_du_22_decembre_2021_et_du_24_janvier_2022",
+        "n_q": 2,
+        "cohesion": 0.0
+      },
+      {
+        "doc_id": "art_75_a_78_fasc_20_enquete_preliminaire",
+        "n_q": 5,
+        "cohesion": 0.0
+      },
+      {
+        "doc_id": "art_802_fasc_20_dispositions_generales_nullite",
+        "n_q": 3,
+        "cohesion": 0.0
+      },
+      {
+        "doc_id": "art_lo_630_fasc_20_question_prioritaire_de_constitutionnalite",
+        "n_q": 4,
+        "cohesion": 0.0
+      },
+      {
+        "doc_id": "art_preliminaire_fasc_40_principes_directeurs_du_proces_penal_principes_propres_aux_droits_des_victimes_droits_des_victimes",
+        "n_q": 4,
+        "cohesion": 0.0
+      }
+    ]
+  }
+}

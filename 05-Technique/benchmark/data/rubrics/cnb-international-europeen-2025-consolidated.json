@@ -1,0 +1,731 @@
+{
+  "metadata": {
+    "source": "CNB CRFPA 2025 - Droit international et europeen (consolide)",
+    "source_path": "data/cnb-crfpa/2025/cas-pratiques.pdf (pages 20-25)",
+    "validation_sources": [
+      "Grille officielle CNB 2025 - Droit international et europeen (diffusion Cap'Barreau) + complement posterieur",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 12 (note 15/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 28 (note 12/20)",
+      "Meilleure copie IEJ Strasbourg 2025 - copie 38 (note 12/20)"
+    ],
+    "generated_by": "Claude (general-purpose subagent, consolidation run)",
+    "generated_at": "2026-04-20",
+    "schema_ref": "Design-Rubrique-Hierarchisee.md",
+    "session": "Septembre 2025",
+    "epreuve": {
+      "date": "2025-09-03",
+      "duree_heures": 3,
+      "coefficient": 2,
+      "total_points": 20,
+      "repartition_points": {
+        "Q1_projet_kickstart_concentration_FSR": 9,
+        "Q2_machine_outil_MakinStar": 6,
+        "Q3_changement_etat_civil_Paul": 5
+      },
+      "qualite_redactionnelle": "retrait maximum de 2 points"
+    },
+    "notes_methodologiques": "Pour les reglements UE, format conventionnel `reglement_ue_XXXX_YYYY:article` (ex : reglement_ue_1215_2012:7 pour Bruxelles I bis art. 7, reglement_ce_139_2004:1 pour le reglement concentration). Les traites internationaux (Convention de La Haye 1955, TFUE, Charte) sont references via `short_ref` uniquement, sans forcer le format canonique code:article (champ dedie). Les arrets CJUE/CJCE sont references via leur nom et numero d'affaire (format `C-XXX/YY`)."
+  },
+  "questions": [
+    {
+      "id": "CNB-INTEU-2025-Q1",
+      "branche": "international-europeen",
+      "specialisation": "Droit europeen - controle des concentrations + controle des subventions etrangeres (FSR)",
+      "question": "M. McThrottle, dirigeant de la SAS Tekkbike (fabricant d'equipements moto, siege France, CA mondial 2024 = 2,155 Mds EUR, implantations en France/Belgique/Italie/Portugal/Pologne), envisage un projet Kickstart consistant a racheter 100% du capital de son principal distributeur Rezo2wheels GmbH (siege Allemagne, CA mondial 2024 = 549,9 M EUR, ventes en France/Allemagne/Pologne/Italie/Portugal/Royaume-Uni). Tekkbike a par ailleurs recu en 2024 des aides substantielles de plusieurs Etats tiers (Bresil 25 M, Argentine 8,5 M, Bolivie 5 M, Colombie 6 M, Chili 10 M = 54,5 M EUR). Le plan Kickstart est-il envisageable au regard du droit europeen et, si oui, a quelles conditions ?",
+      "perspective": "neutre",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Qualifier l'operation d'achat de 100% du capital de Rezo2wheels par Tekkbike comme prise de controle exclusif et operation de concentration economique au sens de l'art. 3.1 b) du Reglement (CE) 139/2004",
+            "linked_article": "reglement_ce_139_2004:3",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "l'operation d'achat par la societe Tekkbike de 100% de la societe Rezo2Wheels emporte prise de controle exclusif de celle-ci et constitue une operation de concentration economique (art. 3.§1 b))"
+          },
+          {
+            "text": "Verifier les seuils de dimension communautaire (art. 1 du Reglement 139/2004) : la premiere serie de seuils de l'art. 1.2 (CA mondial total > 5 Mds EUR) n'est PAS atteinte (~2,7 Mds EUR)",
+            "linked_article": "reglement_ce_139_2004:1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La premiere serie de seuils (article 1.§2) n'est pas atteinte, des lors que le chiffre d'affaires total realise sur le plan mondial par l'ensemble des entreprises concernees est inferieur a 5 milliards d'euros"
+          },
+          {
+            "text": "Constater que la seconde serie de seuils de l'art. 1.3 EST atteinte : CA mondial cumule > 2,5 Mds EUR ; CA total > 100 M EUR dans au moins 3 Etats membres (France, Pologne, Italie, Portugal) ; CA individuel > 25 M EUR dans au moins 3 de ces Etats (France, Pologne, Portugal) ; CA UE individuel > 100 M EUR (2,1 Mds et 468 M EUR)",
+            "linked_article": "reglement_ce_139_2004:1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la seconde serie de seuils, prevue a l'article 1.§3 est atteinte... un peu plus de 2,7 milliards d'euros en l'espece... France, Pologne, Italie, Portugal... les autres seuils cumulatifs sont egalement depasses"
+          },
+          {
+            "text": "Verifier la clause des 2/3 (exception d'extraneite) : aucune des entreprises concernees ne realise plus des 2/3 de son CA UE dans un seul Etat membre, donc l'exception ne joue pas",
+            "linked_article": "reglement_ce_139_2004:1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "aucune des entreprises concernees ne realise plus des deux tiers de son chiffre d'affaires total dans l'Union a l'interieur d'un seul Etat membre"
+          },
+          {
+            "text": "Obligation de notification prealable a la DG Comp de la Commission europeenne (art. 4 du Reglement 139/2004)",
+            "linked_article": "reglement_ce_139_2004:4",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "vérifier si elle doit faire l'objet d'une notification aupres de la Direction generale de la concurrence (DG Comp) de la Commission europeenne"
+          },
+          {
+            "text": "Effet de guichet unique (art. 21.3) : la controlabilite par la Commission dessaisit les Etats membres par ailleurs competents en vertu de leur legislation nationale",
+            "linked_article": "reglement_ce_139_2004:21",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "la controlabilite de l'operation par la Commission europeenne dessaisit tous les etats membres qui seraient par ailleurs competents pour controler l'operation en vertu de leurs legislations nationales (guichet unique) (art. 21.§3 du reglement)"
+          },
+          {
+            "text": "Effet suspensif de l'operation (art. 7) : interdiction du gun jumping - l'operation ne peut etre realisee avant decision de compatibilite",
+            "linked_article": "reglement_ce_139_2004:7",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "du caractere suspensif de l'operation, qui ne pourra etre realisee avant l'obtention de la decision la declarant compatible avec le marche commun, et a fortiori avant la notification (gun jumping) (art. 7 du reglement)"
+          },
+          {
+            "text": "Delais de procedure (art. 10) : 25 jours ouvres minimum a compter de la reception d'une notification complete ; delais plus longs en cas de procedure de phase 2 (art. 6.1 c))",
+            "linked_article": "reglement_ce_139_2004:10",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "des delais induits par la procedure de notification, qui sont precises a l'article 10 du reglement, et qui sont au minimum de 25 jours ouvres"
+          },
+          {
+            "text": "Risques en cas de realisation avant autorisation : mesures de retablissement et amendes pouvant aller jusqu'a 10% du CA total (art. 14.2)",
+            "linked_article": "reglement_ce_139_2004:14",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "imposer des amendes pouvant aller jusqu'a 10% du chiffre d'affaires total realise par les entreprises concernees (art. 14.§2 du reglement)"
+          },
+          {
+            "text": "Appreciation du risque concurrentiel : pas d'effet horizontal (pas de concurrent), pas d'effet congloméral (produits similaires), risque principal = effet vertical, mais environnement tres concurrentiel avec de nombreux autres grossistes et concurrents commercialement agressifs donc risque de verrouillage des intrants a priori ecarte",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il n'y a en effet a priori pas d'effet horizontal a redouter... ni d'effet congloméral... Le principal risque potentiel serait celui d'effets de nature verticale... Tout risque de verrouillage des intrants semble par consequent ecarte"
+          },
+          {
+            "text": "Alerter sur le Reglement (UE) 2022/2560 dit FSR (subventions etrangeres faussant le marche interieur), en vigueur depuis le 12 juillet 2023, distinct du regime des aides d'Etats des art. 107 et s. TFUE",
+            "linked_article": "reglement_ue_2022_2560:54",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Reglement dit FSR qui porte sur le controle des subventions versees par des Etats tiers a l'Union europeenne (problematiques distinctes des aides d'Etats membres des art. 107 et s. TFUE), en vigueur depuis le 12 juillet 2023"
+          },
+          {
+            "text": "Verifier les seuils de l'art. 20 du Reglement FSR en matiere de concentration : contributions financieres cumulees > 50 M EUR sur 3 ans = SEUIL FRANCHI (Tekkbike a recu 54,5 M en 2024) ; mais CA UE de la cible < 500 M EUR = PREMIER SEUIL NON FRANCHI (Rezo2wheels n'atteint pas 500 M EUR dans l'UE)",
+            "linked_article": "reglement_ue_2022_2560:20",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "si le second seuil (reception par les entreprises concernees de contributions financieres totales cumulees de plus de 50 millions d'euros au cours des trois annees precedant la transaction) est franchi... en revanche le premier ne l'est pas, l'entreprise acquise etant bien etablie dans l'Union mais y realisant un chiffre d'affaires total inferieur a 500 millions d'euros"
+          },
+          {
+            "text": "Conclusion FSR : pas de notification au titre du Reglement FSR parallelement a la notification au titre du controle des concentrations",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "Il n'y a par consequent pas lieu a notification au titre du reglement FSR parallelement a la notification au titre du controle des concentrations"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Preciser la methode de calcul du CA pour une acquisition de controle exclusif : cote acquereur = CA consolide du groupe ; cote vendeur = CA de la seule entite acquise",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "S'agissant d'une acquisition de controle exclusif, sont pris en compte cote acquereur le chiffre d'affaires consolide du groupe (societe mere et filiales), et cote vendeur, uniquement le CA de l'entite acquise"
+          },
+          {
+            "text": "Indifference des formes sociales (SAS/GmbH) sur l'analyse",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Les formes sociales des entreprises concernees, en l'occurrence SAS et GmbH, sont sans incidence sur l'analyse"
+          },
+          {
+            "text": "Possibilite d'engagements/remedes proposes par les parties notifiantes pour faire lever les preoccupations de concurrence",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "proposition de remedes par les parties notifiantes... une decision d'autorisation conditionnee a des mesures correctives"
+          },
+          {
+            "text": "Le Reglement FSR prevoit aussi la notification dans le cadre d'appels d'offres publics > 250 M EUR (situation non concernee ici)",
+            "linked_article": "reglement_ue_2022_2560:1",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "la notification des subventions etrangeres lors de la reponse a des appels d'offres publics dans l'Union pour un montant excedant 250 millions d'euros (cas qui ne concerne pas la situation de la societe Tekkbike)"
+          },
+          {
+            "text": "Conseil de notifier le plan Kickstart a la Commission et veiller a l'absence de creation/renforcement de position dominante, avec possibilite de prendre des engagements (art. 8 du Reglement)",
+            "linked_article": "reglement_ce_139_2004:8",
+            "sources": ["copie_iej"],
+            "why": "Les trois copies concluent par la recommandation de notification et mentionnent la possibilite d'engagements au titre de l'art. 8 - conforme a la grille"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Possibilite de renvois de la Commission vers les autorites nationales (art. 4.4 et art. 9 du Reglement 139/2004) - valorise si mentionne",
+            "linked_article": "reglement_ce_139_2004:9",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "on pourra valoriser les candidats qui indiqueront la possibilite de renvois de la Commission vers les autorites nationales en application des articles 4.§4 et 9 du reglement, mais sans pour autant penaliser ceux qui n'en feraient pas mention"
+          },
+          {
+            "text": "Delai informel de pre-notification qui s'ajoute aux delais legaux de procedure",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "a ces delais de procedure s'ajoute le delai informel d'une eventuelle pre-notification"
+          },
+          {
+            "text": "Definition de l'entreprise en droit UE (toute entite exercant une activite economique) : CJCE Hofner et Elser 1991, CJCE Pavlov 2000, exclusion des prerogatives de puissance publique (CJCE Eurocontrol 1976) et de la solidarite (CJCE Poucet et Pistre 2001)",
+            "linked_jp": "CJCE, 23 avril 1991, Hofner et Elser, C-41/90",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 cite ces arrets de maniere precise pour qualifier la notion d'entreprise - non requis par la grille mais culture juridique pertinente"
+          },
+          {
+            "text": "Definition du marche pertinent : substituabilite des produits du point de vue du consommateur (CJCE Hoffmann-La Roche 1979, CJCE United Brands 1978)",
+            "linked_jp": "CJCE, 14 fev. 1978, United Brands, 27/76",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 et la copie 38 citent United Brands pour l'analyse du marche pertinent - absent de la grille mais pertinent en droit de la concurrence"
+          },
+          {
+            "text": "Reglements (UE) 2023/914 sur les regles de procedure du controle des concentrations et Reglement (UE) 2015/1589 pour le droit procedural des aides d'Etat",
+            "sources": ["llm_intrinsic"],
+            "why": "Textes listes dans les documents autorises (cf. page de garde de l'epreuve) - potentiellement mobilisables pour la procedure mais non expressement requis par la grille",
+            "uncertainty_note": "Non mentionnes dans la grille ni dans les copies examinees - inclus pour contexte"
+          },
+          {
+            "text": "Precision sur la phase 2 (enquete approfondie) : 90-105 jours ouvres d'instruction complementaire apres l'engagement de la procedure (art. 6.1 c))",
+            "linked_article": "reglement_ce_139_2004:6",
+            "sources": ["copie_iej"],
+            "why": "La copie 38 precise le detail des delais de phase 2 - grille reconnait ce niveau de detail comme valorisable"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "reglement_ce_139_2004:1",
+          "reglement_ce_139_2004:3",
+          "reglement_ce_139_2004:4",
+          "reglement_ce_139_2004:7",
+          "reglement_ce_139_2004:10",
+          "reglement_ce_139_2004:14",
+          "reglement_ce_139_2004:21",
+          "reglement_ue_2022_2560:1",
+          "reglement_ue_2022_2560:20"
+        ],
+        "optionnels": [
+          "reglement_ce_139_2004:2",
+          "reglement_ce_139_2004:5",
+          "reglement_ce_139_2004:6",
+          "reglement_ce_139_2004:8",
+          "reglement_ce_139_2004:9",
+          "reglement_ue_2022_2560:19",
+          "reglement_ue_2022_2560:54"
+        ]
+      },
+      "jp_attendues": [
+        {
+          "ref": "ECLI:EU:C:1991:161",
+          "short_ref": "CJCE, 23 avril 1991, Hofner et Elser, C-41/90",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Definit la notion d'entreprise en droit de la concurrence UE (toute entite exercant une activite economique)",
+          "uncertainty_note": "ECLI non verifie dans les sources consultees"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 14 fev. 1978, United Brands, 27/76",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Definition du marche pertinent et de la position dominante",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 13 fev. 1979, Hoffmann-La Roche, 85/76",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Appreciation in concreto de la position dominante, substituabilite des produits",
+          "uncertainty_note": "ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": ["traite_tfue:107", "traite_tfue:108"],
+        "not_to_cite_jp": [],
+        "notes": "Les articles 107 et s. TFUE concernent les aides d'Etat des Etats membres - NE PAS les invoquer ici car les aides en question proviennent d'Etats TIERS a l'UE (Bresil, Argentine, Bolivie, Colombie, Chili) : le regime applicable est le Reglement FSR, distinct du regime des aides d'Etat."
+      },
+      "source_extract": "I. Monsieur McThrottle souhaite avoir recours a votre expertise, notamment parce que ni son entreprise, ni Rezo2wheels n'ont procede a des cessions ou des acquisitions ces dernieres annees, et que ses souvenirs juridiques sont lointains. Il vous interroge, sur la base des elements preliminaires dont vous disposez a ce stade, sur le point de savoir si le plan Kickstart vous semble envisageable du point de vue du droit europeen et si oui, a quelles conditions. Renseignez-le. (9 points)",
+      "consolidation_notes": "Question tres dense (9 pts = presque moitie de l'epreuve). Grille structuree en 2 blocs : A) Concentrations (7 pts) et B) FSR (2 pts). Toutes les copies traitent correctement A mais AUCUNE des 3 copies examinees n'evoque le Reglement FSR (2 pts perdus). La copie 12 (note 15) est la plus rigoureuse sur les seuils ; la copie 28 (12) est structuree ; la copie 38 (12) introduit des arrets CJUE supplementaires (Hofner, United Brands, Tetra Pak, CK Investments UK) non requis mais valorisables."
+    },
+    {
+      "id": "CNB-INTEU-2025-Q2",
+      "branche": "international-europeen",
+      "specialisation": "Droit international prive - conflit de juridictions et conflit de lois en matiere de vente internationale de marchandises",
+      "question": "La societe Tekkbike a achete le 15 juin 2024 une machine-outil a la societe autrichienne MakinStar, pour delivrance a Rungis (France) au plus tard le 15 octobre 2024. La machine a ete livree avec retard (15 janvier 2025), causant un prejudice a Tekkbike (annulations de commandes). Le contrat EXCLUT expressement la Convention de Vienne de 1980 (CVIM). Quelles sont les options de Tekkbike en matiere de juridiction competente et de loi applicable ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Identifier la question comme un litige contractuel international (vente de marchandises) a resoudre par la regle europeenne en l'absence de clause compromissoire ou d'election de for",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "a defaut de clause compromissoire ou de clause d'election de for, on doit se tourner vers une mise en oeuvre de l'article 7. 1. b du Reglement Bruxelles I bis"
+          },
+          {
+            "text": "Applicabilite du Reglement (UE) 1215/2012 Bruxelles I bis : regle de principe de l'article 4 (competence du juge du domicile du defendeur)",
+            "linked_article": "reglement_ue_1215_2012:4",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "offrant ainsi a la societe demanderesse le choix entre les juridictions autrichienne (art. 4 : siege du defendeur) et les juridictions francaises"
+          },
+          {
+            "text": "Option de competence speciale en matiere contractuelle : art. 7.1.b Bruxelles I bis - competence du lieu ou la marchandise a ete ou devait etre livree",
+            "linked_article": "reglement_ue_1215_2012:7",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "une mise en oeuvre de l'article 7. 1. b du Reglement Bruxelles I bis et le jeu d'option de competence au profit des juridictions du lieu ou la marchandise a ete ou devait etre livree"
+          },
+          {
+            "text": "Choix offert a Tekkbike : juridictions autrichiennes (siege MakinStar - art. 4) OU juridictions francaises (lieu de livraison Rungis - art. 7.1.b)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "offrant ainsi a la societe demanderesse le choix entre les juridictions autrichienne... et les juridictions francaises"
+          },
+          {
+            "text": "La CVIM etant exclue, recourir au Reglement (CE) 593/2008 Rome I sur la loi applicable aux obligations contractuelles",
+            "linked_article": "reglement_ce_593_2008:1",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "les faits mentionnent une exclusion de la CVIM, ce qui nous amene donc vers une application du reglement Rome I, pour ce qui concerne la loi applicable"
+          },
+          {
+            "text": "Principe : loi choisie par les parties (art. 3 Rome I) ; a defaut, presomption en faveur de la loi du lieu de residence habituelle du vendeur (art. 4.1.a Rome I)",
+            "linked_article": "reglement_ce_593_2008:4",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "La loi applicable est en principe la loi choisie par les parties. Apparemment aucun choix n'a ete fait en l'espece, nous amenant aux presomptions de localisation de Rome I, en l'occurrence au profit de la loi du lieu ou le vendeur a sa residence habituelle"
+          },
+          {
+            "text": "La loi applicable est la loi autrichienne (residence habituelle du vendeur MakinStar)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "la loi autrichienne est bien la loi applicable a defaut de choix dans le contrat"
+          },
+          {
+            "text": "Opportunite du choix : faire concorder le for et le jus (saisir le juge autrichien appliquant la loi autrichienne) facilite l'application et evite les problemes de preuve de la loi etrangere",
+            "sources": ["grille_cnb"],
+            "grille_weight": 2,
+            "extract_from_grille": "On attend ici des candidats qu'ils s'interrogent sur l'opportunite de faire concorder le for et le jus... Cette seconde hypothese, qui consiste a faire concorder le for et le jus, peut s'averer plus commode, en evitant les problemes de preuve de la loi etrangere devant le juge francais"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Discussion sur la prestation caracteristique : vente de marchandise a fabriquer - arbitrage entre prestation de service (conception) et vente (delivrance de la chose fabriquee)",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En presence d'une vente de marchandise a fabriquer, une discussion peut s'engager sur la prestation caracteristique du contrat (conception : prestation de service ou delivrance de la chose fabriquee : vente)"
+          },
+          {
+            "text": "Inversement, opportunite de saisir le juge francais (proximite des regles procedurales connues) qui appliquera le droit autrichien - dissociation for/jus si demontree plus avantageuse",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "on peut evidemment accorder les points au candidat qui demontre qu'il serait plus opportun de saisir le juge francais, car les regles procedurales sont mieux connues par exemple, en lui demandant d'appliquer le droit autrichien"
+          },
+          {
+            "text": "Nuance du complement de grille : si le juge francais est saisi, le Reglement Rome I (art. 25) reserve l'application de la Convention de La Haye du 15 juin 1955 sur la vente d'objets mobiliers corporels (signee et ratifiee par la France, pas par l'Autriche), dont l'application conduit a la meme loi autrichienne",
+            "linked_article": "reglement_ce_593_2008:25",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "le Reglement Rome I reserve l'application de la Convention de La Haye du 15 juin 1955 sur la vente de meubles corporels (signee et ratifiee par la France mais pas par l'Autriche), dont la mise en oeuvre conduit a la designation de la meme loi (autrichienne). On valorisera l'etudiant qui apporte cette nuance"
+          },
+          {
+            "text": "Principe de confiance mutuelle dans l'espace judiciaire europeen, facilitant l'execution transfrontiere",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "Dans le cadre de l'espace judiciaire europeen, le principe de confiance mutuelle facilite au demeurant l'execution transfrontiere, ce qui ne rend pas ce choix incongru"
+          },
+          {
+            "text": "Verification des champs d'application du Reglement Bruxelles I bis : materiel (art. 1 - matiere civile et commerciale, notion autonome - CJCE Eurocontrol 1976), temporel (art. 66 - actions introduites apres le 10 janvier 2015), spatial (art. 4 et s. - domicile du defendeur dans un Etat membre)",
+            "linked_article": "reglement_ue_1215_2012:66",
+            "sources": ["copie_iej"],
+            "why": "Les trois copies (12, 28, 38) verifient methodiquement les 4 criteres d'applicabilite (ratione materiae/loci/temporis/personae) - methodologie classique de DIP valorisable"
+          },
+          {
+            "text": "Domicile de la personne morale = siege statutaire (art. 63 Bruxelles I bis)",
+            "linked_article": "reglement_ue_1215_2012:63",
+            "sources": ["copie_iej"],
+            "why": "Les 3 copies appliquent correctement l'art. 63 pour situer le domicile de MakinStar en Autriche"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Qualification de matiere contractuelle (CJCE Jakob Handte 1992) : engagement librement assume d'une partie envers une autre - oppose a la matiere delictuelle (CJCE Kalfelis 1988)",
+            "linked_jp": "CJCE, 17 juin 1992, Jakob Handte, C-26/91",
+            "sources": ["copie_iej"],
+            "why": "Les copies 12 et 38 citent Jakob Handte pour qualifier la matiere contractuelle - jurisprudence classique non requise par la grille mais pertinente",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Distinction vente de marchandises / fourniture de service (CJUE Car Trim 2010, CJCE Falco 2009, CJUE Granarolo 2016)",
+            "linked_jp": "CJUE, 25 fev. 2010, Car Trim, C-381/08",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 cite Car Trim pour qualifier le contrat comme vente (livraison d'un bien) par opposition a une fourniture de service",
+            "uncertainty_note": "ECLI non verifie ; pertinent pour l'analyse de la prestation caracteristique soulevee par la grille"
+          },
+          {
+            "text": "A defaut de stipulation contractuelle sur le lieu de livraison, Car Trim fixe le lieu a celui de la remise materielle du bien a l'acheteur",
+            "linked_jp": "CJUE, 25 fev. 2010, Car Trim, C-381/08",
+            "sources": ["copie_iej"],
+            "why": "Precision apportee par la copie 28 - en l'espece le lieu est contractuellement fixe a Rungis, la JP n'est donc pas le pivot mais reste pertinente"
+          },
+          {
+            "text": "Application universelle du Reglement Rome I (art. 2) : le juge d'un Etat membre applique Rome I meme si la loi designee est celle d'un Etat tiers",
+            "linked_article": "reglement_ce_593_2008:2",
+            "sources": ["copie_iej"],
+            "why": "La copie 28 rappelle ce principe - pertinent pour la methodologie DIP"
+          },
+          {
+            "text": "Immunite de juridiction et autorite de chose jugee ecartees de facto : parties privees, contrat prive",
+            "sources": ["copie_iej"],
+            "why": "Precision de la copie 38 - non requis par la grille mais montre la rigueur methodologique"
+          },
+          {
+            "text": "Regles d'ordre public international : le juge francais saisi pourrait ecarter certaines dispositions du droit autrichien contraires a l'OPI, en l'absence de fraude a la loi",
+            "sources": ["copie_iej"],
+            "why": "Reflexion de la copie 38 sur l'interet strategique de saisir le juge francais pour faire jouer l'OPI - approfondissement non requis"
+          },
+          {
+            "text": "Articles 14 et 15 du Code civil (competence fondee sur la nationalite) ne s'appliquent qu'a titre subsidiaire en matiere europeenne (Cass. 1re civ. 1985, Cognacs and Brandies from France) + arrets Peloma-Scheffel 1958/1962",
+            "linked_article": "code_civil:14",
+            "sources": ["copie_iej"],
+            "why": "Rappel methodologique de la copie 12 sur la hierarchie des sources en DIP",
+            "uncertainty_note": "References aux arrets Peloma-Scheffel difficiles a verifier - probable reference a Scheffel 1962 et Peltier 1958 sur l'applicabilite generale des regles de competence territoriale"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [
+          "reglement_ue_1215_2012:4",
+          "reglement_ue_1215_2012:7",
+          "reglement_ce_593_2008:3",
+          "reglement_ce_593_2008:4"
+        ],
+        "optionnels": [
+          "reglement_ue_1215_2012:1",
+          "reglement_ue_1215_2012:63",
+          "reglement_ue_1215_2012:66",
+          "reglement_ce_593_2008:1",
+          "reglement_ce_593_2008:2",
+          "reglement_ce_593_2008:25"
+        ]
+      },
+      "traites_attendus": [
+        {
+          "short_ref": "Convention de La Haye du 15 juin 1955 sur la loi applicable aux ventes a caractere international d'objets mobiliers corporels",
+          "role": "reserve par l'art. 25 Rome I ; designe egalement la loi autrichienne",
+          "sources": ["grille_cnb", "copie_iej"],
+          "uncertainty_note": "Non formatable en code:article strict - reference via short_ref. Articles pertinents : art. 2 (choix), art. 3 (a defaut : loi du vendeur)"
+        },
+        {
+          "short_ref": "Convention de Vienne du 11 avril 1980 sur la vente internationale de marchandises (CVIM)",
+          "role": "EXCLUE par les parties dans le contrat - ne s'applique donc pas",
+          "sources": ["grille_cnb", "copie_iej"],
+          "uncertainty_note": "Piege a eviter : ne pas fonder la solution sur la CVIM malgre son applicabilite de principe"
+        }
+      ],
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CJCE, 17 juin 1992, Jakob Handte, C-26/91",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["copie_iej"],
+          "why": "Definition autonome de la matiere contractuelle",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJUE, 25 fev. 2010, Car Trim, C-381/08",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["copie_iej"],
+          "why": "Qualification du contrat de vente de marchandises et determination du lieu de livraison",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 14 oct. 1976, LTU c. Eurocontrol, 29/76",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Notion autonome de matiere civile et commerciale (exclusion des prerogatives de puissance publique)",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 23 avril 2009, Falco Privatstiftung, C-533/07",
+          "sens_vs_question": "neutre",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Definition de la fourniture de services - ecarte en l'espece au profit de la qualification vente",
+          "uncertainty_note": "ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": ["code_civil:14", "code_civil:15"],
+        "not_to_cite_jp": [],
+        "notes": "Les articles 14 et 15 du Code civil (competence fondee sur la nationalite francaise du demandeur/defendeur) sont subsidiaires : ils ne jouent qu'a defaut de regle europeenne applicable. Ici le Reglement Bruxelles I bis s'applique pleinement, donc NE PAS fonder la competence sur les art. 14/15. De meme, ne pas fonder la solution sur la CVIM (exclue par les parties)."
+      },
+      "source_extract": "II. Independamment du projet Kickstart, la societe Tekkbike a acquis, pour les besoins de sa production a Rungis, une machine-outil fabriquee par la societe autrichienne MakinStar, par contrat conclu le 15 juin 2024. L'acte prevoyait une delivrance de la chose et sa livraison devant intervenir dans les locaux de Rungis, aux frais du vendeur, le 15 octobre 2024 au plus tard. La machine a certes ete livree, mais le 15 janvier 2025. Tekkbike en a subi un prejudice, plusieurs de ses acheteurs ayant annule ces commandes. Ladite machine-outil etait en effet indispensable a une production specifique. La societe Tekkbike entend bien agir contre MakinStar en raison de ce retard dans l'execution de ses engagements mais s'interroge sur la loi applicable et la juridiction competente, des lors que le contrat exclut expressement l'application de la Convention de Vienne de 1980 sur la vente internationale de marchandises. Renseignez-le sur ses options et conseillez-le. (6 points)",
+      "consolidation_notes": "Question bien equilibree (6 pts : 2+2+2 = juridiction + loi + opportunite). Toutes les copies traitent correctement A (juridiction) et B (loi). Ecart notable : la nuance Convention de La Haye 1955 (complement de grille apres demandes IEJ) n'est citee que par la copie 12 - point valorise. La partie C (opportunite du choix for/jus) est la plus faiblement traitee par les copies. La copie 38 va plus loin sur l'ordre public international (strategie pro-juge francais)."
+    },
+    {
+      "id": "CNB-INTEU-2025-Q3",
+      "branche": "international-europeen",
+      "specialisation": "Droit UE - citoyennete europeenne, libre circulation, reconnaissance transfrontaliere des actes d'etat civil",
+      "question": "Emily McThrottle, nee en Slovenie et enregistree comme femme sur son acte de naissance, a demenage au Royaume-Uni en 2008 et acquis la nationalite britannique en 2016. En 2017, elle a change de prenom (devenant Paul) et d'identite de genre par la procedure britannique du Deed Poll. En septembre 2020, elle a obtenu un Gender Identity Certificate britannique. De retour en Slovenie en 2023, Paul sollicite la modification de son acte de naissance. Les autorites slovenes lui imposent d'engager une nouvelle instance juridictionnelle en Slovenie. Quelles sont les perspectives juridiques de Paul pour obtenir la reconnaissance de son changement d'etat civil ?",
+      "perspective": "demande",
+      "date_posee": "2026-04-20",
+      "rubric": {
+        "core": [
+          {
+            "text": "Paul est citoyen de l'Union au sens de l'art. 20 TFUE, en tant que ressortissant slovene (la Slovenie etant entree dans l'UE en 2004), et dispose du droit de circuler et sejourner librement sur le territoire des Etats membres (art. 21 TFUE)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Emily pouvait parfaitement, sur le fondement des articles 20 et 21 TFUE circuler au sein de l'Union et sejourner librement au Royaume Uni"
+          },
+          {
+            "text": "A l'epoque du demenagement (2008) et du changement d'etat civil (2017-2020), le Royaume-Uni etait encore un Etat membre de l'Union europeenne - chronologie determinante",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Ce qui compte ici demeure la date a laquelle la situation juridique a ete constituee et a laquelle l'acte d'etat civil a ete dresse conformement au droit interne. A ce moment-la, le Royaume-Uni etait encore un Etat-membre de l'Union europeenne"
+          },
+          {
+            "text": "Acquisition de la nationalite britannique ayant permis l'acces aux modalites simplifiees de changement d'etat civil (Deed Poll + Gender Identity Certificate) - actes regulierement dresses par les autorites britanniques",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "Grace a l'acquisition de la nationalite britannique, il a pu proceder aux modalites simplifiees de changement d'etat civil"
+          },
+          {
+            "text": "Principe de pleine reconnaissance en droit de l'UE : une situation juridique et un acte regulierement dresse dans un Etat membre doivent etre reconnus dans les autres Etats membres",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 2,
+            "extract_from_grille": "En droit de l'Union europeenne, le principe de pleine reconnaissance d'une situation juridique et d'un acte regulierement dresse dans un Etat membre s'impose avec acuite"
+          },
+          {
+            "text": "En DIP, un acte d'etat civil dresse a l'etranger a la meme force probante qu'un acte local s'il respecte les formes locales d'etablissement",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "En droit international prive, un acte d'etat civil dresse a l'etranger a, en principe, des lors qu'il respecte les formes locales d'etablissement, la meme force probante qu'un acte local"
+          },
+          {
+            "text": "Conclusion : les autorites slovenes sont tenues de reconnaitre l'acte britannique dresse avant le Brexit, sans pouvoir imposer une nouvelle procedure juridictionnelle qui ferait abstraction du changement deja legalement acquis",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "les autorites slovenes sont tenues de reconnaitre l'acte dresse a l'epoque anterieure au Brexit par les autorites britanniques"
+          }
+        ],
+        "expected": [
+          {
+            "text": "Reference a l'arret pivot CJUE Mirin du 4 octobre 2024 (C-4/23) : l'art. 20 et l'art. 21.1 TFUE, lus a la lumiere des art. 7 et 45 de la Charte des droits fondamentaux de l'UE, s'opposent a une reglementation qui ne permet pas de reconnaitre le changement de prenom et d'identite de genre legalement acquis dans un autre Etat membre ; la chronologie vis-a-vis du Brexit est sans incidence",
+            "linked_jp": "CJUE, 4 oct. 2024, Mirin, C-4/23",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 1,
+            "extract_from_grille": "directement inspires de l'arret rendu par la CJUE le 4 octobre 2024 dans l'affaire Mirin (aff. C-4/23)... On valorisera evidemment l'etudiant qui connaitrait cette affaire",
+            "uncertainty_note": "ECLI non verifie ; arret recent de la CJUE"
+          },
+          {
+            "text": "CJUE Freitag du 8 juin 2017 (C-541/15) : le refus par un Etat membre de la reconnaissance d'un changement de prenom regulierement effectue dans un autre Etat membre constitue une entrave a la liberte de circulation",
+            "linked_jp": "CJUE, 8 juin 2017, Freitag, C-541/15",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le refus par un Etat-membre de la reconnaissance du changement de prenom regulierement effectue dans un autre Etat-membre constitue une entrave a l'exercice du droit de circuler et de sejourner sur le territoire de l'Union (CJUE, Freitag, 8 juin 2017, aff. C-541/15)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "CJUE Bogendorff von Wolffersdorff du 2 juin 2016 (C-438/14) : le refus de reconnaitre un changement d'etat civil peut causer des obstacles serieux ; un Etat membre ne saurait imposer une nouvelle procedure aboutissant a un resultat inconciliable",
+            "linked_jp": "CJUE, 2 juin 2016, Bogendorff von Wolffersdorff, C-438/14",
+            "sources": ["grille_cnb"],
+            "grille_weight": 1,
+            "extract_from_grille": "le refus de reconnaitre un changement de la mention du genre a l'etat civil peut causer des obstacles serieux de divers ordres. Aussi, un Etat-membre ne saurait imposer une nouvelle procedure qui pourrait aboutir a un resultat inconciliable (Cf. CJUE, Bogendorff von Wolffersdorff, 2 juin 2016, aff. C-438/14)",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "L'entree et le sejour des ressortissants europeens sont aussi garantis au titre du marche interieur par les art. 45 a 62 TFUE et par le droit derive (notamment Directive 2004/38)",
+            "sources": ["grille_cnb", "copie_iej"],
+            "grille_weight": 0,
+            "extract_from_grille": "l'entree et le sejour des ressortissants europeens sur le sol d'un autre Etat membre se trouve egalement garanti au titre du marche interieur par les articles 45 a 62 du TFUE. Il en va de meme par toute une serie de dispositions de droit derive"
+          },
+          {
+            "text": "Articles 7 (vie privee et familiale) et 45 (libre circulation et sejour) de la Charte des droits fondamentaux de l'UE ; art. 41 de la Charte (droit a une bonne administration) va dans le meme sens",
+            "sources": ["grille_cnb"],
+            "grille_weight": 0,
+            "extract_from_grille": "l'article 41 de la Charte des droits fondamentaux de l'U.E. va dans le meme sens"
+          }
+        ],
+        "expert": [
+          {
+            "text": "Arret CJCE Micheletti 1992 (C-369/90) : en cas de double nationalite d'un Etat membre et d'un Etat tiers, prevaut la nationalite de l'Etat membre au nom de l'effet utile des droits de citoyen UE",
+            "linked_jp": "CJCE, 7 juil. 1992, Micheletti, C-369/90",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 mobilise Micheletti pour justifier la qualite de citoyen UE de Paul malgre sa double nationalite slovene/britannique",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Arret CJUE Tjebbes/Lounes 2017 (C-165/16) : un citoyen qui a exerce sa liberte de circulation jusqu'au Brexit en obtenant la nationalite de l'Etat d'accueil ne saurait etre prive des droits dont il beneficiait au titre de son statut de citoyen UE",
+            "linked_jp": "CJUE, 14 nov. 2017, Lounes, C-165/16",
+            "sources": ["copie_iej"],
+            "why": "Cite par les copies 12 et 28 pour traiter la question chronologique Brexit",
+            "uncertainty_note": "ECLI non verifie - attention confusion possible avec Tjebbes (C-221/17)"
+          },
+          {
+            "text": "CJUE Coman 2018 (C-673/16) : les Etats membres sont tenus de reconnaitre les situations d'etat civil legalement creees dans un autre Etat membre (mariage de meme sexe), au risque d'entraver la liberte de circulation",
+            "linked_jp": "CJUE, 5 juin 2018, Coman, C-673/16",
+            "sources": ["copie_iej"],
+            "why": "La copie 38 cite Coman - la copie 12 cite la 'jurisprudence Pancharevo' pour illustrer la reconnaissance mutuelle en matiere d'etat civil",
+            "uncertainty_note": "ECLI non verifie ; Pancharevo = CJUE 14 dec. 2021 C-490/20"
+          },
+          {
+            "text": "CJCE Garcia Avello 2003 et CJCE Grunkin-Paul 2008 : obligation de reconnaissance du nom tel qu'il est issu d'un autre Etat membre",
+            "linked_jp": "CJCE, 2 oct. 2003, Garcia Avello, C-148/02",
+            "sources": ["copie_iej"],
+            "why": "La copie 38 cite Garcia Avello et Grunkin-Paul pour illustrer la jurisprudence etablie sur la reconnaissance des noms",
+            "uncertainty_note": "ECLI non verifie"
+          },
+          {
+            "text": "Principe de reconnaissance mutuelle : transposition de la logique Cassis de Dijon 1979 (marchandises) et Gebhard 1995 / Centros 1999 (liberte d'etablissement) aux situations juridiques individuelles",
+            "linked_jp": "CJCE, 20 fev. 1979, Cassis de Dijon, 120/78",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 mobilise ce rapprochement conceptuel - non requis mais temoigne d'une reflexion transversale"
+          },
+          {
+            "text": "L'art. 18 TFUE prohibe les discriminations entre nationaux et citoyens UE ressortissants d'autres Etats membres ; en principe l'Union est indifferente aux discriminations a rebours affectant les nationaux dans leur propre Etat, sauf activation de la citoyennete par exercice de la liberte de circulation",
+            "linked_article": "traite_tfue:18",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 exprime ce raisonnement sur la 'citoyennete activee' - mecanique classique de la JP UE",
+            "uncertainty_note": "Reference a l'article 18 TFUE : format non strictement canonique - reference au traite hors schema code:article"
+          },
+          {
+            "text": "Directive 2004/38 relative au droit de circuler et de sejourner librement, sous reserve de ne pas representer une charge excessive pour la securite sociale des Etats membres",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 cite la Directive 2004/38 comme fondement de droit derive",
+            "uncertainty_note": "Non requise par la grille mais dans les textes autorises"
+          },
+          {
+            "text": "Traitement EU Withdrawal Act 2020 / accord de retrait UK : le Brexit (vote 2016, acte 2020) fait du RU un Etat tiers, mais les droits acquis avant le retrait restent protegés",
+            "sources": ["copie_iej"],
+            "why": "La copie 12 et 28 contextualisent le Brexit - conforme a la logique Mirin",
+            "uncertainty_note": "Reference pas directement requise par la grille"
+          }
+        ]
+      },
+      "articles_attendus": {
+        "obligatoires": [],
+        "optionnels": []
+      },
+      "traites_attendus": [
+        {
+          "short_ref": "Traite sur le fonctionnement de l'Union europeenne (TFUE), articles 20 et 21",
+          "role": "Fondements de la citoyennete europeenne et de la libre circulation - pivots de la solution",
+          "sources": ["grille_cnb", "copie_iej"],
+          "uncertainty_note": "Non formatable en code:article strict - reference via short_ref"
+        },
+        {
+          "short_ref": "Charte des droits fondamentaux de l'Union europeenne, articles 7 et 45",
+          "role": "Lecture combinee avec TFUE (art. 20 et 21) dans Mirin",
+          "sources": ["grille_cnb"],
+          "uncertainty_note": "Reference via short_ref uniquement"
+        },
+        {
+          "short_ref": "Directive 2004/38/CE relative au droit des citoyens de l'Union de circuler et sejourner librement",
+          "role": "Droit derive soutenant la libre circulation",
+          "sources": ["copie_iej"],
+          "uncertainty_note": "Non formatable en code:article strict"
+        }
+      ],
+      "jp_attendues": [
+        {
+          "ref": null,
+          "short_ref": "CJUE, 4 oct. 2024, Mirin, C-4/23",
+          "sens_vs_question": "favorable",
+          "importance": 1,
+          "sources": ["grille_cnb", "copie_iej"],
+          "why": "Arret PIVOT (1 pt explicite dans la grille) - solution directement transposable : les autorites doivent reconnaitre le changement d'etat civil acquis dans un autre EM (meme avant Brexit) sans imposer nouvelle procedure",
+          "uncertainty_note": "ECLI non verifie ; arret recent"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJUE, 8 juin 2017, Freitag, C-541/15",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Le refus de reconnaissance d'un changement de prenom est une entrave a la libre circulation",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJUE, 2 juin 2016, Bogendorff von Wolffersdorff, C-438/14",
+          "sens_vs_question": "favorable",
+          "importance": 2,
+          "sources": ["grille_cnb"],
+          "why": "Un Etat membre ne saurait imposer une nouvelle procedure aboutissant a un resultat inconciliable",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 7 juil. 1992, Micheletti, C-369/90",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Primaute de la nationalite UE en cas de double nationalite",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJUE, 14 nov. 2017, Lounes, C-165/16",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Maintien des droits de citoyen UE en cas d'exercice de la liberte de circulation et d'acquisition de la nationalite de l'Etat d'accueil",
+          "uncertainty_note": "ECLI non verifie ; la copie 28 cite 'Tarfik Lounes' - probablement meme arret"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJUE, 5 juin 2018, Coman, C-673/16",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Reconnaissance mutuelle des situations d'etat civil legalement creees dans un autre EM",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 2 oct. 2003, Garcia Avello, C-148/02",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Reconnaissance des noms entre Etats membres",
+          "uncertainty_note": "ECLI non verifie"
+        },
+        {
+          "ref": null,
+          "short_ref": "CJCE, 14 oct. 2008, Grunkin-Paul, C-353/06",
+          "sens_vs_question": "favorable",
+          "importance": 3,
+          "sources": ["copie_iej"],
+          "why": "Transcription du nom acquis dans un autre Etat membre",
+          "uncertainty_note": "ECLI non verifie"
+        }
+      ],
+      "pieges": {
+        "not_to_cite_articles": [],
+        "not_to_cite_jp": [],
+        "notes": "Piege chronologique : ne pas conclure que le Brexit prive Paul de ses droits. La date d'acquisition de la situation juridique (acte d'etat civil 2017-2020) est anterieure au retrait effectif du RU, et Mirin precise explicitement que cette chronologie est sans incidence des lors que le changement a ete legalement acquis quand le RU etait encore Etat membre."
+      },
+      "source_extract": "III. La soeur de Harley McThrottle, Emily McThrottle, de nationalite slovene, est nee et a ete enregistree a la naissance sur les actes de naissance slovenes comme etant de sexe feminin... Pour des raisons professionnelles, elle a demenage au Royaume-Uni en 2008 et a acquis la nationalite britannique en 2016. L'annee suivante, Emily, qui s'est toujours sentie appartenir au genre masculin, decide de changer de prenom (elle se fait desormais appeler Paul) et de titre de civilite... Paul a utilise la procedure de Deed Poll britannique... En septembre 2020, Paul obtient un Gender Identity Certificate... De retour en Slovenie en 2023, Paul McThrottle sollicite de l'officier de l'etat civil de Ljubljana qu'il soit procede a une modification de son acte de naissance... Cette autorite slovene... vient a peine de lui indiquer qu'il devrait introduire une instance juridictionnelle en Slovenie... Renseignez-le. (5 points)",
+      "consolidation_notes": "Question discriminante (5 pts) entierement basee sur l'arret Mirin C-4/23 du 4 oct. 2024. Le bareme donne 1 pt pour la connaissance de Mirin, 1 pt pour l'articulation Slovenie-UE et chronologie nationalite britannique, 2 pts pour le principe de pleine reconnaissance, 1 pt pour l'argument chronologique Brexit. Les 3 copies traitent bien la question mais avec des approches differentes : la copie 12 cite explicitement Mirin ; la copie 28 n'y arrive pas avant la fin de sa copie (Q3 bacle) ; la copie 38 construit une solution sur Garcia Avello/Grunkin-Paul/Coman sans citer Mirin mais arrive a la meme conclusion."
+    }
+  ]
+}

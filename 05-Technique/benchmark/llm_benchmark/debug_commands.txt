@@ -1,0 +1,83 @@
+########################################################################
+# DEBUG — à lancer dans ~/work/llm_benchmark sur le cluster
+# une fois que run_all_models.py a fini (ou été arrêté)
+########################################################################
+
+# ─── 1. Voir le CSV final ─────────────────────────────────────────────
+cat results/comparison.csv
+
+
+# ─── 2. Inspecter qwen3.5-2B (F1=0.000) ───────────────────────────────
+# Pour comprendre pourquoi aucun TP.
+python3 -c "
+import json
+r = json.load(open('results/qwen3.5-2B.json'))
+print('TOTALS:', r['totals'])
+print('METRICS:', r['metrics'])
+print()
+for arret in r['per_arret'][:5]:
+    print(f\"--- {arret['id']} ({arret['jur']}) ---\")
+    print(f\"  GT ({arret['n_gt']} pair_keys expected)\")
+    print(f\"  n_pred = {arret['n_pred']}\")
+    print(f\"  extra (pred du LLM, pas dans GT, 10 premiers): {arret['extra'][:10]}\")
+    print(f\"  missed (GT pas trouvés, 5 premiers): {arret['missed'][:5]}\")
+    print(f\"  fp_bad_slug={arret['fp_bad_slug']}  fp_hallucination={arret['fp_hallucination']}\")
+    print(f\"  finish_reason={arret.get('finish_reason')}  error={arret.get('error')}\")
+    print()
+"
+
+
+# ─── 3. Idem qwen3.5-9B ───────────────────────────────────────────────
+python3 -c "
+import json
+r = json.load(open('results/qwen3.5-9B.json'))
+print('TOTALS:', r['totals'])
+print('METRICS:', r['metrics'])
+print()
+for arret in r['per_arret'][:5]:
+    print(f\"--- {arret['id']} ({arret['jur']}) ---\")
+    print(f\"  GT ({arret['n_gt']}) n_pred={arret['n_pred']} TP={arret['tp']} FP={arret['fp']} FN={arret['fn']}\")
+    print(f\"  extra (10): {arret['extra'][:10]}\")
+    print(f\"  missed (5): {arret['missed'][:5]}\")
+    print(f\"  fp_bad_slug={arret['fp_bad_slug']}  fp_hallucination={arret['fp_hallucination']}\")
+    print()
+"
+
+
+# ─── 4. Logs vLLM des modèles Gemma 4 qui ont planté ──────────────────
+echo "========== vllm_gemma4-E2B.log =========="
+tail -60 logs/vllm_gemma4-E2B.log
+
+echo ""
+echo "========== vllm_gemma4-E4B.log =========="
+tail -60 logs/vllm_gemma4-E4B.log
+
+
+# ─── 5. Versions des libs clés ────────────────────────────────────────
+python3 -c "
+import vllm, transformers, torch
+print('vllm         :', vllm.__version__)
+print('transformers :', transformers.__version__)
+print('torch        :', torch.__version__)
+import sys; print('python       :', sys.version.split()[0])
+"
+
+
+# ─── 6. GPU libre ? ───────────────────────────────────────────────────
+nvidia-smi
+
+
+# ─── 7. Disque restant ────────────────────────────────────────────────
+df -h ~
+
+
+# ─── 8. Re-run ciblé (une fois debug fait) ────────────────────────────
+# Ex : forcer re-run de qwen3.5-2B (après correction éventuelle du prompt)
+# python3 run_all_models.py --only qwen3.5-2B --force
+#
+# Ex : tenter uniquement les Gemma 4 (après upgrade transformers)
+# python3 run_all_models.py --only gemma4-E2B gemma4-E4B gemma4-26B-A4B gemma4-31B
+
+
+# ─── 9. Si transformers trop vieux pour Gemma 4 ───────────────────────
+# pip install --user --break-system-packages --upgrade transformers

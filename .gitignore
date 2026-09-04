@@ -49,6 +49,9 @@ env/
 *.pid
 *.log
 
+# Pickles de graphes (régénérables depuis .graphml + scripts, certains > 100 MB)
+*.pkl
+
 # ═══════════════════════════════════════════════════════════════════════
 # Secrets (API tokens, credentials, ...)
 # ═══════════════════════════════════════════════════════════════════════

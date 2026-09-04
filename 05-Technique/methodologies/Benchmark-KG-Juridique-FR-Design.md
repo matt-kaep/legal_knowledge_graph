@@ -3,8 +3,28 @@ tags: [benchmark, methodologie, design, technique]
 type: design-document
 status: "en-cours"
 created: 2026-04-16
-modified: 2026-04-16
+modified: 2026-04-20
 ---
+
+> [!info] MAJ 2026-04-20 — Format d'évaluation précisé
+> Le format de ground truth et les métriques ont été précisés dans [[Design-Rubrique-Hierarchisee]] :
+> - Rubrique hiérarchisée **core / expected / expert** (pondérée 3/2/1)
+> - Sortie JSON imposée aux systèmes testés (schéma unique)
+> - Formats canoniques fixés pour les sources : [[Format-Fondement-Juridique]] (articles/codes) et [[Format-Jurisprudence]] (JP)
+> - Abandon de l'étiquette qualitative `Difficulty` pour M1-M5 au profit de proxies mesurables (`|rubric|`, `nb_sources_attendues`, `ratio_expert`)
+> - Détails et motivation : [[2026-04-20]]
+
+> [!important] MAJ 2026-04-21 (soir) — Fusion vers un benchmark unifié "mode avocat"
+> Décision actée avec Jhony : les deux benchmarks construits le 20 et 21 avril
+> (CRFPA structuré + Rapprochements) sont fusionnés en **un seul benchmark
+> "mode avocat"** qui correspond au besoin métier réel.
+> - Spec complète : [[Design-Benchmark-Avocat-Unifie]]
+> - Input : question juridique en langage avocat.
+> - Output : `{articles, JP avec sens favorable/défavorable, arguments}`.
+> - Baselines : B1 (LLM) · B2 (LLM+RAG) · C1 (LLM+GraphRAG) · C2 (GNN+BERT) · C3 (retrieval pur).
+> - Scoring : `w_art·F1_pénalisé + w_jp·F1_pondéré_sens + w_arg·similarité_sémantique`.
+> - Conséquence sur ce document : les modules M1-M6 restent l'ossature *conceptuelle*
+>   mais le benchmark *exécutable* est désormais unifié.
 
 # Design du benchmark KG juridique FR
 

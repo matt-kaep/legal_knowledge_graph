@@ -1,0 +1,1528 @@
+% !TEX program = pdflatex
+% Presentation superviseur -- Week 14 -- 2026-06-22
+% Objectif : présenter le protocole K-fold inter-graphes, la famille G0/G1/G2/G3 et le plan de benchmark final.
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, fit, backgrounds, calc}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamerfont{footnote}{size=\tiny}
+
+\definecolor{accent}{RGB}{41, 92, 155}
+\definecolor{accentsoft}{RGB}{230, 238, 247}
+\definecolor{warn}{RGB}{200, 80, 40}
+\definecolor{ok}{RGB}{30, 130, 70}
+\definecolor{artcol}{RGB}{41, 92, 155}
+\definecolor{jpcol}{RGB}{47, 111, 79}
+\definecolor{crosscol}{RGB}{110, 60, 130}
+
+\newcommand{\keybox}[1]{%
+  \begin{center}
+  \colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\warnbox}[1]{%
+  \begin{center}
+  \colorbox{red!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\okbox}[1]{%
+  \begin{center}
+  \colorbox{green!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+\newcommand{\crossbox}[1]{%
+  \begin{center}
+  \colorbox{violet!10}{\parbox{0.92\linewidth}{\centering #1}}
+  \end{center}}
+
+\title[KG juridique FR --- Week 14]{Construction d'un Knowledge Graph juridique français}
+\subtitle{Point d'avancement --- Week 14 : protocole K-fold inter-graphes et benchmark final visé}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{22 juin 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Plan de la séance}
+  \scriptsize
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Protocole benchmark figé}
+
+
+\begin{frame}{Message principal}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \textbf{Ce qui est maintenant figé}
+      \begin{itemize}\setlength{\itemsep}{0.35em}
+        \item Deux datasets officiels : train strict 5603, eval rich strict 754.
+        \item Scores finaux publiés uniquement sur l'eval strict.
+        \item Panel commun : Recall@10, Hit@10, MRR@10, NDCG@10, Normalized Rank, LLM Judge.
+        \item PPR, B3/B4 et LightGCN sélectionnent leurs hyperparamètres sur train.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \textbf{Ce qui manque encore}
+      \begin{itemize}\setlength{\itemsep}{0.35em}
+        \item LLM Judge strict : \textcolor{ok}{fait}, 48\,824 paires jugées.
+        \item LLM seul et LLM+RAG : \textcolor{ok}{fait sur eval strict}.
+        \item Folds K-fold officiels à produire et brancher dans les scripts.
+        \item Relances benchmark complètes : d'abord $G_0$, puis $G_1$, puis $G_2$, puis $G_3$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.7em}
+  \keybox{\scriptsize Le deck raconte maintenant un seul protocole : \textbf{5-fold CV sur train strict pour choisir},
+  \textbf{eval rich strict gelé pour publier}, puis tableaux finaux par graphe et tableau inter-graphes.}
+\end{frame}
+
+\begin{frame}{Datasets figés -- séparation train / eval}
+  \scriptsize
+  \textbf{Décision} : ne garder que les splits \textit{retrievable strict} comme datasets principaux.
+  Toutes les réponses attendues doivent être présentes dans le graphe et dans les pools d'embeddings.
+
+  \vspace{0.45em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{3.2cm} r r r p{4.4cm}@{}}
+    \toprule
+    \textbf{Split} & \textbf{Questions} & \textbf{Docs} & \textbf{Refs moy.} & \textbf{Usage} \\
+    \midrule
+    \rowcolor{green!10}
+    \textbf{Train strict utilisable} & \textbf{5603} & \textbf{166} & \textbf{1.48 art. / 1.19 JP} & \textbf{tuning / entraînement} \\
+    \midrule
+    \rowcolor{accentsoft}
+    \textbf{Eval rich strict utilisable} & \textbf{754} & \textbf{162} & \textbf{1.79 art. / 1.30 JP} & \textbf{benchmark final} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize Les fichiers v3+ larges restent des sources/intermédiaires.
+  Les scores finaux ne sont publiés que sur \textbf{eval rich strict utilisable}.}
+\end{frame}
+
+\begin{frame}{Techniques de génération et politique benchmark}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{accent}Génération / augmentation}
+      \begin{enumerate}\setlength{\itemsep}{0.25em}
+        \item vLLM sur 230 fascicules doctrine.
+        \item Validation JSON + références dans le span.
+        \item Résolution graph-only articles / JP.
+        \item Subagents ciblés sur fascicules sous-extraits.
+        \item Normalisation mécanique des sorties.
+        \item Augmentation train :
+        2 variantes par question + composites par doc.
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{ok}Politique de runs}
+      \begin{itemize}\setlength{\itemsep}{0.35em}
+        \item \textbf{Tuning} : train strict 5603.
+        \item \textbf{Scores finaux} : eval rich strict 754.
+        \item Pas de scores finaux sur les datasets non stricts.
+        \item PPR/LightGCN choisissent leurs hyperparamètres sur le train.
+        \item LLM seul et LLM+RAG : eval uniquement.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.7em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.1}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}l c c c@{}}
+    \toprule
+    \textbf{Benchmark} & \textbf{Article} & \textbf{JP} & \textbf{Métriques} \\
+    \midrule
+    Train strict 5603 & oui & oui & tuning / entraînement \\
+    Eval rich strict 754 & oui & oui & scores finaux : Recall@10, Hit@10, MRR, NDCG, Normalized Rank, LLM Judge \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Protocole K-fold inter-graphes}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \textbf{Décision protocolaire}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item \textbf{5-fold CV} sur \texttt{train\_augmented\_retrievable\_strict}.
+        \item \textbf{Eval finale gelée} : \texttt{eval\_rich\_retrievable\_strict}.
+        \item Mêmes folds pour \textbf{toutes} les méthodes.
+        \item Mêmes folds pour \textbf{tous} les graphes.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \textbf{Pourquoi c'est nécessaire}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item Séparer l'effet \textbf{graphe} de l'effet \textbf{tuning}.
+        \item Éviter de comparer un champion choisi sur $G_0$ à un graphe nettoyé.
+        \item Rendre la comparaison \textbf{$G_0/G_1/G_2/G_3$} publiable.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.6em}
+  \keybox{\scriptsize Règle opérationnelle : \textbf{une configuration est choisie par CV train-side},
+  puis \textbf{rejouée une seule fois} sur l'eval stricte du graphe considéré.}
+\end{frame}
+
+\begin{frame}{Règle commune de sélection des champions}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{2.7cm} p{5.0cm} p{5.2cm}@{}}
+    \toprule
+    \textbf{Bloc} & \textbf{Règle} & \textbf{Lecture} \\
+    \midrule
+    Métrique primaire & \textbf{Hit@10} & reflète la part des bons résultats effectivement placés dans le top-10 \\
+    \midrule
+    Tie-break 1 & \textbf{NDCG@10} & qualité du ranking quand plusieurs bonnes réponses existent \\
+    \midrule
+    Tie-break 2 & \textbf{MRR@10} & avantage aux premiers bons items bien classés \\
+    \midrule
+    Tie-break 3--4 & Recall@10 puis Normalized Rank & garde la lecture historique du projet \\
+    \midrule
+    LLM Judge & \textbf{hors tuning primaire} & calculé ensuite sur les champions finaux \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize La comparaison devient auditable : chaque champion est justifié par
+  la \textbf{même règle} sur toutes les familles de méthodes et toutes les versions de graphe.}
+\end{frame}
+
+\begin{frame}{Panel métriques (1/2) -- Recall@10, Normalized Rank, Hit@K}
+  \footnotesize
+
+  \textbf{\color{accent}Recall@K \ (régime multi-GT)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{Recall@K}(q) = \frac{|\,\mathrm{GT}_q \cap R_q[{:}K]\,|}{|\,\mathrm{GT}_q\,|}
+    \qquad
+    \overline{\mathrm{Recall@K}} = \frac{1}{|Q|}\sum_q \mathrm{Recall@K}(q)
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : fraction de la GT retrouvée dans le top-$K$ \ (range $[0,1]$). \\
+  \textbf{Limite} : plafonné par $K$ si $|\mathrm{GT}|>K$ ; aveugle au rang.
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{accent}Normalized Rank \ (régime multi-GT, custom)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{NormalizedRank}(q) = \frac{x - (K{+}1)}{\frac{b'+1}{2} - (K{+}1)}
+    \quad
+    x = \tfrac{1}{|\mathrm{GT}|}\!\!\sum_{a\in\mathrm{GT}}\!\!\mathrm{rang}(a),\
+    b' = \min(|\mathrm{GT}|, K)
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : qualité du re-rank \emph{interne} à la GT trouvée \ (range $[0,1]$). \\
+  \textbf{Limite} : couplée à Recall@10 (dégénérée si Recall@10${=}0$), formulation non-standard.
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{ok}Hit@K \ (couverture atteignable)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{Hit@K}(q) =
+    |\,\mathrm{GT}_q \cap R_q[{:}K]\,| \,/\, \min(|\mathrm{GT}_q|,K)
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : part des bons résultats que la méthode pouvait réellement placer dans le top-$K$. \\
+  \textbf{Intérêt} : score atteignable à 1 même si $|\mathrm{GT}|>K$ ; non redondant avec Recall@10 en multi-GT.
+\end{frame}
+
+\begin{frame}{Panel métriques (2/2) -- MRR@K, NDCG@K, LLM Judge}
+  \footnotesize
+
+  \textbf{\color{ok}MRR@K -- Mean Reciprocal Rank \ (régime singleton)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{RR}(q) =
+    \begin{cases}
+      \dfrac{1}{\mathrm{rang}(a^*)} & \text{si } \exists\, a^* \in \mathrm{GT}_q \cap R_q[{:}K] \\[0.3em]
+      0 & \text{sinon}
+    \end{cases}
+    \quad a^* = \text{premier GT par rang}
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : à quel rang apparaît le premier GT trouvé (rang 1 $\to$ 1 ; rang 2 $\to$ 0,5 ; rang 10 $\to$ 0,1). \\
+  \textbf{Convention} : cappé à $K{=}10$ (rang $>K \to 0$) ; référence reco system pour le régime singleton.
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{ok}NDCG@K -- Normalized Discounted Cumulative Gain \ (régime multi-GT)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{NDCG@K}(q) = \frac{\sum_{i=1}^{K} \mathrm{rel}_i \,/\, \log_2(i{+}1)}
+                              {\sum_{i=1}^{\min(|\mathrm{GT}|,K)} 1 \,/\, \log_2(i{+}1)}
+    \quad \mathrm{rel}_i =
+    \begin{cases} 1 & R_q[i]\in\mathrm{GT}_q \\ 0 & \text{sinon} \end{cases}
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : ranking pondéré par décrue logarithmique -- récompense couverture ET ordre. Hit en rang 1 vaut $1$, en rang 2 vaut $0{,}63$, en rang 10 vaut $0{,}29$. \\
+  \textbf{Pourquoi binaire aujourd'hui} : la GT dit seulement « attendu / non attendu ». \\
+  \textbf{Après Chantier 3} : rel multi-niveau si la GT distingue strict, cité/visé, validé.
+
+  \vspace{0.3em}\hrulefill\vspace{0.2em}
+
+  \textbf{\color{crosscol}LLM Judge \ (qualité hors-GT)}
+  \vspace{-0.2em}
+  \[
+    \mathrm{LLMJudge}(q) = \frac{2\cdot \#n_2 + \#n_1}{2K}
+    \quad\text{avec } n_2 / n_1 / n_0 = \text{pertinent} \,/\, \text{proche} \,/\, \text{non pertinent}
+  \]
+  \vspace{-0.6em} \\
+  \textbf{Mesure} : pertinence sémantique du top-$K$ indépendamment de la GT ; capte les vrais positifs absents de la GT. \\
+  \textbf{Coût} : $|Q|\!\times\!K\approx 10\mathrm{k}$ appels Gemma 4 26B.
+\end{frame}
+
+% ============================================================
+\section{Méthodes et tuning}
+
+\begin{frame}{Ordre d'exécution sur les graphes}
+  \footnotesize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.16}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{1.0cm} p{5.6cm} p{5.9cm}@{}}
+    \toprule
+    \textbf{Graphe} & \textbf{Rôle expérimental} & \textbf{Pourquoi maintenant} \\
+    \midrule
+    \rowcolor{accentsoft}
+    $G_0$ & \textbf{Référence historique + validation du harnais K-fold} & vérifier que le nouveau pipeline retrouve les bons ordres de grandeur connus \\
+    \midrule
+    \rowcolor{green!10}
+    $G_1$ & \textbf{Base propre minimale} & premier test honnête de l'effet du cleaning à coût benchmark quasi nul \\
+    \midrule
+    $G_2$ & \textbf{Compromis structure / couverture} & candidat fort pour la meilleure version de graphe pénal benchmarkable \\
+    \midrule
+    $G_3$ & \textbf{Variante agressive / stress test} & utile pour borner jusqu'où le nettoyage reste bénéfique \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize Ordre retenu : \textbf{$G_0 \rightarrow G_1 \rightarrow G_2 \rightarrow G_3$}.
+  On valide d'abord le protocole, puis on mesure l'effet scientifique du cleaning.}
+\end{frame}
+
+\begin{frame}{Tuning à faire sur chaque graphe}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.14}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{2.2cm} p{4.9cm} p{2.9cm} p{3.3cm}@{}}
+    \toprule
+    \textbf{Famille} & \textbf{Hyperparamètres} & \textbf{Cibles} & \textbf{Sortie attendue} \\
+    \midrule
+    B2/B3/B4 & $k_{in} \in \{5,10,20,50\}$ selon la variante & Articles strict + JP & tableau CV + champion par modalité \\
+    \midrule
+    PPR & $k_{in}$, $\alpha$, seed type \{art, jp, both\} & Articles strict + JP & courbes \,$\alpha \to$ Hit, \,$k_{in} \to$ Hit \\
+    \midrule
+    LightGCN & $K$, seeds, lr, epochs, ancrage & Articles strict + JP & tableau CV + courbes $K \to$ Hit + loss train \\
+    \midrule
+    LLM / RAG & pas de gros sweep v1 & Eval finale seulement & lignes comparatives dans le tableau final \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \warnbox{\scriptsize Le \textbf{negative mining plus dur} est gardé pour la \textbf{phase 2},
+  après stabilisation du protocole inter-graphes.}
+\end{frame}
+
+\begin{frame}{Parcours méthode -- protocole évalué}
+  \footnotesize
+  \begin{center}
+  \begin{tikzpicture}[
+      method/.style={rectangle, rounded corners, draw=accent, fill=accentsoft,
+                     minimum width=1.85cm, minimum height=0.9cm, align=center,
+                     font=\tiny, very thick},
+      gnn/.style={rectangle, rounded corners, draw=ok, fill=green!10,
+                  minimum width=1.85cm, minimum height=0.9cm, align=center,
+                  font=\tiny, very thick},
+      future/.style={rectangle, rounded corners, draw=accent, fill=accentsoft,
+                     minimum width=1.85cm, minimum height=0.9cm, align=center,
+                     font=\tiny, thick},
+      arr/.style={-{Stealth[length=2.2mm]}, thick, accent}
+    ]
+    \node[future] (llm) at (0,0) {\textbf{LLM seul}\\eval strict};
+    \node[future] (rag) at (2.15,0) {\textbf{LLM + RAG}\\eval strict};
+    \node[method] (cos) at (4.3,0) {\textbf{Cosine}\\BGE-M3};
+    \node[method] (cross) at (6.45,0) {\textbf{Cross-modal}\\JP $\leftrightarrow$ Art};
+    \node[method] (ppr) at (8.6,0) {\textbf{PPR}\\diffusion};
+    \node[gnn] (lgcn) at (10.75,0) {\textbf{LightGCN}\\propagation + BPR};
+    \draw[arr, dashed] (llm) -- (rag);
+    \draw[arr, dashed] (rag) -- (cos);
+    \draw[arr] (cos) -- (cross);
+    \draw[arr] (cross) -- (ppr);
+    \draw[arr] (ppr) -- (lgcn);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.7em}
+  \keybox{\scriptsize \textbf{Lecture} : toutes les méthodes sont évaluées dans le même cadre. LLM seul et LLM+RAG sont scorés sur eval strict ; PPR/LightGCN sont sélectionnés sur train strict.}
+
+  \vspace{0.5em}
+  \textbf{Règle de lecture} : les méthodes avec hyperparamètres sont choisies sur train ; le tableau final ne contient que les scores eval.
+\end{frame}
+
+\begin{frame}{Règle de sélection des meilleures lignes}
+  \footnotesize
+  \textbf{Aujourd'hui, le choix est fait au Hit@10.}
+  Pour les méthodes avec hyperparamètres, on classe les variantes sur le
+  \textbf{train strict} puis on reporte seulement les scores finaux sur l'eval.
+
+  \vspace{0.45em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}p{3.0cm} p{3.0cm} p{4.0cm} p{3.2cm}@{}}
+    \toprule
+    \textbf{Famille} & \textbf{Données de choix} & \textbf{Métrique de ranking} & \textbf{Meilleure ligne} \\
+    \midrule
+    Cosine / cross-modal & train strict & Hit@10 strict par modalité & meilleur variant $s$ par cible \\
+    \midrule
+    PPR & train strict & Hit@10 article strict / JP & un champion par cible \\
+    \midrule
+    LightGCN & train strict & Hit@10 + compromis articles/JP & $K=2$, seed 42 \\
+    \midrule
+    LLM seul / LLM+RAG & eval strict uniquement & Hit@10 eval, pas de tuning & comparaison de variantes \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize Le rang ajouté dans les tableaux ci-dessous est donc un
+  rang \textbf{Hit@10}. Il sert à rendre la sélection auditable ; MRR, NDCG,
+  Normalized Rank et LLM Judge restent nécessaires pour interpréter la qualité.
+  LLM Judge n'est pas utilisé pour tuner : il est réservé à l'eval finale.}
+\end{frame}
+
+\begin{frame}{LLM / LLM+RAG -- Article strict}
+  \scriptsize
+  \textit{Pas de tuning train : ces lignes sont évaluées uniquement sur eval rich strict.}
+
+  \vspace{0.35em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.12}
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{@{}p{2.35cm} p{2.2cm} r r r r r r r@{}}
+    \toprule
+    \textbf{Variante} & \textbf{Contexte fourni} &
+    \textbf{Recall} & \textbf{Hit} & \textbf{MRR} & \textbf{NDCG} & \textbf{Norm. Rank} & \textbf{LLM Judge} & \textbf{Rang Hit} \\
+    \midrule
+    \rowcolor{green!10}
+    LLM + RAG & B2-a top-10 & 0,369 & 0,369 & 0,404 & 0,356 & 0,363 & 0,232 (1,3/2,1/6,6) & 1 \\
+    LLM seul & -- & 0,053 & 0,053 & 0,053 & 0,045 & 0,049 & 0,188 (0,3/3,1/6,6) & 2 \\
+    \bottomrule
+  \end{tabular}
+  }
+  \end{center}
+
+  \vspace{0.5em}
+  \keybox{\scriptsize Le RAG est indispensable : il multiplie le Hit strict par
+  environ 7 vs LLM seul, mais reste sous les méthodes BGE/PPR/LightGCN.}
+\end{frame}
+
+\begin{frame}{LLM / LLM+RAG -- JP}
+  \scriptsize
+  \textit{Eval rich strict. Version JP lancée sur GPU ; RAG = reranking du top-10 B3-a cosine JP.}
+
+  \vspace{0.35em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.12}
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{@{}p{2.4cm} p{2.2cm} r r r r r r r@{}}
+    \toprule
+    \textbf{Variante} & \textbf{Contexte fourni} &
+    \textbf{Recall} & \textbf{Hit} & \textbf{MRR} & \textbf{NDCG} & \textbf{Norm. Rank} & \textbf{LLM Judge} & \textbf{Rang Hit} \\
+    \midrule
+    \rowcolor{green!10}
+    LLM + RAG JP & B3-a top-10 & 0,197 & 0,197 & 0,168 & 0,174 & 0,186 & 0,398 (2,9/2,1/5,0) & 1 \\
+    LLM seul JP & -- & 0,000 & 0,000 & 0,000 & 0,000 & 0,000 & -- & 2 \\
+    \bottomrule
+  \end{tabular}
+  }
+  \end{center}
+
+  \vspace{0.5em}
+  \keybox{\scriptsize LLM seul JP produit des citations libres non résolues en
+  IDs du graphe. LLM+RAG JP est exploitable car il rerank uniquement des candidats
+  JP déjà identifiés.}
+\end{frame}
+
+\begin{frame}{Cosine / cross-modal -- variantes articles}
+  \scriptsize
+  \textit{Train strict. Sélection déterministe côté articles. Rang calculé au Hit@10.}
+
+  \vspace{0.25em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.08}
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{@{}p{2.5cm} p{3.3cm} r r r r r r@{}}
+    \toprule
+    \textbf{Variante} & \textbf{Méthode} & \textbf{Recall} & \textbf{Hit} & \textbf{MRR} &
+    \textbf{NDCG} & \textbf{Norm. Rank} & \textbf{Rang Hit} \\
+    \midrule
+    \rowcolor{green!10}
+    B3-e ($s=20$) & JP top-$s$ $\to$ articles cités & 0,521 & 0,521 & 0,353 & 0,371 & 0,417 & 1 \\
+    B3-e ($s=10$) & JP top-$s$ $\to$ articles cités & 0,514 & 0,514 & 0,359 & 0,374 & 0,420 & 2 \\
+    B3-e ($s=50$) & JP top-$s$ $\to$ articles cités & 0,510 & 0,510 & 0,343 & 0,361 & 0,407 & 3 \\
+    B2-a & q $\to$ articles, cosine & 0,413 & 0,413 & 0,284 & 0,296 & 0,332 & 4 \\
+    B4-a ($s=10$) & direct + via JP, rerank cosine & 0,413 & 0,413 & 0,284 & 0,296 & 0,332 & 4 \\
+    B4-a ($s=20$) & direct + via JP, rerank cosine & 0,413 & 0,413 & 0,284 & 0,296 & 0,332 & 4 \\
+    B4-a ($s=50$) & direct + via JP, rerank cosine & 0,413 & 0,413 & 0,284 & 0,296 & 0,332 & 4 \\
+    \bottomrule
+  \end{tabular}
+  }
+  \end{center}
+
+  \vspace{0.35em}
+  \keybox{\scriptsize B3-e domine côté articles : partir des JP puis revenir
+  aux articles apporte plus que le cosine article pur.}
+\end{frame}
+
+\begin{frame}{Cosine / cross-modal -- variantes JP}
+  \tiny
+  \textit{Train strict. Sélection déterministe côté JP. Rang calculé au Hit@10.}
+
+  \vspace{0.2em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.02}
+  \setlength{\tabcolsep}{3pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{@{}p{2.7cm} p{3.4cm} r r r r r r@{}}
+    \toprule
+    \textbf{Variante} & \textbf{Méthode} & \textbf{Recall} & \textbf{Hit} & \textbf{MRR} &
+    \textbf{NDCG} & \textbf{Norm. Rank} & \textbf{Rang Hit} \\
+    \midrule
+    \rowcolor{green!10}
+    B4-c ($s=10$) & union JP + via articles, rerank cosine & 0,240 & 0,240 & 0,141 & 0,161 & 0,185 & 1 \\
+    B4-c ($s=20$) & union JP + via articles, rerank cosine & 0,238 & 0,238 & 0,141 & 0,161 & 0,185 & 2 \\
+    B4-c ($s=50$) & union JP + via articles, rerank cosine & 0,238 & 0,238 & 0,141 & 0,161 & 0,185 & 2 \\
+    B3-a & question $\to$ JP, cosine synthèses & 0,238 & 0,238 & 0,141 & 0,161 & 0,185 & 4 \\
+    B4-e ($s=20$) & fusion RRF articles + JP & 0,234 & 0,234 & 0,111 & 0,137 & 0,167 & 5 \\
+    B4-e ($s=10$) & fusion RRF articles + JP & 0,227 & 0,227 & 0,118 & 0,141 & 0,172 & 6 \\
+    B4-e ($s=50$) & fusion RRF articles + JP & 0,226 & 0,226 & 0,100 & 0,127 & 0,156 & 7 \\
+    B4-d ($s=50$) & intersection candidats articles/JP & 0,216 & 0,216 & 0,132 & 0,149 & 0,170 & 8 \\
+    B4-d ($s=20$) & intersection candidats articles/JP & 0,181 & 0,181 & 0,118 & 0,131 & 0,149 & 9 \\
+    B4-d ($s=10$) & intersection candidats articles/JP & 0,137 & 0,137 & 0,100 & 0,107 & 0,121 & 10 \\
+    B4-f ($s=10$) & JP pondérés par citations articles & 0,113 & 0,113 & 0,047 & 0,062 & 0,075 & 11 \\
+    B4-f ($s=20$) & JP pondérés par citations articles & 0,085 & 0,085 & 0,033 & 0,045 & 0,054 & 12 \\
+    B4-f ($s=50$) & JP pondérés par citations articles & 0,053 & 0,053 & 0,024 & 0,030 & 0,036 & 13 \\
+    \bottomrule
+  \end{tabular}
+  }
+  \end{center}
+
+  \vspace{0.2em}
+  \keybox{\scriptsize Côté JP, les variantes proches de B3-a sont très serrées :
+  le choix au Hit seul ne suffit pas à conclure fortement.}
+\end{frame}
+
+\begin{frame}{PPR strict -- tuning train puis score eval}
+  \scriptsize
+  \textbf{Règle méthodologique} : les hyperparamètres PPR sont choisis sur
+  \textbf{train strict} (5603 questions), puis seuls les champions sont scorés sur
+  \textbf{eval rich strict} (754 questions).
+
+  \vspace{0.45em}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{accent}Sweep train}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item $k_{in} \in \{5,10,20,50\}$
+        \item seed $\in$ articles seuls / JP seules / mixte
+        \item $\alpha \in \{0{,}50;0{,}70;0{,}85;0{,}95\}$
+        \item $5603 \times 48 = 268944$ lignes
+        \item 0 question skippée
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{\color{ok}Champions retenus}
+      \begin{center}
+      \renewcommand{\arraystretch}{1.12}
+      \setlength{\tabcolsep}{4pt}
+      \begin{tabular}{@{}l l@{}}
+        \toprule
+        \textbf{Cible} & \textbf{Champion train} \\
+        \midrule
+        Article strict & $s=50$, mixte, $\alpha=0{,}50$ \\
+        JP & $s=20$, mixte, $\alpha=0{,}50$ \\
+        \bottomrule
+      \end{tabular}
+      \end{center}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize PPR n'est plus choisi sur l'eval : l'eval ne sert qu'à mesurer
+  les champions sélectionnés sur train.}
+\end{frame}
+
+\begin{frame}{PPR Article -- seed articles}
+  \tiny
+  \textit{Train strict, cible article strict. Rang global Article sur les 48 variantes PPR, au Hit@10.}
+
+  \vspace{0.15em}
+  \begin{center}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $s$ & $\alpha$ & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    5 & 0,500 & 0,389 & 0,389 & 0,295 & 0,297 & 0,329 & 33 \\
+    5 & 0,700 & 0,385 & 0,385 & 0,294 & 0,295 & 0,327 & 35 \\
+    5 & 0,850 & 0,376 & 0,376 & 0,279 & 0,282 & 0,318 & 39 \\
+    5 & 0,950 & 0,350 & 0,350 & 0,111 & 0,163 & 0,235 & 44 \\
+    10 & 0,500 & 0,413 & 0,413 & 0,306 & 0,309 & 0,354 & 26 \\
+    10 & 0,700 & 0,412 & 0,412 & 0,298 & 0,305 & 0,352 & 27 \\
+    10 & 0,850 & 0,409 & 0,409 & 0,214 & 0,245 & 0,311 & 29 \\
+    10 & 0,950 & 0,379 & 0,379 & 0,083 & 0,148 & 0,191 & 37 \\
+    20 & 0,500 & 0,456 & 0,456 & 0,314 & 0,326 & 0,371 & 13 \\
+    20 & 0,700 & 0,457 & 0,457 & 0,275 & 0,299 & 0,353 & 12 \\
+    20 & 0,850 & 0,431 & 0,431 & 0,138 & 0,200 & 0,270 & 20 \\
+    20 & 0,950 & 0,255 & 0,255 & 0,046 & 0,091 & 0,095 & 46 \\
+    \rowcolor{accentsoft}
+    50 & 0,500 & 0,480 & 0,480 & 0,302 & 0,324 & 0,373 & 10 \\
+    50 & 0,700 & 0,441 & 0,441 & 0,156 & 0,215 & 0,280 & 14 \\
+    50 & 0,850 & 0,367 & 0,367 & 0,080 & 0,143 & 0,177 & 40 \\
+    50 & 0,950 & 0,067 & 0,067 & 0,013 & 0,024 & 0,023 & 48 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.2em}
+  \keybox{\scriptsize Champion de la slide : $s=50$, $\alpha=0{,}50$.
+  Lecture : seed articles seuls utile côté article, mais battu par le seed mixte.}
+\end{frame}
+
+\begin{frame}{PPR Article -- seed JP}
+  \tiny
+  \textit{Train strict, cible article strict. Rang global Article sur les 48 variantes PPR, au Hit@10.}
+
+  \vspace{0.15em}
+  \begin{center}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $s$ & $\alpha$ & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    5 & 0,500 & 0,422 & 0,422 & 0,223 & 0,258 & 0,310 & 23 \\
+    5 & 0,700 & 0,415 & 0,415 & 0,204 & 0,244 & 0,296 & 25 \\
+    5 & 0,850 & 0,399 & 0,399 & 0,169 & 0,215 & 0,271 & 32 \\
+    5 & 0,950 & 0,381 & 0,381 & 0,126 & 0,181 & 0,237 & 36 \\
+    10 & 0,500 & 0,431 & 0,431 & 0,221 & 0,259 & 0,313 & 18 \\
+    10 & 0,700 & 0,422 & 0,422 & 0,196 & 0,240 & 0,296 & 24 \\
+    10 & 0,850 & 0,407 & 0,407 & 0,156 & 0,209 & 0,267 & 30 \\
+    10 & 0,950 & 0,378 & 0,378 & 0,114 & 0,172 & 0,228 & 38 \\
+    \rowcolor{accentsoft}
+    20 & 0,500 & 0,438 & 0,438 & 0,205 & 0,249 & 0,305 & 16 \\
+    20 & 0,700 & 0,431 & 0,431 & 0,179 & 0,230 & 0,287 & 19 \\
+    20 & 0,850 & 0,409 & 0,409 & 0,141 & 0,198 & 0,253 & 28 \\
+    20 & 0,950 & 0,362 & 0,362 & 0,100 & 0,158 & 0,209 & 41 \\
+    50 & 0,500 & 0,407 & 0,407 & 0,170 & 0,218 & 0,269 & 31 \\
+    50 & 0,700 & 0,389 & 0,389 & 0,147 & 0,197 & 0,248 & 34 \\
+    50 & 0,850 & 0,356 & 0,356 & 0,114 & 0,166 & 0,215 & 42 \\
+    50 & 0,950 & 0,300 & 0,300 & 0,081 & 0,129 & 0,168 & 45 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.2em}
+  \keybox{\scriptsize Champion de la slide : $s=20$, $\alpha=0{,}50$.
+  Lecture : seed JP seuls = signal indirect vers articles, moins fort que le seed mixte.}
+\end{frame}
+
+\begin{frame}{PPR Article -- seed mixte}
+  \tiny
+  \textit{Train strict, cible article strict. Rang global Article sur les 48 variantes PPR, au Hit@10.}
+
+  \vspace{0.15em}
+  \begin{center}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $s$ & $\alpha$ & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    5 & 0,500 & 0,526 & 0,526 & 0,338 & 0,360 & 0,387 & 2 \\
+    5 & 0,700 & 0,512 & 0,512 & 0,318 & 0,344 & 0,379 & 4 \\
+    5 & 0,850 & 0,485 & 0,485 & 0,234 & 0,281 & 0,345 & 8 \\
+    5 & 0,950 & 0,429 & 0,429 & 0,122 & 0,190 & 0,267 & 21 \\
+    10 & 0,500 & 0,439 & 0,439 & 0,335 & 0,339 & 0,388 & 15 \\
+    10 & 0,700 & 0,471 & 0,471 & 0,288 & 0,315 & 0,385 & 11 \\
+    10 & 0,850 & 0,483 & 0,483 & 0,189 & 0,250 & 0,337 & 9 \\
+    10 & 0,950 & 0,437 & 0,437 & 0,104 & 0,178 & 0,233 & 17 \\
+    20 & 0,500 & 0,510 & 0,510 & 0,319 & 0,346 & 0,418 & 5 \\
+    20 & 0,700 & 0,525 & 0,525 & 0,229 & 0,289 & 0,373 & 3 \\
+    20 & 0,850 & 0,501 & 0,501 & 0,155 & 0,231 & 0,310 & 7 \\
+    20 & 0,950 & 0,351 & 0,351 & 0,078 & 0,138 & 0,171 & 43 \\
+    \rowcolor{green!10}
+    50 & 0,500 & 0,543 & 0,543 & 0,228 & 0,292 & 0,371 & 1 \\
+    50 & 0,700 & 0,504 & 0,504 & 0,169 & 0,241 & 0,311 & 6 \\
+    50 & 0,850 & 0,422 & 0,422 & 0,114 & 0,181 & 0,235 & 22 \\
+    50 & 0,950 & 0,222 & 0,222 & 0,049 & 0,087 & 0,104 & 47 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.2em}
+  \keybox{\scriptsize Champion PPR article strict : seed mixte, $s=50$, $\alpha=0{,}50$.}
+\end{frame}
+
+\begin{frame}{PPR JP -- seed articles}
+  \tiny
+  \textit{Train strict, cible JP. Rang global JP sur les 48 variantes PPR, au Hit@10. Champion slide : $s=5$, $\alpha=0{,}50$.}
+
+  \vspace{0.15em}
+  \begin{center}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $s$ & $\alpha$ & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    \rowcolor{accentsoft}
+    5 & 0,500 & 0,063 & 0,063 & 0,021 & 0,030 & 0,039 & 33 \\
+    5 & 0,700 & 0,061 & 0,061 & 0,020 & 0,029 & 0,038 & 35 \\
+    5 & 0,850 & 0,062 & 0,062 & 0,020 & 0,030 & 0,038 & 34 \\
+    5 & 0,950 & 0,061 & 0,061 & 0,019 & 0,029 & 0,036 & 36 \\
+    10 & 0,500 & 0,047 & 0,047 & 0,016 & 0,023 & 0,029 & 38 \\
+    10 & 0,700 & 0,047 & 0,047 & 0,015 & 0,023 & 0,028 & 40 \\
+    10 & 0,850 & 0,047 & 0,047 & 0,015 & 0,023 & 0,028 & 38 \\
+    10 & 0,950 & 0,049 & 0,049 & 0,015 & 0,023 & 0,028 & 37 \\
+    20 & 0,500 & 0,034 & 0,034 & 0,013 & 0,018 & 0,021 & 41 \\
+    20 & 0,700 & 0,034 & 0,034 & 0,012 & 0,017 & 0,020 & 42 \\
+    20 & 0,850 & 0,033 & 0,033 & 0,012 & 0,017 & 0,020 & 44 \\
+    20 & 0,950 & 0,034 & 0,034 & 0,012 & 0,017 & 0,021 & 43 \\
+    50 & 0,500 & 0,021 & 0,021 & 0,009 & 0,012 & 0,014 & 46 \\
+    50 & 0,700 & 0,022 & 0,022 & 0,008 & 0,011 & 0,013 & 45 \\
+    50 & 0,850 & 0,020 & 0,020 & 0,008 & 0,011 & 0,013 & 47 \\
+    50 & 0,950 & 0,019 & 0,019 & 0,008 & 0,011 & 0,013 & 48 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{PPR JP -- seed JP}
+  \tiny
+  \textit{Train strict, cible JP. Rang global JP sur les 48 variantes PPR, au Hit@10. Champion slide : $s=20$, $\alpha=0{,}70$.}
+
+  \vspace{0.15em}
+  \begin{center}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $s$ & $\alpha$ & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    5 & 0,500 & 0,215 & 0,215 & 0,137 & 0,153 & 0,177 & 24 \\
+    5 & 0,700 & 0,214 & 0,214 & 0,133 & 0,150 & 0,176 & 26 \\
+    5 & 0,850 & 0,215 & 0,215 & 0,130 & 0,147 & 0,174 & 23 \\
+    5 & 0,950 & 0,211 & 0,211 & 0,126 & 0,144 & 0,172 & 28 \\
+    10 & 0,500 & 0,238 & 0,238 & 0,136 & 0,157 & 0,185 & 9 \\
+    10 & 0,700 & 0,238 & 0,238 & 0,129 & 0,152 & 0,183 & 9 \\
+    10 & 0,850 & 0,238 & 0,238 & 0,124 & 0,148 & 0,180 & 9 \\
+    10 & 0,950 & 0,238 & 0,238 & 0,119 & 0,145 & 0,178 & 9 \\
+    20 & 0,500 & 0,243 & 0,243 & 0,128 & 0,152 & 0,184 & 3 \\
+    \rowcolor{accentsoft}
+    20 & 0,700 & 0,245 & 0,245 & 0,115 & 0,143 & 0,177 & 2 \\
+    20 & 0,850 & 0,242 & 0,242 & 0,109 & 0,138 & 0,172 & 4 \\
+    20 & 0,950 & 0,239 & 0,239 & 0,101 & 0,132 & 0,165 & 8 \\
+    50 & 0,500 & 0,237 & 0,237 & 0,114 & 0,140 & 0,173 & 13 \\
+    50 & 0,700 & 0,225 & 0,225 & 0,095 & 0,123 & 0,158 & 18 \\
+    50 & 0,850 & 0,212 & 0,212 & 0,083 & 0,111 & 0,144 & 27 \\
+    50 & 0,950 & 0,199 & 0,199 & 0,072 & 0,100 & 0,127 & 30 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{PPR JP -- seed mixte}
+  \tiny
+  \textit{Train strict, cible JP. Rang global JP sur les 48 variantes PPR, au Hit@10.}
+
+  \vspace{0.15em}
+  \begin{center}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $s$ & $\alpha$ & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    5 & 0,500 & 0,217 & 0,217 & 0,136 & 0,152 & 0,177 & 21 \\
+    5 & 0,700 & 0,218 & 0,218 & 0,129 & 0,147 & 0,174 & 19 \\
+    5 & 0,850 & 0,216 & 0,216 & 0,119 & 0,140 & 0,170 & 22 \\
+    5 & 0,950 & 0,214 & 0,214 & 0,111 & 0,133 & 0,166 & 25 \\
+    10 & 0,500 & 0,240 & 0,240 & 0,137 & 0,158 & 0,187 & 7 \\
+    10 & 0,700 & 0,240 & 0,240 & 0,126 & 0,150 & 0,182 & 6 \\
+    10 & 0,850 & 0,236 & 0,236 & 0,107 & 0,136 & 0,171 & 15 \\
+    10 & 0,950 & 0,234 & 0,234 & 0,094 & 0,126 & 0,162 & 16 \\
+    \rowcolor{green!10}
+    20 & 0,500 & 0,246 & 0,246 & 0,124 & 0,150 & 0,184 & 1 \\
+    20 & 0,700 & 0,242 & 0,242 & 0,107 & 0,137 & 0,174 & 4 \\
+    20 & 0,850 & 0,227 & 0,227 & 0,084 & 0,116 & 0,151 & 17 \\
+    20 & 0,950 & 0,209 & 0,209 & 0,068 & 0,100 & 0,129 & 29 \\
+    50 & 0,500 & 0,237 & 0,237 & 0,099 & 0,130 & 0,165 & 14 \\
+    50 & 0,700 & 0,217 & 0,217 & 0,076 & 0,108 & 0,140 & 20 \\
+    50 & 0,850 & 0,181 & 0,181 & 0,049 & 0,079 & 0,101 & 31 \\
+    50 & 0,950 & 0,136 & 0,136 & 0,035 & 0,057 & 0,070 & 32 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.2em}
+  \keybox{\scriptsize Champion PPR JP : seed mixte, $s=20$, $\alpha=0{,}50$.}
+\end{frame}
+
+\begin{frame}{LightGCN -- ce qu'on teste concrètement}
+  \footnotesize
+  \textbf{Hypothèse} : les embeddings BGE-M3 capturent le sens, mais pas assez la structure
+  de citation. LightGCN sert à injecter le graphe Art$\leftrightarrow$JP dans les représentations.
+
+  \vspace{0.45em}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+    \textbf{1. Initialisation}
+    \begin{itemize}\setlength{\itemsep}{0.1em}
+      \item $E^{(0)}$ = embeddings BGE-M3 des articles et JP.
+      \item Graphe fixe : citations Art$\leftrightarrow$JP, normalisées par degré.
+      \item Les questions restent hors graphe : vecteurs BGE-M3 figés.
+    \end{itemize}
+
+    \vspace{0.2em}
+    \textbf{2. Propagation LightGCN}
+    \[
+      E^{(k+1)} = \widetilde{A}E^{(k)}, \quad
+      \widetilde{A}=D^{-1/2}AD^{-1/2}
+    \]
+    \[
+      E^*=\frac{1}{K+1}\sum_{k=0}^{K}E^{(k)}
+    \]
+
+    \column{0.48\textwidth}
+    \textbf{3. Scoring retrieval}
+    \[
+      score(q,i)=\cos(e_q^{BGE}, e_i^*)
+    \]
+
+    \vspace{0.2em}
+    \textbf{4. Entraînement}
+    \[
+      \begin{aligned}
+      \mathcal{L} &=
+      -\log\sigma\left(\frac{score(q,i^+)-score(q,i^-)}{\tau}\right) \\
+      &\quad + \lambda \lVert E^{(0)}-E_{BGE}\rVert^2
+      \end{aligned}
+    \]
+
+    \vspace{-0.2em}
+    {\scriptsize
+    $i^+$ = article attendu ; $i^-$ = article négatif.
+    Le terme d'ancrage empêche les embeddings de dériver loin du signal BGE.
+    }
+  \end{columns}
+
+  \vspace{0.35em}
+  \keybox{\scriptsize \textbf{Lecture} : on n'entraîne pas le graphe lui-même ;
+  le graphe fixe la propagation, et l'apprentissage calibre les représentations
+  pour rapprocher les questions de leurs articles attendus.}
+\end{frame}
+
+
+\begin{frame}{LightGCN entraîné -- variantes Article strict}
+  \scriptsize
+  \textit{Train strict. Ici : variantes \textbf{avec entraînement} uniquement (30 epochs). $K$ = nombre de propagations LightGCN ; seed = graine aléatoire d'entraînement.}
+
+  \vspace{0.25em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.08}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $K$ & seed & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    1 & 1 & 0,730 & 0,730 & 0,522 & 0,552 & 0,612 & 1 \\
+    1 & 2 & 0,722 & 0,722 & 0,521 & 0,550 & 0,610 & 4 \\
+    1 & 42 & 0,720 & 0,720 & 0,522 & 0,551 & 0,610 & 6 \\
+    2 & 1 & 0,727 & 0,727 & 0,523 & 0,552 & 0,613 & 2 \\
+    2 & 2 & 0,721 & 0,721 & 0,520 & 0,549 & 0,608 & 5 \\
+    \rowcolor{green!10}
+    2 & 42 & 0,723 & 0,723 & 0,523 & 0,551 & 0,610 & 3 \\
+    3 & 1 & 0,658 & 0,658 & 0,470 & 0,495 & 0,545 & 7 \\
+    3 & 2 & 0,655 & 0,655 & 0,479 & 0,501 & 0,549 & 8 \\
+    3 & 42 & 0,652 & 0,652 & 0,472 & 0,495 & 0,545 & 9 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize Cette slide compare \textbf{seulement les versions entraînées}.
+  La version \textbf{sans entraînement} correspond au cas ``propagé'' montré dans l'ablation et dans le tableau final.
+  Ligne retenue : $K=2$, seed 42, car bon compromis article / JP.}
+\end{frame}
+
+\begin{frame}{LightGCN -- variantes JP}
+  \scriptsize
+  \textit{Train strict. Toutes les lignes : 30 epochs, loss BPR cosine + ancrage BGE. Rang au Hit@10 JP.}
+
+  \vspace{0.25em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.08}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}r r r r r r r r@{}}
+    \toprule
+    $K$ & seed & Recall & Hit & MRR & NDCG & Norm. Rank & Rang \\
+    \midrule
+    1 & 1 & 0,521 & 0,521 & 0,376 & 0,401 & 0,439 & 6 \\
+    1 & 2 & 0,521 & 0,521 & 0,375 & 0,401 & 0,442 & 8 \\
+    1 & 42 & 0,516 & 0,516 & 0,373 & 0,398 & 0,438 & 9 \\
+    2 & 1 & 0,528 & 0,528 & 0,384 & 0,409 & 0,453 & 5 \\
+    2 & 2 & 0,521 & 0,521 & 0,381 & 0,406 & 0,450 & 7 \\
+    \rowcolor{green!10}
+    2 & 42 & 0,529 & 0,529 & 0,383 & 0,409 & 0,452 & 4 \\
+    3 & 1 & 0,534 & 0,534 & 0,385 & 0,412 & 0,455 & 1 \\
+    3 & 2 & 0,530 & 0,530 & 0,386 & 0,412 & 0,456 & 2 \\
+    3 & 42 & 0,529 & 0,529 & 0,385 & 0,411 & 0,455 & 3 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize Côté JP, $K=3$ maximise le Hit, mais au prix d'une baisse
+  forte côté articles. On garde donc $K=2$ comme compromis publiable.}
+\end{frame}
+
+\begin{frame}{Tuning hyperparamètres -- état publiable}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{2.7cm} p{4.4cm} p{4.2cm} p{2.1cm}@{}}
+    \toprule
+    \textbf{Famille} & \textbf{Grille / décision} & \textbf{Champion retenu} & \textbf{Statut} \\
+    \midrule
+    Cosine / B3 / B4 & Pas d'apprentissage ; variantes déterministes $s \in \{10,20,50\}$ selon méthode & meilleurs variants dans les tableaux finaux & fixé \\
+    \midrule
+    PPR & $s \in \{5,10,20,50\}$, seed articles/JP/mixte, $\alpha \in \{0{,}50,0{,}70,0{,}85,0{,}95\}$ & article $s=50$, mixte, $\alpha=0{,}50$ ; JP $s=20$, mixte, $\alpha=0{,}50$ & \textcolor{ok}{fait} \\
+    \midrule
+    LightGCN & $K \in \{1,2,3\}$, seeds $\{1,2,42\}$, 30 epochs & $K=2$, seed 42 pour l'artefact final & \textcolor{ok}{fait pour K} \\
+    \midrule
+    LLM / LLM+RAG & Runs eval uniquement ; pas de tuning train prévu à ce stade & eval strict & \textcolor{ok}{fait} \\
+    \midrule
+    LLM Judge & Juge LLM sur top-10 de chaque méthode & \textcolor{ok}{fait sur eval strict} & 48\,824 paires jugées \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize Ce tableau évite l'ambiguïté : PPR est tuné complètement ; LightGCN est publiable sur la profondeur $K$, mais garde un tuning de second niveau possible.}
+\end{frame}
+
+% ============================================================
+\section{Résultats finaux eval strict}
+
+
+\begin{frame}{Résultats finaux -- lecture d'ensemble}
+  \footnotesize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.22}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}p{3.0cm} p{4.7cm} p{5.0cm}@{}}
+    \toprule
+    \textbf{Cible} & \textbf{Champion actuel} & \textbf{Lecture} \\
+    \midrule
+    Articles strict & LightGCN entraîné : Hit 0,551 ; Normalized Rank 0,453 & Gain très léger vs PPR en Hit ; B3-e reste quasiment à égalité et garde le meilleur rang MRR/NDCG. \\
+    \midrule
+    JP & LightGCN entraîné : Hit 0,271 ; NDCG 0,178 & Nouveau champion quantitatif, mais l'écart reste modéré ; LLM Judge doit arbitrer la qualité sémantique. \\
+    \midrule
+    Sémantique hors-GT & LLM Judge strict lancé : 48\,824 paires jugées & Articles : LightGCN propagé meilleur LLM Judge ; JP : cosine/PPR/LightGCN très proches. \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize Conclusion actuelle : le graphe aide, mais pas de manière uniforme.
+  LightGCN gagne en Hit strict article et JP, tandis que LLM Judge nuance les gains GT :
+  la qualité sémantique ne suit pas toujours le rappel.}
+\end{frame}
+
+\begin{frame}{Résultats finaux -- Articles strict}
+  \tiny
+  \textit{Dataset : eval rich retrievable strict, 754 questions, K=10. LLM Judge = score (n2/n1/n0 moyens).}
+
+  \vspace{0.25em}
+  \renewcommand{\arraystretch}{1.08}
+  \setlength{\tabcolsep}{4pt}
+  \begin{center}
+  \begin{tabular}{@{}l l r r r r r@{}}
+    \toprule
+    \textbf{Méthode} & \textbf{LLM Judge (n2/n1/n0)}
+     & Recall & Hit & MRR & NDCG & Norm. Rank \\
+    \midrule
+    LLM seul
+     & 0,188 (0,3/3,1/6,6)
+     & 0,053 & 0,053 & 0,053 & 0,045 & 0,049 \\
+    LLM + RAG
+     & 0,232 (1,3/2,1/6,6)
+     & 0,369 & 0,369 & 0,404 & 0,356 & 0,363 \\
+    \midrule
+    B2-a cosine articles
+     & 0,480 (1,4/6,7/1,9)
+     & 0,417 & 0,417 & 0,313 & 0,313 & 0,340 \\
+    \rowcolor{accentsoft}
+    B3-e -- JP $\to$ Art ($s{=}10$)
+     & 0,444 (1,2/6,4/2,4)
+     & 0,532 & 0,532 & \textbf{0,409} & \textbf{0,409} & 0,450 \\
+    PPR $s{=}50$ mixte $\alpha=0{,}50$
+     & 0,426 (1,3/5,8/2,8)
+     & \textbf{0,547} & \textbf{0,547} & 0,265 & 0,313 & 0,383 \\
+    \midrule
+    LightGCN $K{=}2$ propagé
+     & \textbf{0,488 (1,4/7,0/1,6)}
+     & 0,502 & 0,502 & 0,351 & 0,362 & 0,400 \\
+    \rowcolor{green!10}
+    \textbf{LightGCN $K{=}2$ entraîné}
+     & 0,457 (1,2/6,8/2,0)
+     & \textbf{0,551} & \textbf{0,551} & 0,399 & 0,408 & \textbf{0,453} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.25em}
+  {\scriptsize \textbf{Lecture} : LightGCN entraîné dépasse légèrement PPR en Hit strict
+  et garde presque le rang de B3-e.}
+\end{frame}
+
+\begin{frame}{Résultats finaux -- JP}
+  \tiny
+  \textit{Dataset : eval rich retrievable strict, 754 questions, K=10.}
+
+  \vspace{0.2em}
+  \renewcommand{\arraystretch}{1.03}
+  \setlength{\tabcolsep}{3pt}
+  \begin{center}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{@{}l l | r r r r r@{}}
+    \toprule
+    \textbf{Méthode} & \textbf{LLM Judge (n2/n1/n0)} & Recall & Hit & MRR & NDCG & Norm. Rank \\
+    \midrule
+    LLM seul JP & -- & 0,000 & 0,000 & 0,000 & 0,000 & 0,000 \\
+    LLM + RAG JP & 0,398 (2,9/2,1/5,0) & 0,197 & 0,197 & 0,168 & 0,174 & 0,186 \\
+    \midrule
+    B3-a cosine JP & \textbf{0,608 (3,5/5,2/1,3)} & 0,218 & 0,218 & 0,136 & 0,154 & 0,177 \\
+    B4-d -- intersection ($s{=}50$) & 0,594 (3,4/5,0/1,6) & 0,209 & 0,209 & 0,128 & 0,145 & 0,166 \\
+    B4-e -- RRF ($s{=}20$) & 0,543 (3,1/4,8/2,2) & 0,219 & 0,219 & 0,099 & 0,125 & 0,153 \\
+    B4-f -- citation-weighted ($s{=}10$) & 0,424 (1,8/4,9/3,3) & 0,109 & 0,109 & 0,041 & 0,056 & 0,072 \\
+    PPR $s{=}20$ mixte $\alpha=0{,}50$ & 0,603 (3,5/5,1/1,4) & 0,227 & 0,227 & 0,118 & 0,143 & 0,172 \\
+    \midrule
+    LightGCN $K{=}2$ propagé & 0,583 (3,3/5,0/1,6) & 0,258 & 0,258 & 0,143 & 0,169 & 0,195 \\
+    \rowcolor{green!10}
+    \textbf{LightGCN $K{=}2$ entraîné} & 0,602 (3,5/5,0/1,5) & \textbf{0,271} & \textbf{0,271} & \textbf{0,152} & \textbf{0,178} & \textbf{0,202} \\
+    \bottomrule
+  \end{tabular}
+  }
+  \end{center}
+
+  \vspace{0.15em}
+  {\tiny \textbf{Lecture} : LightGCN devient champion sur toutes les métriques JP du panel,
+  mais l'écart reste modéré. LLM Judge nuance ce gain : LightGCN entraîné est champion GT, mais reste quasi à égalité avec cosine JP et PPR.}
+\end{frame}
+
+% ============================================================
+\section{Analyses et suite}
+
+\begin{frame}{Famille de graphes -- définitions retenues}
+  \footnotesize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.18}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{0.9cm} p{7.1cm} p{4.0cm}@{}}
+    \toprule
+    \textbf{Vue} & \textbf{Règle de construction} & \textbf{Lecture} \\
+    \midrule
+    \rowcolor{accentsoft}
+    $G_0$ & Graphe historique benchmarké jusqu'ici : JP citant au moins un article pénal, avec tous les articles co-cités. & Base historique, mais structure très sale. \\
+    \midrule
+    \rowcolor{green!10}
+    $G_1$ & $G_0$ sans articles isolés, sans articles abrogés, puis sans JP devenues isolées. & Base propre minimale, coût benchmark quasi nul. \\
+    \midrule
+    $G_2$ & $G_1$ sans les 14 plus gros hubs articles. & Compromis structure / couverture le plus crédible à ce stade. \\
+    \midrule
+    $G_3$ & $G_2$ sans 15 articles procéduraux résiduels très généraux. & Variante plus agressive, utile pour l'analyse. \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize Message méthodologique : les benchmarks publiés aujourd'hui sont encore sur \textbf{$G_0$}.
+  Le cleaning est maintenant objectivé ; la prochaine vague sert à re-benchmarker sur \textbf{$G_1$} puis \textbf{$G_2$}.}
+\end{frame}
+
+\begin{frame}{Graphes -- structure et connectivité}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.12}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}l r r r r r@{}}
+    \toprule
+    \textbf{Graphe} & \textbf{JP} & \textbf{Articles} & \textbf{Arêtes} & \textbf{Composantes} & \textbf{\% comp. géante} \\
+    \midrule
+    $G_0$ & 118\,112 & 87\,821 & 642\,450 & 59\,975 & 70,86 \\
+    \rowcolor{green!10}
+    $G_1$ & 117\,374 & 23\,859 & 593\,172 & 45 & 99,92 \\
+    \rowcolor{accentsoft}
+    $G_2$ & 95\,959 & 23\,845 & 469\,839 & 237 & 99,52 \\
+    $G_3$ & 91\,283 & 23\,830 & 442\,223 & 288 & 99,38 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.3em}
+  \begin{itemize}\setlength{\itemsep}{0.2em}
+    \item $G_0$ est grand mais artificiellement fragmenté : 59\,945 singletons.
+    \item $G_1$ nettoie massivement sans casser la structure : quasi tout le graphe devient connecté.
+    \item $G_2$ enlève du liant procédural, mais garde encore une très grande composante principale.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Graphes -- coût sur les datasets stricts}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.14}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}l c c c c@{}}
+    \toprule
+    \textbf{Vue} & \textbf{Train art. strict} & \textbf{Eval art. strict} & \textbf{Train JP} & \textbf{Eval JP} \\
+    \midrule
+    $G_0$ & 100,0\% & 100,0\% & 100,0\% & 100,0\% \\
+    \rowcolor{green!10}
+    $G_1$ & 99,87\% & 100,0\% & 99,84\% & 100,0\% \\
+    \rowcolor{accentsoft}
+    $G_2$ & 97,12\% & 96,15\% & 98,32\% & 98,36\% \\
+    $G_3$ & 91,14\% & 90,96\% & 96,41\% & 97,24\% \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.35em}
+  \begin{itemize}\setlength{\itemsep}{0.2em}
+    \item $G_1$ coûte presque rien sur les datasets stricts.
+    \item $G_2$ reste défendable pour un benchmark pénal plus sémantique.
+    \item $G_3$ devient une variante d'analyse : lisibilité meilleure, mais perte benchmark sensible.
+  \end{itemize}
+
+  \vspace{0.3em}
+  \keybox{\scriptsize Décision provisoire : \textbf{$G_1$ = base propre minimale}. \textbf{$G_2$ = candidat principal}
+  pour la prochaine vague de benchmarks graphe. \textbf{$G_3$} reste une variante plus agressive à comparer.}
+\end{frame}
+
+\begin{frame}{Graphes -- degrés et hubs résiduels}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{../specs/graph-bipartite-dashboard-assets-2026-06-22/fig_article_degree_buckets.png}
+
+      \vspace{0.3em}
+      {\tiny Articles : distribution très heavy-tail, médiane = 2 dans les quatre vues.}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{../specs/graph-bipartite-dashboard-assets-2026-06-22/fig_jp_degree_buckets.png}
+
+      \vspace{0.3em}
+      {\tiny JP : distribution plus compacte ; le cleaning agit surtout côté articles.}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.08}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}l c c c@{}}
+    \toprule
+    \textbf{Vue} & \textbf{Article max degré} & \textbf{Articles degré $>1000$} & \textbf{JP degré $>100$} \\
+    \midrule
+    $G_0$ & 35\,502 & 77 & 4 \\
+    $G_1$ & 35\,502 & 75 & 4 \\
+    $G_2$ & 2\,529 & 61 & 1 \\
+    $G_3$ & 2\,371 & 46 & 1 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Figures de tuning à produire}
+  \footnotesize
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \textbf{Courbes hyperparamètres}
+      \begin{itemize}\setlength{\itemsep}{0.28em}
+        \item B3/B4 : \textbf{$k_{in} \to$ Hit@10}
+        \item PPR : \textbf{$\alpha \to$ Hit@10}
+        \item PPR : \textbf{$k_{in} \to$ Hit@10}
+        \item LightGCN : \textbf{$K \to$ Hit@10}
+        \item Courbes secondaires : NDCG@10 si place
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \textbf{Courbes d'entraînement}
+      \begin{itemize}\setlength{\itemsep}{0.28em}
+        \item LightGCN : \textbf{epoch $\to$ loss train}
+        \item LightGCN : \textbf{epoch $\to$ Hit@10 val}
+        \item LightGCN : \textbf{epoch $\to$ NDCG@10 val}
+        \item Moyenne + dispersion si multi-seed
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.55em}
+  \keybox{\scriptsize Les tableaux diront \textbf{qui gagne}. Les courbes diront
+  \textbf{pourquoi}, \textbf{à quel point le tuning est stable}, et si un graphe
+  nettoyé rend la méthode plus robuste ou non.}
+\end{frame}
+
+\begin{frame}{Tableau final visé -- comparaison inter-graphes}
+  \scriptsize
+  \begin{center}
+  \renewcommand{\arraystretch}{1.12}
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{@{}p{2.7cm} p{0.9cm} c c c c c p{1.9cm}@{}}
+    \toprule
+    \textbf{Méthode championne} & \textbf{Graphe} & \textbf{Recall} & \textbf{Hit} & \textbf{MRR} & \textbf{NDCG} & \textbf{Norm. Rank} & \textbf{Couverture} \\
+    \midrule
+    B2-a & $G_0$ & -- & -- & -- & -- & -- & 100\% / 100\% \\
+    B2-a & $G_1$ & soon & soon & soon & soon & soon & 100\% / 100\% \\
+    B2-a & $G_2$ & soon & soon & soon & soon & soon & 96,1\% / 98,4\% \\
+    \midrule
+    PPR champion & $G_0$ & -- & -- & -- & -- & -- & 100\% / 100\% \\
+    PPR champion & $G_1$ & soon & soon & soon & soon & soon & 100\% / 100\% \\
+    PPR champion & $G_2$ & soon & soon & soon & soon & soon & 96,1\% / 98,4\% \\
+    \midrule
+    LightGCN champion & $G_0$ & \textbf{existant} & \textbf{existant} & \textbf{existant} & \textbf{existant} & \textbf{existant} & 100\% / 100\% \\
+    LightGCN champion & $G_1$ & soon & soon & soon & soon & soon & 100\% / 100\% \\
+    LightGCN champion & $G_2$ & soon & soon & soon & soon & soon & 96,1\% / 98,4\% \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.35em}
+  {\scriptsize
+  \textbf{Convention} : couverture = \textit{article strict / JP} sur l'eval stricte.
+  Le tableau final complet sera dupliqué \textbf{Articles strict} et \textbf{JP},
+  puis résumé dans une vue inter-graphes.}
+\end{frame}
+
+\begin{frame}{Pipeline benchmark -- état réel}
+  \footnotesize
+  \begin{enumerate}\setlength{\itemsep}{0.32em}
+    \item \textbf{Implémenté} : scripts \texttt{41} à \texttt{46}, folds partagés, CV B3/B4, PPR, LightGCN, replay final des champions.
+    \item \textbf{Validé localement} : tests ciblés + replay synthétique de la couche finale.
+    \item \textbf{Run réel à faire sur $G_0$} : produire les artefacts CV (\texttt{champions.json}, \texttt{cv\_results\_summary.csv}), puis rejouer \texttt{45\_run\_final\_champions.py}.
+    \item Réappliquer ensuite \textbf{exactement le même protocole} sur \textbf{$G_1$}.
+    \item Puis refaire sur \textbf{$G_2$}, et garder \textbf{$G_3$} comme borne agressive.
+  \end{enumerate}
+
+  \vspace{0.5em}
+  \okbox{\scriptsize Le harnais n'est plus une idée de protocole : il existe maintenant
+  en code, avec sorties normalisées et tableaux finaux inter-graphes. Le prochain jalon
+  est le \textbf{premier run réel complet sur $G_0$}.}
+\end{frame}
+
+\begin{frame}{Suite -- pistes pour enrichir le bench}
+  \footnotesize
+  \textbf{Problème structurel} : GT moyenne $\approx 1$ article et $\approx 1$ JP par question.
+  La taille de la GT limite mécaniquement la richesse de l'évaluation.
+
+  \vspace{0.4em}
+  \renewcommand{\arraystretch}{1.2}
+  \setlength{\tabcolsep}{5pt}
+  \begin{center}
+  \begin{tabular}{@{}p{4.6cm} c c p{5.0cm}@{}}
+    \toprule
+    \textbf{Piste} & \textbf{Coût} & \textbf{Qualité} & \textbf{Effet attendu} \\
+    \midrule
+    \rowcolor{green!10}
+    Expansion GT par \textbf{visa des arrêts} & faible & forte & GT articles enrichie, ancrée juridiquement \\
+    \rowcolor{green!10}
+    Citation transitive Légifrance (1-hop) & faible & moyenne & Enrichit la GT article stricte avec sources vérifiables \\
+    \rowcolor{green!10}
+    GT multi-niveau (central / support / contextuel) & faible & forte & Débloque NDCG multi-niveau \\
+    \midrule
+    \rowcolor{accentsoft}
+    \textbf{Reverse-engineering décisions} CA/Cass & moyen & \textbf{très forte} & Bench scalable, GT = visa du juge \\
+    \rowcolor{accentsoft}
+    Annales CRFPA + sujets partiels & moyen & forte & Questions réelles annotées \\
+    \midrule
+    Annotation humaine ciblée (200 q) & fort & top & Gold standard de calibration \\
+    \midrule
+    Paraphrase LLM doctrine\_qgen & faible & \textcolor{warn}{faible} & Amplifie les biais auto-référentiels \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \keybox{\scriptsize \textbf{Recommandation} : combiner visa des arrêts + citation Légifrance
+  avec le reverse-engineering de décisions CA/Cass. Annotation humaine ciblée en validation croisée.}
+\end{frame}
+
+\begin{frame}{Suite -- pivot conceptuel}
+  \footnotesize
+  \textbf{Plutôt que} :
+  \vspace{0.2em}
+  \begin{center}
+  \emph{« GT extraite du texte de la question »}\\
+  $\to$ singletons mécaniques, métriques range dégénérées
+  \end{center}
+
+  \vspace{0.5em}
+  \textbf{Adopter} :
+  \begin{center}
+  \emph{« GT ancrée dans des décisions réelles »}\\
+  $\to$ visa du juge $\Rightarrow$ 3-8 articles par question naturellement
+  \end{center}
+
+  \vspace{0.8em}
+  \keybox{Le pivot résout structurellement le problème du singleton.
+  Une métrique différente ne suffit pas -- il faut une GT structurellement plus riche.
+  \textbf{Reverse-engineering :} pour un arrêt CA/Cass dont on connaît le visa, formuler
+  la question « quels articles s'appliquent à [résumé des faits] ? ».
+  GT = visa de l'arrêt. Scalable à milliers de questions, gold humain.}
+
+  \vspace{0.5em}
+  \textbf{À arbitrer avec Johnny} : valider l'investissement reverse-engineering vs purs
+  enrichissements gratuits (visa + Légifrance).
+\end{frame}
+
+\begin{frame}{Questions à arbitrer avec Johnny}
+  \footnotesize
+  \begin{enumerate}\setlength{\itemsep}{0.3em}
+    \item \textbf{Validation panel métriques} : OK pour Hit@K + MRR@K cappé + NDCG@K binaire ?
+    NDCG multi-niveau plus tard si on a une GT graduée (Chantier 3) ?
+    \item \textbf{Lecture LLM Judge} : OK pour acter que \textbf{cosine pur est champion LLM Judge} et que
+    « optimiser Recall@10 ne gagne pas LLM Judge » ? Implication forte sur la stratégie GNN.
+    \item \textbf{Dénominateur LLM Judge} : \texttt{k\_fixed} ($2K{=}20$, actuel) vs \texttt{k\_ranking}
+    (taille réelle). N'impacte que B3-e/B4-d (~9,6 items). Switch = re-agrégation seule.
+    \item \textbf{Lecture LLM} : LLM seul est très faible sans contexte ; LLM-RAG améliore fortement
+    les métriques GT mais reste sous les méthodes BGE/PPR/LightGCN, surtout en LLM Judge.
+    \item \textbf{Enrichissement bench} : feu vert sur le reverse-engineering de décisions
+    (chantier moyen, plusieurs semaines) ou rester sur visa + Légifrance ?
+    \item \textbf{Choix graphe pour vague 2} : valider $G_1$ comme base propre de référence,
+    puis $G_2$ comme variante pénale plus sélective pour reruns cosine / PPR / LightGCN.
+    \item \textbf{Cible Étape 1 vs Étape 2} : où place-t-on la frontière ?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+  \vspace{2em}
+  \Huge\textcolor{accent}{\textbf{Merci}}
+
+  \vspace{2em}
+  \large Questions / arbitrages
+  \end{center}
+\end{frame}
+
+\appendix
+\section{Annexes}
+
+\begin{frame}{Roadmap actualisée -- 21 paliers, état au 9 juin}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.0}
+  \begin{center}
+  \begin{tabular}{@{}c p{8.8cm} l@{}}
+    \toprule
+    \textbf{\#} & \textbf{Palier} & \textbf{État} \\
+    \midrule
+    1  & Étude SOTA, fiches de lecture                                                & \textcolor{ok}{\textbf{Validé S1--S2}} \\
+    2  & Téléchargement décisions Judilibre + analyse donnée                         & \textcolor{ok}{\textbf{Validé S1--S2}} \\
+    3  & Extraction articles (regex V5)                                              & \textcolor{ok}{\textbf{Validé S3}} \\
+    4  & Graphe biparti JP $\leftrightarrow$ Art + analyse macro                     & \textcolor{ok}{\textbf{Validé S3}} \\
+    5  & Premier benchmark CRFPA 8 q                                                 & \textcolor{ok}{\textbf{Validé S3--S4}} \\
+    6  & Métriques d'évaluation Recall + Normalized Rank                                              & \textcolor{ok}{\textbf{Validé S4 / raffiné S7}} \\
+    7  & Baseline 1 (embedding JP naïf)                                              & \textcolor{warn}{\textbf{Échec démasqué S4}} \\
+    \rowcolor{accentsoft}
+    8  & Pivot articles-first -- Baseline 2 (embedding articles)                     & \textcolor{ok}{\textbf{Validé S5--S7}} \\
+    \rowcolor{accentsoft}
+    9  & Synthèses JP (DB OVH Hector)                                                & \textcolor{ok}{\textbf{Validé S7}} \\
+    \rowcolor{accentsoft}
+    10 & Baseline 3 (embedding synthèses JP)                                         & \textcolor{ok}{\textbf{Validé S7--S8}} \\
+    \rowcolor{accentsoft}
+    11 & Agrandissement bench (doctrine\_qgen 1707 q)                                & \textcolor{ok}{\textbf{Validé S8}} \\
+    \rowcolor{accentsoft}
+    12 & Évaluation comparée gros bench                                              & \textcolor{ok}{\textbf{Validé S8}} \\
+    \rowcolor{accentsoft}
+    13 & Baseline 4 -- stratégies cross-modales (B4-a/c/d/e/f)                       & \textcolor{ok}{\textbf{Validé S8--S9}} \\
+    \rowcolor{accentsoft}
+    14 & PPR naïf -- baseline graphe non-apprise                                     & \textcolor{ok}{\textbf{Validé S9}} \\
+    \midrule
+    \rowcolor{accentsoft}
+    15 & \textbf{Panel métriques complet} (Hit@K, MRR, NDCG)                         & \textcolor{ok}{\textbf{Validé S10}} \\
+    \rowcolor{accentsoft}
+    16 & \textbf{Grand tableau global} (cosine / PPR / GNN $\times$ panel + LLM Judge)     & \textcolor{ok}{\textbf{Validé S10}} \\
+    \rowcolor{accentsoft}
+    17 & \textbf{LLM Judge} (Gemma 4 26B, 9 méthodes, run cluster)               & \textcolor{ok}{\textbf{Validé S10}} \\
+    \rowcolor{accentsoft}
+    18 & \textbf{LightGCN sur G0} (design A, cosine BPR + ancrage)                   & \textcolor{ok}{\textbf{Validé S10}} \\
+    \midrule
+    \rowcolor{green!10}
+    19 & \textbf{Famille G0/G1/G2/G3} : cleaning, hubs, connectivité, couverture datasets & \textcolor{ok}{\textbf{Validé S13}} \\
+    \rowcolor{green!10}
+    20 & \textbf{LightGCN} ablation init + régime D (supervision JP) + reruns sur $G_1/G_2$ & \textcolor{accent}{\textbf{S13--S14}} \\
+    \rowcolor{green!10}
+    21 & \textbf{Enrichissement du bench} (visa, reverse-eng décisions, CRFPA) + variantes GNN & \textcolor{accent}{\textbf{S13--S15}} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Les décisions prises ensemble Week-9}
+  \footnotesize
+  \vspace{0.3em}
+  \begin{enumerate}\setlength{\itemsep}{0.9em}
+    \item \textbf{Panel métriques complet, adapté à la sparsité GT} :
+    Recall + Normalized Rank + LLM Judge + \textbf{Hit@K}, MRR et NDCG@K, avec reporting séparé
+    des régimes \textit{singleton} (Hit, MRR) et \textit{multi-GT} (Recall, NDCG, MAP).
+    \item \textbf{Grand tableau de synthèse global} : LLM seul $+$ LLM-RAG $+$
+    similarité cosine $+$ PPR $+$ GNN, sur \textbf{toutes les métriques},
+    avec \textbf{LLM Judge appliqué à toutes les lignes}.
+    \item \textbf{Méthodes graphe avancées} : commencer par \textbf{LightGCN}
+    (baseline incontournable reco system), puis variantes (R-GCN, HGT, GraphSAGE).
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{LightGCN -- ce que chaque brique apporte}
+  \footnotesize
+  Une \textbf{ablation} ajoute les composants un par un pour mesurer leur contribution.
+  Ici, on isole le texte seul, puis le graphe, puis l'apprentissage.
+
+  \vspace{0.45em}
+  \begin{center}\scriptsize
+  \renewcommand{\arraystretch}{1.35}
+  \setlength{\tabcolsep}{5pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{@{}l c c c l@{}}
+    \toprule
+    \textbf{Configuration testée} & \textbf{Recall} & \textbf{Hit} & \textbf{MRR} & \textbf{Ce que ça mesure} \\
+    \midrule
+    BGE seul : $score(q,i)=\cos(q,i)$
+      & $0{,}459$ & $0{,}459$ & $0{,}302$ & signal sémantique pur \\
+    BGE + propagation graphe ($K{=}2$), sans train
+      & $\mathbf{0{,}653}$ & $\mathbf{0{,}653}$ & $\mathbf{0{,}432}$
+      & \textcolor{ok}{\textbf{$+0{,}194$ Recall = apport structurel du graphe}} \\
+    BGE + propagation + BPR cosinus, 3 seeds
+      & $\mathbf{0{,}704 \pm 0{,}007}$ & $\mathbf{0{,}739 \pm 0{,}007}$ & $\mathbf{0{,}494 \pm 0{,}002}$
+      & \textcolor{ok}{\textbf{$+0{,}051$ Recall = apport de l'apprentissage}} \\
+    \bottomrule
+  \end{tabular}
+  }
+  \end{center}
+
+  \vspace{0.45em}
+  \keybox{\scriptsize \textbf{Résultat principal} : chaque étage ajoute.
+  Le gros gain vient du graphe de citations ; l'entraînement ajoute ensuite un
+  gain plus faible mais robuste, aussi visible sur Hit et MRR.}
+
+  \vspace{0.3em}
+  {\scriptsize
+  \textbf{Choix de profondeur} : $K_0 < K_1 < \mathbf{K_2} > K_3$.
+  Après deux propagations, le signal commence à se lisser excessivement
+  (\emph{over-smoothing}), donc $K{=}2$ est retenu.
+  }
+\end{frame}
+
+\begin{frame}{LightGCN -- limites honnêtes \& suite}
+  \footnotesize
+  \warnbox{\scriptsize Les scores présentés ici restent sur \textbf{$G_0$ historique}.
+  Depuis, la famille \textbf{$G_1/G_2/G_3$} a été construite et mesurée :
+  $G_1$ nettoie massivement à coût benchmark quasi nul ; $G_2$ est le meilleur compromis candidat.}
+
+  \vspace{0.4em}
+  \textbf{Autres limites} :
+  \begin{itemize}\setlength{\itemsep}{0.05em}
+    \item $840$ paires d'entraînement seulement (732 q hors cohorte) $\to$ apprentissage = calibration, pas un gros gain.
+    \item \textbf{JP non supervisé} (zéro paire positive côté JP).
+    \item PPR reste un point de comparaison important pour la diffusion large.
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Prochaines étapes priorisées} :
+  \begin{enumerate}\setlength{\itemsep}{0.1em}
+    \item \textcolor{ok}{\textbf{$\checkmark$ Multi-seed validé}} (3 seeds, $\pm 0{,}007$). Reste : ablation init (zéro vs aléatoire) pour décomposer le $+0{,}051$.
+    \item \textbf{Régime D} : injecter la supervision JP$+$article (cf. ADR-001).
+    \item \textbf{Reruns sur $G_1$ puis $G_2$} : vérifier si le nettoyage améliore réellement cosine / PPR / LightGCN.
+    \item Tester une variante où les questions entrent explicitement dans le graphe.
+    \item Tuning $(\tau, \lambda, \mathrm{lr})$ + grille $K$ autour de 2.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Annexe -- LLM Judge : peut-on faire confiance au juge ?}
+  \footnotesize
+  \textbf{But} : vérifier que le LLM Judge mesure bien la pertinence sémantique du top-$K$,
+  et pas seulement une préférence arbitraire du LLM.
+
+  \vspace{0.45em}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.28}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{2.7cm} p{4.5cm} p{3.0cm} p{3.2cm}@{}}
+    \toprule
+    \textbf{Contrôle} & \textbf{Comparaison} & \textbf{Résultat} & \textbf{Lecture} \\
+    \midrule
+    1. Reconnaître le vrai &
+    1\,864 items de GT déjà retrouvés dans les rankings. &
+    78~\% notés $n_2$. &
+    La GT est majoritairement reconnue comme pertinente. \\
+    \midrule
+    2. Refuser le faux &
+    Pour 20 questions, on compare un item GT, un article proche en cosine mais hors GT,
+    et un article random. &
+    GT : 55~\% $n_2$ ; proche hors GT : 18~\% ; random : 0~\%. &
+    Le juge ne crédite pas automatiquement ce qui ressemble au thème. \\
+    \midrule
+    3. Être stable &
+    36 items stratifiés, jugés en aveugle par Gemma puis Opus. &
+    $\kappa = 0{,}64$ ; exact 61~\% ; $\pm 1$ niveau : 97~\%. &
+    Les désaccords existent mais restent rarement extrêmes. \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Variantes graphe 1-hop + cross-modal — 1707 q doctrine_qgen</title>
+<style>
+  :root {
+    --c-bg: #fafaf7; --c-fg: #1a1a1a; --c-muted: #666;
+    --c-accent: #2d4a6b; --c-accent-light: #dde7f0;
+    --c-success: #2d5d3a; --c-success-light: #e6efe7;
+    --c-warn: #8b5a2b; --c-warn-light: #f4ebe0;
+    --c-fail: #8b3a3a; --c-fail-light: #f4e6e6;
+    --c-border: #d9d4c8; --c-table-stripe: #f2efe8;
+    --c-code-bg: #ecebe5;
+  }
+  body { font-family: "Iowan Old Style", Palatino, Georgia, serif; background: var(--c-bg); color: var(--c-fg); max-width: 1180px; margin: 2rem auto; padding: 0 2rem 4rem; line-height: 1.55; font-size: 16px; }
+  h1 { font-size: 2rem; border-bottom: 3px solid var(--c-accent); padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+  h1 + p.lede { color: var(--c-muted); font-style: italic; margin-top: 0; margin-bottom: 2rem; }
+  h2 { font-size: 1.5rem; color: var(--c-accent); margin-top: 3rem; border-bottom: 1px solid var(--c-border); padding-bottom: 0.3rem; }
+  h3 { font-size: 1.2rem; margin-top: 2rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; background: white; }
+  th, td { border: 1px solid var(--c-border); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: var(--c-accent); color: white; font-weight: 600; }
+  tbody tr:nth-child(even) { background: var(--c-table-stripe); }
+  code { font-family: "SF Mono", Monaco, Consolas, monospace; background: var(--c-code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.88em; }
+  pre { background: var(--c-code-bg); padding: 0.9rem 1.1rem; border-radius: 5px; overflow-x: auto; font-size: 0.85rem; border-left: 3px solid var(--c-accent); }
+  .box { border: 1px solid var(--c-border); border-radius: 6px; padding: 1rem 1.3rem; margin: 1rem 0; background: white; }
+  .box.success { border-left: 5px solid var(--c-success); background: var(--c-success-light); }
+  .box.warn    { border-left: 5px solid var(--c-warn);    background: var(--c-warn-light); }
+  .box.fail    { border-left: 5px solid var(--c-fail);    background: var(--c-fail-light); }
+  .box.accent  { border-left: 5px solid var(--c-accent);  background: var(--c-accent-light); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin: 1.2rem 0 2rem; }
+  .kpi { background: white; border-radius: 6px; border: 1px solid var(--c-border); padding: 0.9rem 1rem; text-align: center; }
+  .kpi .value { font-size: 1.55rem; font-weight: 600; color: var(--c-accent); font-variant-numeric: tabular-nums; }
+  .kpi .label { font-size: 0.78rem; color: var(--c-muted); margin-top: 0.2rem; }
+  .delta-pos { color: var(--c-success); font-weight: 600; }
+  .delta-neg { color: var(--c-fail); font-weight: 600; }
+  .winner { background: #ddf5e0 !important; font-weight: 600; }
+  .dead { color: var(--c-muted); font-style: italic; }
+  hr { border: none; border-top: 1px dashed var(--c-border); margin: 2.5rem 0; }
+  .small { font-size: 0.85rem; color: var(--c-muted); }
+</style>
+</head>
+<body>
+
+<h1>Variantes graphe 1-hop + cross-modal — éval 1707 q doctrine_qgen</h1>
+<p class="lede">Run 28 mai 2026, script <code>11_eval_graph_variants.py</code>, 90s sur MacBook MPS</p>
+
+<div class="box accent">
+  <p><strong>Question initiale Johnny / Matthieu :</strong> on a testé <em>articles → JP par union</em>. Mais on n'a testé ni <em>l'intersection</em>, ni <em>la majority</em>, ni le sens symétrique <em>JP → articles</em>. Et idée additionnelle : combiner les deux espaces d'embedding indépendants (articles + synthèses JP) en mode set, comme deux "vues" filtrantes.</p>
+  <p><strong>Ce qu'on apprend :</strong> deux nouvelles stratégies battent largement la baseline cosine direct ; l'intersection même-type est morte-née ; les cross-modales sont une vraie famille à explorer.</p>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi"><div class="value">10</div><div class="label">stratégies testées</div></div>
+  <div class="kpi"><div class="value">1 707</div><div class="label">questions</div></div>
+  <div class="kpi"><div class="value">84 %</div><div class="label">pass DUR du champion (cross_art_union K=10)</div></div>
+  <div class="kpi"><div class="value">+35 pts</div><div class="label">vs baseline cosine direct (49 %)</div></div>
+</div>
+
+<h2>1. La matrice des 10 stratégies testées</h2>
+
+<table>
+  <thead><tr><th>Famille</th><th>Stratégie</th><th>Définition</th><th>Type retour</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="3">Articles → JP (point d'entrée articles)</td><td><code>union</code></td><td>JP citant ≥ 1 article du top-K (= <code>jp_via_graph</code> baseline)</td><td>set (peut être très grand)</td></tr>
+    <tr><td><code>intersection</code></td><td>JP citant TOUS les K articles</td><td>set très restrictif</td></tr>
+    <tr><td><code>majority</code></td><td>JP citant ≥ ⌈K/2⌉ articles</td><td>set intermédiaire</td></tr>
+    <tr><td rowspan="3">JP → Articles (point d'entrée JP)</td><td><code>union</code></td><td>articles cités par ≥ 1 JP du top-K JP</td><td>set</td></tr>
+    <tr><td><code>intersection</code></td><td>articles cités par TOUTES les K JP</td><td>set restrictif</td></tr>
+    <tr><td><code>majority</code></td><td>articles cités par ≥ ⌈K/2⌉ JP</td><td>set</td></tr>
+    <tr><td rowspan="2">Cross-modal articles (A_art ∪/∩ B_art)</td><td><code>cross_art_union</code></td><td>top-K cosine art ∪ articles cités par top-K JP-cosine</td><td>set (large)</td></tr>
+    <tr><td><code>cross_art_intersection</code></td><td>top-K cosine art ∩ articles cités par top-K JP-cosine</td><td>set (ultra précis)</td></tr>
+    <tr><td rowspan="2">Cross-modal JP (A_jp ∪/∩ B_jp)</td><td><code>cross_jp_union</code></td><td>JP via_graph ∪ top-K cosine JP direct</td><td>set</td></tr>
+    <tr><td><code>cross_jp_intersection</code></td><td>JP via_graph ∩ top-K cosine JP direct</td><td>set précis</td></tr>
+  </tbody>
+</table>
+
+<h2>2. Articles → JP — résultats (971 q évaluables JP-side)</h2>
+
+<table>
+  <thead><tr><th>K_in</th><th>Variante</th><th>pass DUR</th><th>%</th><th>mean recall</th><th>mean n_returned</th></tr></thead>
+  <tbody>
+    <tr><td>5</td><td>union</td><td>455</td><td>47 %</td><td>0,458</td><td>736 JP</td></tr>
+    <tr><td>5</td><td class="dead">intersection</td><td class="dead">2</td><td class="dead">0 %</td><td class="dead">0,002</td><td class="dead">0</td></tr>
+    <tr><td>5</td><td class="dead">majority</td><td class="dead">16</td><td class="dead">2 %</td><td class="dead">0,016</td><td class="dead">4</td></tr>
+    <tr><td>10</td><td>union</td><td>543</td><td>56 %</td><td>0,547</td><td>1 440 JP</td></tr>
+    <tr><td>10</td><td class="dead">intersection</td><td class="dead">1</td><td class="dead">0 %</td><td class="dead">0,001</td><td class="dead">0</td></tr>
+    <tr><td>10</td><td class="dead">majority</td><td class="dead">8</td><td class="dead">1 %</td><td class="dead">0,008</td><td class="dead">1</td></tr>
+    <tr><td>20</td><td>union</td><td>634</td><td>65 %</td><td>0,641</td><td>2 530 JP</td></tr>
+    <tr><td>50</td><td>union</td><td>728</td><td>75 %</td><td>0,739</td><td>5 817 JP</td></tr>
+  </tbody>
+</table>
+
+<div class="box fail">
+  <p><strong>Intersection morte-née</strong> sur la direction articles → JP. À K=5, l'événement « une JP cite à la fois 5 articles spécifiques du top-K » est trop rare (les JP citent en médiane ~3-5 articles, pas alignés avec un top-K spécifique). Majority à 1-2 % suit la même logique.</p>
+  <p>→ Cette branche n'est pas exploitable. <strong>À retirer de la roadmap.</strong></p>
+</div>
+
+<h2>3. JP → Articles — résultats (1707 q)</h2>
+
+<table>
+  <thead><tr><th>K_in</th><th>Variante</th><th>pass DUR</th><th>%</th><th>mean recall</th><th>mean n_returned</th></tr></thead>
+  <tbody>
+    <tr class="winner"><td>5</td><td>union</td><td>1 182</td><td><strong>69 %</strong></td><td>0,670</td><td><strong>21 articles</strong></td></tr>
+    <tr><td>5</td><td class="dead">intersection</td><td class="dead">142</td><td class="dead">8 %</td><td class="dead">0,077</td><td class="dead">0</td></tr>
+    <tr><td>5</td><td>majority</td><td>517</td><td>30 %</td><td>0,283</td><td>2</td></tr>
+    <tr><td>10</td><td>union</td><td>1 312</td><td>77 %</td><td>0,751</td><td>35</td></tr>
+    <tr><td>20</td><td>union</td><td>1 399</td><td>82 %</td><td>0,804</td><td>60</td></tr>
+    <tr><td>50</td><td>union</td><td>1 498</td><td>88 %</td><td>0,866</td><td>119</td></tr>
+  </tbody>
+</table>
+
+<div class="box success">
+  <p><strong>Surprise majeure</strong> : <code>JP → Articles union K=5</code> donne <strong>69 % de pass DUR avec seulement 21 articles retournés</strong>. C'est mieux que <code>filtered_strict</code> cosine direct (49 % pass) ET avec moins d'articles à examiner.</p>
+  <p><strong>Hypothèse explicative</strong> : les synthèses LLM Hector sont en registre narratif, plus proches sémantiquement d'une question CRFPA que les textes d'articles normatifs. Le top-K JP est donc de meilleure qualité comme point d'entrée. Quand on remonte au graphe, on attrape les bons articles.</p>
+</div>
+
+<h2>4. Cross-modal articles — résultats (1707 q)</h2>
+
+<table>
+  <thead><tr><th>K_in</th><th>Variante</th><th>pass DUR</th><th>%</th><th>mean recall</th><th>mean n_returned</th></tr></thead>
+  <tbody>
+    <tr><td>5</td><td>cross_art_union</td><td>1 329</td><td>78 %</td><td>0,758</td><td>25</td></tr>
+    <tr class="winner"><td>10</td><td>cross_art_union</td><td>1 437</td><td><strong>84 %</strong></td><td>0,825</td><td><strong>43</strong></td></tr>
+    <tr><td>20</td><td>cross_art_union</td><td>1 520</td><td>89 %</td><td>0,878</td><td>76</td></tr>
+    <tr><td>50</td><td>cross_art_union</td><td>1 591</td><td>93 %</td><td>0,923</td><td>161</td></tr>
+    <tr><td>5</td><td>cross_art_intersection</td><td>526</td><td>31 %</td><td>0,286</td><td>1</td></tr>
+    <tr><td>10</td><td>cross_art_intersection</td><td>690</td><td>40 %</td><td>0,375</td><td>2</td></tr>
+    <tr><td>20</td><td>cross_art_intersection</td><td>850</td><td>50 %</td><td>0,465</td><td>4</td></tr>
+    <tr><td>50</td><td>cross_art_intersection</td><td>1 047</td><td>61 %</td><td>0,579</td><td>9</td></tr>
+  </tbody>
+</table>
+
+<div class="box success">
+  <p><strong>Champion absolu rappel-précision</strong> : <code>cross_art_union K=10</code> = <strong>84 % pass DUR</strong> avec seulement <strong>43 articles retournés</strong>. C'est un saut de <strong>+35 points</strong> vs baseline cosine direct (49 %).</p>
+  <p>L'union de deux signaux indépendants (cosine articles + back-edge depuis cosine JP) couvre des questions que ni l'un ni l'autre ne capture seul. C'est l'analogue propre du <code>jp_hybrid_max</code> qui était cassé.</p>
+</div>
+
+<div class="box accent">
+  <p><strong>Champion haute-précision</strong> : <code>cross_art_intersection K=20</code> = 50 % pass avec <strong>4 articles retournés</strong> en moyenne. Pour un système qui présente une liste courte à l'utilisateur (« voici les 3 articles à étudier »), c'est l'outil de choix.</p>
+</div>
+
+<h2>5. Cross-modal JP — résultats (971 q évaluables)</h2>
+
+<table>
+  <thead><tr><th>K_in</th><th>Variante</th><th>pass DUR</th><th>%</th><th>mean recall</th><th>mean n_returned</th></tr></thead>
+  <tbody>
+    <tr><td>5</td><td>cross_jp_union</td><td>619</td><td>64 %</td><td>0,623</td><td>728 JP</td></tr>
+    <tr><td>10</td><td>cross_jp_union</td><td>689</td><td>71 %</td><td>0,697</td><td>1 424 JP</td></tr>
+    <tr><td>20</td><td>cross_jp_union</td><td>761</td><td>78 %</td><td>0,772</td><td>2 501 JP</td></tr>
+    <tr><td>50</td><td>cross_jp_union</td><td>846</td><td>87 %</td><td>0,861</td><td>5 750 JP</td></tr>
+    <tr><td>5</td><td>cross_jp_intersection</td><td>182</td><td>19 %</td><td>0,180</td><td>2</td></tr>
+    <tr><td>10</td><td>cross_jp_intersection</td><td>259</td><td>27 %</td><td>0,257</td><td>4</td></tr>
+    <tr><td>20</td><td>cross_jp_intersection</td><td>329</td><td>34 %</td><td>0,326</td><td>9</td></tr>
+    <tr><td>50</td><td>cross_jp_intersection</td><td>437</td><td>45 %</td><td>0,437</td><td>25</td></tr>
+  </tbody>
+</table>
+
+<div class="box success">
+  <p><code>cross_jp_union K=5</code> = <strong>64 %</strong> vs baseline <code>jp_via_graph K=5</code> = 47 % → <strong>+17 points</strong> en intégrant le signal du cosine direct sur synthèses.</p>
+</div>
+
+<h2>6. Recap — top stratégies par usage</h2>
+
+<table>
+  <thead><tr><th>Usage</th><th>Stratégie</th><th>Pass DUR</th><th>n_returned moyen</th></tr></thead>
+  <tbody>
+    <tr><td>Articles, <strong>rappel max</strong></td><td><code>cross_art_union K=50</code></td><td>93 %</td><td>161</td></tr>
+    <tr class="winner"><td>Articles, <strong>rappel équilibré</strong></td><td><code>cross_art_union K=10</code></td><td>84 %</td><td>43</td></tr>
+    <tr><td>Articles, <strong>précision max</strong></td><td><code>cross_art_intersection K=10</code></td><td>40 %</td><td>2</td></tr>
+    <tr><td>Articles, <strong>précision-rappel</strong></td><td><code>JP → Articles union K=5</code></td><td>69 %</td><td>21</td></tr>
+    <tr><td>JP, <strong>rappel max</strong></td><td><code>cross_jp_union K=50</code></td><td>87 %</td><td>5 750</td></tr>
+    <tr class="winner"><td>JP, <strong>rappel équilibré</strong></td><td><code>cross_jp_union K=10</code></td><td>71 %</td><td>1 424</td></tr>
+    <tr><td>JP, <strong>précision max</strong></td><td><code>cross_jp_intersection K=10</code></td><td>27 %</td><td>4</td></tr>
+    <tr><td>Baseline ranking (script 10)</td><td><code>jp_via_graph open</code></td><td>47 %</td><td>top-5</td></tr>
+  </tbody>
+</table>
+
+<h2>7. Lectures et implications</h2>
+
+<ol>
+  <li><strong>JP → Articles est strictement meilleur que Articles → JP comme point d'entrée pour le retrieval articles.</strong> Le signal d'entrée (cosine JP-synthèse) est de meilleure qualité. Cela invite à reconsidérer l'architecture article-first du 5 mai : avec les bons embeddings JP (synthèses Hector), JP-first revient en jeu — mais cette fois avec une raison empirique solide.</li>
+  <li><strong>Les cross-modales sont une vraie famille à exploiter.</strong> Combiner deux espaces d'embedding indépendants (articles + synthèses JP) via opérations ensemblistes donne le saut de performance le plus net observé jusqu'ici (+35 pts).</li>
+  <li><strong>Intersection même-type est morte-née.</strong> Le critère « cite TOUS les K » est trop strict pour le graphe biparti que nous avons.</li>
+  <li><strong>La distinction set-based vs ranking-based devient critique.</strong> On compare maintenant des stratégies qui retournent 4 articles vs 161 articles vs un top-10 strict. Il faut introduire une métrique unique (F1 ou MAP) pour départager. La métrique « pass DUR » seule n'est plus suffisante.</li>
+  <li><strong>RRF passe en P2.</strong> Le 26/05, RRF était LA prochaine étape. Aujourd'hui, les cross-modales offrent un saut plus net pour moins de complexité. RRF reste pertinent comme alternative pour conserver un ranking ordonné, mais n'est plus le chemin critique.</li>
+</ol>
+
+<h2>8. Limites et risques à surveiller</h2>
+
+<ul>
+  <li><strong>Précision implicite faible</strong> pour les unions agressives : à K=50, <code>cross_art_union</code> retourne 161 articles pour ~1-3 gold. Précision implicite ~2 %. Pour un usage final, il faudra re-ranker dans le set.</li>
+  <li><strong>Sweet spot K_in dépend du usecase</strong> : K=5 pour précision, K=20 pour rappel. Pas de valeur universelle.</li>
+  <li><strong>Bench limité au pénal procédural</strong> : doctrine_qgen est 100 % procédure pénale (230 fascicules Jurisclasseurs PP). Les patterns observés ici peuvent ne pas se généraliser à d'autres branches (civil, admin).</li>
+  <li><strong>Cherry-picking</strong> : on a testé 4 valeurs de K_in × 10 variantes = 40 cellules. Le risque de retenir le meilleur par hasard existe. Confirmer en cross-validation sur un sous-ensemble.</li>
+</ul>
+
+<h2>9. Prochaines actions</h2>
+
+<ol>
+  <li><strong>Test du rang du premier gold</strong> côté cosine art vs cosine JP — pour valider l'hypothèse sur la qualité du signal d'entrée.</li>
+  <li><strong>Introduire F1 / MAP</strong> dans le pipeline d'éval — métrique unique pour comparer set-based et ranking-based.</li>
+  <li><strong>Tester sur corpus_clean (3 421 q)</strong> dont 1 714 q ont seulement un gold article (sans JP) — ça teste isolément le côté articles.</li>
+  <li><strong>Cross-modal × autres branches</strong> : étendre doctrine_qgen à civil/admin/social pour vérifier la généralisation.</li>
+  <li><strong>Re-ranker dans le set</strong> : sur <code>cross_art_union K=10</code> (43 articles), appliquer un cross-encoder léger pour ordonner les 43 candidats → produit final top-10 cible.</li>
+</ol>
+
+<hr>
+<p class="small">Généré le 28 mai 2026 — script <code>11_eval_graph_variants.py</code>, 1707 q × 4 K_in × 10 variantes = 68 280 cellules en 90s sur MacBook MPS. Artefacts : <code>data/doctrine_qgen/recall_graph_variants.csv</code> + <code>summary.json</code>.</p>
+
+</body>
+</html>

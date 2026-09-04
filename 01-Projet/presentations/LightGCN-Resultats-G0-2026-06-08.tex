@@ -1,0 +1,157 @@
+% !TEX program = pdflatex
+% Point Johnny -- Résultats LightGCN (design A) sur le graphe G0 -- 2026-06-08
+% Standalone : compile avec pdflatex.
+
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\definecolor{accent}{RGB}{41, 92, 155}
+\definecolor{accentsoft}{RGB}{230, 238, 247}
+\definecolor{ok}{RGB}{30, 130, 70}
+\definecolor{warn}{RGB}{200, 80, 40}
+
+\newcommand{\keybox}[1]{\begin{center}\colorbox{accentsoft}{\parbox{0.92\linewidth}{\centering #1}}\end{center}}
+\newcommand{\okbox}[1]{\begin{center}\colorbox{green!10}{\parbox{0.92\linewidth}{\centering #1}}\end{center}}
+\newcommand{\warnbox}[1]{\begin{center}\colorbox{red!10}{\parbox{0.92\linewidth}{\centering #1}}\end{center}}
+\newcommand{\win}{\textbf{\textcolor{ok}{$\uparrow$}}}
+
+\title[LightGCN sur G0]{LightGCN sur le graphe de citations — résultats sur G0}
+\subtitle{Design A : propagation Art$\leftrightarrow$JP, questions = users BGE-M3}
+\author{Matthieu Kaeppelin}
+\institute{Stage FE Recherche}
+\date{8 juin 2026}
+
+\begin{document}
+
+\begin{frame}\titlepage\end{frame}
+
+% ============================================================
+\begin{frame}{En une diapo}
+  \okbox{\textbf{LightGCN bat PPR sur 2 régimes sur 3} — sur le graphe \textbf{G0 brut}, sans nettoyage.}
+
+  \vspace{0.4em}
+  \begin{itemize}
+    \item \textbf{Design A} : on propage les embeddings BGE-M3 sur le graphe de citations Art$\leftrightarrow$JP ; les questions sont des « users » BGE-M3 \emph{figés}, scorés en \textbf{cosinus}.
+    \item \win~\textbf{Articles strict} : bat PPR (NDCG 0,533 vs 0,334), \textbf{égale} le champion B3-e (0,711).
+    \item \win~\textbf{JP} : \textbf{nouveau champion} toutes méthodes (M1 0,437 $>$ B4-e 0,416 $>$ PPR 0,407).
+    \item PPR garde l'avantage en \textbf{articles étendu} (rappel large).
+  \end{itemize}
+
+  \keybox{Critère du handoff (« battre PPR sur $\geq 1$ régime ») : \textbf{atteint sur 2 régimes}.}
+\end{frame}
+
+% ============================================================
+\begin{frame}{L'argument central : décomposition de l'ablation}
+  \begin{center}\scriptsize
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{@{}l c l@{}}
+    \toprule
+    \textbf{Méthode} & \textbf{M1 strict (art.)} & \textbf{Ce que ça isole} \\
+    \midrule
+    Texte seul (cosine BGE-M3) & 0,459 & le sémantique pur \\
+    \;\; + propagation graphe ($K{=}2$, figé) & \textbf{0,653} & \textcolor{ok}{\textbf{+0,194} = apport du GRAPHE} \\
+    \;\;\;\; + apprentissage (BPR cosinus) & \textbf{0,704} & \textcolor{ok}{\textbf{+0,051} = apport de l'APPRENTISSAGE} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \keybox{Chaque étage ajoute. L'ablation $K{=}0$ ($=$ cosine) sépare proprement
+  « ce que le texte apporte » de « ce que le graphe apporte » de « ce que l'apprentissage apporte ».}
+
+  \footnotesize
+  \vspace{0.3em}
+  \textit{Apprentissage \textbf{validé sur 3 seeds} : $0{,}704 \pm 0{,}007$, $\Delta$ toujours positif ($+0{,}045$ à $+0{,}059$). La victoire vs PPR (ligne } $K{=}2$ \textit{ figé, 0,653) est déterministe.}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Le grand tableau global — articles (cohorte 971, $K{=}10$)}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.15}
+  \setlength{\tabcolsep}{5pt}
+  \begin{center}
+  \begin{tabular}{@{}l r r | r r@{}}
+    \toprule
+    & \multicolumn{2}{c|}{\textbf{GT strict}} & \multicolumn{2}{c}{\textbf{GT étendu}} \\
+    \textbf{Méthode} & M1 & NDCG & M1 & NDCG \\
+    \midrule
+    B2-a (cosine articles)            & 0,459 & 0,325 & 0,185 & 0,195 \\
+    B3-e (JP$\to$Art via graphe)      & \textbf{0,711} & 0,518 & 0,399 & 0,400 \\
+    PPR row $\alpha{=}0{,}85$         & 0,601 & 0,334 & 0,421 & 0,435 \\
+    PPR row $\alpha{=}0{,}95$         & 0,571 & 0,246 & \textbf{0,440} & \textbf{0,413} \\
+    \rowcolor{accentsoft} LightGCN $K{=}2$ (BGE propagé) & 0,653 & 0,472 & 0,296 & 0,317 \\
+    \rowcolor{accentsoft} \textbf{LightGCN $K{=}2$ entraîné} & 0,704 & \textbf{0,532} & 0,326 & 0,356 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \keybox{Strict : LightGCN \win~bat PPR, \textbf{égale} B3-e (et gagne le NDCG/MRR). \quad
+  Étendu : PPR devant (diffusion large).}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Le grand tableau global — JP}
+  \scriptsize
+  \renewcommand{\arraystretch}{1.2}
+  \setlength{\tabcolsep}{7pt}
+  \begin{center}
+  \begin{tabular}{@{}l r r r@{}}
+    \toprule
+    \textbf{Méthode} & M1 & Hit & NDCG \\
+    \midrule
+    B3-a (cosine JP)              & 0,408 & 0,427 & 0,304 \\
+    B4-e (RRF $k_{in}{=}20$)      & 0,416 & 0,436 & 0,241 \\
+    PPR row $\alpha{=}0{,}95$     & 0,407 & 0,426 & 0,236 \\
+    \rowcolor{accentsoft} \textbf{LightGCN $K{=}2$ (BGE propagé)} & \textbf{0,437} & \textbf{0,457} & \textbf{0,318} \\
+    \rowcolor{accentsoft} LightGCN $K{=}2$ entraîné & 0,429 & 0,446 & 0,309 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \okbox{\textbf{LightGCN = nouveau champion JP}, toutes méthodes confondues.}
+
+  \footnotesize
+  \vspace{0.3em}
+  \textit{Tradeoff : l'entraînement échange un peu de JP (0,437$\to$0,426) contre de la précision articles —
+  les 840 paires d'entraînement sont des positifs \emph{articles}, zéro supervision JP.}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Trois leçons techniques}
+  \begin{enumerate}
+    \item \textbf{Scoring cosinus obligatoire.} En produit scalaire, la propagation gonfle la norme des \emph{hubs} $\Rightarrow$ biais de popularité qui effondre strict+JP (M1 $\approx$ 0,02). La L2-normalisation le retire.
+    \medskip
+    \item \textbf{Over-smoothing} visible : $K_0 < K_1 < \mathbf{K_2} > K_3$. $K{=}2$ optimal — conforme à la théorie LightGCN.
+    \medskip
+    \item \textbf{Apprentissage} : BPR \textbf{cosinus} ($\tau{=}0{,}1$) + \textbf{ancrage} $\lambda\lVert E_0 - \mathrm{BGE}\rVert^2$. Sans ces deux corrections, l'entraînement naïf \emph{drift} sur 840 paires et s'effondre.
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\begin{frame}{Limites honnêtes \& suite}
+  \warnbox{Tout ceci sur le graphe \textbf{G0 brut} : 36\,\% d'articles résolus, 48\,\% de nœuds morts, graphe binaire. Le nettoyage G0$\to$Vn est de l'\textbf{upside non exploité}.}
+
+  \vspace{0.3em}
+  \textbf{Autres limites} : 840 paires d'entraînement seulement ; JP non supervisé ; PPR reste devant en étendu.
+
+  \vspace{0.5em}
+  \textbf{Prochaines étapes}
+  \begin{enumerate}
+    \item Valider l'entraînement \textbf{multi-seed} (mean$\pm$range).
+    \item \textbf{Régime D} : injecter la supervision JP+article (table séparée).
+    \item \textbf{G0 $\to$ V1} : retirer les nœuds morts, re-mesurer.
+    \item Combler l'\textbf{étendu} (variante C : questions dans le graphe).
+  \end{enumerate}
+\end{frame}
+
+\end{document}
