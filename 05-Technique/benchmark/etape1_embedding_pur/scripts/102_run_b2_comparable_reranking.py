@@ -125,7 +125,8 @@ def job_input_sha256(job: dict[str, Any]) -> str:
     return hashlib.sha256(canonical_json({
         "experiment_id": job["experiment_id"], "family": job["family"], "modality": job["modality"],
         "qid": job["qid"], "question": job["question"], "candidates": job["candidates"],
-        "k_in": job["k_in"], "k_out": job["k_out"], "prompt_sha256": job["prompt_sha256"],
+        "k_in": job["k_in"], "k_out": job["k_out"], "replay_seed": job.get("replay_seed"),
+        "prompt_sha256": job["prompt_sha256"],
         "model_id": job["model_id"], "model_revision": job["model_revision"], "temperature": job["temperature"],
     }).encode("utf-8")).hexdigest()
 
@@ -167,41 +168,51 @@ def prepare_jobs(*, pools: list[Path], prompts: dict[str, Path], output_path: Pa
         raise FileExistsError(f"refusing to overwrite immutable job file: {output_path}")
     prompt_sha = {modality: sha256(path) for modality, path in prompts.items()}
     jobs: list[dict[str, Any]] = []
-    seen: set[tuple[str, str, str]] = set()
+    seen: set[tuple[str, str, int, str, str]] = set()
     for pool_path in pools:
         for pool in _load_pool(pool_path):
             modality = str(pool["modality"])
             if modality not in prompts:
                 raise ValueError(f"missing prompt for {modality}")
-            key = (str(pool["family"]), modality, str(pool["qid"]))
-            if key in seen:
-                raise ValueError(f"duplicate frozen pool job: {key}")
-            seen.add(key)
             job = {
-                "experiment_id": "E029", "family": key[0], "modality": modality, "qid": key[2],
+                "experiment_id": "E029", "family": str(pool["family"]), "modality": modality,
+                "qid": str(pool["qid"]),
                 "question": str(pool["question"]), "candidates": list(pool["candidates"]),
                 "k_in": int(pool["k_in"]), "k_out": int(pool["k_out"]),
+                "replay_seed": str(pool["replay_seed"]) if pool.get("replay_seed") is not None else None,
                 "source_method": str(pool["source_method"]), "source_ranking_sha256": str(pool["source_ranking_sha256"]),
                 "source_texts_sha256": str(pool["source_texts_sha256"]), "prompt_sha256": prompt_sha[modality],
                 "model_id": model_id, "model_revision": model_revision, "temperature": 0,
             }
+            key = _key(job)
+            if key in seen:
+                raise ValueError(f"duplicate frozen pool job: {key}")
+            seen.add(key)
             if len(job["candidates"]) != job["k_in"] or len({candidate["item_id"] for candidate in job["candidates"]}) != job["k_in"]:
                 raise ValueError(f"{key}: pool cardinality is invalid")
             job["input_sha256"] = job_input_sha256(job)
             jobs.append(job)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("x", encoding="utf-8") as handle:
-        for job in sorted(jobs, key=lambda item: (item["family"], item["modality"], item["qid"])):
+        for job in sorted(jobs, key=_key):
             handle.write(canonical_json(job) + "\n")
     return len(jobs)
 
 
-def _key(record: dict[str, Any]) -> tuple[str, str, str]:
-    return str(record["family"]), str(record["modality"]), str(record["qid"])
+def _key(record: dict[str, Any]) -> tuple[str, str, int, str, str]:
+    """Identify one immutable E029 context, not just one retrieval question."""
+    replay_seed = record.get("replay_seed")
+    return (
+        str(record["family"]),
+        str(record["modality"]),
+        int(record["k_in"]),
+        "" if replay_seed is None else str(replay_seed),
+        str(record["qid"]),
+    )
 
 
-def _latest_terminal(path: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
-    latest: dict[tuple[str, str, str], dict[str, Any]] = {}
+def _latest_terminal(path: Path) -> dict[tuple[str, str, int, str, str], dict[str, Any]]:
+    latest: dict[tuple[str, str, int, str, str], dict[str, Any]] = {}
     if not path.exists():
         return latest
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -236,13 +247,13 @@ def run_jobs(*, jobs_path: Path, responses_path: Path, endpoint: str, model_id: 
                 raw_ids = parse_ranked_ids(raw, pool_ids, int(job["k_out"]))
                 ranked_ids, fallback_ids = normalize_ranked_ids(raw_ids, pool_ids, int(job["k_out"]))
                 slots = [{"rank": rank, "reference": item, "resolved_item_id": item, "resolution": "unique"} for rank, item in enumerate(ranked_ids, start=1)]
-                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid")}, "input_sha256": expected_sha, "raw_response_sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(), "elapsed_seconds": time.monotonic() - started, "slots": slots, "response_normalization": {"duplicate_ids_removed": len(raw_ids) - len(set(raw_ids)), "source_order_fallback_ids": fallback_ids}, "status": "ok"}
+                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}, "input_sha256": expected_sha, "raw_response_sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(), "elapsed_seconds": time.monotonic() - started, "slots": slots, "response_normalization": {"duplicate_ids_removed": len(raw_ids) - len(set(raw_ids)), "source_order_fallback_ids": fallback_ids}, "status": "ok"}
                 counts["completed"] += 1
             except InvalidRerankingResponse as exc:
-                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid")}, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "slots": zero_slots(int(job["k_out"]), resolution="invalid_response"), "status": "invalid"}
+                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "slots": zero_slots(int(job["k_out"]), resolution="invalid_response"), "status": "invalid"}
                 counts["invalid"] += 1
             except Exception as exc:
-                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid")}, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "status": "error"}
+                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "status": "error"}
                 counts["error"] += 1
             output.write(canonical_json(record) + "\n")
             output.flush()
@@ -275,30 +286,34 @@ def materialize_exact_results(*, questions: dict[str, dict[str, Any]], jobs: lis
         ranked = [slot.get("resolved_item_id") for slot in slots]
         if any(item is not None and str(item) not in pool for item in ranked):
             raise ValueError(f"response outside its frozen pool: {key}")
-        question = questions.get(key[2])
+        question = questions.get(key[4])
         if question is None:
-            raise ValueError(f"question missing from frozen evaluation: {key[2]}")
+            raise ValueError(f"question missing from frozen evaluation: {key[4]}")
         gold_field = "articles_attendus" if key[1] == "article" else "gold_jp_ids"
         gold = {str(item) for item in question.get(gold_field, [])}
         if not gold:
             raise ValueError(f"strict gold labels missing: {key}")
         for slot in slots:
-            rows.append({"family": key[0], "modality": key[1], "qid": key[2], "rank": slot["rank"], "item_id": slot.get("resolved_item_id"), "reference": slot.get("reference"), "resolution": slot.get("resolution"), "response_status": response["status"], "k_in": job["k_in"]})
-        metric = {"family": key[0], "modality": key[1], "qid": key[2], "k_in": job["k_in"], "hit_at_10": retrieval_metrics.hit_at_k(ranked, gold, 10), "ndcg_at_10": retrieval_metrics.ndcg_at_k(ranked, gold, 10), "mrr_at_10": retrieval_metrics.mrr_at_k(ranked, gold, 10), "exact_any_gold_at_10": float(bool(set(ranked) & gold))}
+            rows.append({"family": key[0], "modality": key[1], "qid": key[4], "rank": slot["rank"], "item_id": slot.get("resolved_item_id"), "reference": slot.get("reference"), "resolution": slot.get("resolution"), "response_status": response["status"], "k_in": job["k_in"], "replay_seed": job.get("replay_seed")})
+        metric = {"family": key[0], "modality": key[1], "qid": key[4], "k_in": job["k_in"], "replay_seed": job.get("replay_seed"), "hit_at_10": retrieval_metrics.hit_at_k(ranked, gold, 10), "ndcg_at_10": retrieval_metrics.ndcg_at_k(ranked, gold, 10), "mrr_at_10": retrieval_metrics.mrr_at_k(ranked, gold, 10), "exact_any_gold_at_10": float(bool(set(ranked) & gold))}
         if key[1] == "article":
             metric["recall_at_10"] = metric["hit_at_10"]
         metric_rows.append(metric)
     rankings = pd.DataFrame(rows)
     per_question = pd.DataFrame(metric_rows)
-    aggregate = per_question.groupby(["family", "modality", "k_in"], as_index=False).mean(numeric_only=True)
+    aggregate = per_question.groupby(["family", "modality", "k_in", "replay_seed"], as_index=False, dropna=False).mean(numeric_only=True)
+    seed_mean = aggregate.groupby(["family", "modality", "k_in"], as_index=False, dropna=False).mean(numeric_only=True)
+    seed_mean["seed_count"] = aggregate.groupby(["family", "modality", "k_in"], dropna=False).size().to_numpy()
     out_dir.mkdir(parents=True)
     rankings_path = out_dir / "rankings_top10.parquet"
     per_question_path = out_dir / "per_question_exact_metrics.parquet"
     aggregate_path = out_dir / "exact_metrics.csv"
+    seed_mean_path = out_dir / "exact_metrics_seed_mean.csv"
     rankings.to_parquet(rankings_path, index=False)
     per_question.to_parquet(per_question_path, index=False)
     aggregate.to_csv(aggregate_path, index=False)
-    receipt = {"rankings_top10.parquet": sha256(rankings_path), "per_question_exact_metrics.parquet": sha256(per_question_path), "exact_metrics.csv": sha256(aggregate_path), "jobs": len(jobs), "responses": len(terminal)}
+    seed_mean.to_csv(seed_mean_path, index=False)
+    receipt = {"rankings_top10.parquet": sha256(rankings_path), "per_question_exact_metrics.parquet": sha256(per_question_path), "exact_metrics.csv": sha256(aggregate_path), "exact_metrics_seed_mean.csv": sha256(seed_mean_path), "jobs": len(jobs), "responses": len(terminal)}
     (out_dir / "materialization_receipt.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return receipt
 

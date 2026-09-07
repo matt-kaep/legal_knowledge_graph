@@ -168,6 +168,7 @@ def test_materializer_selects_one_frozen_lightgcn_replay_seed(tmp_path):
 
     row = json.loads(output.read_text(encoding="utf-8"))
     assert [candidate["item_id"] for candidate in row["candidates"]] == ["a42-1", "a42-2"]
+    assert row["replay_seed"] == "42"
 
 
 def test_e029_preflight_is_explicitly_blocked_on_a_common_context_budget():

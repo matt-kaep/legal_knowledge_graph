@@ -2,6 +2,7 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pandas as pd
 import pytest
 
 
@@ -59,3 +60,104 @@ def test_invalid_reranker_response_is_explicit_zero_not_pool_completion():
 
     assert [slot["resolved_item_id"] for slot in slots] == [None, None, None]
     assert [slot["resolution"] for slot in slots] == ["invalid_response"] * 3
+
+
+def test_jobs_keep_depth_and_replay_seed_as_distinct_frozen_conditions(tmp_path):
+    runner = _load_runner()
+    pool = tmp_path / "pools.jsonl"
+    article_prompt = tmp_path / "article.txt"
+    jp_prompt = tmp_path / "jp.txt"
+    output = tmp_path / "jobs.jsonl"
+    article_prompt.write_text("Articles.", encoding="utf-8")
+    jp_prompt.write_text("Jurisprudence.", encoding="utf-8")
+    common = {
+        "experiment_id": "E029",
+        "family": "lightgcn",
+        "modality": "article",
+        "qid": "q1",
+        "question": "Question",
+        "k_out": 2,
+        "source_method": "LightGCN-trained_K2",
+        "source_ranking_sha256": "ranking-sha",
+        "source_texts_sha256": "texts-sha",
+    }
+    records = [
+        {
+            **common,
+            "k_in": 2,
+            "replay_seed": "42",
+            "candidates": [{"item_id": "a1", "text": "A1"}, {"item_id": "a2", "text": "A2"}],
+        },
+        {
+            **common,
+            "k_in": 3,
+            "replay_seed": "43",
+            "candidates": [
+                {"item_id": "a1", "text": "A1"},
+                {"item_id": "a2", "text": "A2"},
+                {"item_id": "a3", "text": "A3"},
+            ],
+        },
+    ]
+    pool.write_text("".join(json.dumps(record) + "\n" for record in records), encoding="utf-8")
+
+    assert runner.prepare_jobs(
+        pools=[pool],
+        prompts={"article": article_prompt, "jp": jp_prompt},
+        output_path=output,
+        model_id="model",
+        model_revision="revision",
+    ) == 2
+
+    jobs = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+    assert {(job["k_in"], job["replay_seed"]) for job in jobs} == {(2, "42"), (3, "43")}
+    assert len({runner._key(job) for job in jobs}) == 2
+
+
+def test_materialization_exports_seed_specific_metrics_before_the_seed_mean(tmp_path):
+    runner = _load_runner()
+    common = {
+        "experiment_id": "E029",
+        "family": "lightgcn",
+        "modality": "article",
+        "qid": "q1",
+        "question": "Question",
+        "k_in": 2,
+        "k_out": 2,
+        "source_method": "LightGCN-trained_K2",
+        "source_ranking_sha256": "ranking-sha",
+        "source_texts_sha256": "texts-sha",
+        "prompt_sha256": "prompt-sha",
+        "model_id": "model",
+        "model_revision": "revision",
+        "temperature": 0,
+        "candidates": [{"item_id": "a1", "text": "A1"}, {"item_id": "a2", "text": "A2"}],
+    }
+    jobs = [{**common, "replay_seed": seed} for seed in ("42", "43")]
+    responses = []
+    for job in jobs:
+        responses.append({
+            "experiment_id": "E029",
+            "family": "lightgcn",
+            "modality": "article",
+            "qid": "q1",
+            "replay_seed": job["replay_seed"],
+            "input_sha256": runner.job_input_sha256(job),
+            "status": "ok",
+            "slots": [
+                {"rank": 1, "reference": "a1", "resolved_item_id": "a1", "resolution": "unique"},
+                {"rank": 2, "reference": "a2", "resolved_item_id": "a2", "resolution": "unique"},
+            ],
+        })
+
+    runner.materialize_exact_results(
+        questions={"q1": {"articles_attendus": ["a1"]}},
+        jobs=jobs,
+        responses=responses,
+        out_dir=tmp_path / "materialized",
+    )
+
+    by_seed = pd.read_csv(tmp_path / "materialized" / "exact_metrics.csv")
+    seed_mean = pd.read_csv(tmp_path / "materialized" / "exact_metrics_seed_mean.csv")
+    assert set(by_seed["replay_seed"].astype(str)) == {"42", "43"}
+    assert seed_mean.loc[0, "seed_count"] == 2

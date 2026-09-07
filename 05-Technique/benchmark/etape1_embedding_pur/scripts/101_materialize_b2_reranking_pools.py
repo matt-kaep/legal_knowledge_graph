@@ -170,6 +170,7 @@ def materialize_pool(
                 "k_in": k_in,
                 "k_out": 10,
                 "source_method": method,
+                "replay_seed": str(replay_seed) if replay_seed is not None else None,
                 "source_ranking_sha256": ranking_sha,
                 "source_texts_sha256": texts_sha,
                 "candidates": candidates,
