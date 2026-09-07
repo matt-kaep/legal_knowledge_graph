@@ -1,0 +1,6 @@
+Tu dois réordonner les références de décisions fournies pour répondre à la question, sans ajouter de référence et sans modifier les identifiants.
+
+Retourne exactement dix identifiants, par ordre de pertinence décroissante, uniquement parmi les identifiants du tableau fourni.
+
+Réponds exclusivement avec un objet JSON conforme à ce schéma, sans bloc Markdown :
+{"ranked_ids":["614024df7e15a6adfd695a23","614024df7e15a6adfd695a24","614024df7e15a6adfd695a25","614024df7e15a6adfd695a26","614024df7e15a6adfd695a27","614024df7e15a6adfd695a28","614024df7e15a6adfd695a29","614024df7e15a6adfd695a30","614024df7e15a6adfd695a31","614024df7e15a6adfd695a32"]}
