@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 
@@ -8,6 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "101_materialize_b2_reranking_pools.py"
+PREFLIGHT_MANIFEST = ROOT / "configs" / "b2_reranking_comparable_a3_preflight_v1.json"
 
 
 def _load_materializer():
@@ -112,3 +114,14 @@ def test_materializer_requires_the_same_complete_question_set(tmp_path):
             candidate_ids={"a1", "a2"},
             k_in=2,
         )
+
+
+def test_e029_preflight_is_explicitly_blocked_on_a_common_context_budget():
+    payload = json.loads(PREFLIGHT_MANIFEST.read_text(encoding="utf-8"))
+
+    assert payload["experiment_id"] == "E029"
+    assert payload["status"] == "blocked_requires_frozen_context_budget"
+    assert payload["common_contract_if_unblocked"]["k_in"] == [50, 100]
+    assert payload["common_contract_if_unblocked"]["k_out"] == 10
+    assert payload["context_audit_characters_before_any_truncation"]["kin100"]["cosine_article"]["above_64000"] == 676
+    assert payload["code_bundle"]["pool_materializer"]["sha256"] == hashlib.sha256(SCRIPT.read_bytes()).hexdigest()
