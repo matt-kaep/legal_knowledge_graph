@@ -9,6 +9,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "99_aggregate_b1_a3_paper_ready_subset.py"
 MANIFEST = ROOT / "configs" / "confirmatory_campaign_b1_a3_paper_ready_g6.json"
+REPLAY_V2_MANIFEST = ROOT / "configs" / "confirmatory_campaign_b1_a3_paper_ready_g6_replay_v2.json"
 
 
 def _load_runner():
@@ -64,6 +65,20 @@ def test_paper_ready_manifest_seals_the_existing_b1_r2_evidence_and_new_subset_r
     assert payload["replay"]["final_seeds"] == [42, 43, 44]
     assert payload["code_bundle"]["subset_aggregator"]["sha256"] == hashlib.sha256(
         SCRIPT.read_bytes()
+    ).hexdigest()
+
+
+def test_replay_v2_manifest_supersedes_the_sealed_g6_manifest_with_current_replay_code():
+    payload = json.loads(REPLAY_V2_MANIFEST.read_text(encoding="utf-8"))
+
+    assert payload["supersedes"]["manifest_path"] == str(MANIFEST.relative_to(ROOT.parents[2]))
+    assert payload["source_cv"]["aggregation_sha256"] == (
+        "2d525254b10e263ff3f25ac4bc8e2e4c9c56b974d71f0653bfc45276a5d13fab"
+    )
+    assert payload["outputs"]["root"] != json.loads(MANIFEST.read_text(encoding="utf-8"))["outputs"]["root"]
+    replay_helper = ROOT / "scripts" / "45_run_final_champions.py"
+    assert payload["code_bundle"]["replay_helper"]["sha256"] == hashlib.sha256(
+        replay_helper.read_bytes()
     ).hexdigest()
 
 

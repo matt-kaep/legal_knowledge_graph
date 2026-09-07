@@ -89,6 +89,15 @@ def _copy_bench_artifacts(src_dir: Path, dst_dir: Path) -> None:
             dst.write_bytes(src.read_bytes())
 
 
+def _copy_lightgcn_train_artifacts(src_dir: Path, dst_dir: Path) -> None:
+    """Stage the A3 training projection required by every final LightGCN loss."""
+    _copy_bench_artifacts(src_dir, dst_dir)
+    projection = src_dir / "lightgcn_article_positive_projection.json"
+    if not projection.is_file():
+        raise FileNotFoundError(f"Missing required LightGCN projection: {projection}")
+    (dst_dir / projection.name).write_bytes(projection.read_bytes())
+
+
 def _m3_cache_dir(out_dir: Path) -> Path:
     return out_dir.parent / f".{out_dir.name}_m3_cache"
 
@@ -491,7 +500,7 @@ def replay_lightgcn(
         tmp_path = Path(tmp_dir)
         train_tmp = tmp_path / "train"
         eval_tmp = tmp_path / "eval"
-        _copy_bench_artifacts(train_bench_dir, train_tmp)
+        _copy_lightgcn_train_artifacts(train_bench_dir, train_tmp)
         _copy_bench_artifacts(eval_bench_dir, eval_tmp)
         for row in unique_lightgcn_champions(champions):
             suffix = lightgcn_run_id(row)

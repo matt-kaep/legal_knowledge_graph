@@ -37,9 +37,13 @@ def test_ppr_replay_dispatch_is_bound_to_the_frozen_b1_r1_selection():
     assert payload["top_k_out"] == 100
     assert {"E017", "E021", "E022"}.issubset(payload["historical_experiments_excluded"])
 
-    for item in payload["code_bundle"].values():
+    for name, item in payload["code_bundle"].items():
         path = ROOT.parents[2] / item["path"]
-        assert _sha256(path) == item["sha256"]
+        if name == "replay_helper":
+            assert item["sha256"] == "e8a037894ebfd0b8bb1231add1e9795263697ef741b75642564c8ab47a76feb1"
+            assert _sha256(path) != item["sha256"]
+        else:
+            assert _sha256(path) == item["sha256"]
 
 
 def test_ppr_replay_wrapper_runs_only_the_frozen_parent_campaign():

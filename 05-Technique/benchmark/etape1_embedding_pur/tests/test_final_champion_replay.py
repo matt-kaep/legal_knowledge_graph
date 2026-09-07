@@ -87,6 +87,20 @@ def test_lightgcn_replay_args_force_fixed_final_epoch():
     assert args[args.index("--top-k-out") + 1] == "1000"
 
 
+def test_lightgcn_train_copy_preserves_verified_positive_projection(tmp_path):
+    source = tmp_path / "source"
+    destination = tmp_path / "destination"
+    source.mkdir()
+    for name in ("bench_global.json", "questions_emb.npy", "questions_ids.npy"):
+        (source / name).write_bytes(name.encode("utf-8"))
+    projection = b'{"rows":[{"qid":"q1","retrievable_positive_article_ids":["a1"]}]}'
+    (source / "lightgcn_article_positive_projection.json").write_bytes(projection)
+
+    final_replay._copy_lightgcn_train_artifacts(source, destination)
+
+    assert (destination / "lightgcn_article_positive_projection.json").read_bytes() == projection
+
+
 def test_grouped_replay_roots_never_overlap_legacy_directories(tmp_path, monkeypatch):
     monkeypatch.setattr(final_replay.graph_protocol, "BENCH_ROOT", tmp_path)
 
