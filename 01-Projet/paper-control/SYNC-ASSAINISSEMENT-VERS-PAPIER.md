@@ -8,6 +8,13 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission prioritaire — parcours urgent G6 et LLM autorisés, sans nouveau score
+
+- La campagne urgente du papier est maintenant séparée de l'ablation exhaustive : `G6-citation-AA-knn5` est la configuration principale présélectionnée, non un champion confirmé des onze graphes. Au 7 septembre, 59/120 tâches CV G6 ont un reçu valide ; les 30 tâches B1-r2 soumises (indices 179--208) sont toutes G6 et les autres graphes sont différés, sans suppression ni modification des artefacts B1-r2.
+- Après ces 120 tâches, A créera un manifeste B1-paper-ready distinct afin d'agréger la CV G6, geler les configurations Articles/JP sur train/CV, puis effectuer les trois replays finals. Aucun score G6 partiel, champion inter-graphes ni ranking de l'évaluation n'existe encore.
+- Cosine et PPR A3 disposent déjà de rankings top-100 et de métriques exactes : A prépare les CSV et courbes urgents sans recalcul de retrieval. Les résultats historiques E017/E021/E022 restent exclus.
+- E027 (LLM direct), E029 (reranking) et E030 (juge) sont désormais autorisées **hors B1-r2**, sous manifests B2 séparés. E029 commence par cosine/PPR avec 50 candidats d'entrée puis 100, et G6 rejoindra le même protocole après son replay. E030 reste exploratoire jusqu'à l'accord avocat ; il ne faut pas le confondre avec le reranking. Aucun appel LLM, modèle ou prompt nouveau n'est encore figé ni exécuté.
+
 ## Transmission prioritaire — B1-r2 LightGCN en cours, aucun nouveau score
 
 - E025 est effectivement en cours, mais **aucun résultat LightGCN B1-r2 n’existe encore** : aucun champion de validation croisée, aucun replay final, aucun classement des 754 questions et aucune comparaison PPR--LightGCN à reprendre dans le papier.
