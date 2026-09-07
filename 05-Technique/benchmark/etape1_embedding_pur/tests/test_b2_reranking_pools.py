@@ -133,6 +133,43 @@ def test_materializer_cli_accepts_lightgcn_as_a_frozen_ranking_family():
     assert args.family == "lightgcn"
 
 
+def test_materializer_selects_one_frozen_lightgcn_replay_seed(tmp_path):
+    materializer = _load_materializer()
+    ranking = tmp_path / "ranking.parquet"
+    pd.DataFrame({
+        "qid": ["q1"] * 4,
+        "method": ["LightGCN-trained_K2"] * 4,
+        "modality": ["art"] * 4,
+        "rank": [1, 2, 1, 2],
+        "item_id": ["a42-1", "a42-2", "a43-1", "a43-2"],
+        "replay_seed": [42, 42, 43, 43],
+    }).to_parquet(ranking, index=False)
+    texts = tmp_path / "article_texts.parquet"
+    pd.DataFrame({
+        "pair_key": ["a42-1", "a42-2", "a43-1", "a43-2"],
+        "texte": ["T42-1", "T42-2", "T43-1", "T43-2"],
+    }).to_parquet(texts, index=False)
+    questions = tmp_path / "questions.json"
+    questions.write_text(json.dumps({"questions": [{"qid": "q1", "enonce": "Question"}]}), encoding="utf-8")
+    output = tmp_path / "pool.jsonl"
+
+    materializer.materialize_pool(
+        ranking_path=ranking,
+        questions_path=questions,
+        text_source_path=texts,
+        output_path=output,
+        family="lightgcn",
+        modality="article",
+        candidate_ids={"a42-1", "a42-2", "a43-1", "a43-2"},
+        k_in=2,
+        method="LightGCN-trained_K2",
+        replay_seed="42",
+    )
+
+    row = json.loads(output.read_text(encoding="utf-8"))
+    assert [candidate["item_id"] for candidate in row["candidates"]] == ["a42-1", "a42-2"]
+
+
 def test_e029_preflight_is_explicitly_blocked_on_a_common_context_budget():
     payload = json.loads(PREFLIGHT_MANIFEST.read_text(encoding="utf-8"))
 

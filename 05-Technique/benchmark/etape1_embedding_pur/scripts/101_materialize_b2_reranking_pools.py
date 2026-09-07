@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Materialize immutable real candidate pools for B2/E029 comparable reranking.
 
-Each pool is derived from exactly one frozen top-100 ranking source (Cosine or
-PPR), one modality and one K_in.  Candidate text is joined by the identifier
-itself; a missing, conflicting or out-of-A3 candidate is a hard preflight
-failure rather than a silent exclusion.
+Each pool is derived from exactly one frozen top-100 ranking source, one
+modality and one K_in. When a source contains several final replay seeds, the
+seed is explicit and cannot be mixed silently. Candidate text is joined by the
+identifier itself; a missing, conflicting or out-of-A3 candidate is a hard
+preflight failure rather than a silent exclusion.
 """
 
 from __future__ import annotations
@@ -97,6 +98,7 @@ def load_texts(path: Path, modality: str) -> dict[str, str]:
 def materialize_pool(
     *, ranking_path: Path, questions_path: Path, text_source_path: Path, output_path: Path,
     family: str, modality: str, candidate_ids: set[str], k_in: int, method: str | None = None,
+    replay_seed: str | None = None,
 ) -> int:
     if modality not in {"article", "jp"}:
         raise ValueError("modality must be article or jp")
@@ -121,6 +123,15 @@ def materialize_pool(
             raise ValueError(f"frozen ranking requires explicit method; found {methods}")
         method = methods[0]
     ranking = ranking.loc[ranking["method"].astype(str).eq(method)].copy()
+    seed_column = "replay_seed" if "replay_seed" in ranking.columns else "seed" if "seed" in ranking.columns else None
+    if replay_seed is not None:
+        if seed_column is None:
+            raise ValueError("frozen ranking has no replay-seed column")
+        ranking = ranking.loc[ranking[seed_column].astype(str).eq(str(replay_seed))].copy()
+        if ranking.empty:
+            raise ValueError(f"frozen ranking has no rows for replay seed {replay_seed}")
+    elif seed_column is not None and ranking[seed_column].nunique() > 1:
+        raise ValueError("frozen ranking contains several replay seeds; --replay-seed is required")
     ranking["qid"] = ranking["qid"].astype(str)
     ranking["item_id"] = ranking["item_id"].astype(str)
     ranking["rank"] = ranking["rank"].astype(int)
@@ -178,6 +189,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--modality", choices=("article", "jp"), required=True)
     parser.add_argument("--a3-manifest", type=Path, required=True)
     parser.add_argument("--method")
+    parser.add_argument("--replay-seed")
     parser.add_argument("--k-in", type=int, required=True)
     return parser.parse_args(argv)
 
@@ -195,6 +207,7 @@ def main(argv: list[str] | None = None) -> int:
         candidate_ids=a3_candidate_ids(a3_payload, args.modality),
         k_in=args.k_in,
         method=args.method,
+        replay_seed=args.replay_seed,
     )
     print(json.dumps({"questions": count, "output": str(args.output)}))
     return 0
