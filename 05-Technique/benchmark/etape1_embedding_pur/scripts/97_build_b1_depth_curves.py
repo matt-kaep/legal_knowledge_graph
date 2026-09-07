@@ -165,6 +165,21 @@ def score_ranking_group(
     return pd.DataFrame(records)
 
 
+def aggregate_depth_curves(per_question: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate questions within a seed before estimating dispersion across seeds."""
+    per_seed_curves = (
+        per_question.groupby(["source", "target", "seed", "k"], as_index=False)["hit_at_k"]
+        .mean()
+    )
+    curves = (
+        per_seed_curves.groupby(["source", "target", "k"], as_index=False)["hit_at_k"]
+        .agg(mean="mean", seed_std="std", seeds="count")
+        .sort_values(["target", "source", "k"], kind="stable")
+    )
+    curves["seed_std"] = curves["seed_std"].fillna(0.0)
+    return curves
+
+
 def derive_curves(
     payload: dict,
     sources: dict[str, Path],
@@ -217,12 +232,7 @@ def derive_curves(
             scored.insert(2, "seed", seed)
             per_seed.append(scored)
     per_seed_df = pd.concat(per_seed, ignore_index=True)
-    curves = (
-        per_seed_df.groupby(["source", "target", "k"], as_index=False)["hit_at_k"]
-        .agg(mean="mean", seed_std="std", seeds="count")
-        .sort_values(["target", "source", "k"], kind="stable")
-    )
-    curves["seed_std"] = curves["seed_std"].fillna(0.0)
+    curves = aggregate_depth_curves(per_seed_df)
     per_seed_metrics = (
         per_seed_df.loc[per_seed_df["k"].eq(10)]
         .groupby(["source", "target", "seed"], as_index=False)

@@ -66,6 +66,21 @@ def test_b1_depth_rejects_a_frozen_ranking_whose_hash_differs_from_its_manifest(
         curves.validate_frozen_ranking_hash(payload, "cosine", ranking_path)
 
 
+def test_b1_depth_curve_dispersion_is_computed_across_seeds_not_questions():
+    curves = _load_module()
+    per_question = pd.DataFrame([
+        {"source": "cosine", "target": "articles", "seed": "single", "k": 10, "hit_at_k": 0.0},
+        {"source": "cosine", "target": "articles", "seed": "single", "k": 10, "hit_at_k": 1.0},
+    ])
+
+    exported = curves.aggregate_depth_curves(per_question)
+    row = exported.iloc[0]
+
+    assert row["mean"] == pytest.approx(0.5)
+    assert row["seed_std"] == pytest.approx(0.0)
+    assert row["seeds"] == 1
+
+
 def test_b1_depth_exports_exact_ndcg_and_mrr_at_10_from_top100_rankings():
     curves = _load_module()
     questions = {"q1": {"articles_attendus": ["a", "b"]}}
