@@ -1,0 +1,151 @@
+{
+  "manifest_id": "confirmatory-campaign-b1-a3-paper-ready-g6-2026-09-07",
+  "campaign_id": "b1-paper-ready-g6-a3-2026-09-07",
+  "schema_version": "b1-paper-ready-g6-subset.v1",
+  "status": "authorized_after_complete_g6_atomic_cv",
+  "purpose": "Produce the urgent paper-ready LightGCN result for the preselected G6 Article--Article graph without waiting for the ten deferred graph ablations. This is not an inter-graph champion selection.",
+  "scientific_status": "confirmatory_internal_evaluation_after_train_cv_freeze",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "manifest_id": "checkpoint-a3-effective-retrieval-universe-2026-09-02",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3"
+  },
+  "parent_b1_r2": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r2.json",
+    "manifest_sha256": "9427430f436ca5fc1e2d2bdc9858880c7ed45daaaf48d6b88ca170df614e440c",
+    "task_plan_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_cv/task_plan.json",
+    "task_plan_sha256": "37fce90ff05643b54502ae5b40b22154792d94bb691880401de6ec0e89de5c4d",
+    "preflight_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_cv/preflight.json",
+    "preflight_sha256": "9d816a7ec6c9af83d7e66a2c7a403257e990e388aecd692181b57a72240d3f0a",
+    "task_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r2_cuda_atomic_20260903/lightgcn_cv/tasks",
+    "immutable": true
+  },
+  "scope": {
+    "graph_version": "G6-citation-AA-knn5",
+    "role": "preselected_paper_main_configuration_not_intergraph_champion",
+    "atomic_cv": {
+      "task_count": 120,
+      "fold_count": 5,
+      "selection_targets": ["art", "jp"],
+      "hyperparameter_configurations_per_fold_and_target": 12,
+      "completion_rule": "all_120_hash_valid_cuda_receipts_required_before_aggregation"
+    }
+  },
+  "protocol_version": "grouped_v5_no_eval_overlap_effective_retrieval_v3",
+  "datasets": {
+    "train": {
+      "split": "train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3",
+      "directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/bench_global.json",
+      "questions": 5578,
+      "sha256": "5ca7f54b944456cb318c028978c35430571b302785d2581348a35db81f8285f5"
+    },
+    "evaluation": {
+      "split": "eval_rich_retrievable_strict",
+      "directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+      "questions": 754,
+      "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+      "byte_for_byte_identical_to_a3": true
+    }
+  },
+  "folds": {
+    "count": 5,
+    "seed": 42,
+    "sha256": "cc872759b5cc2f93aceb54ac2ac5c5c396e236e7198982f720978e82b3920f59",
+    "metadata_sha256": "ace15f32d7c4d3cf0c592dbec1512a94aa9fcbfa20d0ef77bd5a8bbb5888690e"
+  },
+  "graphs": ["G6-citation-AA-knn5"],
+  "candidate_universe": {
+    "articles": {
+      "count": 13236,
+      "order_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c"
+    },
+    "jurisprudence": {
+      "count": 114851,
+      "order_sha256": "065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a"
+    }
+  },
+  "candidate_inputs": {
+    "articles_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_order_all.npy"},
+    "jurisprudence_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summary_order.npy"},
+    "shared_article_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy"},
+    "shared_jp_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy"}
+  },
+  "parameters": {
+    "lightgcn": {
+      "cv_seeds": [42],
+      "final_seeds": [42, 43, 44],
+      "train_k": [1, 2, 3],
+      "learning_rate": [0.0005, 0.001],
+      "lambda_anchor": [0.5, 1.0],
+      "epochs": 30,
+      "negative_sampling_strategy": ["random"],
+      "top_k_out": 100
+    }
+  },
+  "metrics": {
+    "primary": "normalized_hit_at_k",
+    "formula": "dedup_intersection_over_min_gold_k",
+    "article_hit_equals_recall_at_10": true,
+    "report": ["normalized_hit_at_1_to_100", "ndcg_at_10", "mrr_at_10", "top_100_rankings", "inference_time_per_question"],
+    "forbidden_alias": "exact_any_gold_at_10"
+  },
+  "selection": {
+    "scope": "train_cv_only",
+    "articles": ["normalized_hit_at_10", "ndcg_at_10", "mrr_at_10"],
+    "jurisprudence": ["normalized_hit_at_10", "ndcg_at_10", "mrr_at_10"],
+    "freeze_before_evaluation": true,
+    "intergraph_claim": "forbidden"
+  },
+  "replay": {
+    "final_seeds": [42, 43, 44],
+    "top_k_out": 100,
+    "selection_source": "frozen_train_cv_only_G6",
+    "evaluation_access_before_freeze": "forbidden"
+  },
+  "resources": {
+    "lightgcn": {
+      "partition": "A40",
+      "gpu": 1,
+      "cpus": 5,
+      "memory_gb": 20,
+      "minimum_available_memory_gib": 9.1,
+      "execution": "sequential_final_replays_after_complete_G6_CV"
+    }
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_20260907",
+    "lightgcn_cv": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_20260907/lightgcn_cv",
+    "lightgcn_final": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_20260907/lightgcn_final",
+    "depth_curves": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_20260907/depth_curves"
+  },
+  "historical_experiments_excluded": ["E017", "E021", "E022"],
+  "not_authorized": ["intergraph_lightgcn_champion_claim", "E027", "E029", "E030"],
+  "code_bundle": {
+    "subset_aggregator": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/99_aggregate_b1_a3_paper_ready_subset.py",
+      "sha256": "2d9fc6b3c0c2561490c76ef8f358dfd97664879a7528cbde7902b20899e2a9d6"
+    },
+    "parent_atomic_runner": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/97_run_b1_a3_r2_lightgcn_tasks.py",
+      "sha256": "182eaef82396b00bf0d43ca52366c3f3a121ca51917a01af510c356689a9b0d8"
+    },
+    "freeze_champions": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/95_freeze_b1_a3_champions.py",
+      "sha256": "69e4898a6e5d3a4b5a10525e7e3e65449b3338f1e758baabdec4c1e9743781ee"
+    },
+    "final_replay": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/96_replay_b1_a3_champions.py",
+      "sha256": "96bd6a2c8c56960d80049393d6e82bc19ffb8befe4aa8a4feed4c697e5a6435b"
+    },
+    "depth_curves": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/97_build_b1_depth_curves.py",
+      "sha256": "d07d676a82c76cf1c81e0a5b8c4ac8571cd88d4e80135d14f8e6ec39a612047b"
+    },
+    "replay_helper": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py",
+      "sha256": "e8a037894ebfd0b8bb1231add1e9795263697ef741b75642564c8ab47a76feb1"
+    }
+  }
+}
