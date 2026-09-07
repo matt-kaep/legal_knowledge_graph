@@ -1,7 +1,7 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-e027-authorized
+status: b1-g6-lightgcn-final-validated-e027-and-e029-preflight-active
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
@@ -17,7 +17,8 @@ Le parcours urgent autour de `G6-citation-AA-knn5` est terminé et traçable. G6
 - L'export unique de comparaison cosine / PPR / LightGCN G6 est terminé sous `paper_ready_retrieval_a3_g6_lightgcn_v2.json` (SHA-256 `33b8c2b9004396fe5fa2b59db9a05cbb7015d3aa9ece714fbe852cce8e2fad54`) et Slurm `984925` (`0:0`, 19 s). Il vérifie les trois hashes de rankings avant lecture, 754 questions, les rangs 1--100 sans doublon ni candidat hors A3, et les deux ordres candidats A3. Son reçu `depth_curves_manifest.json` vaut SHA-256 `0913a9b1b83dae34f2cd55f84ae772ab5c73202e225b5f98c982c309035914de`; métriques SHA-256 `9569ea74bb3d7fa50ef5fd80cd86cbc8879ec95fb41686ca8a34bdd79f20f7ad`; courbes SHA-256 `98f7db2e44a4ab8ce82f334e23d21e09dcaa366b727f7e6b62fb13d2a45e614d`; PNG/PDF SHA-256 `388f1078dde1f1f3b7a9eedbdbf9e38aaf63e65ca9ffc80e93a85d3fd6da8a54` / `e6b2eac3a8bca55350268c212a895e452a8e8d174c07580d437694dcb346b041`.
 - Résultats exacts G6, moyenne des trois graines : Articles Hit/Recall@10 `0,5510694286556356`, NDCG@10 `0,40073652473423804`, MRR@10 `0,39287538770297387` ; JP Hit@10 `0,2663572060123784`, NDCG@10 `0,1777719765610496`, MRR@10 `0,15267848371296647`. Les écarts-types entre graines sont conservés dans l'artefact, sans être nécessaires au tableau principal. Le statut est `confirmatory_internal_evaluation_after_train_cv_freeze` ; E017/E021/E022 sont exclus.
 - L'incident `984807` reste archivé : il a échoué avant entraînement, ranking ou métrique car la projection positive A3 manquait dans le staging temporaire. Le manifeste v2 et ses sorties ci-dessus le remplacent sans modifier le gel train/CV.
-- E027 est soumise après le gate G6 : `984939` (Articles) et `984940` (JP), tous deux en attente de ressources L40S au moment de l'enregistrement. Le modèle direct reste question-seule, prompts Articles/JP distincts, température 0 et résolution A3 stricte. E029 reste distincte : l'audit v4 de texte intégral est valide (15 conditions compatibles, 25 `--`), mais les appels reranker attendent les jobs E027. E030 reste exploratoire jusqu'au contrôle avocat.
+- E027 est soumise après le gate G6 : `984939` (Articles) et `984940` (JP), tous deux en attente de ressources L40S au moment de l'enregistrement. Le modèle direct reste question-seule, prompts Articles/JP distincts, température 0 et résolution A3 stricte.
+- E029 reste distincte. L'audit v4 de texte intégral valide pour cosine/PPR 15 conditions et fixe 25 cellules à `--`. Le préflight complémentaire G6 est soumis sur CPU sous Slurm `984986`, avec le manifeste `configs/b2_reranking_comparable_a3_lightgcn_g6_preflight_v1.json` (SHA-256 `0e6ec4012c306a74d43f5869f4552b655b8a16e3d59c003f09c7eff6776e8120`). Il matérialise et audite 60 conditions (graines finales 42/43/44 × Articles/JP × K_in 10--100), avec textes intégralement inchangés et réserve de 256 tokens de sortie ; il interdit vLLM et tout appel reranker. Les métriques de reranking ne seront moyennées qu'après trois exécutions complètes par graine ; aucun résultat E029 n'existe à ce stade. E030 reste exploratoire jusqu'au contrôle avocat.
 
 ## Campagne B1 — PPR final validé ; LightGCN B1-r2 en cours sur GPU
 
