@@ -116,6 +116,23 @@ def test_materializer_requires_the_same_complete_question_set(tmp_path):
         )
 
 
+def test_materializer_cli_accepts_lightgcn_as_a_frozen_ranking_family():
+    materializer = _load_materializer()
+
+    args = materializer.parse_args([
+        "--ranking", "lightgcn_top100.parquet",
+        "--questions", "questions.json",
+        "--texts", "article_texts.parquet",
+        "--output", "lightgcn_article_k10.jsonl",
+        "--family", "lightgcn",
+        "--modality", "article",
+        "--a3-manifest", "a3.json",
+        "--k-in", "10",
+    ])
+
+    assert args.family == "lightgcn"
+
+
 def test_e029_preflight_is_explicitly_blocked_on_a_common_context_budget():
     payload = json.loads(PREFLIGHT_MANIFEST.read_text(encoding="utf-8"))
 

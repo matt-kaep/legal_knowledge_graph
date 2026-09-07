@@ -174,7 +174,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--questions", type=Path, required=True)
     parser.add_argument("--texts", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--family", choices=("cosine", "ppr"), required=True)
+    parser.add_argument("--family", choices=("cosine", "ppr", "lightgcn"), required=True)
     parser.add_argument("--modality", choices=("article", "jp"), required=True)
     parser.add_argument("--a3-manifest", type=Path, required=True)
     parser.add_argument("--method")
