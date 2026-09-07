@@ -95,6 +95,14 @@ def _load_jobs(path: Path) -> list[dict[str, Any]]:
     return jobs
 
 
+def snapshot_tokenizer_hashes(model_snapshot: Path) -> dict[str, str]:
+    required = ("tokenizer.json", "tokenizer_config.json", "chat_template.jinja")
+    missing = [name for name in required if not (model_snapshot / name).is_file()]
+    if missing:
+        raise ValueError(f"model snapshot lacks tokenizer evidence: {missing}")
+    return {name: sha256(model_snapshot / name) for name in required}
+
+
 def audit_frozen_job_files(
     job_paths: Iterable[Path],
     *,
@@ -102,6 +110,7 @@ def audit_frozen_job_files(
     tokenizer: Any,
     model_id: str,
     model_revision: str,
+    model_snapshot: Path | None = None,
     context_limit_tokens: int,
     max_output_tokens: int,
     expected_questions: int,
@@ -124,9 +133,13 @@ def audit_frozen_job_files(
         max_output_tokens=max_output_tokens,
         expected_questions=expected_questions,
     )
+    model: dict[str, object] = {"id": model_id, "revision": model_revision}
+    if model_snapshot is not None:
+        model["local_snapshot"] = str(model_snapshot)
+        model["tokenizer_files"] = snapshot_tokenizer_hashes(model_snapshot)
     return {
         **audit,
-        "model": {"id": model_id, "revision": model_revision},
+        "model": model,
         "context_limit_tokens": context_limit_tokens,
         "max_output_tokens": max_output_tokens,
         "candidate_text_policy": "full_text_unmodified",
@@ -138,10 +151,14 @@ def audit_frozen_job_files(
     }
 
 
-def load_tokenizer(model_id: str, revision: str) -> Any:
+def load_tokenizer(model_id: str, revision: str, model_snapshot: Path | None = None) -> Any:
     """Load only the tokenizer used by the frozen reranking model revision."""
     from transformers import AutoTokenizer
 
+    if model_snapshot is not None:
+        if not model_snapshot.is_dir():
+            raise ValueError(f"model snapshot directory does not exist: {model_snapshot}")
+        return AutoTokenizer.from_pretrained(str(model_snapshot), local_files_only=True)
     return AutoTokenizer.from_pretrained(model_id, revision=revision)
 
 
@@ -152,6 +169,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--prompt-jp", type=Path, required=True)
     parser.add_argument("--model-id", required=True)
     parser.add_argument("--model-revision", required=True)
+    parser.add_argument("--model-snapshot", type=Path, help="Local immutable snapshot used by vLLM when the remote revision is unavailable.")
     parser.add_argument("--context-limit-tokens", type=int, default=16384)
     parser.add_argument("--max-output-tokens", type=int, default=256)
     parser.add_argument("--expected-questions", type=int, default=754)
@@ -164,9 +182,10 @@ def main(argv: list[str] | None = None) -> int:
     report = audit_frozen_job_files(
         args.jobs,
         prompt_paths={"article": args.prompt_article, "jp": args.prompt_jp},
-        tokenizer=load_tokenizer(args.model_id, args.model_revision),
+        tokenizer=load_tokenizer(args.model_id, args.model_revision, args.model_snapshot),
         model_id=args.model_id,
         model_revision=args.model_revision,
+        model_snapshot=args.model_snapshot,
         context_limit_tokens=args.context_limit_tokens,
         max_output_tokens=args.max_output_tokens,
         expected_questions=args.expected_questions,

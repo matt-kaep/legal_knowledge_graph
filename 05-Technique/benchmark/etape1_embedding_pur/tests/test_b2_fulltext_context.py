@@ -1,6 +1,8 @@
 import importlib.util
 import json
 from pathlib import Path
+import sys
+import types
 
 import pytest
 
@@ -185,7 +187,7 @@ def test_cli_writes_fulltext_audit_with_the_frozen_completion_reserve(tmp_path, 
         def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
             return [0] * 12
 
-    monkeypatch.setattr(auditor, "load_tokenizer", lambda model_id, revision: Tokenizer())
+    monkeypatch.setattr(auditor, "load_tokenizer", lambda model_id, revision, model_snapshot=None: Tokenizer())
 
     assert auditor.main([
         "--jobs", str(jobs_path),
@@ -200,3 +202,58 @@ def test_cli_writes_fulltext_audit_with_the_frozen_completion_reserve(tmp_path, 
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["max_output_tokens"] == 256
     assert payload["conditions"][0]["input_token_budget"] == 16128
+
+
+def test_local_model_snapshot_avoids_unavailable_remote_revision(tmp_path, monkeypatch):
+    auditor = _load_auditor()
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    calls = []
+
+    class AutoTokenizer:
+        @classmethod
+        def from_pretrained(cls, source, **kwargs):
+            calls.append((source, kwargs))
+            return "tokenizer"
+
+    monkeypatch.setitem(sys.modules, "transformers", types.SimpleNamespace(AutoTokenizer=AutoTokenizer))
+
+    assert auditor.load_tokenizer("remote/model", "obsolete-revision", model_snapshot=snapshot) == "tokenizer"
+    assert calls == [(str(snapshot), {"local_files_only": True})]
+
+
+def test_audit_records_tokenizer_files_from_the_local_model_snapshot(tmp_path):
+    auditor = _load_auditor()
+    jobs_path = tmp_path / "jobs.jsonl"
+    jobs_path.write_text(json.dumps({
+        "family": "cosine", "modality": "article", "qid": "q1", "question": "Question",
+        "k_in": 1, "candidates": [{"item_id": "a1", "text": "Article entier", "source_rank": 1}],
+    }) + "\n", encoding="utf-8")
+    article_prompt = tmp_path / "article.txt"
+    article_prompt.write_text("Articles.", encoding="utf-8")
+    jp_prompt = tmp_path / "jp.txt"
+    jp_prompt.write_text("Jurisprudence.", encoding="utf-8")
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    (snapshot / "tokenizer.json").write_text("tokenizer", encoding="utf-8")
+    (snapshot / "tokenizer_config.json").write_text("config", encoding="utf-8")
+    (snapshot / "chat_template.jinja").write_text("template", encoding="utf-8")
+
+    class Tokenizer:
+        def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+            return [0]
+
+    report = auditor.audit_frozen_job_files(
+        [jobs_path],
+        prompt_paths={"article": article_prompt, "jp": jp_prompt},
+        tokenizer=Tokenizer(),
+        model_id="model-id",
+        model_revision="4033",
+        model_snapshot=snapshot,
+        context_limit_tokens=16384,
+        max_output_tokens=256,
+        expected_questions=1,
+    )
+
+    assert report["model"]["local_snapshot"] == str(snapshot)
+    assert report["model"]["tokenizer_files"]["tokenizer.json"] == auditor.sha256(snapshot / "tokenizer.json")
