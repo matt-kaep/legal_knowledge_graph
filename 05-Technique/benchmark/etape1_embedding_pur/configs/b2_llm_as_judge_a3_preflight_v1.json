@@ -1,0 +1,88 @@
+{
+  "manifest_id": "b2-e030-llm-as-a-judge-a3-preflight-v1-2026-09-07",
+  "campaign_id": "b2-llm-as-a-judge-a3-preflight-v1-2026-09-07",
+  "schema_version": "b2-llm-as-a-judge-preflight.v1",
+  "experiment_id": "E030",
+  "status": "preparation_only_no_model_call_no_frozen_lists",
+  "purpose": "Prepare a separate LLM-as-a-Judge evaluation contract for frozen top-10 lists. This is not a reranker and does not select any retrieval model, graph, seed, prompt or parameter.",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754,
+    "candidate_universe": {
+      "articles": 13236,
+      "jurisprudence": 114851
+    }
+  },
+  "input_contract": {
+    "modalities": ["article", "jp"],
+    "top_k": 10,
+    "ranking_sources_to_freeze": [
+      "E027_direct_LLM_after_materialization",
+      "E026_cosine",
+      "E024_PPR_champion",
+      "E025_LightGCN_G6_each_final_replay_seed",
+      "E029_reranked_outputs_only_if_that_experiment_completes"
+    ],
+    "article_candidate_content": "full_text_from_the_hashed_A3_article_text_source",
+    "jurisprudence_candidate_content": "blind_hashed_decision_card_without_rank_retriever_or_ground_truth_metadata",
+    "forbidden_visible_metadata": ["rank", "retriever", "graph", "seed", "ground_truth", "gold_label", "LLM_judge_history"],
+    "deduplication": "retain only the first occurrence of a candidate within a question/list; a later repeated candidate stays in the fixed-K denominator with zero effective gain"
+  },
+  "grading": {
+    "labels": ["A", "B", "C", "D", "E", "non_jugeable"],
+    "gains": {
+      "A": 1.0,
+      "B": 0.5,
+      "C": 0.0,
+      "D": 0.0,
+      "E": 0.0,
+      "non_jugeable": 0.0
+    },
+    "k": 10,
+    "denominator": "fixed_K_10",
+    "duplicate_candidate_gain": 0.0,
+    "per_question_score": "sum(effective_gain_at_each_of_10_positions) / 10",
+    "aggregate": "arithmetic_mean_of_per_question_scores; preserve class distribution and non_jugeable rate"
+  },
+  "prompt_and_schema": {
+    "article_prompt": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/b2_llm_judge_articles_v1.txt",
+      "sha256": "a690d4fe92b17fdbf9eec90ca47b35a2d8339217e86f38b15c659088bbb43433"
+    },
+    "jurisprudence_prompt": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/b2_llm_judge_jurisprudence_v1.txt",
+      "sha256": "0b396b3208a119dca01fb1b25ea4e2e7b6c17fdc43af7c5c45074a6070274751"
+    },
+    "response_schema": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/schemas/b2_llm_judge_grading_v1.json",
+      "sha256": "7e5df6e6860f11c72333379e7b1cafc1c99aafb05b569ac9392d09d4b8d36fe9"
+    }
+  },
+  "model": {
+    "status": "not_frozen",
+    "required_before_execution": ["model identifier", "immutable revision", "temperature", "local snapshot and tokenizer hashes", "context and completion budgets"]
+  },
+  "execution_gate": {
+    "model_calls_authorized": false,
+    "required_before_freezing_execution_manifest": [
+      "hash-validated top-10 source lists for each included method and modality",
+      "frozen model identity and revision",
+      "deterministic job identifiers and immutable source-card hashes",
+      "prompt and schema token-budget audit",
+      "explicit treatment of missing candidate content and technical failures"
+    ],
+    "required_before_promoting_any_score": [
+      "completed lawyer audit recorded in lawyer_agreement.json",
+      "human-agreement report linked to the exact B2 prompt, schema and model contract"
+    ],
+    "forbidden": [
+      "using judge scores as a reranker",
+      "using judge scores to choose a graph, seed or retrieval hyperparameter",
+      "claiming superiority before the lawyer audit"
+    ]
+  },
+  "scientific_status": "preparation_only; any later E030 score remains exploratory_until_lawyer_audit"
+}
