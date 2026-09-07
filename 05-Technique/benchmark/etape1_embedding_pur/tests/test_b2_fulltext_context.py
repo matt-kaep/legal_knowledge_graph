@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import runpy
 import sys
 import types
 
@@ -257,3 +258,42 @@ def test_audit_records_tokenizer_files_from_the_local_model_snapshot(tmp_path):
 
     assert report["model"]["local_snapshot"] == str(snapshot)
     assert report["model"]["tokenizer_files"]["tokenizer.json"] == auditor.sha256(snapshot / "tokenizer.json")
+
+
+def test_script_entrypoint_runs_only_after_all_audit_definitions(tmp_path, monkeypatch):
+    jobs_path = tmp_path / "jobs.jsonl"
+    jobs_path.write_text(json.dumps({
+        "family": "cosine", "modality": "article", "qid": "q1", "question": "Question",
+        "k_in": 1, "candidates": [{"item_id": "a1", "text": "Article entier", "source_rank": 1}],
+    }) + "\n", encoding="utf-8")
+    article_prompt = tmp_path / "article.txt"
+    article_prompt.write_text("Articles.", encoding="utf-8")
+    jp_prompt = tmp_path / "jp.txt"
+    jp_prompt.write_text("Jurisprudence.", encoding="utf-8")
+    output = tmp_path / "audit.json"
+
+    class AutoTokenizer:
+        @classmethod
+        def from_pretrained(cls, source, **kwargs):
+            return cls()
+
+        def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+            return [0]
+
+    monkeypatch.setitem(sys.modules, "transformers", types.SimpleNamespace(AutoTokenizer=AutoTokenizer))
+    monkeypatch.setattr(sys, "argv", [
+        str(SCRIPT),
+        "--jobs", str(jobs_path),
+        "--prompt-article", str(article_prompt),
+        "--prompt-jp", str(jp_prompt),
+        "--model-id", "model-id",
+        "--model-revision", "model-revision",
+        "--expected-questions", "1",
+        "--output", str(output),
+    ])
+
+    with pytest.raises(SystemExit) as exit_code:
+        runpy.run_path(str(SCRIPT), run_name="__main__")
+
+    assert exit_code.value.code == 0
+    assert json.loads(output.read_text(encoding="utf-8"))["conditions"][0]["compatible"] is True

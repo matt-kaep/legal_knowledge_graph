@@ -195,10 +195,6 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
-
-
 def audit_fulltext_jobs(
     jobs: Iterable[dict[str, Any]],
     *,
@@ -251,3 +247,7 @@ def audit_fulltext_jobs(
         "schema_version": "b2-e029-fulltext-context-audit.v1",
         "conditions": conditions,
     }
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
