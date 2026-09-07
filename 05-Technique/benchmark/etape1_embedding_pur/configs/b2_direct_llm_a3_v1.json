@@ -1,0 +1,131 @@
+{
+  "manifest_id": "b2-e027-direct-llm-a3-v1-2026-09-07",
+  "campaign_id": "b2-direct-llm-a3-v1-2026-09-07",
+  "schema_version": "b2-direct-llm-question-only.v1",
+  "experiment_id": "E027",
+  "status": "frozen_authorized_waiting_for_g6_queue",
+  "purpose": "Measure the frozen Gemma direct baseline on A3. The model receives the fixed modality prompt and one evaluation question only; it receives no graph, candidate pool, retrieval result, corpus, web access or tool.",
+  "scientific_status": "confirmatory_internal_evaluation_after_contract_freeze",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "manifest_id": "checkpoint-a3-effective-retrieval-universe-2026-09-02",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3"
+  },
+  "datasets": {
+    "evaluation": {
+      "split": "eval_rich_retrievable_strict",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+      "questions": 754,
+      "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+      "byte_for_byte_identical_to_a3": true
+    }
+  },
+  "candidate_universe": {
+    "articles": {
+      "count": 13236,
+      "order_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c"
+    },
+    "jurisprudence": {
+      "count": 114851,
+      "order_sha256": "065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a"
+    }
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "provider": "local_vllm_openai_compatible",
+    "network_policy": "HF_HUB_OFFLINE=1; TRANSFORMERS_OFFLINE=1; no web or tool"
+  },
+  "model_visible_contract": {
+    "inputs": ["fixed_modality_prompt", "question_text"],
+    "forbidden_inputs": ["candidate_ids", "candidate_texts", "candidate_pool", "retrieval_rankings", "retrieval_scores", "graph", "corpus", "web", "tools", "gold_labels"],
+    "response_json": {"references": "array of 0 to 10 ordered strings"},
+    "k_out": 10
+  },
+  "resolution_contract": {
+    "common": "Strict deterministic post-hoc resolution against the A3 returnable universe only. No semantic matching, fuzzy matching, nearest-neighbour matching or manual repair.",
+    "articles": {
+      "accepted_forms": ["exact A3 item_id <code_slug>:<article_num>", "<official French code title>, article <article_num>"],
+      "normalization": "Unicode NFKC, case, terminal periods and whitespace for code titles; Unicode NFKC and syntactic part-letter punctuation/whitespace normalization for article numbers.",
+      "unknown_or_ambiguous": "preserve the original rank as a null zero slot"
+    },
+    "jurisprudence": {
+      "accepted_form": "byte-for-byte exact A3 opaque jp_id only",
+      "unknown_or_ambiguous": "preserve the original rank as a null zero slot",
+      "explicit_non_resolution": "ECLI, court/date, docket-number and free-text citations are not mapped because no frozen one-to-one A3 citation index exists."
+    },
+    "duplicate_resolved_identifier": "first occurrence is retained; later occurrence remains a null zero slot at its original rank",
+    "malformed_json": "terminal invalid response with ten null zero slots"
+  },
+  "tasks": {
+    "article": {
+      "prompt": {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/direct_llm_articles_b2_v1.txt",
+        "sha256": "7160183f4b2fdb4eba45f889a175919c9a28e46512a786d25ad70a93dbc282f1"
+      },
+      "jobs": {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_direct_llm_a3_v1_20260907/jobs/articles.jsonl",
+        "questions": 754,
+        "sha256": "0c5e8496190500dfd8389f20ca11c76d4b4163eb40d74a4aadd35f9aac0b7719"
+      },
+      "outputs": {
+        "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_direct_llm_a3_v1_20260907/article"
+      }
+    },
+    "jp": {
+      "prompt": {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/direct_llm_jurisprudence_b2_v1.txt",
+        "sha256": "7cbde1c6123974c12d54cf7386307fda3168fd7a2e158b63ab11b9a14e7a5c4f"
+      },
+      "jobs": {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_direct_llm_a3_v1_20260907/jobs/jurisprudence.jsonl",
+        "questions": 754,
+        "sha256": "717df8d6dd7130cf85914c376a843c5e126b10fb727a15a15c72a8988db06f26"
+      },
+      "outputs": {
+        "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_direct_llm_a3_v1_20260907/jp"
+      }
+    }
+  },
+  "metrics": {
+    "primary": "normalized_hit_at_10",
+    "formula": "Hit@K = |dedup(R_K) intersect Y| / min(|Y|, K)",
+    "article_hit_equals_recall_at_10": true,
+    "secondary": ["ndcg_at_10", "mrr_at_10"],
+    "recorded_but_not_primary": "exact_any_gold_at_10",
+    "zero_slot_semantics": "A null output slot contributes no gain and retains its originally emitted rank."
+  },
+  "resources": {
+    "partition": "L40S",
+    "gpus_per_modality": 1,
+    "cpus_per_modality": 8,
+    "memory_gb_per_modality": 48,
+    "time_limit": "12:00:00",
+    "submission_gate": "Submit neither modality while G6 LightGCN has any running or pending task; this avoids competition for the shared per-user GPU quota."
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_direct_llm_a3_v1_20260907",
+    "append_only_responses": true,
+    "immutable_materialization": true,
+    "per_modality": ["responses.jsonl", "materialized/rankings_top10.parquet", "materialized/exact_metrics.json", "materialized/materialization_receipt.json", "run_receipt.json"]
+  },
+  "historical_experiments_excluded": ["E012", "E017", "E021", "E022"],
+  "separate_from": ["E029_reranking_comparable", "E030_llm_as_a_judge"],
+  "code_bundle": {
+    "direct_runner": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/100_run_b2_direct_llm.py",
+      "sha256": "3bf3dbf22a19336e11ad9749b25243967b4ab71c157fd63aa92bd2da38a58ab9"
+    },
+    "slurm_launcher": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b2_e027_direct_llm.sh",
+      "sha256": "9f81997b393fc68adf3a2892c69dadf22c03f5151fae4311ba00b02a6bbff9f5"
+    },
+    "article_code_title_mapping": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/etape1/config.py",
+      "sha256": "2ac2a2a5403be5bc4ef3907d49f80b9e9d1e80bfdfc0a2639aa709f3601b3eb2",
+      "field": "ALL_CODES",
+      "read_policy": "static AST literal read without executing config.py"
+    }
+  }
+}
