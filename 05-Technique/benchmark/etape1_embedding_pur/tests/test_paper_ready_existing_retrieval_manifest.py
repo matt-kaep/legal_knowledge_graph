@@ -4,13 +4,14 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3.json"
+MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3_r2.json"
 
 
 def test_paper_ready_existing_retrieval_manifest_keeps_a3_and_b1_r1_provenance_frozen():
     payload = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
-    assert payload["campaign_id"] == "b1-paper-ready-existing-retrieval-a3-2026-09-07"
+    assert payload["campaign_id"] == "b1-paper-ready-existing-retrieval-a3-r2-2026-09-07"
+    assert payload["supersedes"]["manifest_sha256"] == "0ce16ae4c4d58070f9a15e1bc43ee5ba904cd62debd46f5f56b6e870a0065126"
     assert payload["a3"]["sha256"] == "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3"
     assert payload["source_campaign"]["manifest_sha256"] == "1b612a182742244dad59006e6d01b826a0285f01123aeeae67321b48c9de5e9a"
     assert payload["source_campaign"]["immutable"] is True

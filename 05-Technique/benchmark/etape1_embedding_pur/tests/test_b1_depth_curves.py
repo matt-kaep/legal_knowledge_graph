@@ -56,6 +56,16 @@ def test_b1_depth_rejects_duplicate_or_outside_top100_candidates():
         curves.score_ranking_group(rows, questions=questions, candidate_ids={"a", *[f"x{i}" for i in range(98)]}, target="articles")
 
 
+def test_b1_depth_rejects_a_frozen_ranking_whose_hash_differs_from_its_manifest(tmp_path):
+    curves = _load_module()
+    ranking_path = tmp_path / "rankings.parquet"
+    ranking_path.write_bytes(b"not the ranking sealed by the manifest")
+    payload = {"frozen_rankings": {"cosine": {"sha256": "0" * 64}}}
+
+    with pytest.raises(ValueError, match="SHA-256 differs from the manifest"):
+        curves.validate_frozen_ranking_hash(payload, "cosine", ranking_path)
+
+
 def test_b1_depth_exports_exact_ndcg_and_mrr_at_10_from_top100_rankings():
     curves = _load_module()
     questions = {"q1": {"articles_attendus": ["a", "b"]}}

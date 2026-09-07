@@ -23,6 +23,20 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def validate_frozen_ranking_hash(payload: dict, source: str, path: Path) -> str:
+    """Return the source hash and reject a manifest/file provenance mismatch."""
+    actual = _sha256(path)
+    frozen_sources = payload.get("frozen_rankings", {})
+    if source not in frozen_sources:
+        return actual
+    expected = frozen_sources[source].get("sha256")
+    if not expected:
+        raise ValueError(f"{source}: frozen ranking is missing its manifest SHA-256")
+    if actual != expected:
+        raise ValueError(f"{source}: frozen ranking SHA-256 differs from the manifest")
+    return actual
+
+
 def _data_path(raw: str) -> Path:
     path = Path(raw)
     return path if path.is_absolute() else DATA_REPO / path
@@ -189,7 +203,7 @@ def derive_curves(
     for source, path in sources.items():
         if not path.is_file():
             raise FileNotFoundError(path)
-        source_hashes[source] = _sha256(path)
+        source_hashes[source] = validate_frozen_ranking_hash(payload, source, path)
         frame = pd.read_parquet(path)
         for source_name, target, seed, group in _ranking_groups(frame, source=source):
             scored = score_ranking_group(
