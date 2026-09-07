@@ -4,6 +4,7 @@ import math
 from pathlib import Path
 import shutil
 import tempfile
+import builtins
 
 import numpy as np
 import pandas as pd
@@ -147,3 +148,48 @@ def test_b1_depth_derivation_writes_versioned_exact_metrics_at_10(tmp_path, monk
     assert exported["ndcg_at_10"].tolist() == pytest.approx([1 / math.log2(3)] * 2)
     assert exported["mrr_at_10"].tolist() == pytest.approx([0.5, 0.5])
     assert not (tmp_path / "validated" / "depth_curves.png").exists()
+
+
+def test_b1_depth_preflights_plot_dependency_before_creating_an_output_directory(tmp_path, monkeypatch):
+    curves = _load_module()
+    monkeypatch.setattr(curves, "DATA_REPO", tmp_path)
+    (tmp_path / "eval.json").write_text(json.dumps({"questions": [{
+        "qid": "q1", "articles_attendus": ["a"], "gold_jp_ids": ["j"],
+    }]}), encoding="utf-8")
+    article_ids = ["a", *[f"a{i}" for i in range(1, 101)]]
+    jp_ids = ["j", *[f"j{i}" for i in range(1, 101)]]
+    np.save(tmp_path / "articles.npy", np.asarray(article_ids, dtype=object))
+    np.save(tmp_path / "jp.npy", np.asarray(jp_ids, dtype=object))
+    np.save(tmp_path / "graph_articles.npy", np.asarray(article_ids, dtype=object))
+    np.save(tmp_path / "graph_jp.npy", np.asarray(jp_ids, dtype=object))
+    rows = []
+    for modality, first, prefix in (("art", "a", "a"), ("jp", "j", "j")):
+        for rank in range(1, 101):
+            rows.append({"qid": "q1", "modality": modality, "rank": rank, "item_id": first if rank == 1 else f"{prefix}{rank}"})
+    ranking_path = tmp_path / "rankings.parquet"
+    pd.DataFrame(rows).to_parquet(ranking_path, index=False)
+    payload = {
+        "campaign_id": "test-b1",
+        "datasets": {"evaluation": {"path": "eval.json", "questions": 1, "sha256": "test"}},
+        "candidate_inputs": {
+            "articles_order": {"path": "articles.npy"},
+            "jurisprudence_order": {"path": "jp.npy"},
+            "shared_article_ids": {"path": "graph_articles.npy"},
+            "shared_jp_ids": {"path": "graph_jp.npy"},
+        },
+        "candidate_universe": {"articles": {"count": 101}, "jurisprudence": {"count": 101}},
+    }
+    real_import = builtins.__import__
+
+    def missing_matplotlib(name, *args, **kwargs):
+        if name.startswith("matplotlib"):
+            raise ModuleNotFoundError("No module named 'matplotlib'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", missing_matplotlib)
+    out_dir = tmp_path / "must-not-exist-after-a-missing-plot-dependency"
+
+    with pytest.raises(ModuleNotFoundError, match="matplotlib"):
+        curves.derive_curves(payload, {"cosine": ranking_path}, out_dir, render_plots=True)
+
+    assert not out_dir.exists()
