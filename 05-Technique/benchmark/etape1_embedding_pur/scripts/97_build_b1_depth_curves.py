@@ -180,6 +180,11 @@ def aggregate_depth_curves(per_question: pd.DataFrame) -> pd.DataFrame:
     return curves
 
 
+def _require_plotting_dependency() -> None:
+    """Fail before artifact creation when a requested figure cannot be rendered."""
+    import matplotlib.pyplot  # noqa: F401
+
+
 def derive_curves(
     payload: dict,
     sources: dict[str, Path],
@@ -187,6 +192,8 @@ def derive_curves(
     *,
     render_plots: bool = False,
 ) -> dict[str, Path]:
+    if render_plots:
+        _require_plotting_dependency()
     eval_path = _data_path(payload["datasets"]["evaluation"]["path"])
     questions_list = json.loads(eval_path.read_text(encoding="utf-8"))["questions"]
     questions = {str(question["qid"]): question for question in questions_list}
