@@ -116,6 +116,16 @@ def test_chat_token_counter_uses_generation_template():
     assert auditor.count_chat_tokens(Tokenizer(), "Prompt complet") == 3
 
 
+def test_chat_token_counter_reads_input_ids_from_batch_encoding_like_result():
+    auditor = _load_auditor()
+
+    class Tokenizer:
+        def apply_chat_template(self, messages, *, tokenize, add_generation_prompt):
+            return {"input_ids": list(range(57)), "attention_mask": [1] * 57}
+
+    assert auditor.count_chat_tokens(Tokenizer(), "Prompt complet") == 57
+
+
 def test_fulltext_audit_report_is_immutable_and_records_completion_budget(tmp_path):
     auditor = _load_auditor()
     output = tmp_path / "fulltext_context_audit.json"

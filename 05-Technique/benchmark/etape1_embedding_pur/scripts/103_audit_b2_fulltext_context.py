@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 import hashlib
 import importlib.util
 import json
@@ -66,11 +66,20 @@ def audit_token_counts(
 
 def count_chat_tokens(tokenizer: Any, prompt: str) -> int:
     """Count the exact chat-template input tokens before generation starts."""
-    token_ids = tokenizer.apply_chat_template(
+    rendered = tokenizer.apply_chat_template(
         [{"role": "user", "content": prompt}],
         tokenize=True,
         add_generation_prompt=True,
     )
+    token_ids = rendered.get("input_ids") if isinstance(rendered, Mapping) else getattr(rendered, "input_ids", rendered)
+    if token_ids is None:
+        raise ValueError("chat template output has no input_ids")
+    if hasattr(token_ids, "tolist"):
+        token_ids = token_ids.tolist()
+    if isinstance(token_ids, (list, tuple)) and token_ids and isinstance(token_ids[0], (list, tuple)):
+        if len(token_ids) != 1:
+            raise ValueError("chat template must produce exactly one input sequence")
+        token_ids = token_ids[0]
     return len(token_ids)
 
 
