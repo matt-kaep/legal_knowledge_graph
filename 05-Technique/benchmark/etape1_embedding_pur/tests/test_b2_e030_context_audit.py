@@ -31,6 +31,23 @@ def _job(*, modality: str, qid: str, position: int, document: Optional[Dict], ze
 
 
 class E030ContextAuditTest(unittest.TestCase):
+    def test_chat_counter_uses_input_ids_not_batch_encoding_key_count(self):
+        """A tokenizer returning input_ids/attention_mask must count token ids, not two mapping keys."""
+        auditor = _load_auditor()
+
+        class BatchEncodingLikeTokenizer:
+            def apply_chat_template(self, messages, **kwargs):
+                self.messages = messages
+                self.kwargs = kwargs
+                return {"input_ids": [10, 11, 12, 13], "attention_mask": [1, 1, 1, 1]}
+
+        tokenizer = BatchEncodingLikeTokenizer()
+        counter = auditor._chat_token_counter_from_tokenizer(tokenizer)
+
+        self.assertEqual(counter("un prompt"), 4)
+        self.assertEqual(tokenizer.messages, [{"role": "user", "content": "un prompt"}])
+        self.assertTrue(tokenizer.kwargs["add_generation_prompt"])
+
     def test_reserves_completion_budget_and_keeps_zero_slots_out_of_model_prompts(self):
         """A future change that forgets completion tokens must fail this audit."""
         auditor = _load_auditor()

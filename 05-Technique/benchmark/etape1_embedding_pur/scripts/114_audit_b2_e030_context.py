@@ -153,22 +153,37 @@ def _load_jsonl(path: Path) -> List[Dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def _chat_token_counter_from_tokenizer(tokenizer: Any) -> Callable[[str], int]:
+    def count_tokens(prompt: str) -> int:
+        encoded = tokenizer.apply_chat_template(
+            [{"role": "user", "content": prompt}],
+            tokenize=True,
+            add_generation_prompt=True,
+        )
+        try:
+            tokens = encoded["input_ids"]
+        except (KeyError, TypeError) as exc:
+            raise ValueError("chat template output lacks input_ids") from exc
+        if hasattr(tokens, "tolist"):
+            tokens = tokens.tolist()
+        if isinstance(tokens, (list, tuple)) and tokens and isinstance(tokens[0], (list, tuple)):
+            if len(tokens) != 1:
+                raise ValueError("E030 context audit expects one chat-template sequence per prompt")
+            tokens = tokens[0]
+        if not isinstance(tokens, (list, tuple)):
+            raise ValueError("chat template input_ids are not a token sequence")
+        return len(tokens)
+
+    return count_tokens
+
+
 def _chat_token_counter(model_snapshot: Path) -> Callable[[str], int]:
     try:
         from transformers import AutoTokenizer
     except ImportError as exc:
         raise RuntimeError("transformers is required for an E030 context audit") from exc
     tokenizer = AutoTokenizer.from_pretrained(str(model_snapshot), local_files_only=True)
-
-    def count_tokens(prompt: str) -> int:
-        tokens = tokenizer.apply_chat_template(
-            [{"role": "user", "content": prompt}],
-            tokenize=True,
-            add_generation_prompt=True,
-        )
-        return len(tokens)
-
-    return count_tokens
+    return _chat_token_counter_from_tokenizer(tokenizer)
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
