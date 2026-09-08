@@ -114,6 +114,51 @@ def test_jobs_keep_depth_and_replay_seed_as_distinct_frozen_conditions(tmp_path)
     assert len({runner._key(job) for job in jobs}) == 2
 
 
+def test_article_projection_is_token_bounded_and_jp_synthese_is_left_intact():
+    runner = _load_runner()
+
+    class Tokenizer:
+        def encode(self, text, *, add_special_tokens):
+            assert add_special_tokens is False
+            return list(range(len(text)))
+
+        def decode(self, ids, *, skip_special_tokens, clean_up_tokenization_spaces):
+            assert skip_special_tokens is True
+            assert clean_up_tokenization_spaces is False
+            return "|".join(map(str, ids))
+
+    article, article_representation = runner.project_candidates_for_reranking(
+        [{"item_id": "a1", "text": "abcdef", "source_rank": 1}],
+        modality="article",
+        article_token_cap=3,
+        tokenizer=Tokenizer(),
+        tokenizer_id="frozen/gemma",
+        tokenizer_revision="abc",
+    )
+    jp, jp_representation = runner.project_candidates_for_reranking(
+        [{"item_id": "j1", "text": "Synthèse intégrale", "source_rank": 1}],
+        modality="jp",
+        article_token_cap=3,
+        tokenizer=Tokenizer(),
+        tokenizer_id="frozen/gemma",
+        tokenizer_revision="abc",
+    )
+
+    assert article == [{"item_id": "a1", "text": "0|1|2", "source_rank": 1}]
+    assert article_representation == {
+        "source_field": "texte",
+        "projection": "token_prefix",
+        "tokenizer_id": "frozen/gemma",
+        "tokenizer_revision": "abc",
+        "token_cap": 3,
+    }
+    assert jp == [{"item_id": "j1", "text": "Synthèse intégrale", "source_rank": 1}]
+    assert jp_representation == {
+        "source_field": "synthese",
+        "projection": "complete_unmodified",
+    }
+
+
 def test_materialization_exports_seed_specific_metrics_before_the_seed_mean(tmp_path):
     runner = _load_runner()
     common = {

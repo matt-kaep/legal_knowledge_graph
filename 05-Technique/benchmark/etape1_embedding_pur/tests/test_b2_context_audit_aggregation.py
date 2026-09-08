@@ -95,3 +95,24 @@ def test_aggregate_rejects_contract_mismatch_and_incomplete_matrix(tmp_path):
         aggregator.aggregate_reports([first, second], expected_conditions=2)
     with pytest.raises(ValueError, match="expected 3 conditions"):
         aggregator.aggregate_reports([first], expected_conditions=3)
+
+
+def test_aggregate_accepts_the_v2_materialized_representation_schema(tmp_path):
+    aggregator = _load_aggregator()
+    report = _report(family="cosine", modality="article", k_in=70)
+    report["schema_version"] = "b2-e029-context-audit.v2"
+    report["candidate_text_policy"] = "materialized_per_condition"
+    report["conditions"][0]["candidate_text_representation"] = {
+        "source_field": "texte",
+        "projection": "token_prefix",
+        "tokenizer_id": "frozen/gemma",
+        "tokenizer_revision": "abc",
+        "token_cap": 192,
+    }
+    path = tmp_path / "v2.json"
+    _write(path, report)
+
+    result = aggregator.aggregate_reports([path], expected_conditions=1)
+
+    assert result["schema_version"] == "b2-e029-context-audit-aggregate.v2"
+    assert result["conditions"][0]["candidate_text_representation"]["token_cap"] == 192

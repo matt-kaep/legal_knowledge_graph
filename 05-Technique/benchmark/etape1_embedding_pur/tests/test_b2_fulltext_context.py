@@ -90,7 +90,7 @@ def test_fulltext_audit_groups_conditions_and_retains_overflowing_question():
         "family": "cosine",
         "modality": "article",
         "k_in": 10,
-        "candidate_text_policy": "full_text_unmodified",
+        "candidate_text_representation": {"source_field": "texte", "projection": "complete_unmodified"},
         "questions": 2,
         "context_limit_tokens": 16384,
         "max_output_tokens": 256,
@@ -127,6 +127,46 @@ def test_fulltext_audit_keeps_lightgcn_replay_seeds_as_distinct_conditions():
     )
 
     assert [(row["replay_seed"], row["questions"]) for row in report["conditions"]] == [("42", 1), ("43", 1)]
+
+
+def test_context_audit_records_the_materialized_article_projection_and_rejects_mixing():
+    auditor = _load_auditor()
+    base = {
+        "family": "cosine",
+        "modality": "article",
+        "qid": "q1",
+        "question": "Question",
+        "k_in": 1,
+        "candidates": [{"item_id": "a1", "text": "Prefixe gelé", "source_rank": 1}],
+        "candidate_text_representation": {
+            "source_field": "texte",
+            "projection": "token_prefix",
+            "tokenizer_id": "frozen/gemma",
+            "tokenizer_revision": "abc",
+            "token_cap": 192,
+        },
+    }
+
+    report = auditor.audit_fulltext_jobs(
+        [base],
+        prompt_templates={"article": "Instruction Articles.", "jp": "Instruction JP."},
+        count_prompt_tokens=lambda _prompt: 12,
+        context_limit_tokens=16384,
+        max_output_tokens=256,
+        expected_questions=1,
+    )
+
+    assert report["conditions"][0]["candidate_text_representation"] == base["candidate_text_representation"]
+    mixed = {**base, "candidate_text_representation": {**base["candidate_text_representation"], "token_cap": 191}}
+    with pytest.raises(ValueError, match="representation differs"):
+        auditor.audit_fulltext_jobs(
+            [base, mixed],
+            prompt_templates={"article": "Instruction Articles.", "jp": "Instruction JP."},
+            count_prompt_tokens=lambda _prompt: 12,
+            context_limit_tokens=16384,
+            max_output_tokens=256,
+            expected_questions=2,
+        )
 
 
 def test_chat_token_counter_uses_generation_template():

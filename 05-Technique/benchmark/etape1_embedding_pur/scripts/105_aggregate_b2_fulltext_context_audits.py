@@ -11,8 +11,10 @@ from pathlib import Path
 from typing import Any
 
 
-SHARD_SCHEMA_VERSION = "b2-e029-fulltext-context-audit.v1"
-AGGREGATE_SCHEMA_VERSION = "b2-e029-fulltext-context-audit-aggregate.v1"
+SHARD_TO_AGGREGATE_SCHEMA = {
+    "b2-e029-fulltext-context-audit.v1": "b2-e029-fulltext-context-audit-aggregate.v1",
+    "b2-e029-context-audit.v2": "b2-e029-context-audit-aggregate.v2",
+}
 CONTRACT_KEYS = (
     "model",
     "context_limit_tokens",
@@ -34,7 +36,7 @@ def _read_report(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
         raise ValueError(f"context audit is not a JSON object: {path}")
-    if value.get("schema_version") != SHARD_SCHEMA_VERSION:
+    if value.get("schema_version") not in SHARD_TO_AGGREGATE_SCHEMA:
         raise ValueError(f"unexpected shard schema_version in {path}: {value.get('schema_version')!r}")
     if not isinstance(value.get("conditions"), list) or not value["conditions"]:
         raise ValueError(f"context audit has no conditions: {path}")
@@ -58,6 +60,7 @@ def aggregate_reports(report_paths: Iterable[Path], *, expected_conditions: int)
         raise ValueError("expected_conditions must be positive")
 
     contract: dict[str, Any] | None = None
+    shard_schema_version: str | None = None
     source_reports: list[dict[str, str]] = []
     job_files: list[dict[str, Any]] = []
     conditions: list[dict[str, Any]] = []
@@ -65,6 +68,11 @@ def aggregate_reports(report_paths: Iterable[Path], *, expected_conditions: int)
 
     for path in paths:
         payload = _read_report(path)
+        observed_schema = str(payload["schema_version"])
+        if shard_schema_version is None:
+            shard_schema_version = observed_schema
+        elif observed_schema != shard_schema_version:
+            raise ValueError(f"context-audit schema mismatch: {path}")
         observed_contract = {key: payload.get(key) for key in CONTRACT_KEYS}
         if contract is None:
             contract = observed_contract
@@ -88,12 +96,12 @@ def aggregate_reports(report_paths: Iterable[Path], *, expected_conditions: int)
 
     if len(conditions) != expected_conditions:
         raise ValueError(f"expected {expected_conditions} conditions, found {len(conditions)}")
-    assert contract is not None
+    assert contract is not None and shard_schema_version is not None
     conditions.sort(key=lambda row: tuple("" if value is None else value for value in _condition_key(row)))
     compatible_conditions = sum(bool(row.get("compatible")) for row in conditions)
     overflow_questions = sum(len(row.get("overflow_qids", [])) for row in conditions)
     return {
-        "schema_version": AGGREGATE_SCHEMA_VERSION,
+        "schema_version": SHARD_TO_AGGREGATE_SCHEMA[shard_schema_version],
         **contract,
         "source_reports": source_reports,
         "job_files": job_files,

@@ -8,6 +8,14 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — nouveau préflight E029 autorisé, aucun résultat encore (2026-09-08)
+
+La décision de représentation est désormais figée pour un **nouveau** contrat E029 : profondeurs `10,20,30,40,50,60,70`, sortie top-10; Articles réduits au préfixe de 192 tokens du tokenizer Gemma exactement versionné; JP conservées sous forme de `synthese` complète. Cette règle est identique pour cosine, PPR et les trois graines LightGCN. Le modèle ne verra jamais le retrieveur, le graphe, la graine, le rang ou le score source.
+
+Preuve de protocole : `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_preflight_v1.json`, SHA-256 `d40676004a1601f3b0bb5523409993506973f6db5af4884d4a175fe49a88f347`. Il prévoit 70 conditions × 754 questions = 52 780 jobs, mais interdit encore tout appel LLM. Les 33 tests E029 ciblés passent. Les cinq lots neufs et l’audit de contexte doivent être produits et hashés avant qu’A puisse créer le manifeste GPU.
+
+**Action Papier :** ne rien intégrer à ce stade. La formulation pourra devenir « analyse annexe exploratoire de reranking sur viviers gelés » seulement après le préflight complet puis les sorties GPU contrôlées. Les archives plein texte E029 antérieures restent séparées et ne doivent ni être agrégées ni comparées à cette nouvelle représentation.
+
 ## Mise à jour — E029 bloquée par le contexte, zéro appel modèle (2026-09-08)
 
 Le reranking comparable n'a aucun score ni sortie LLM intégrable. Le manifeste v4 est `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_fullmatrix_cpu_preflight_v4.json` (SHA-256 `a6026645ff0ddaac4e5375231189b974e37873369368c9e99c2b82145905b31a`). Les 100 viviers restent validés byte à byte par `.../_campaign_b2_e029_fullmatrix_cpu_preflight_v3_20260908/input_pool_validation.json` (SHA-256 `0a95bc75c0750c1b2de7acae19843ce000e50a2abffd7599f469047a1985ce06`). Le reçu final v4 est `.../_campaign_b2_e029_fullmatrix_cpu_preflight_v4_20260908/cpu_preflight_receipt.json` (SHA-256 `d3da604a0225c97156bcbdc5bd9caf94d75de32bb4ab2901e28ace1de9b6db0f`).

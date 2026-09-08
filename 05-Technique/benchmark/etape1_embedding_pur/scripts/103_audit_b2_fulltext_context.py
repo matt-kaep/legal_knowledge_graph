@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit whether immutable full-text reranking prompts fit a model context."""
+"""Audit whether immutable materialized reranking prompts fit a model context."""
 
 from __future__ import annotations
 
@@ -16,6 +16,10 @@ SCRIPTS = Path(__file__).resolve().parent
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 from b2_reranking_prompt import render_reranking_prompt  # noqa: E402
+
+
+def canonical_json(value: object) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def sha256(path: Path) -> str:
@@ -107,6 +111,34 @@ def snapshot_tokenizer_hashes(model_snapshot: Path) -> dict[str, str]:
     return {name: sha256(model_snapshot / name) for name in required}
 
 
+def candidate_text_representation(job: dict[str, Any]) -> dict[str, Any]:
+    """Read an explicit representation, with an archive-safe full-text default."""
+    modality = str(job["modality"])
+    representation = job.get("candidate_text_representation")
+    if representation is None:
+        if modality == "article":
+            return {"source_field": "texte", "projection": "complete_unmodified"}
+        if modality == "jp":
+            return {"source_field": "synthese", "projection": "complete_unmodified"}
+        raise ValueError(f"unsupported reranking modality: {modality}")
+    if not isinstance(representation, dict):
+        raise ValueError(f"{modality}: candidate_text_representation must be an object")
+    if modality == "article" and representation.get("source_field") != "texte":
+        raise ValueError("article candidate_text_representation must name source field texte")
+    if modality == "jp" and representation != {"source_field": "synthese", "projection": "complete_unmodified"}:
+        raise ValueError("JP candidate_text_representation must preserve the complete synthese")
+    if modality not in {"article", "jp"}:
+        raise ValueError(f"unsupported reranking modality: {modality}")
+    if representation.get("projection") not in {"complete_unmodified", "token_prefix"}:
+        raise ValueError(f"{modality}: unsupported candidate text projection")
+    if representation.get("projection") == "token_prefix":
+        if modality != "article" or not isinstance(representation.get("token_cap"), int) or representation["token_cap"] <= 0:
+            raise ValueError("only Articles may use a positive token-prefix projection")
+        if not all(isinstance(representation.get(key), str) and representation[key] for key in ("tokenizer_id", "tokenizer_revision")):
+            raise ValueError("token-prefix projection requires tokenizer id and revision")
+    return representation
+
+
 def audit_frozen_job_files(
     job_paths: Iterable[Path],
     *,
@@ -146,7 +178,7 @@ def audit_frozen_job_files(
         "model": model,
         "context_limit_tokens": context_limit_tokens,
         "max_output_tokens": max_output_tokens,
-        "candidate_text_policy": "full_text_unmodified",
+        "candidate_text_policy": "materialized_per_condition",
         "job_files": job_files,
         "prompt_files": {
             modality: {"path": str(path), "sha256": sha256(path)}
@@ -211,7 +243,7 @@ def audit_fulltext_jobs(
     """Audit frozen jobs by condition without shortening any candidate text."""
     if expected_questions <= 0:
         raise ValueError("expected_questions must be positive")
-    grouped: dict[tuple[str, str, int, str | None], list[tuple[str, int]]] = {}
+    grouped: dict[tuple[str, str, int, str | None], dict[str, object]] = {}
     for job in jobs:
         family = str(job["family"])
         modality = str(job["modality"])
@@ -226,10 +258,16 @@ def audit_fulltext_jobs(
         if any(not isinstance(candidate.get("text"), str) or not candidate["text"].strip() for candidate in candidates):
             raise ValueError(f"{family}/{modality}/{qid}: candidate text must be complete and non-empty")
         prompt = render_reranking_prompt(prompt_templates[modality], job)
-        grouped.setdefault((family, modality, k_in, replay_seed), []).append((qid, int(count_prompt_tokens(prompt))))
+        key = (family, modality, k_in, replay_seed)
+        representation = candidate_text_representation(job)
+        group = grouped.setdefault(key, {"token_counts": [], "candidate_text_representation": representation})
+        if canonical_json(group["candidate_text_representation"]) != canonical_json(representation):
+            raise ValueError(f"{family}/{modality}/K={k_in}: candidate text representation differs within one condition")
+        group["token_counts"].append((qid, int(count_prompt_tokens(prompt))))
 
     conditions: list[dict[str, object]] = []
-    for (family, modality, k_in, replay_seed), token_counts in sorted(grouped.items()):
+    for (family, modality, k_in, replay_seed), group in sorted(grouped.items()):
+        token_counts = group["token_counts"]
         qids = [qid for qid, _ in token_counts]
         if len(token_counts) != expected_questions or len(set(qids)) != expected_questions:
             raise ValueError(f"{family}/{modality}/K={k_in}: expected exactly {expected_questions} unique questions")
@@ -242,7 +280,7 @@ def audit_fulltext_jobs(
             "family": family,
             "modality": modality,
             "k_in": k_in,
-            "candidate_text_policy": "full_text_unmodified",
+            "candidate_text_representation": group["candidate_text_representation"],
             **summary,
         }
         if replay_seed is not None:
@@ -251,7 +289,7 @@ def audit_fulltext_jobs(
     if not conditions:
         raise ValueError("jobs must not be empty")
     return {
-        "schema_version": "b2-e029-fulltext-context-audit.v1",
+        "schema_version": "b2-e029-context-audit.v2",
         "conditions": conditions,
     }
 

@@ -111,14 +111,78 @@ def zero_slots(k_out: int, *, resolution: str) -> list[dict[str, Any]]:
     ]
 
 
+def _legacy_candidate_text_representation(modality: str) -> dict[str, Any]:
+    if modality == "article":
+        return {"source_field": "texte", "projection": "complete_unmodified"}
+    if modality == "jp":
+        return {"source_field": "synthese", "projection": "complete_unmodified"}
+    raise ValueError(f"unsupported reranking modality: {modality}")
+
+
+def project_candidates_for_reranking(
+    candidates: Iterable[dict[str, Any]],
+    *,
+    modality: str,
+    article_token_cap: int | None,
+    tokenizer: Any | None,
+    tokenizer_id: str | None,
+    tokenizer_revision: str | None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Materialize the exact candidate text visible to the B2 reranker.
+
+    The projection is intentionally performed before job hashing and inference.
+    JP syntheses remain byte-for-byte unchanged; Article text is decoded from the
+    exact frozen tokenizer prefix so the context audit and vLLM receive the same
+    string.
+    """
+    copied = [dict(candidate) for candidate in candidates]
+    for candidate in copied:
+        if not isinstance(candidate.get("text"), str) or not candidate["text"].strip():
+            raise ValueError("reranking candidates require a non-empty text field")
+
+    if article_token_cap is None:
+        return copied, _legacy_candidate_text_representation(modality)
+    if article_token_cap <= 0:
+        raise ValueError("article_token_cap must be positive")
+    if modality == "jp":
+        return copied, _legacy_candidate_text_representation(modality)
+    if modality != "article":
+        raise ValueError(f"unsupported reranking modality: {modality}")
+    if tokenizer is None or not tokenizer_id or not tokenizer_revision:
+        raise ValueError("Article projection requires the exact frozen tokenizer id and revision")
+
+    for candidate in copied:
+        token_ids = tokenizer.encode(candidate["text"], add_special_tokens=False)
+        projected = tokenizer.decode(
+            token_ids[:article_token_cap],
+            skip_special_tokens=True,
+            clean_up_tokenization_spaces=False,
+        )
+        if not isinstance(projected, str) or not projected.strip():
+            raise ValueError(f"Article projection is empty for candidate {candidate.get('item_id')}")
+        candidate["text"] = projected
+    return copied, {
+        "source_field": "texte",
+        "projection": "token_prefix",
+        "tokenizer_id": tokenizer_id,
+        "tokenizer_revision": tokenizer_revision,
+        "token_cap": article_token_cap,
+    }
+
+
 def job_input_sha256(job: dict[str, Any]) -> str:
-    return hashlib.sha256(canonical_json({
+    payload = {
         "experiment_id": job["experiment_id"], "family": job["family"], "modality": job["modality"],
         "qid": job["qid"], "question": job["question"], "candidates": job["candidates"],
         "k_in": job["k_in"], "k_out": job["k_out"], "replay_seed": job.get("replay_seed"),
         "prompt_sha256": job["prompt_sha256"],
         "model_id": job["model_id"], "model_revision": job["model_revision"], "temperature": job["temperature"],
-    }).encode("utf-8")).hexdigest()
+    }
+    # Historical full-text jobs predate this explicit field; retaining their
+    # hash payload intact keeps the archive independently materializable.
+    if "candidate_text_representation" in job:
+        payload["candidate_text_representation"] = job["candidate_text_representation"]
+    return hashlib.sha256(canonical_json(payload).encode("utf-8")).hexdigest()
 
 
 def call_openai_compatible(*, endpoint: str, model: str, prompt: str, pool_ids: list[str], k_out: int) -> str:
@@ -153,7 +217,18 @@ def _load_pool(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
-def prepare_jobs(*, pools: list[Path], prompts: dict[str, Path], output_path: Path, model_id: str, model_revision: str) -> int:
+def prepare_jobs(
+    *,
+    pools: list[Path],
+    prompts: dict[str, Path],
+    output_path: Path,
+    model_id: str,
+    model_revision: str,
+    article_token_cap: int | None = None,
+    tokenizer: Any | None = None,
+    tokenizer_id: str | None = None,
+    tokenizer_revision: str | None = None,
+) -> int:
     if output_path.exists():
         raise FileExistsError(f"refusing to overwrite immutable job file: {output_path}")
     prompt_sha = {modality: sha256(path) for modality, path in prompts.items()}
@@ -164,15 +239,24 @@ def prepare_jobs(*, pools: list[Path], prompts: dict[str, Path], output_path: Pa
             modality = str(pool["modality"])
             if modality not in prompts:
                 raise ValueError(f"missing prompt for {modality}")
+            candidates, representation = project_candidates_for_reranking(
+                pool["candidates"],
+                modality=modality,
+                article_token_cap=article_token_cap,
+                tokenizer=tokenizer,
+                tokenizer_id=tokenizer_id,
+                tokenizer_revision=tokenizer_revision,
+            )
             job = {
                 "experiment_id": "E029", "family": str(pool["family"]), "modality": modality,
                 "qid": str(pool["qid"]),
-                "question": str(pool["question"]), "candidates": list(pool["candidates"]),
+                "question": str(pool["question"]), "candidates": candidates,
                 "k_in": int(pool["k_in"]), "k_out": int(pool["k_out"]),
                 "replay_seed": str(pool["replay_seed"]) if pool.get("replay_seed") is not None else None,
                 "source_method": str(pool["source_method"]), "source_ranking_sha256": str(pool["source_ranking_sha256"]),
                 "source_texts_sha256": str(pool["source_texts_sha256"]), "prompt_sha256": prompt_sha[modality],
                 "model_id": model_id, "model_revision": model_revision, "temperature": 0,
+                "candidate_text_representation": representation,
             }
             key = _key(job)
             if key in seen:
@@ -318,6 +402,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     prepare.add_argument("--output", type=Path, required=True)
     prepare.add_argument("--model-id", required=True)
     prepare.add_argument("--model-revision", required=True)
+    prepare.add_argument("--article-token-cap", type=int, help="Exact frozen-token prefix for Article candidates; omit only for archived full-text jobs.")
+    prepare.add_argument("--tokenizer-snapshot", type=Path, help="Local snapshot of the exact tokenizer revision required by --article-token-cap.")
     run = commands.add_parser("run")
     run.add_argument("--jobs", type=Path, required=True)
     run.add_argument("--responses", type=Path, required=True)
@@ -333,11 +419,32 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def load_frozen_tokenizer(model_snapshot: Path) -> Any:
+    if not model_snapshot.is_dir():
+        raise ValueError(f"tokenizer snapshot directory does not exist: {model_snapshot}")
+    from transformers import AutoTokenizer
+
+    return AutoTokenizer.from_pretrained(str(model_snapshot), local_files_only=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if args.command == "prepare":
         prompts = {"article": args.prompt_article, "jp": args.prompt_jp}
-        print(json.dumps({"jobs": prepare_jobs(pools=args.pool, prompts=prompts, output_path=args.output, model_id=args.model_id, model_revision=args.model_revision)}))
+        if (args.article_token_cap is None) != (args.tokenizer_snapshot is None):
+            raise ValueError("--article-token-cap and --tokenizer-snapshot must be supplied together")
+        tokenizer = load_frozen_tokenizer(args.tokenizer_snapshot) if args.tokenizer_snapshot else None
+        print(json.dumps({"jobs": prepare_jobs(
+            pools=args.pool,
+            prompts=prompts,
+            output_path=args.output,
+            model_id=args.model_id,
+            model_revision=args.model_revision,
+            article_token_cap=args.article_token_cap,
+            tokenizer=tokenizer,
+            tokenizer_id=args.model_id if tokenizer else None,
+            tokenizer_revision=args.model_revision if tokenizer else None,
+        )}))
         return 0
     if args.command == "run":
         prompts = {"article": args.prompt_article, "jp": args.prompt_jp}
