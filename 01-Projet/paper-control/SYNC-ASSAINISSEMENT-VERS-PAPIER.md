@@ -8,6 +8,13 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — E029 successeur : préflight complet, exécution GPU gelée, aucun score (2026-09-08)
+
+- Le reranking E029 successeur est prêt à être soumis, mais **ne fournit encore aucun résultat**. Son contrat exploratoire est : même reranker Gemma figé, `K_in=10,20,30,40,50,60,70`, `K_out=10`, mêmes 754 questions, viviers cosine/PPR/LightGCN G6 et trois seeds LightGCN séparées. Articles : préfixe de 192 tokens Gemma du champ `texte`; JP : champ `synthese` complet. Le retrieveur, le graphe, la seed, le rang et les scores ne sont pas montrés au modèle.
+- Preuve CPU : reçu `05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/preflight_receipt.json`, SHA `a3878e63faf467bf1c8311440076af595f0e8544c881b6dc791d45fec9537740`, et audit de contexte SHA `8e82219ba9cb2ca22c484a709669135ba472627cb9499406f5445e0ee9bc1779`. Ils attestent cinq lots hashés, 52 780 requêtes, 70/70 conditions compatibles, zéro dépassement et zéro appel modèle.
+- Manifeste d’exécution GPU : `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_execution_v1.json`, SHA `c9296ceaed851a01ace69e2e2ade42ad35b01dc70107fda21813840b554467c1`. Il reste distinct des archives E029 plein texte et de E030.
+- Action Papier : ne rien intégrer ni chiffrer pour ce contrat tant que les cinq reçus GPU, les rankings top-10, les métriques exactes et l’agrégation hashée n’ont pas été contrôlés par A. E030 n’est pas lancé.
+
 ## Mise à jour — nouveau préflight E029 autorisé, aucun résultat encore (2026-09-08)
 
 La décision de représentation est désormais figée pour un **nouveau** contrat E029 : profondeurs `10,20,30,40,50,60,70`, sortie top-10; Articles réduits au préfixe de 192 tokens du tokenizer Gemma exactement versionné; JP conservées sous forme de `synthese` complète. Cette règle est identique pour cosine, PPR et les trois graines LightGCN. Le modèle ne verra jamais le retrieveur, le graphe, la graine, le rang ou le score source.

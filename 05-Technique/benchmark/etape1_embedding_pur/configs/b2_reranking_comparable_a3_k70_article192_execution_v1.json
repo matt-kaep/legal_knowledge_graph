@@ -1,0 +1,108 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-k70-article192-execution-v1-2026-09-08",
+  "campaign_id": "b2-e029-reranking-comparable-a3-k70-article192-v1-2026-09-08",
+  "schema_version": "b2-comparable-reranking-k70-article192-execution.v1",
+  "experiment_id": "E029",
+  "status": "frozen_authorized_model_execution",
+  "purpose": "Execute the five immutable successor E029 shards whose Article candidates use the frozen 192-token Gemma prefix and whose jurisprudence candidates use the complete synthese. This exploratory annex is separate from LLM-as-a-Judge and does not select a retriever, graph, depth, seed, or training configuration.",
+  "scientific_status": "exploratory_reranking_annex",
+  "predecessor": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_preflight_v1.json",
+    "manifest_sha256": "d40676004a1601f3b0bb5523409993506973f6db5af4884d4a175fe49a88f347",
+    "preflight_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908",
+    "preflight_receipt_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/preflight_receipt.json",
+    "preflight_receipt_sha256": "a3878e63faf467bf1c8311440076af595f0e8544c881b6dc791d45fec9537740",
+    "context_audit_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/context_audit.json",
+    "context_audit_sha256": "8e82219ba9cb2ca22c484a709669135ba472627cb9499406f5445e0ee9bc1779",
+    "preflight_model_calls": 0,
+    "preflight_conditions": 70,
+    "preflight_compatible_conditions": 70,
+    "preflight_overflow_questions": 0
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754,
+    "retrieval_candidate_universe": {"articles": 13236, "decisions": 114851}
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "snapshot": "/home/ids/kaeppelin-22/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 256,
+    "snapshot_policy": "offline_exact_revision"
+  },
+  "prompts": {
+    "article": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt", "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"},
+    "jp": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt", "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"}
+  },
+  "reranking_contract": {
+    "depth_grid": [10, 20, 30, 40, 50, 60, 70],
+    "k_out": 10,
+    "representation": {
+      "article": {"source_field": "texte", "projection": "token_prefix", "token_cap": 192},
+      "jp": {"source_field": "synthese", "projection": "complete_unmodified"}
+    },
+    "candidate_text_policy": "materialized_per_condition_from_frozen_candidate_ids",
+    "source_order_hidden_from_model": true,
+    "same_representation_for_all_families_questions_and_lightgcn_seeds": true,
+    "lightgcn_seed_policy": "keep final replay seeds 42, 43 and 44 separate through jobs, responses, metrics and evidence; calculate a mean only after every seed is complete",
+    "selection_policy": "no retriever, graph, K_in, hyperparameter, epoch or seed is selected from E029 outputs"
+  },
+  "resources": {
+    "partition_preference": ["L40S", "H100", "A100"],
+    "gpus_per_shard": 1,
+    "cpus_per_shard": 8,
+    "memory_per_shard": "48G",
+    "walltime_per_shard": "12:00:00",
+    "vllm": {"max_model_len": 16384, "max_num_seqs": 2, "gpu_memory_utilization": 0.9}
+  },
+  "code_bundle": {
+    "reranking_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py", "sha256": "ea2c98b37f440f28b616c3c24a0d7a619a21c71dbabf89d337fc687e7952e669"},
+    "gpu_launcher": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b2_e029_reranking_shard_v2.sh", "sha256": "f3fdb14ba563d4759a51c4098b190474cecba155d8b453fef57c6a682bd6f8dd"},
+    "execution_aggregator": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/107_aggregate_b2_e029_execution.py", "sha256": "1c21f800cb4ea445bb07144075c1bad0b48409b2fbd3dcef39916ab643610514"}
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_execution_v1_20260908",
+    "shard_pattern": "shards/{shard}",
+    "required_per_shard": ["responses.jsonl", "materialized/materialization_receipt.json", "materialized/exact_metrics.csv", "run_receipt.json"],
+    "aggregate_directory": "aggregate"
+  },
+  "shards": [
+    {
+      "id": "cosine",
+      "conditions": [{"family": "cosine", "modality": "article", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}, {"family": "cosine", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/cosine.jsonl", "sha256": "1173b12dc8337543a9d3bc0b2b146baca43630bfd1b1d06ccbddd6c4ee8f2b32", "count": 10556}
+    },
+    {
+      "id": "ppr",
+      "conditions": [{"family": "ppr", "modality": "article", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}, {"family": "ppr", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/ppr.jsonl", "sha256": "664409d8ec3e01bb964ea5b68eacbb8633123e206a8b707bbfc10a54b8c3d7b8", "count": 10556}
+    },
+    {
+      "id": "lightgcn-seed42",
+      "conditions": [{"family": "lightgcn", "modality": "article", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 42}, {"family": "lightgcn", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 42}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/lightgcn-seed42.jsonl", "sha256": "9dea121f2644f22dca6255b56b858fee2c7ccee22675f8b2ea6bab873ce8a8c5", "count": 10556}
+    },
+    {
+      "id": "lightgcn-seed43",
+      "conditions": [{"family": "lightgcn", "modality": "article", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 43}, {"family": "lightgcn", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 43}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/lightgcn-seed43.jsonl", "sha256": "ceedfd8f1e15618445b13e3171b37fab8d73817123bb600c72f2c497474bad11", "count": 10556}
+    },
+    {
+      "id": "lightgcn-seed44",
+      "conditions": [{"family": "lightgcn", "modality": "article", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 44}, {"family": "lightgcn", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 44}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/lightgcn-seed44.jsonl", "sha256": "e7aa2e5a65280baa0795cf92641da867713362ae1ee9f47011d901992a71650f", "count": 10556}
+    }
+  ],
+  "totals": {"shards": 5, "conditions": 70, "questions_per_condition": 754, "model_calls": 52780},
+  "execution_gate": {
+    "allowed": ["run only the immutable job files listed here", "resume a shard only when its materialization receipt is absent", "materialize exact metrics after complete per-shard coverage", "aggregate only after every frozen shard is complete"],
+    "forbidden": ["pool regeneration", "representation substitution", "text truncation beyond the frozen Article 192-token prefix", "seed mixing", "post-evaluation configuration selection", "LLM-as-a-Judge execution"],
+    "next_gate": "Validate all five run receipts and aggregate per-seed and seed-mean metrics only after every frozen shard is complete."
+  }
+}

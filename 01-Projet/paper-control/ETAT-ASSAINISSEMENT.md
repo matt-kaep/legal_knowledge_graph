@@ -1,20 +1,21 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-e027-completed-e029-k70-article192-cpu-preflight-authorized
+status: b1-g6-lightgcn-final-validated-e027-completed-e029-k70-article192-gpu-manifest-frozen
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
 
-## E029 — contrat successeur Article-192 / JP-synthèse autorisé en préflight CPU (2026-09-08)
+## E029 — préflight complet, manifeste GPU Article-192 / JP-synthèse gelé (2026-09-08)
 
 - Décision scientifique appliquée au **nouveau** contrat uniquement : `K_in=10,20,30,40,50,60,70`, `K_out=10`; chaque candidat Article est le préfixe des **192 tokens** du tokenizer Gemma figé, chaque candidat JP est la `synthese` complète. La même règle est imposée à cosine, PPR et aux trois graines LightGCN. Le retrieveur, le graphe, la graine, le rang source et le score restent invisibles du prompt.
-- Manifeste CPU-only : `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_preflight_v1.json`, SHA-256 `d40676004a1601f3b0bb5523409993506973f6db5af4884d4a175fe49a88f347`. Il réutilise seulement les 70 viviers A3 byte-validés issus de la matrice source v2, conserve A3 et interdit explicitement tout appel modèle.
-- L’orchestrateur `scripts/106_prepare_b2_e029_article192_preflight.sh` validera les hashes source, matérialisera cinq lots neufs (cosine, PPR, LightGCN graines 42/43/44), comptera le template de chat exact avec 256 tokens de sortie réservés, puis refusera tout GPU sans 70 conditions compatibles, 52 780 jobs et `model_calls=0`.
-- Les protections de code sont vertes : 33 tests E029 ciblés et les contrôles de syntaxe/JSON passent. Les réponses historiques plein texte conservent leur hash et leur statut d’archive; elles ne peuvent pas être mélangées aux nouveaux jobs car la représentation visible est désormais incluse dans le hash d’entrée.
-- **Statut présent :** préflight CPU autorisé, non encore exécuté; aucun nouvel appel modèle, ranking reranké, métrique ou score E029 n’existe. Le manifeste GPU successeur ne sera créé qu’après son reçu complet. E030 reste non lancé.
+- Préflight CPU terminé, sans appel modèle : reçu `05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/preflight_receipt.json`, SHA-256 `a3878e63faf467bf1c8311440076af595f0e8544c881b6dc791d45fec9537740`. Il atteste cinq lots immuables de 10 556 requêtes chacun, soit 52 780 requêtes et `model_calls=0`.
+- Audit agrégé exact du template de chat : `.../_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/context_audit.json`, SHA-256 `8e82219ba9cb2ca22c484a709669135ba472627cb9499406f5445e0ee9bc1779`. Il atteste 70/70 conditions compatibles, 52 780 paires question-condition, zéro dépassement de la fenêtre 16 384 (256 tokens de sortie réservés), préfixe Article de 192 tokens Gemma et `synthese` JP complète.
+- Manifeste GPU distinct et gelé : `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_execution_v1.json`, SHA-256 `c9296ceaed851a01ace69e2e2ade42ad35b01dc70107fda21813840b554467c1`. Il lie A3, les prompts, le snapshot Gemma exact, les cinq hashes de lots, les ressources L40S/H100/A100, le runner et l’agrégateur sans modifier les artefacts CPU ni l’archive plein texte.
+- Les protections de code sont vertes : 35 tests E029 ciblés passent. Les réponses historiques plein texte conservent leur hash et leur statut d’archive; elles ne peuvent pas être mélangées aux nouveaux jobs car la représentation visible est incluse dans le hash d’entrée.
+- **Statut présent :** manifeste GPU figé, soumission Slurm à effectuer depuis le commit dédié ; aucun appel modèle, ranking reranké, métrique ou score de ce contrat E029 n’existe encore. E030 reste non lancé.
 
 ## E029 — préflight CPU v4 bloqué par la fenêtre de contexte, zéro appel modèle (2026-09-08)
 
