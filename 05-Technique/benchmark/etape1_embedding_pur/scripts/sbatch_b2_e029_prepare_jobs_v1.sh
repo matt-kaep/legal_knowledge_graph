@@ -18,10 +18,12 @@ set -eEuo pipefail
 
 PYTHON_BIN="${LKG_PYTHON:-$HOME/work/.venv-benchmark/bin/python}"
 ROOT="$LKG_REPO/05-Technique/benchmark/etape1_embedding_pur"
-MANIFEST="$ROOT/configs/b2_reranking_comparable_a3_jobs_preparation_v1.json"
+MANIFEST_NAME="${E029_JOBS_PREPARATION_MANIFEST_FILENAME:-b2_reranking_comparable_a3_jobs_preparation_v1.json}"
+MANIFEST="$ROOT/configs/$MANIFEST_NAME"
 RUNNER="$ROOT/scripts/102_run_b2_comparable_reranking.py"
+POOL_RESOLVER="$ROOT/scripts/e029_audited_pool_resolver.py"
 
-for path in "$PYTHON_BIN" "$MANIFEST" "$RUNNER"; do
+for path in "$PYTHON_BIN" "$MANIFEST" "$RUNNER" "$POOL_RESOLVER"; do
   [[ -e "$path" ]] || { echo "missing required path: $path" >&2; exit 2; }
 done
 
@@ -37,7 +39,10 @@ import shlex
 import sys
 
 payload = json.load(open(sys.argv[1], encoding="utf-8"))
-if payload["experiment_id"] != "E029" or payload["status"] != "authorized_cpu_jobs_preparation_no_model_call":
+if payload["experiment_id"] != "E029" or payload["status"] not in {
+    "authorized_cpu_jobs_preparation_no_model_call",
+    "authorized_cpu_jobs_preparation_no_model_call_successor_v2",
+}:
     raise SystemExit("unexpected E029 jobs-preparation manifest identity or status")
 if payload["reranking_contract"]["candidate_text_policy"] != "full_text_unmodified":
     raise SystemExit("candidate text policy must remain full_text_unmodified")
@@ -69,6 +74,7 @@ emit("OUT_REL", payload["outputs"]["root"])
 emit("MODEL", payload["model"]["id"])
 emit("REVISION", payload["model"]["revision"])
 emit("RUNNER_SHA", payload["code_bundle"]["reranking_runner"]["sha256"])
+emit("POOL_RESOLVER_SHA", payload["code_bundle"]["audited_pool_resolver"]["sha256"])
 PY
 )"
 
@@ -92,6 +98,7 @@ done
 [[ "$(sha256sum "$ARTICLE_PROMPT" | awk '{print $1}')" == "$ARTICLE_PROMPT_SHA" ]] || { echo "article prompt SHA mismatch" >&2; exit 2; }
 [[ "$(sha256sum "$JP_PROMPT" | awk '{print $1}')" == "$JP_PROMPT_SHA" ]] || { echo "JP prompt SHA mismatch" >&2; exit 2; }
 [[ "$(sha256sum "$RUNNER" | awk '{print $1}')" == "$RUNNER_SHA" ]] || { echo "reranking runner SHA mismatch" >&2; exit 2; }
+[[ "$(sha256sum "$POOL_RESOLVER" | awk '{print $1}')" == "$POOL_RESOLVER_SHA" ]] || { echo "audited pool resolver SHA mismatch" >&2; exit 2; }
 
 mkdir -p "$OUT_ROOT/jobs"
 exec > >(tee -a "$OUT_ROOT/job-${SLURM_JOB_ID:-manual}.log") 2>&1
@@ -104,35 +111,46 @@ export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-8}" OPENBLAS_NUM_THREADS=1 MKL_NU
   exit 0
 }
 
-"$PYTHON_BIN" - "$MANIFEST" "$AUDIT" "$SEEDED_RECEIPT" "$COSINE_PPR_ROOT" "$LIGHTGCN_ROOT" "$OUT_ROOT" "$RUNNER" "$ARTICLE_PROMPT" "$JP_PROMPT" "$MODEL" "$REVISION" <<'PY'
+"$PYTHON_BIN" - "$MANIFEST" "$AUDIT" "$SEEDED_RECEIPT" "$LIGHTGCN_ROOT" "$OUT_ROOT" "$RUNNER" "$POOL_RESOLVER" "$LKG_DATA_ROOT" "$ARTICLE_PROMPT" "$JP_PROMPT" "$MODEL" "$REVISION" <<'PY'
 import hashlib
+import importlib.util
 import json
 import subprocess
 import sys
 from pathlib import Path
 
-manifest, audit_path, seeded_path, cosine_ppr_root, lightgcn_root, output_root, runner, article_prompt, jp_prompt = map(Path, sys.argv[1:10])
-model, revision = sys.argv[10:12]
+manifest, audit_path, seeded_path, lightgcn_root, output_root, runner, resolver_path, data_root, article_prompt, jp_prompt = map(Path, sys.argv[1:11])
+model, revision = sys.argv[11:13]
 payload = json.loads(manifest.read_text(encoding="utf-8"))
 audit = json.loads(audit_path.read_text(encoding="utf-8"))
 seeded = json.loads(seeded_path.read_text(encoding="utf-8"))
 output_root.mkdir(parents=True, exist_ok=True)
 
+resolver_spec = importlib.util.spec_from_file_location("e029_audited_pool_resolver", resolver_path)
+if resolver_spec is None or resolver_spec.loader is None:
+    raise SystemExit(f"cannot load audited pool resolver: {resolver_path}")
+resolver_module = importlib.util.module_from_spec(resolver_spec)
+resolver_spec.loader.exec_module(resolver_module)
+
 def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
-audit_hashes = {Path(row["path"]).name: row["sha256"] for row in audit["job_files"]}
 seeded_hashes = {}
 for seed in seeded["seeds"]:
     for row in seed["pools"]:
         seeded_hashes[Path(row["path"]).name] = row["sha256"]
 
 def cosine_ppr_pool(family, modality, k_in):
-    path = cosine_ppr_root / f"{family}_{modality}_kin{k_in}.jsonl"
-    expected = audit_hashes.get(path.name)
-    if expected is None or sha256(path) != expected:
-        raise SystemExit(f"unverified cosine/PPR pool: {path}")
-    return path
+    try:
+        return resolver_module.resolve_audited_pool(
+            audit["job_files"],
+            data_root=data_root,
+            family=family,
+            modality=modality,
+            k_in=k_in,
+        )
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
 
 def lightgcn_pool(seed, modality, k_in):
     path = lightgcn_root / f"lightgcn_{modality}_seed{seed}_k{k_in}.jsonl"
