@@ -152,6 +152,22 @@ def test_chat_token_counter_reads_input_ids_from_batch_encoding_like_result():
     assert auditor.count_chat_tokens(Tokenizer(), "Prompt complet") == 57
 
 
+def test_context_audit_uses_the_same_metadata_free_prompt_shape_as_the_reranker():
+    auditor = _load_auditor()
+
+    prompt = auditor.render_reranking_prompt("Instruction.", {
+        "question": "Quelle règle ?",
+        "candidates": [{"item_id": "a-1", "text": "Texte article", "source_rank": 7, "score": 0.99}],
+    })
+
+    assert prompt == (
+        "Instruction.\n\nQuestion :\nQuelle règle ?\n\nRéférences à ordonner :\n"
+        "[\n  {\n    \"item_id\": \"a-1\",\n    \"text\": \"Texte article\"\n  }\n]\n"
+    )
+    assert "source_rank" not in prompt
+    assert "score" not in prompt
+
+
 def test_fulltext_audit_report_is_immutable_and_records_completion_budget(tmp_path):
     auditor = _load_auditor()
     output = tmp_path / "fulltext_context_audit.json"

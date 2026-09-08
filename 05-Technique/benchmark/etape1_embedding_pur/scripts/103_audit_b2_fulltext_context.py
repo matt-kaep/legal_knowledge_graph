@@ -6,21 +6,16 @@ from __future__ import annotations
 import argparse
 from collections.abc import Iterable, Mapping
 import hashlib
-import importlib.util
 import json
 from pathlib import Path
+import sys
 from typing import Any, Callable
 
 
 SCRIPTS = Path(__file__).resolve().parent
-
-
-def _load_reranking_runner():
-    spec = importlib.util.spec_from_file_location("b2_reranking_runner_for_context_audit", SCRIPTS / "102_run_b2_comparable_reranking.py")
-    module = importlib.util.module_from_spec(spec)
-    assert spec.loader is not None
-    spec.loader.exec_module(module)
-    return module
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+from b2_reranking_prompt import render_reranking_prompt  # noqa: E402
 
 
 def sha256(path: Path) -> str:
@@ -216,7 +211,6 @@ def audit_fulltext_jobs(
     """Audit frozen jobs by condition without shortening any candidate text."""
     if expected_questions <= 0:
         raise ValueError("expected_questions must be positive")
-    runner = _load_reranking_runner()
     grouped: dict[tuple[str, str, int, str | None], list[tuple[str, int]]] = {}
     for job in jobs:
         family = str(job["family"])
@@ -231,7 +225,7 @@ def audit_fulltext_jobs(
             raise ValueError(f"{family}/{modality}/{qid}: candidate count differs from K_in")
         if any(not isinstance(candidate.get("text"), str) or not candidate["text"].strip() for candidate in candidates):
             raise ValueError(f"{family}/{modality}/{qid}: candidate text must be complete and non-empty")
-        prompt = runner.render_reranking_prompt(prompt_templates[modality], job)
+        prompt = render_reranking_prompt(prompt_templates[modality], job)
         grouped.setdefault((family, modality, k_in, replay_seed), []).append((qid, int(count_prompt_tokens(prompt))))
 
     conditions: list[dict[str, object]] = []

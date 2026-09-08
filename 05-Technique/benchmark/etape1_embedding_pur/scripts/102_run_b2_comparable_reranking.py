@@ -21,6 +21,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 import metrics as retrieval_metrics  # noqa: E402
+from b2_reranking_prompt import render_reranking_prompt  # noqa: E402
 
 
 class InvalidRerankingResponse(ValueError):
@@ -108,17 +109,6 @@ def zero_slots(k_out: int, *, resolution: str) -> list[dict[str, Any]]:
         {"rank": rank, "reference": None, "resolved_item_id": None, "resolution": resolution}
         for rank in range(1, k_out + 1)
     ]
-
-
-def render_reranking_prompt(prompt_template: str, job: dict[str, Any]) -> str:
-    visible_candidates = [
-        {"item_id": candidate["item_id"], "text": candidate["text"]}
-        for candidate in job["candidates"]
-    ]
-    return (
-        f"{prompt_template.rstrip()}\n\nQuestion :\n{job['question']}\n\n"
-        f"Références à ordonner :\n{json.dumps(visible_candidates, ensure_ascii=False, indent=2)}\n"
-    )
 
 
 def job_input_sha256(job: dict[str, Any]) -> str:
