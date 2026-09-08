@@ -8,6 +8,18 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## Phase 0 E029/E030 — inventaire terminé, aucun nouveau compute (2026-09-08)
+
+Le checkpoint traçable est `01-Projet/paper-control/INVENTAIRE-E029-E030-A3-2026-09-08.md` ; le suivi est `PROGRESS-E029-E030.md`. L'inventaire est en lecture seule : aucun job GPU, entraînement, reconstruction de graphe ou appel de modèle n'a été lancé.
+
+- A3 reste le contrat exclusif : SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`, 754 questions, 13 236 Articles et 114 851 décisions retournables.
+- Les sources top-100 réutilisables sont cosine `7de0504d...`, PPR `8f15c4d3...` et LightGCN G6 `b1448dd5...`. E027 est une baseline top-10 Judge, pas un vivier de reranking.
+- L'archive E029 est récupérée et vérifiée : 42 conditions / 31 668 réponses terminales, 754 questions et 10 positions par condition. Elle est toutefois incomplète face à la matrice requise de 100 conditions / 75 400 unités : 58 cellules manquent. Aucun agrégat ne peut les masquer.
+- La structure pénale A3 G1/G6/G7 existe (CSV `80ba400a...`, JSON `f5f909ff...`, manifest `2307ac04...`). Le graphe complet distinct reste à exporter, sans déduire de valeur.
+- E030 n'a aucun appel modèle ni résultat. Son préflight `0f7c40ce...` reste préparation seulement ; tout score Judge demeure exploratoire tant que `lawyer_agreement.json` est absent.
+
+Gate suivant : audit de contexte K=10..100, Articles et JP séparés, prompts/cartes inclus, limite 16 384 et réserve de sortie 256. Aucun GPU ne sera soumis avant ce rapport et un manifeste E029 successeur.
+
 ## Priorité A3 du 2026-09-08 — inventaire ciblé et replays manquants préparés
 
 L’inventaire exclut E017/E021/E022 et tout snapshot antérieur à A3. Il porte sur G1, G6 avec liens Article--Article et G7 avec ces mêmes liens, poids citation 1 / sémantique 0,25.

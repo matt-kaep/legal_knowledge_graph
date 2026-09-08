@@ -8,6 +8,19 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Résumé courant — Phase 0 E029/E030 terminée, aucun nouveau calcul
+
+- Checkpoint : `01-Projet/paper-control/INVENTAIRE-E029-E030-A3-2026-09-08.md` ; suivi : `PROGRESS-E029-E030.md`. Aucun calcul ni appel GPU n'a été lancé pendant l'inventaire.
+- Les seuls chiffres réutilisables pour le tableau principal restent les résultats retrieval A3 déjà transmis. Rankings top-100 complets et hashés : cosine `7de0504d...`, PPR `8f15c4d3...`, LightGCN G6 `b1448dd5...`.
+- E029 possède des sorties réelles mais 42 conditions sur les 100 demandées (31 668/75 400 unités). Elles sont exploratoires et en attente d'un audit d'identité strict ; aucun score E029 ne doit être repris dans le papier à ce stade.
+- E030 n'a aucun résultat. Les scores Judge historiques E016/E017 restent exploratoires et `lawyer_agreement.json` manque.
+- La structure pénale G1/G6/G7 est exportée ; la structure du graphe complet distinct reste à produire. Ne pas présenter une approximation structurelle.
+
+### 2026-09-08 — Gate de non-calcul E029/E030
+
+- A mesure désormais le budget de contexte K=10..100, Articles et JP séparés, prompt et cartes inclus. Aucune troncature, profondeur supprimée ou profondeur substituée ne sera introduite silencieusement.
+- Action B : ne pas intégrer E029/E030 ; le futur tableau reranking affichera toutes les profondeurs ou des `--` explicitement justifiés.
+
 ## Handoff prioritaire — résultats A3, reranking terminé et décision E030 requise (2026-09-08)
 
 Ce bloc remplace les statuts antérieurs « E029 en cours » du présent canal. Il est autonome et peut être transmis tel quel à la session Papier.
