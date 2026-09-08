@@ -8,6 +8,13 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — tableau structurel canonique G1/G6/G7 disponible (2026-09-08)
+
+- Source unique : `.../_campaign_b1_a3_structural_graphs_20260908/a3_structural_graphs.csv`, SHA `80ba400a88ebef618df5a9ce1430e66fe637607bf1051f891297bc93774f5b0f`; reçu SHA `2307ac04cfffd4a337211c56037045954d8ee9678212c0ba9c6843260a144bb7`.
+- À reprendre : G1 = 593 172 arêtes citation Article--JP, 45 composantes, composante principale `99,92494671925116 %`, degré moyen/médian `8,399906537423973 / 3`; G6-AA = 639 034 arêtes (593 172 citation + 45 862 AA), 37 composantes, `99,93910771561887 %`, `9,049358152839634 / 4`, normalisation symétrique, poids `AA=1`, `citation=1`; G7-AA = mêmes nœuds et arêtes, aucune normalisation, poids `AA=0,25`, `citation=1`.
+- Toujours distinguer 117 374 lignes JP brutes de 115 304 décisions uniques, 23 859 nœuds Article structurels de 13 236 candidats Article retournables et 114 851 candidats JP retournables. Le CSV comporte les percentiles, maximum, isolés et hashes des graphes sources.
+- Le fichier ne décrit que les graphes pénaux G1/G6/G7. **Ne pas écrire de chiffre pour un « graphe complet » distinct** : A n'a pas encore identifié de source structurelle non ambiguë pour cette notion.
+
 ## Mise à jour — E028 r5 rétablit le manifeste de code courant, sans changer les résultats (2026-09-08)
 
 - R4 reste une archive intègre de son exécution. R5 est le nouveau manifeste courant : `configs/paper_ready_existing_retrieval_a3_r5.json`, SHA `1d987e9479b30b33d212ba3d9ef79131592f826b8e43310c3322a10d6302d224`, reçu SHA `bcf4aa500cfe9cd6ee80ef5f00dd0634b98260482e448ad65d6445eb17eb4f84`.

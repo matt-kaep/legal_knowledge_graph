@@ -1,12 +1,19 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-e027-completed-e029-k70-article192-gpu-submitted
+status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-k70-article192-gpu-submitted
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
+
+## E036 — caractérisation structurelle canonique A3 des graphes pénaux G1/G6/G7 (2026-09-08)
+
+- L'export canonique est `.../_campaign_b1_a3_structural_graphs_20260908/a3_structural_graphs_manifest.json`, SHA-256 `2307ac04cfffd4a337211c56037045954d8ee9678212c0ba9c6843260a144bb7`. Il lie A3, le script `104_characterize_a3_structural_graphs.py` (SHA-256 `f59995ddc5d610121fa231aecd96ab4a48a9edaf7b822ede58c6e0eb188f6455`), le JSON détaillé (`f5f909ff5274e469350321351d3ad237511d4f10b68ad9b9959e2837ded36454`) et le CSV (`80ba400a88ebef618df5a9ce1430e66fe637607bf1051f891297bc93774f5b0f`).
+- Définition : G1 est le graphe pénal biparti de citations Article--JP (`graph_penal.npz`); G6 et G7 sont les graphes hybrides pénaux Article--JP + Article--Article (`graph_hybrid_mixed.npz`), avec poids et normalisation exportés. Chaque ligne distingue les **117 374 lignes JP brutes** des **115 304 décisions uniques**, ainsi que les 23 859 nœuds Article structurels et les univers retournables A3 de 13 236 / 114 851 candidats.
+- G1 a 593 172 arêtes de citation, 45 composantes, une plus grande composante de `0,9992494671925116`, degré moyen/médian `8,399906537423973 / 3`. G6 et G7 ont chacun 639 034 arêtes (593 172 citations + 45 862 liens AA), 37 composantes, une plus grande composante de `0,9993910771561887`, degré moyen/médian `9,049358152839634 / 4`; G6 applique la normalisation symétrique et poids AA/citation `1/1`, G7 aucun renormalisation et poids AA/citation `0,25/1`.
+- L'export couvre les trois graphes pénaux explicitement demandés. Un **graphe complet distinct** n'est pas encore caractérisé : aucun fichier source ne porte aujourd'hui une définition et un identifiant non ambigus de « graphe complet ». Aucun chiffre de graphe complet n'est donc communiqué ou déduit.
 
 ## E028 — dérivation r5, successeur de reproductibilité courant (2026-09-08)
 
