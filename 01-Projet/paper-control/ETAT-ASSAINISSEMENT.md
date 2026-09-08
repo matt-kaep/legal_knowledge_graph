@@ -8,12 +8,13 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
-## E029 — préflight CPU v4 seed-aware en cours, zéro appel modèle (2026-09-08)
+## E029 — préflight CPU v4 bloqué par la fenêtre de contexte, zéro appel modèle (2026-09-08)
 
 - Le manifeste v4 immuable est `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_fullmatrix_cpu_preflight_v4.json`, SHA-256 `a6026645ff0ddaac4e5375231189b974e37873369368c9e99c2b82145905b31a`. Il hérite explicitement du contrat v3 : A3, 100 viviers top-100 gelés, prompts et Gemma à la révision demandée ; il ne modifie ni texte ni profondeur.
 - V2 est archivé car son auditeur fusionnait des seeds LightGCN ; v3 est archivé car il importait un module de métriques inutile au préflight, absent du staging CPU. Aucun appel modèle ni token compté n'a été produit par ces deux tentatives. Le correctif extrait le rendu pur partagé avec le runner, rend la seed partie de l'identité de condition et ajoute l'agrégateur qui refuse doublon, dérive de contrat et matrice incomplète ; 30 tests E029 ciblés passent.
 - Les 100 viviers v2 sont validés byte à byte avant réemploi dans v3 : reçu `.../_campaign_b2_e029_fullmatrix_cpu_preflight_v3_20260908/input_pool_validation.json`, SHA-256 `0a95bc75c0750c1b2de7acae19843ce000e50a2abffd7599f469047a1985ce06`, 100 conditions × 754 questions, zéro appel modèle.
-- L'audit de tokens exact du template de chat v4 est en cours sur CPU Télécom, 20 lots indépendants. Il conserve `texte` intégral pour les Articles et `synthese` intégrale pour les JP, réserve 256 tokens de sortie sur 16 384, et ne tronque rien. Aucun GPU E029/E030 n'est autorisé avant le reçu global v4 : 100 conditions, zéro doublon, et zéro dépassement pour chaque condition.
+- L'audit de tokens exact du template de chat v4 est terminé : reçu `.../_campaign_b2_e029_fullmatrix_cpu_preflight_v4_20260908/cpu_preflight_receipt.json`, SHA-256 `d3da604a0225c97156bcbdc5bd9caf94d75de32bb4ab2901e28ace1de9b6db0f`; agrégat des 100 conditions SHA-256 `ea1d060ed8595406d40d022b6b6a1069c084003623f01ee9f0e5eb38243b92e3`; CSV synthétique SHA-256 `f56dd0417d890f21ff0f403989343eb0e413f7d6d024de0d4e01c08360ebf78d`. Il atteste 42 conditions compatibles, 58 incompatibles et 24 509 prompts dépassant le budget d'entrée de 16 128 tokens ; `model_calls=0`.
+- Détail : cosine Articles échoue dès K=10 ; PPR Articles ne passe qu'à K=10 ; LightGCN Articles passe à K=10 et K=20 seulement ; pour JP, cosine/PPR/LightGCN passent jusqu'à K=70 et échouent à K=80--100. Les textes sont restés `texte` intégral (Articles) et `synthese` intégrale (JP), sans troncature. Aucune condition partielle ne sera lancée : un nouveau contrat de représentation commun, explicitement approuvé et hashé, est requis avant E029 GPU ; E030 reste bloquée en dépendance.
 
 ## Phase 0 E029/E030 — inventaire terminé, aucun nouveau compute (2026-09-08)
 

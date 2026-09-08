@@ -8,11 +8,11 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
-## Mise à jour — E029 préflight CPU v4 seed-aware en cours (2026-09-08)
+## Mise à jour — E029 bloquée par le contexte, zéro appel modèle (2026-09-08)
 
-Le reranking comparable n'a encore aucun score ni sortie LLM intégrable. Le manifeste actif est `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_fullmatrix_cpu_preflight_v4.json` (SHA-256 `a6026645ff0ddaac4e5375231189b974e37873369368c9e99c2b82145905b31a`). Il hérite de v3 sans changer A3 ni les viviers réels top-100 ; il remplace seulement l'import du runner complet par le même rendu pur de prompt utilisé par ce runner. Les 100 viviers restent validés byte à byte par `.../_campaign_b2_e029_fullmatrix_cpu_preflight_v3_20260908/input_pool_validation.json` (SHA-256 `0a95bc75c0750c1b2de7acae19843ce000e50a2abffd7599f469047a1985ce06`).
+Le reranking comparable n'a aucun score ni sortie LLM intégrable. Le manifeste v4 est `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_fullmatrix_cpu_preflight_v4.json` (SHA-256 `a6026645ff0ddaac4e5375231189b974e37873369368c9e99c2b82145905b31a`). Les 100 viviers restent validés byte à byte par `.../_campaign_b2_e029_fullmatrix_cpu_preflight_v3_20260908/input_pool_validation.json` (SHA-256 `0a95bc75c0750c1b2de7acae19843ce000e50a2abffd7599f469047a1985ce06`). Le reçu final v4 est `.../_campaign_b2_e029_fullmatrix_cpu_preflight_v4_20260908/cpu_preflight_receipt.json` (SHA-256 `d3da604a0225c97156bcbdc5bd9caf94d75de32bb4ab2901e28ace1de9b6db0f`).
 
-Statut à reprendre dans le papier : **aucun résultat E029 ou E030 n'est reportable**. V2 est archivé (seeds LightGCN fusionnées), v3 est archivé (échec d'import avant comptage), tous deux sans appel modèle. L'audit exact v4 des 100 prompts est en cours, avec Articles `texte` intégral, JP `synthese` intégrale, contexte 16 384 et réserve de sortie 256 ; aucune troncature et aucun appel modèle. Toute future expérience GPU E029 est conditionnée à un reçu v4 complet sans dépassement. E030 reste séparée, sans score et exploratoire jusqu'à l'audit avocat.
+Statut à reprendre dans le papier : **aucun résultat E029 ou E030 n'est reportable**. V2 est archivé (seeds LightGCN fusionnées), v3 est archivé (échec d'import avant comptage), tous deux sans appel modèle. L'audit exact v4 couvre les 100 prompts avec Articles `texte` intégral, JP `synthese` intégrale, contexte 16 384 et réserve de sortie 256 : 42 conditions passent, 58 échouent, 24 509 prompts dépassent le budget d'entrée de 16 128 tokens et `model_calls=0`. Aucune troncature, profondeur supprimée ou matrice GPU partielle n'est autorisée. E029 attend une règle de représentation compacte commune, explicitement gelée ; E030 reste séparée, sans score et exploratoire jusqu'à l'audit avocat.
 
 ## Résumé courant — E029 matrice complète en préflight CPU, aucun résultat LLM nouveau
 
