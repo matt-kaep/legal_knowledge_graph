@@ -186,12 +186,14 @@ def job_input_sha256(job: dict[str, Any]) -> str:
     return hashlib.sha256(canonical_json(payload).encode("utf-8")).hexdigest()
 
 
-def call_openai_compatible(*, endpoint: str, model: str, prompt: str, pool_ids: list[str], k_out: int) -> str:
+def call_openai_compatible(
+    *, endpoint: str, model: str, prompt: str, pool_ids: list[str], k_out: int, max_output_tokens: int,
+) -> str:
     payload = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0,
-        "max_tokens": 256,
+        "max_tokens": max_output_tokens,
         "response_format": reranking_response_format(k_out, pool_ids),
     }
     request = Request(endpoint.rstrip("/") + "/chat/completions", data=json.dumps(payload, ensure_ascii=False).encode("utf-8"), headers={"Content-Type": "application/json"}, method="POST")
@@ -306,9 +308,12 @@ def run_jobs(
     model_id: str,
     prompts: dict[str, Path],
     max_workers: int = 1,
+    max_output_tokens: int = 256,
 ) -> dict[str, int]:
     if max_workers <= 0:
         raise ValueError("max_workers must be positive")
+    if max_output_tokens <= 0:
+        raise ValueError("max_output_tokens must be positive")
     templates = {modality: path.read_text(encoding="utf-8") for modality, path in prompts.items()}
     terminal = _latest_terminal(responses_path)
     responses_path.parent.mkdir(parents=True, exist_ok=True)
@@ -319,7 +324,11 @@ def run_jobs(
         identity = {name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}
         try:
             pool_ids = [str(candidate["item_id"]) for candidate in job["candidates"]]
-            raw = call_openai_compatible(endpoint=endpoint, model=model_id, prompt=render_reranking_prompt(templates[job["modality"]], job), pool_ids=pool_ids, k_out=int(job["k_out"]))
+            raw = call_openai_compatible(
+                endpoint=endpoint, model=model_id,
+                prompt=render_reranking_prompt(templates[job["modality"]], job),
+                pool_ids=pool_ids, k_out=int(job["k_out"]), max_output_tokens=max_output_tokens,
+            )
             raw_ids = parse_ranked_ids(raw, pool_ids, int(job["k_out"]))
             ranked_ids, fallback_ids = normalize_ranked_ids(raw_ids, pool_ids, int(job["k_out"]))
             slots = [{"rank": rank, "reference": item, "resolved_item_id": item, "resolution": "unique"} for rank, item in enumerate(ranked_ids, start=1)]
@@ -437,6 +446,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     run.add_argument("--prompt-article", type=Path, required=True)
     run.add_argument("--prompt-jp", type=Path, required=True)
     run.add_argument("--max-workers", type=int, default=1, help="Bounded concurrent requests to one local vLLM server.")
+    run.add_argument("--max-output-tokens", type=int, default=256, help="Frozen completion budget supplied by the execution manifest.")
     materialize = commands.add_parser("materialize")
     materialize.add_argument("--questions", type=Path, required=True)
     materialize.add_argument("--jobs", type=Path, required=True)
@@ -474,7 +484,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "run":
         prompts = {"article": args.prompt_article, "jp": args.prompt_jp}
-        print(json.dumps(run_jobs(jobs_path=args.jobs, responses_path=args.responses, endpoint=args.endpoint, model_id=args.model_id, prompts=prompts, max_workers=args.max_workers)))
+        print(json.dumps(run_jobs(jobs_path=args.jobs, responses_path=args.responses, endpoint=args.endpoint, model_id=args.model_id, prompts=prompts, max_workers=args.max_workers, max_output_tokens=args.max_output_tokens)))
         return 0
     jobs = [json.loads(line) for line in args.jobs.read_text(encoding="utf-8").splitlines() if line.strip()]
     responses = [json.loads(line) for line in args.responses.read_text(encoding="utf-8").splitlines() if line.strip()]

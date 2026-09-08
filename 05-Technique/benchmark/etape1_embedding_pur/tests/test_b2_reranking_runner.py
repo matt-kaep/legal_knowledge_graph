@@ -97,6 +97,40 @@ def test_runner_can_execute_two_independent_jobs_concurrently_and_preserve_hashe
     assert {row["input_sha256"] for row in rows} == {runner.job_input_sha256(job) for job in jobs}
 
 
+def test_runner_passes_the_frozen_completion_budget_to_the_provider(tmp_path, monkeypatch):
+    runner = _load_runner()
+    prompts = {"article": tmp_path / "article.txt", "jp": tmp_path / "jp.txt"}
+    prompts["article"].write_text("Articles.", encoding="utf-8")
+    prompts["jp"].write_text("JP.", encoding="utf-8")
+    job = {
+        "experiment_id": "E029", "family": "cosine", "modality": "article", "qid": "q1",
+        "question": "Question", "k_in": 2, "k_out": 2, "replay_seed": None,
+        "source_method": "cosine", "source_ranking_sha256": "ranking", "source_texts_sha256": "texts",
+        "prompt_sha256": "prompt", "model_id": "model", "model_revision": "revision", "temperature": 0,
+        "candidates": [{"item_id": "a1", "text": "A1"}, {"item_id": "a2", "text": "A2"}],
+    }
+    jobs_path = tmp_path / "jobs.jsonl"
+    jobs_path.write_text(json.dumps(job) + "\n", encoding="utf-8")
+    observed = []
+
+    def fake_call(**kwargs):
+        observed.append(kwargs["max_output_tokens"])
+        return json.dumps({"ranked_ids": ["a1", "a2"]})
+
+    monkeypatch.setattr(runner, "call_openai_compatible", fake_call)
+    runner.run_jobs(
+        jobs_path=jobs_path,
+        responses_path=tmp_path / "responses.jsonl",
+        endpoint="http://unused",
+        model_id="model",
+        prompts=prompts,
+        max_workers=1,
+        max_output_tokens=512,
+    )
+
+    assert observed == [512]
+
+
 def test_jobs_keep_depth_and_replay_seed_as_distinct_frozen_conditions(tmp_path):
     runner = _load_runner()
     pool = tmp_path / "pools.jsonl"
