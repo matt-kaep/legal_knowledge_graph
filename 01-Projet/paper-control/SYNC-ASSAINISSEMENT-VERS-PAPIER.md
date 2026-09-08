@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — E028 r4 répare la reproductibilité, sans changer aucun chiffre (2026-09-08)
+
+- A a conservé le manifeste et les exports r3 comme archive immuable, puis a créé le successeur `configs/paper_ready_existing_retrieval_a3_r4.json` (SHA `0855a35878ff33abdc147637c7d151908fbd5b459c4a0b59d2b0cee2d7a52e89`). Il fixe le script de dérivation courant (SHA `6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20`) au lieu de modifier la preuve historique r3.
+- R4 a relu uniquement les rankings top-100 cosine et PPR B1-A3 déjà gelés, a validé leurs hashes puis a produit courbes K=1–100, CSV de métriques et figures. Reçu : `.../_campaign_b1_a3_paper_ready_existing_retrieval_r4_20260908/depth_curves/depth_curves_manifest.json`, SHA `5229c033d218a858c82ca79956d0a2b791875052b667b1d47d56be2d0e6635a6`.
+- Les métriques et courbes sont byte-for-byte identiques à r3 (métriques SHA `fa7abb380c984b652d890576ca2e238f9a7110b9c368b8c0541f152f1d47d5a2`). **Action Papier :** aucune valeur de tableau ne change et r4 ne remplace pas l’export distinct à trois méthodes cosine/PPR/LightGCN G6 ; il rend seulement la provenance de code de la dérivation cosine/PPR à nouveau rejouable.
+
 ## Mise à jour — E029 successeur : préflight complet, exécution GPU gelée, aucun score (2026-09-08)
 
 - Le reranking E029 successeur est prêt à être soumis, mais **ne fournit encore aucun résultat**. Son contrat exploratoire est : même reranker Gemma figé, `K_in=10,20,30,40,50,60,70`, `K_out=10`, mêmes 754 questions, viviers cosine/PPR/LightGCN G6 et trois seeds LightGCN séparées. Articles : préfixe de 192 tokens Gemma du champ `texte`; JP : champ `synthese` complet. Le retrieveur, le graphe, la seed, le rang et les scores ne sont pas montrés au modèle.

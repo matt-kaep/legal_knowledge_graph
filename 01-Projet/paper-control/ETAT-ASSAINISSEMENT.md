@@ -8,6 +8,13 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## E028 — dérivation r4 des rankings B1-A3 gelés, traçabilité de code réparée (2026-09-08)
+
+- Le manifeste historique `paper_ready_existing_retrieval_a3_r3.json` est conservé inchangé : son hash de script `33219ad466a07c8be9800652913406b6c32399b84fb7457bd94555bafc53b10d` désigne correctement le code qui avait produit r3. Le test ne compare plus un manifeste historique à un script ultérieurement modifié.
+- Le successeur versionné `05-Technique/benchmark/etape1_embedding_pur/configs/paper_ready_existing_retrieval_a3_r4.json` (SHA-256 `0855a35878ff33abdc147637c7d151908fbd5b459c4a0b59d2b0cee2d7a52e89`) référence les mêmes rankings cosine/PPR gelés, A3 et la même formule Hit@K, mais épingle le script courant `97_build_b1_depth_curves.py` (SHA-256 `6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20`). Il ne réentraîne ni ne relance aucun retrieveur.
+- La dérivation CPU Télécom r4 a terminé en 12 secondes. Reçu : `.../_campaign_b1_a3_paper_ready_existing_retrieval_r4_20260908/depth_curves/depth_curves_manifest.json`, SHA-256 `5229c033d218a858c82ca79956d0a2b791875052b667b1d47d56be2d0e6635a6`. Il valide les deux sources hashées, 754 questions, 13 236 Articles, 114 851 JP et les ordres A3.
+- Les métriques à K=10 sont exactement identiques à r3 (CSV SHA-256 commun `fa7abb380c984b652d890576ca2e238f9a7110b9c368b8c0541f152f1d47d5a2`) et les courbes CSV sont byte-for-byte identiques. R4 est donc une correction de reproductibilité, non un nouveau résultat. Les figures r4 existent séparément : PNG `324e39c17017b6df9bcf2d953eaef636bd6de1b19c4655c96ec07f541ab403eb`, PDF `c9ffa6bb87a5927a371ecb46c6812bf280dc8edfe177c51ce9e31f5d5a428262`.
+
 ## E029 — préflight complet, manifeste GPU Article-192 / JP-synthèse gelé (2026-09-08)
 
 - Décision scientifique appliquée au **nouveau** contrat uniquement : `K_in=10,20,30,40,50,60,70`, `K_out=10`; chaque candidat Article est le préfixe des **192 tokens** du tokenizer Gemma figé, chaque candidat JP est la `synthese` complète. La même règle est imposée à cosine, PPR et aux trois graines LightGCN. Le retrieveur, le graphe, la graine, le rang source et le score restent invisibles du prompt.
