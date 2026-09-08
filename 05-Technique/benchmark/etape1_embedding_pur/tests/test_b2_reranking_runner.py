@@ -141,6 +141,7 @@ def test_materialization_exports_seed_specific_metrics_before_the_seed_mean(tmp_
             "family": "lightgcn",
             "modality": "article",
             "qid": "q1",
+            "k_in": 2,
             "replay_seed": job["replay_seed"],
             "input_sha256": runner.job_input_sha256(job),
             "status": "ok",

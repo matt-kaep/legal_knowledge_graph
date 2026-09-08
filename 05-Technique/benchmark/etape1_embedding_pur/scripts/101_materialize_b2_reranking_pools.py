@@ -21,9 +21,17 @@ import numpy as np
 import pandas as pd
 
 
-ROOT = Path(__file__).resolve().parents[1]
-CODE_REPO = Path(os.environ.get("LKG_REPO", str(ROOT.parents[3]))).resolve()
-DATA_REPO = Path(os.environ.get("LKG_DATA_ROOT", str(CODE_REPO))).resolve()
+def resolve_repository_roots(script_directory: Path, environment: dict[str, str]) -> tuple[Path, Path]:
+    """Resolve portable code/data roots without evaluating an unused fallback."""
+    if "LKG_REPO" in environment:
+        code_repo = Path(environment["LKG_REPO"]).resolve()
+    else:
+        code_repo = script_directory.resolve().parents[3]
+    data_repo = Path(environment["LKG_DATA_ROOT"]).resolve() if "LKG_DATA_ROOT" in environment else code_repo
+    return code_repo, data_repo
+
+
+CODE_REPO, DATA_REPO = resolve_repository_roots(Path(__file__).resolve().parent, os.environ)
 
 
 def sha256(path: Path) -> str:
@@ -98,7 +106,7 @@ def load_texts(path: Path, modality: str) -> dict[str, str]:
 def materialize_pool(
     *, ranking_path: Path, questions_path: Path, text_source_path: Path, output_path: Path,
     family: str, modality: str, candidate_ids: set[str], k_in: int, method: str | None = None,
-    replay_seed: str | None = None,
+    replay_seed: str | None = None, selected_graph_version: str | None = None,
 ) -> int:
     if modality not in {"article", "jp"}:
         raise ValueError("modality must be article or jp")
@@ -123,6 +131,16 @@ def materialize_pool(
             raise ValueError(f"frozen ranking requires explicit method; found {methods}")
         method = methods[0]
     ranking = ranking.loc[ranking["method"].astype(str).eq(method)].copy()
+    if selected_graph_version is not None:
+        if "selected_graph_version" not in ranking.columns:
+            raise ValueError("frozen ranking has no selected_graph_version column")
+        ranking = ranking.loc[
+            ranking["selected_graph_version"].astype(str).eq(selected_graph_version)
+        ].copy()
+        if ranking.empty:
+            raise ValueError(f"frozen ranking has no rows for graph {selected_graph_version}")
+    elif "selected_graph_version" in ranking.columns and ranking["selected_graph_version"].nunique() > 1:
+        raise ValueError("frozen ranking contains several graphs; --selected-graph-version is required")
     seed_column = "replay_seed" if "replay_seed" in ranking.columns else "seed" if "seed" in ranking.columns else None
     if replay_seed is not None:
         if seed_column is None:
@@ -170,6 +188,7 @@ def materialize_pool(
                 "k_in": k_in,
                 "k_out": 10,
                 "source_method": method,
+                "selected_graph_version": selected_graph_version,
                 "replay_seed": str(replay_seed) if replay_seed is not None else None,
                 "source_ranking_sha256": ranking_sha,
                 "source_texts_sha256": texts_sha,
@@ -191,6 +210,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--a3-manifest", type=Path, required=True)
     parser.add_argument("--method")
     parser.add_argument("--replay-seed")
+    parser.add_argument("--selected-graph-version")
     parser.add_argument("--k-in", type=int, required=True)
     return parser.parse_args(argv)
 
@@ -209,6 +229,7 @@ def main(argv: list[str] | None = None) -> int:
         k_in=args.k_in,
         method=args.method,
         replay_seed=args.replay_seed,
+        selected_graph_version=args.selected_graph_version,
     )
     print(json.dumps({"questions": count, "output": str(args.output)}))
     return 0

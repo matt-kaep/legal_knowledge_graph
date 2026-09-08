@@ -30,6 +30,18 @@ def _rankings(modality: str, ids: list[str]) -> pd.DataFrame:
     })
 
 
+def test_repository_roots_use_explicit_environment_without_evaluating_shallow_default(tmp_path):
+    materializer = _load_materializer()
+
+    code_root, data_root = materializer.resolve_repository_roots(
+        tmp_path / "scripts",
+        {"LKG_REPO": "/portable/code", "LKG_DATA_ROOT": "/portable/data"},
+    )
+
+    assert code_root == Path("/portable/code")
+    assert data_root == Path("/portable/data")
+
+
 def test_materializer_preserves_real_source_order_and_text(tmp_path):
     materializer = _load_materializer()
     ranking = tmp_path / "ranking.parquet"
@@ -171,7 +183,45 @@ def test_materializer_selects_one_frozen_lightgcn_replay_seed(tmp_path):
     assert row["replay_seed"] == "42"
 
 
-def test_e029_preflight_is_explicitly_blocked_on_a_common_context_budget():
+def test_materializer_requires_exact_graph_when_one_ranking_contains_several_graphs(tmp_path):
+    materializer = _load_materializer()
+    ranking = tmp_path / "ranking.parquet"
+    pd.DataFrame({
+        "qid": ["q1"] * 4,
+        "method": ["PPR-sweep-k20-both-a0.5"] * 4,
+        "modality": ["jp"] * 4,
+        "rank": [1, 2, 1, 2],
+        "item_id": ["g1-1", "g1-2", "g6-1", "g6-2"],
+        "selected_graph_version": ["G1", "G1", "G6-citation-AA-knn5", "G6-citation-AA-knn5"],
+    }).to_parquet(ranking, index=False)
+    texts = tmp_path / "jp_texts.parquet"
+    pd.DataFrame({
+        "jp_id": ["g1-1", "g1-2", "g6-1", "g6-2"],
+        "synthese": ["G1-1", "G1-2", "G6-1", "G6-2"],
+    }).to_parquet(texts, index=False)
+    questions = tmp_path / "questions.json"
+    questions.write_text(json.dumps({"questions": [{"qid": "q1", "enonce": "Question"}]}), encoding="utf-8")
+    output = tmp_path / "pool.jsonl"
+
+    materializer.materialize_pool(
+        ranking_path=ranking,
+        questions_path=questions,
+        text_source_path=texts,
+        output_path=output,
+        family="ppr",
+        modality="jp",
+        candidate_ids={"g1-1", "g1-2", "g6-1", "g6-2"},
+        k_in=2,
+        method="PPR-sweep-k20-both-a0.5",
+        selected_graph_version="G6-citation-AA-knn5",
+    )
+
+    row = json.loads(output.read_text(encoding="utf-8"))
+    assert [candidate["item_id"] for candidate in row["candidates"]] == ["g6-1", "g6-2"]
+    assert row["selected_graph_version"] == "G6-citation-AA-knn5"
+
+
+def test_historical_e029_preflight_stays_blocked_and_does_not_claim_current_code():
     payload = json.loads(PREFLIGHT_MANIFEST.read_text(encoding="utf-8"))
 
     assert payload["experiment_id"] == "E029"
@@ -179,4 +229,7 @@ def test_e029_preflight_is_explicitly_blocked_on_a_common_context_budget():
     assert payload["common_contract_if_unblocked"]["k_in"] == [50, 100]
     assert payload["common_contract_if_unblocked"]["k_out"] == 10
     assert payload["context_audit_characters_before_any_truncation"]["kin100"]["cosine_article"]["above_64000"] == 676
-    assert payload["code_bundle"]["pool_materializer"]["sha256"] == hashlib.sha256(SCRIPT.read_bytes()).hexdigest()
+    # This is a sealed historical preflight, not a manifest for the current
+    # pool-materializer revision.  A later code revision must create a new
+    # manifest rather than silently rewriting this archival hash.
+    assert payload["code_bundle"]["pool_materializer"]["sha256"] != hashlib.sha256(SCRIPT.read_bytes()).hexdigest()
