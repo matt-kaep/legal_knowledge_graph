@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — E029 autorisé sur GPU, aucun score encore disponible (2026-09-09)
+
+- Le préflight CPU output-512 est terminé sur Télécom (`986427`, `0:0`, 18 min 56 s), sans appel de modèle. Son reçu hashé `.../_campaign_b2_e029_a3_k70_article192_output512_preflight_v1_20260909/preflight_receipt.json` vaut `da5033e7be5a0e59f0ffdf5172a5a3e976cdc58227f11baefc83f9deea5a9d8d` : 70 conditions compatibles, 52 780 appels prévus, zéro dépassement de contexte et zéro incompatibilité de budget de réponse. Les audits associés valent `86a6ee8d83467b96ac373921d574dfd6efdb1a471595d5591203d1c4c3005811` (contexte) et `3049cb4d8776bb2416e0a9bb97a9ecd23f4bb73aade3ac2733f43d6e4f6a1120` (sortie ; maximum conservatif 425 tokens).
+- Le manifeste GPU distinct est `configs/b2_reranking_comparable_a3_k70_article192_output512_execution_v2.json`, SHA `c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586`. Il conserve A3, les viviers, K=10--70, les prompts, Gemma et température zéro; seule la réserve de sortie passe de 256 à 512 tokens. Il interdit explicitement de réutiliser l'archive tronquée output-256.
+- Statut pour Papier : **ne pas intégrer de résultat E029 ou E030 à ce stade**. Les cinq lots GPU E029 et leur agrégation restent à exécuter, puis les rankings gelés permettront le lancement distinct de E030. E030 demeure une mesure exploratoire centrale de pertinence juridique, non une validation humaine du juge.
+
 ## Mise à jour — paquet publiable A3/B1 et tableaux exacts versionnés (2026-09-08)
 
 - Les tableaux à reprendre sont maintenant versionnés dans la branche : `results/benchmark-a3-b1/main_table_articles.csv` (SHA `44cb8a4bd81ccc5368cc8f802a242c352076f378100184613a0068159e0b1c9d`) et `main_table_jurisprudence.csv` (SHA `0ad76a437f903c06acd3d4e8cf824939c0aa2813d158e7d4f41369fbe4c875b0`). Le reçu `main_table_manifest.json` (SHA `f7d2b7399a6a81eb4442020da6a27e858be12ab3d8aa95b5b4295c9c7aeb021b`) les relie au CSV source B1-A3 G6, SHA `9569ea74bb3d7fa50ef5fd80cd86cbc8879ec95fb41686ca8a34bdd79f20f7ad`.
