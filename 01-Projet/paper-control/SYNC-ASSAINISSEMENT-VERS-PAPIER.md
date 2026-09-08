@@ -20,6 +20,7 @@ tags: [coordination, benchmark, papier]
 - Le tableau E030 restera **distinct** du tableau des métriques exactes. Il est scientifiquement utile comme mesure complémentaire de pertinence juridique, même avant l’audit avocat ; son statut sera explicitement `exploratoire`.
 - L’absence actuelle de `lawyer_agreement.json` n’empêche pas le calcul ni la communication descriptive du score. Elle interdit de présenter le juge comme validé par des avocats, ou d’en déduire une conclusion de supériorité entre méthodes ou graphes.
 - Contrôle technique déjà effectué : les cinq tests du runner préparé passent. Ils attestent notamment que la fiche JP ne contient que `synthese`, que les métadonnées de retrieval sont absentes de la partie visible, et que le score conserve dix positions avec gains A=1, B=0,5. Ce n’est pas encore une autorisation d’exécution : A doit d’abord disposer des rankings E029 hashés, puis B doit figer le manifeste d’exécution (modèle/révision, snapshot/tokenizer et budget inclus).
+- L'exécuteur versionné de A est prêt : `scripts/110_run_b2_e030_llm_judge.py`, SHA `10fe7fac3b177d0b3a6ade586169b1b20ac6cf586ab23983fd42d51f2c4978ef`. Il ne reçoit que des jobs déjà gelés, écrit les réponses append-only puis refuse toute matérialisation incomplète. Ses quatre tests s'ajoutent aux cinq tests préparatoires; la suite complète est verte (`397 passed`). Cela prépare le lancement sans créer de liste, appel modèle ou score E030.
 
 ## Mise à jour — tableau structurel canonique G1/G6/G7 disponible (2026-09-08)
 
