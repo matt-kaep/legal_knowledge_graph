@@ -13,6 +13,7 @@ tags: [coordination, benchmark, papier]
 - Dès que les rankings E029 sont complets, contrôlés et gelés, A lancera E030. Le juge recevra seulement la question et une fiche anonymisée par candidat ; aucune information sur la méthode, le graphe, la graine, le rang, le score ou la vérité terrain ne sera visible.
 - Le tableau E030 restera **distinct** du tableau des métriques exactes. Il est scientifiquement utile comme mesure complémentaire de pertinence juridique, même avant l’audit avocat ; son statut sera explicitement `exploratoire`.
 - L’absence actuelle de `lawyer_agreement.json` n’empêche pas le calcul ni la communication descriptive du score. Elle interdit de présenter le juge comme validé par des avocats, ou d’en déduire une conclusion de supériorité entre méthodes ou graphes.
+- Contrôle technique déjà effectué : les cinq tests du runner préparé passent. Ils attestent notamment que la fiche JP ne contient que `synthese`, que les métadonnées de retrieval sont absentes de la partie visible, et que le score conserve dix positions avec gains A=1, B=0,5. Ce n’est pas encore une autorisation d’exécution : A doit d’abord disposer des rankings E029 hashés, puis B doit figer le manifeste d’exécution (modèle/révision, snapshot/tokenizer et budget inclus).
 
 ## Mise à jour — tableau structurel canonique G1/G6/G7 disponible (2026-09-08)
 
