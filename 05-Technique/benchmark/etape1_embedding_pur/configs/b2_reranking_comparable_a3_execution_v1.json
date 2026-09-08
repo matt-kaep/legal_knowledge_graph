@@ -1,0 +1,96 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-execution-v1-2026-09-08",
+  "campaign_id": "b2-reranking-comparable-a3-execution-v1-2026-09-08",
+  "schema_version": "b2-comparable-reranking-execution.v1",
+  "experiment_id": "E029",
+  "status": "frozen_authorized_model_execution",
+  "purpose": "Execute the five immutable full-text reranking shards prepared under B2/A3. This annex does not select a retrieval method or graph, does not change its candidate pools and remains distinct from LLM-as-a-Judge.",
+  "scientific_status": "exploratory_reranking_annex",
+  "predecessor": {
+    "jobs_preparation_manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_jobs_preparation_v3.json",
+    "jobs_preparation_manifest_sha256": "736541ebd336e8ae0afd3d8aa73db14c8f0382258bb4bedbd392a419bdd28b3b",
+    "jobs_preparation_slurm_job": "985497",
+    "jobs_preparation_receipt_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs_preparation_receipt.json",
+    "jobs_preparation_receipt_sha256": "ca10235c8a9570b58ec8527581c404f26882834c31af7d235b52ce13710d80a3",
+    "jobs_preparation_model_calls": 0
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754,
+    "retrieval_candidate_universe": {"articles": 13236, "decisions": 114851}
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 256,
+    "snapshot_policy": "offline_exact_revision"
+  },
+  "prompts": {
+    "article": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt", "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"},
+    "jp": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt", "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"}
+  },
+  "reranking_contract": {
+    "candidate_text_policy": "full_text_unmodified",
+    "truncation": "forbidden",
+    "k_out": 10,
+    "questions_per_condition": 754,
+    "source_order_hidden_from_model": true,
+    "lightgcn_seed_policy": "keep final replay seeds 42, 43 and 44 separate in jobs, responses and metrics; derive their arithmetic mean only after complete runs",
+    "selection_policy": "no configuration, graph or depth selection is allowed from execution outputs"
+  },
+  "resources": {
+    "partition_preference": ["H100", "L40S"],
+    "gpus_per_shard": 1,
+    "cpus_per_shard": 8,
+    "memory_per_shard": "48G",
+    "walltime_per_shard": "12:00:00",
+    "vllm": {"max_model_len": 16384, "max_num_seqs": 2, "gpu_memory_utilization": 0.9}
+  },
+  "code_bundle": {
+    "reranking_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py", "sha256": "e03dd0bacdd0f6dbaf2f1791da9de7e027c8f652ff367e106600e9a14f12ddd7"},
+    "gpu_launcher": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b2_e029_reranking_shard_v1.sh", "sha256": "ad7931860820c8c8026891a0e19cd2428492f0926084b14c50f0d8d5d3549125"}
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_reranking_a3_execution_v1_20260908",
+    "shard_pattern": "shards/{shard}",
+    "required_files": ["responses.jsonl", "materialized/materialization_receipt.json", "run_receipt.json"]
+  },
+  "shards": [
+    {
+      "id": "cosine-jp",
+      "conditions": [{"family": "cosine", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/cosine-jp.jsonl", "sha256": "e626772d282a8a28863b845f9ba1f21dbdfda1ba5fdc2a9a52fba14d339715de", "count": 5278}
+    },
+    {
+      "id": "ppr",
+      "conditions": [{"family": "ppr", "modality": "article", "k_in": [10], "replay_seed": null}, {"family": "ppr", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/ppr.jsonl", "sha256": "e08421536ae6577449c71b116b1c3523705bfee57bea116ee39b8bbdd51092b5", "count": 6032}
+    },
+    {
+      "id": "lightgcn-seed42",
+      "conditions": [{"family": "lightgcn", "modality": "article", "k_in": [10, 20], "replay_seed": 42}, {"family": "lightgcn", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 42}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/lightgcn-seed42.jsonl", "sha256": "afac6f33596656a106245f1fd691b2d6f67d2f2be64b9dbaf435266a9d0b41fd", "count": 6786}
+    },
+    {
+      "id": "lightgcn-seed43",
+      "conditions": [{"family": "lightgcn", "modality": "article", "k_in": [10, 20], "replay_seed": 43}, {"family": "lightgcn", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 43}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/lightgcn-seed43.jsonl", "sha256": "5586959c6a5b7759932961f7ef8bcea1756b12f7dd97d9940679ebe88cc27544", "count": 6786}
+    },
+    {
+      "id": "lightgcn-seed44",
+      "conditions": [{"family": "lightgcn", "modality": "article", "k_in": [10, 20], "replay_seed": 44}, {"family": "lightgcn", "modality": "jp", "k_in": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 44}],
+      "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/lightgcn-seed44.jsonl", "sha256": "72cc2497d097a94c42af92cf2fdc6329c9ee70097a2f9910762017c3769189c5", "count": 6786}
+    }
+  ],
+  "totals": {"shards": 5, "conditions": 42, "model_calls": 31668},
+  "execution_gate": {
+    "allowed": ["run only the frozen job files listed above", "resume a shard only when its materialization receipt is absent", "materialize exact metrics only after complete per-shard coverage"],
+    "forbidden": ["pool regeneration", "text truncation", "seed mixing", "post-evaluation configuration selection", "LLM-as-a-Judge execution"],
+    "next_gate": "Validate all five run receipts and aggregate only after every frozen shard is complete."
+  }
+}
