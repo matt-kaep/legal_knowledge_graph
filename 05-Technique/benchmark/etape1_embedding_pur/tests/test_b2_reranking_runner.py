@@ -161,3 +161,29 @@ def test_materialization_exports_seed_specific_metrics_before_the_seed_mean(tmp_
     seed_mean = pd.read_csv(tmp_path / "materialized" / "exact_metrics_seed_mean.csv")
     assert set(by_seed["replay_seed"].astype(str)) == {"42", "43"}
     assert seed_mean.loc[0, "seed_count"] == 2
+
+
+def test_materialize_cli_does_not_require_run_only_prompt_arguments(tmp_path):
+    runner = _load_runner()
+    questions = tmp_path / "questions.json"
+    jobs = tmp_path / "jobs.jsonl"
+    responses = tmp_path / "responses.jsonl"
+    out_dir = tmp_path / "materialized"
+    questions.write_text(json.dumps({"questions": [{"qid": "q1", "articles_attendus": ["a1"]}]}), encoding="utf-8")
+    job = {
+        "experiment_id": "E029", "family": "cosine", "modality": "article", "qid": "q1",
+        "question": "Question", "k_in": 1, "k_out": 1, "source_method": "cosine",
+        "source_ranking_sha256": "ranking-sha", "source_texts_sha256": "texts-sha",
+        "prompt_sha256": "prompt-sha", "model_id": "model", "model_revision": "revision",
+        "temperature": 0, "candidates": [{"item_id": "a1", "text": "A1"}],
+    }
+    jobs.write_text(json.dumps(job) + "\n", encoding="utf-8")
+    response = {
+        "experiment_id": "E029", "family": "cosine", "modality": "article", "qid": "q1",
+        "k_in": 1, "replay_seed": None, "input_sha256": runner.job_input_sha256(job), "status": "ok",
+        "slots": [{"rank": 1, "reference": "a1", "resolved_item_id": "a1", "resolution": "unique"}],
+    }
+    responses.write_text(json.dumps(response) + "\n", encoding="utf-8")
+
+    assert runner.main(["materialize", "--questions", str(questions), "--jobs", str(jobs), "--responses", str(responses), "--out-dir", str(out_dir)]) == 0
+    assert (out_dir / "materialization_receipt.json").exists()

@@ -345,11 +345,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    prompts = {"article": args.prompt_article, "jp": args.prompt_jp}
     if args.command == "prepare":
+        prompts = {"article": args.prompt_article, "jp": args.prompt_jp}
         print(json.dumps({"jobs": prepare_jobs(pools=args.pool, prompts=prompts, output_path=args.output, model_id=args.model_id, model_revision=args.model_revision)}))
         return 0
     if args.command == "run":
+        prompts = {"article": args.prompt_article, "jp": args.prompt_jp}
         print(json.dumps(run_jobs(jobs_path=args.jobs, responses_path=args.responses, endpoint=args.endpoint, model_id=args.model_id, prompts=prompts)))
         return 0
     jobs = [json.loads(line) for line in args.jobs.read_text(encoding="utf-8").splitlines() if line.strip()]

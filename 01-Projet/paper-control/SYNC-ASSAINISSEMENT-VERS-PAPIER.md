@@ -8,6 +8,43 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Handoff prioritaire — résultats A3, reranking terminé et décision E030 requise (2026-09-08)
+
+Ce bloc remplace les statuts antérieurs « E029 en cours » du présent canal. Il est autonome et peut être transmis tel quel à la session Papier.
+
+### Ce que le papier peut utiliser maintenant
+
+- **Contrat commun A3 :** entraînement/CV sur 5 578 questions ; évaluation interne inchangée de 754 questions (SHA-256 `850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59`) ; 13 236 Articles et 114 851 décisions retournables. Manifeste A3 `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json`, SHA-256 `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`.
+- **Tableau principal Articles (métriques exactes, A3) :** cosine Hit/Recall@10 `0,4315102521999074`, NDCG@10 `0,32102115314737484`, MRR@10 `0,32082228116710876` ; PPR G6-AA Hit/Recall@10 `0,5768809734326976`, NDCG@10 `0,39573594882260704`, MRR@10 `0,3735463769946528` ; LightGCN G6-AA, moyenne des graines 42/43/44, Hit/Recall@10 `0,5510694286556356`, NDCG@10 `0,40073652473423804`, MRR@10 `0,39287538770297387`.
+- **Tableau principal Jurisprudence (métriques exactes, A3) :** cosine Hit@10 `0,21794871794871795`, NDCG@10 `0,15397741432193576`, MRR@10 `0,13577691465622502` ; PPR G7-AA (citation 1, sémantique 0,25) Hit@10 `0,23065870910698497`, NDCG@10 `0,142981907459661`, MRR@10 `0,11715506715506716` ; LightGCN G6-AA, moyenne des graines 42/43/44, Hit@10 `0,2663572060123784`, NDCG@10 `0,1777719765610496`, MRR@10 `0,15267848371296647`.
+- **Baseline LLM directe E027 :** le modèle ne voit que la question, sans vivier ni corpus. Articles : Hit/Recall@10 `0,09497442212959453`, NDCG@10 `0,08860546818088738`, MRR@10 `0,11098006399730537`. Jurisprudence : `0` pour les trois métriques. Le manifeste est `configs/b2_direct_llm_a3_v1.json`, SHA-256 `a6da87fca6658ae33b73da22b34bd66f061a8a20d9c492e7ae9e891fd35905d7`.
+- **Formulation autorisée :** « Sur l’évaluation interne A3, après sélection par validation croisée sur l’entraînement puis gel des configurations, les méthodes sont évaluées sur le même univers ordonné de candidats retournables. » G6 est la configuration principale présélectionnée du papier ; il ne doit pas être décrit comme un champion causal parmi les onze graphes.
+
+### Reranking LLM E029 — terminé, exact, mais annexe exploratoire
+
+- Les cinq shards ont produit les **31 668** réponses prévues. Les appels étaient déjà terminés quand un défaut du routeur CLI a empêché la matérialisation des résultats. Le correctif ne modifie ni prompt, ni vivier, ni réponse ; la reprise a fait **zéro** appel modèle. Le manifeste initial reste immuable : `configs/b2_reranking_comparable_a3_execution_v1.json`, SHA-256 `259cff89780dfb4bfa39159cc0f608fdd295c559391858d376149170e8ff8515`. Le manifeste de réparation chaîné est `configs/b2_reranking_comparable_a3_materialization_repair_v1.json`, SHA-256 `4e841c3b683590fb9382e665cd73ada8f1a5f854818049d483df0314068a17d1`.
+- Les rankings top-10 et métriques sont complets et hash-validés : cosine JP (5 278 réponses, reçu de reprise SHA `4cdc245baf4145f03b3dbac3ed6abe46b6f43369b6953b62268eac92c8476089`) ; PPR (6 032, `47376ddee2b42a1e02b1a2cddde09b54a2579b20018afccf7dda827fa1313b62`) ; LightGCN G6 graines 42/43/44 (6 786 chacune, reçus `8c369e654f36ff883cecdfa8da4af964589491a9a976857304fd6a0481ccc871`, `054ca5625471e2abf7551b27b9a5bb75f1805c7e529657afdcdd250505fb93f0`, `a5329e9527885018fd10620dfecb825431962cffb1de046f6c3d05618b6fb0f1`). Chaque liste contient 754 questions par condition, dix rangs, aucun doublon parmi les identifiants résolus ; les réponses invalides sont des positions nulles explicites, jamais remplacées.
+- Contrat contenu : Articles = champ `texte` intégral non tronqué ; JP = champ `synthese` non tronqué par décision, ni décision complète, ni `resume_avocat`, ni arguments. Aucun appel à la base OVH n’a lieu à l’inférence. Le modèle est Gemma `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit` à la révision `4033b16200f4152e55e100ea12dc388c537df622`, température 0, fenêtre 16 384 tokens et réserve de sortie 256 tokens.
+- Quelques repères exacts **à réserver à une annexe exploratoire**, jamais au tableau principal : PPR Articles, vivier 10 puis reranking : Hit@10 `0,5768809734326976`, NDCG@10 `0,5067788547230162`, MRR@10 `0,5381399730537662` ; PPR JP, vivier 10 : Hit@10 `0,2306587091069849`, NDCG@10 `0,1933259213191533`, MRR@10 `0,1841075112626836` ; LightGCN G6 JP, vivier 10, moyenne des trois graines : Hit@10 `0,2663572060123784`, NDCG@10 `0,2239652668557736`, MRR@10 `0,2171062972787109`. Les profondeurs non compatibles restent `--` et ne doivent pas être interpolées.
+- **Formulation autorisée uniquement :** « Dans une analyse annexe exploratoire, un LLM réordonne des viviers gelés produits par les retrieveurs, sans modifier ceux-ci. » Ne pas dire que le reranking est une métrique LLM-as-a-Judge, une sélection de graphe, ou une conclusion de supériorité.
+
+### LLM-as-a-Judge E030 — autorisation GPU reçue, gel incomplet
+
+La session Assainissement a reçu l’autorisation de préparer puis lancer les nouveaux runs GPU. Aucun job E030 n’est cependant encore soumis : le manifeste existant est explicitement un préflight (`b2_llm_as_judge_a3_preflight_v1.json`) et n’a pas de modèle, de révision, de listes source ni de budget scellés. Les scores E030 resteront exploratoires jusqu’à l’audit avocat.
+
+**Décisions demandées à la session Papier / responsable scientifique avant gel :**
+
+1. **Modèle du juge :** valider ou refuser la proposition de reprendre exactement Gemma `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit` à la révision `4033b16200f4152e55e100ea12dc388c537df622`, température 0. Ce choix est cohérent avec E027/E029, mais il ne doit pas être supposé sans validation explicite.
+2. **Périmètre des listes rerankées :** faut-il juger les 42 conditions E029 compatibles (toutes profondeurs et trois graines LightGCN), ou figer seulement une profondeur définie avant lecture des scores ? La seconde option est plus légère, mais doit indiquer à l’avance quelle profondeur est retenue et pourquoi. Dans les deux cas, les listes directes, cosine, PPR et LightGCN G6 devront être hashées et jugées séparément.
+3. **Contenu JP vu par le juge :** le préflight prévoit une carte de décision anonymisée et aveugle (sans rang, retrieveur, graphe, graine ni vérité terrain). Confirmer que cette carte doit être fondée sur `synthese`, ou transmettre le schéma de carte souhaité si les champs `arguments` et réponse du juge sont requis. Ce choix change directement le coût et la validité de l’évaluation.
+
+**Rappel d’interprétation :** un juge reçoit une question et dix candidats anonymisés ; il attribue A, B, C, D, E ou `non_jugeable`. Les gains sont A=1, B=0,5, les autres=0 ; le dénominateur reste dix et une répétition après la première occurrence vaut zéro. Ce n’est ni un reranker ni une métrique exacte. Aucun score ne peut étayer une conclusion de supériorité avant `lawyer_agreement.json`.
+
+### État de branche et prochain geste
+
+- Branche : `paper/ecir-2027-reproducibility-clean`, PR publique : <https://github.com/matt-kaep/legal_knowledge_graph/pull/2>. Le papier LaTeX n’a pas été modifié.
+- Assainissement finalise maintenant les exports versionnés E029, les registres et le commit de réparation. Dès réponse aux trois points E030 ci-dessus, la campagne du juge est gelée, soumise et surveillée sans modifier les listes déjà hashées.
+
 ## Mise à jour A3 ciblée — 2026-09-08
 
 - Un inventaire sans E017/E021/E022 confirme : CV PPR complète pour G1, G6-AA et G7-AA-citation1/sémantique0,25 ; les replays présents ne couvrent que G6--Articles et G7--JP. La tentative complémentaire v1 a échoué avant évaluation et sans résultat, faute d’un champ redondant dans les champions locaux ; son successeur v2 vérifie le chemin source et le SHA-256 et tourne sous `985673`. Les quatre replays restent sans score à ce stade.
