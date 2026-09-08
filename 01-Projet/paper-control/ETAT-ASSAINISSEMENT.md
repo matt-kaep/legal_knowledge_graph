@@ -132,6 +132,8 @@ Voir `SYNC-PAPIER-VERS-ASSAINISSEMENT.md`.
 
 ## Dernière mise à jour
 
+2026-09-08 — Le portail Télécom est à nouveau joignable. E029 reste séparée des métriques de retrieval et de E030 : le préflight G6 seedé v2 `985046` a terminé `0:0`, en CPU et sans appel modèle. Son reçu `e1635a0a014b2e66ac0ecfa509bda14c57f2d131f107775160371c7a0f1b1d89` vérifie les 27 viviers G6 pour les graines 42/43/44. Le job CPU `985481` est maintenant soumis sous le manifeste gelé `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_jobs_preparation_v1.json`, SHA-256 `2124dc89ba338957717a06dd3e06f3530bfb365d8771efa5890dae012b7c2cb3`, afin de produire et hasher les 42 lots d'exécution (31 668 appels LLM planifiés). Aucun reranker n'a encore été exécuté, aucun score E029 n'existe et E030 demeure non lancé.
+
 2026-09-07 — Réorientation urgente validée : le parcours B1-paper-ready se limite temporairement à G6 Article--Article, sans modifier B1-r2 ni prétendre à un champion inter-graphes. À l'inventaire, 59/120 tâches G6 et 120/120 tâches G1 possèdent un reçu valide ; les 30 tâches soumises sont exclusivement G6. Cosine et PPR A3 seront dérivés sans nouveau retrieval. E027/E029/E030 sont autorisées sous de futurs manifests B2 distincts, avec E030 explicitement exploratoire en attente de l'accord avocat. Aucun score G6, replay final ou résultat LLM nouveau n’existe encore.
 
 ### 2026-08-18 — Audit/export de reproductibilité et branche dédiée
