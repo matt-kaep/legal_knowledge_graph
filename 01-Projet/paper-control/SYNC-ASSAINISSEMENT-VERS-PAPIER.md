@@ -8,11 +8,11 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
-## Résumé courant — Phase 0 E029/E030 terminée, aucun nouveau calcul
+## Résumé courant — E029 matrice complète en préflight CPU, aucun résultat LLM nouveau
 
-- Checkpoint : `01-Projet/paper-control/INVENTAIRE-E029-E030-A3-2026-09-08.md` ; suivi : `PROGRESS-E029-E030.md`. Aucun calcul ni appel GPU n'a été lancé pendant l'inventaire.
+- Checkpoint initial : `01-Projet/paper-control/INVENTAIRE-E029-E030-A3-2026-09-08.md` ; suivi : `PROGRESS-E029-E030.md`. L'inventaire était sans calcul. Son successeur CPU `b2_reranking_comparable_a3_fullmatrix_cpu_preflight_v2.json` est désormais lancé pour reconstruire 100 viviers K=10..100, mais n'effectue aucun appel modèle.
 - Les seuls chiffres réutilisables pour le tableau principal restent les résultats retrieval A3 déjà transmis. Rankings top-100 complets et hashés : cosine `7de0504d...`, PPR `8f15c4d3...`, LightGCN G6 `b1448dd5...`.
-- E029 possède des sorties réelles mais 42 conditions sur les 100 demandées (31 668/75 400 unités). Elles sont exploratoires et en attente d'un audit d'identité strict ; aucun score E029 ne doit être repris dans le papier à ce stade.
+- L'archive E029 possède 42 conditions sur les 100 demandées (31 668/75 400 unités) ; elle reste immuable et non agrégée. Le successeur emploie PPR G6 explicitement pour les deux tâches : G6 Articles final, G6 JP rejoué depuis son champion CV train-only distinct. Aucun score E029 ne doit être repris dans le papier à ce stade.
 - E030 n'a aucun résultat. Les scores Judge historiques E016/E017 restent exploratoires et `lawyer_agreement.json` manque.
 - La structure pénale G1/G6/G7 est exportée ; la structure du graphe complet distinct reste à produire. Ne pas présenter une approximation structurelle.
 
@@ -21,9 +21,9 @@ tags: [coordination, benchmark, papier]
 - A mesure désormais le budget de contexte K=10..100, Articles et JP séparés, prompt et cartes inclus. Aucune troncature, profondeur supprimée ou profondeur substituée ne sera introduite silencieusement.
 - Action B : ne pas intégrer E029/E030 ; le futur tableau reranking affichera toutes les profondeurs ou des `--` explicitement justifiés.
 
-## Handoff prioritaire — résultats A3, reranking terminé et décision E030 requise (2026-09-08)
+## Handoff historique — résultats A3 et archive E029 partielle (2026-09-08)
 
-Ce bloc remplace les statuts antérieurs « E029 en cours » du présent canal. Il est autonome et peut être transmis tel quel à la session Papier.
+Ce bloc conserve les éléments archivés avant l'inventaire Phase 0. Il ne remplace pas le résumé courant : E029 est actuellement en préflight CPU pour une matrice homogène de 100 conditions, et ses sorties historiques de 42 conditions ne constituent pas un tableau complet.
 
 ### Ce que le papier peut utiliser maintenant
 
@@ -33,7 +33,7 @@ Ce bloc remplace les statuts antérieurs « E029 en cours » du présent canal. 
 - **Baseline LLM directe E027 :** le modèle ne voit que la question, sans vivier ni corpus. Articles : Hit/Recall@10 `0,09497442212959453`, NDCG@10 `0,08860546818088738`, MRR@10 `0,11098006399730537`. Jurisprudence : `0` pour les trois métriques. Le manifeste est `configs/b2_direct_llm_a3_v1.json`, SHA-256 `a6da87fca6658ae33b73da22b34bd66f061a8a20d9c492e7ae9e891fd35905d7`.
 - **Formulation autorisée :** « Sur l’évaluation interne A3, après sélection par validation croisée sur l’entraînement puis gel des configurations, les méthodes sont évaluées sur le même univers ordonné de candidats retournables. » G6 est la configuration principale présélectionnée du papier ; il ne doit pas être décrit comme un champion causal parmi les onze graphes.
 
-### Reranking LLM E029 — terminé, exact, mais annexe exploratoire
+### Reranking LLM E029 — archive de 42 conditions, annexe exploratoire incomplète
 
 - Les cinq shards ont produit les **31 668** réponses prévues. Les appels étaient déjà terminés quand un défaut du routeur CLI a empêché la matérialisation des résultats. Le correctif ne modifie ni prompt, ni vivier, ni réponse ; la reprise a fait **zéro** appel modèle. Le manifeste initial reste immuable : `configs/b2_reranking_comparable_a3_execution_v1.json`, SHA-256 `259cff89780dfb4bfa39159cc0f608fdd295c559391858d376149170e8ff8515`. Le manifeste de réparation chaîné est `configs/b2_reranking_comparable_a3_materialization_repair_v1.json`, SHA-256 `4e841c3b683590fb9382e665cd73ada8f1a5f854818049d483df0314068a17d1`.
 - Les rankings top-10 et métriques sont complets et hash-validés : cosine JP (5 278 réponses, reçu de reprise SHA `4cdc245baf4145f03b3dbac3ed6abe46b6f43369b6953b62268eac92c8476089`) ; PPR (6 032, `47376ddee2b42a1e02b1a2cddde09b54a2579b20018afccf7dda827fa1313b62`) ; LightGCN G6 graines 42/43/44 (6 786 chacune, reçus `8c369e654f36ff883cecdfa8da4af964589491a9a976857304fd6a0481ccc871`, `054ca5625471e2abf7551b27b9a5bb75f1805c7e529657afdcdd250505fb93f0`, `a5329e9527885018fd10620dfecb825431962cffb1de046f6c3d05618b6fb0f1`). Chaque liste contient 754 questions par condition, dix rangs, aucun doublon parmi les identifiants résolus ; les réponses invalides sont des positions nulles explicites, jamais remplacées.

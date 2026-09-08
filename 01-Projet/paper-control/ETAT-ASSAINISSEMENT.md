@@ -89,6 +89,15 @@ Le 2 septembre 2026, l’option 1 validée a été appliquée sans toucher à l�
 
 Transformer les explorations existantes en un benchmark reproductible, comparable et auditable, puis produire les preuves que le papier peut utiliser.
 
+## E029 — préflight CPU de la matrice complète en cours (2026-09-08)
+
+Le manifeste successeur `configs/b2_reranking_comparable_a3_fullmatrix_cpu_preflight_v2.json` (SHA-256 `80d8b4135e02b2c0bef643984b0cbcf111085507bbf26e0aafc0ce90fc6fd9c9`) est poussé sur la branche dédiée. Il reconstruit, sans appel modèle, 100 viviers réels : cosine, PPR G6 et LightGCN G6 (graines 42/43/44), Articles et JP, pour K=10 à 100. Cible : 75 400 inputs de modèle potentiels, mais `model_calls=0` à ce stade.
+
+- Le PPR G6 JP est le replay A3 dédié, gelé sur ses cinq folds train/CV (`PPR-sweep-k20-both-a0.5`, SHA de champion `8eee0902...`) ; il ne remplace pas silencieusement le champion global JP G7.
+- Articles : `texte` complet non modifié ; JP : `synthese` complète non modifiée. Toute troncature est interdite.
+- Après les viviers, l'audit utilisera le tokenizer Gemma exact et réservera 256 tokens de sortie dans la fenêtre de 16 384. Une condition qui dépasse 16 128 tokens d'entrée sera bloquée, sans fallback ni soumission GPU.
+- La correction reproductibilité `313e00a` rend les racines `LKG_REPO`/`LKG_DATA_ROOT` portables et force le choix de graphe lorsqu'un ranking contient plusieurs graphes. Vérification ciblée : 24 tests Télécom passés.
+
 ## État courant
 
 `CHECKPOINT_A_TERMINE_BLOQUE_SUR_COUVERTURE_TRAIN` — le 1er septembre, le train et l'évaluation ont été re-gelés sans chevauchement, en préservant strictement les 754 questions d'évaluation. Les trois QID/textes strictement identiques ont été retirés du train : 5 603 → 5 600 questions. Le nouveau protocole `grouped_v3_no_eval_overlap_v1` contient cinq folds de 1 120 questions, sans fuite de provenance ni de texte normalisé. La preuve versionnée est `05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_v1.json`.
