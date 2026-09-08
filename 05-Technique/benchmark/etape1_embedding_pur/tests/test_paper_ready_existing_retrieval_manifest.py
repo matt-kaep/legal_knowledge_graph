@@ -5,6 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3_r3.json"
+SUCCESSOR_MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3_r4.json"
+HISTORICAL_DEPTH_CURVES_SHA256 = "33219ad466a07c8be9800652913406b6c32399b84fb7457bd94555bafc53b10d"
 
 
 def test_paper_ready_existing_retrieval_manifest_keeps_a3_and_b1_r1_provenance_frozen():
@@ -32,9 +34,17 @@ def test_paper_ready_existing_retrieval_manifest_hashes_only_the_frozen_a3_ranki
     assert "paper_ready_existing_retrieval" in payload["outputs"]["root"]
 
 
-def test_paper_ready_existing_retrieval_manifest_pins_the_derivation_script():
+def test_r3_manifest_preserves_the_historical_derivation_script_hash():
     payload = json.loads(MANIFEST.read_text(encoding="utf-8"))
+
+    assert payload["code_bundle"]["depth_curves"]["sha256"] == HISTORICAL_DEPTH_CURVES_SHA256
+
+
+def test_r4_manifest_pins_the_current_derivation_script_and_supersedes_r3():
+    payload = json.loads(SUCCESSOR_MANIFEST.read_text(encoding="utf-8"))
     script = ROOT / "scripts" / "97_build_b1_depth_curves.py"
 
     assert payload["code_bundle"]["depth_curves"]["path"] == str(script.relative_to(ROOT.parents[2]))
     assert payload["code_bundle"]["depth_curves"]["sha256"] == hashlib.sha256(script.read_bytes()).hexdigest()
+    assert payload["supersedes"]["manifest_path"] == str(MANIFEST.relative_to(ROOT.parents[2]))
+    assert payload["supersedes"]["manifest_sha256"] == hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
