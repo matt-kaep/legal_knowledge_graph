@@ -130,3 +130,34 @@ def test_run_is_append_only_and_skips_terminal_response(tmp_path, monkeypatch):
     assert second == {"jobs": 1, "skipped": 1, "completed": 0}
     assert len(calls) == 1
     assert len(responses.read_text().splitlines()) == 1
+
+
+def test_zero_slot_is_not_sent_to_the_judge_but_stays_in_fixed_k_score(tmp_path, monkeypatch):
+    runner = _load_runner()
+    jobs = [_job(position, f"JP-{position}") for position in range(1, 11)]
+    jobs[0]["candidate_id_internal"] = None
+    jobs[0]["document"] = None
+    jobs[0]["zero_slot"] = True
+    calls = []
+
+    def fake_call(**kwargs):
+        calls.append(kwargs)
+        return {"classe": "A", "justification": "règle directe"}
+
+    monkeypatch.setattr(runner, "call_openai_compatible", fake_call)
+    responses_path = tmp_path / "responses.jsonl"
+    runner.run_judgments(
+        jobs=jobs,
+        responses_path=responses_path,
+        endpoint="http://local/v1",
+        model_id="model",
+        prompt_template="QUESTION: {question}\nFICHE: {document}",
+        max_tokens=64,
+        max_workers=1,
+    )
+    responses = [json.loads(line) for line in responses_path.read_text().splitlines()]
+    summary = runner.materialize_judgments(jobs, responses, tmp_path / "materialized")
+
+    assert len(calls) == 9
+    assert responses[0]["validation_reason"] == "unresolved_zero_slot"
+    assert summary[0]["judge_score_at_10"] == 0.9

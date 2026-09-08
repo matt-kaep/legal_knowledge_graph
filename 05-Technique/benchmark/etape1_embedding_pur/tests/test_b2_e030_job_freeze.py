@@ -104,3 +104,57 @@ def test_freeze_jobs_never_overwrites_an_immutable_list(tmp_path):
             model_id="model",
             model_revision="revision",
         )
+
+
+def test_freeze_jobs_selects_one_explicit_condition_before_validating_ranks(tmp_path):
+    freezer = _load_module()
+    questions, rankings, texts, order, prompt = _inputs(tmp_path)
+    selected = pd.read_parquet(rankings)
+    selected["condition_id"] = "G7-jp"
+    distractor = selected.copy()
+    distractor["condition_id"] = "G1-jp"
+    pd.concat([selected, distractor], ignore_index=True).to_parquet(rankings, index=False)
+
+    receipt = freezer.freeze_jobs(
+        rankings_path=rankings,
+        questions_path=questions,
+        texts_path=texts,
+        candidate_order_path=order,
+        prompt_path=prompt,
+        output_path=tmp_path / "jobs.jsonl",
+        family="ppr_g7",
+        modality="jp",
+        model_id="model",
+        model_revision="revision",
+        filters={"condition_id": "G7-jp"},
+    )
+
+    assert receipt["ranking_filters"] == {"condition_id": "G7-jp"}
+    assert len((tmp_path / "jobs.jsonl").read_text(encoding="utf-8").splitlines()) == 10
+
+
+def test_freeze_jobs_preserves_direct_llm_unresolved_reference_as_zero_slot(tmp_path):
+    freezer = _load_module()
+    questions, rankings, texts, order, prompt = _inputs(tmp_path)
+    frame = pd.read_parquet(rankings)
+    frame.loc[0, "item_id"] = None
+    frame.to_parquet(rankings, index=False)
+
+    freezer.freeze_jobs(
+        rankings_path=rankings,
+        questions_path=questions,
+        texts_path=texts,
+        candidate_order_path=order,
+        prompt_path=prompt,
+        output_path=tmp_path / "jobs.jsonl",
+        family="direct_llm",
+        modality="jp",
+        model_id="model",
+        model_revision="revision",
+        allow_zero_slots=True,
+    )
+
+    first = json.loads((tmp_path / "jobs.jsonl").read_text(encoding="utf-8").splitlines()[0])
+    assert first["zero_slot"] is True
+    assert first["candidate_id_internal"] is None
+    assert first["document"] is None

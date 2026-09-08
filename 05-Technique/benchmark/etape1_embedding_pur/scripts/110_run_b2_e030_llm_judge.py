@@ -81,6 +81,12 @@ def _validate_job(job: dict[str, Any], *, expected_model_id: str | None = None) 
         raise ValueError("E030 temperature must be exactly zero")
     if expected_model_id is not None and job["model_id"] != expected_model_id:
         raise ValueError("E030 job model differs from the frozen execution model")
+    if job.get("zero_slot") is True:
+        if job.get("candidate_id_internal") is not None or job.get("document") is not None:
+            raise ValueError("an E030 zero slot must not contain a candidate or visible document")
+        return
+    if "zero_slot" in job and job["zero_slot"] is not False:
+        raise ValueError("E030 zero_slot must be a boolean")
     _visible_text(job)
 
 
@@ -172,6 +178,8 @@ def run_judgments(
     if unknown:
         raise ValueError("response file includes jobs absent from the frozen E030 job list")
     pending = [job for job_id, job in unique_jobs.items() if job_id not in seen]
+    zero_slots = [job for job in pending if job.get("zero_slot") is True]
+    model_jobs = [job for job in pending if job.get("zero_slot") is not True]
 
     def invoke(job: dict[str, Any]) -> dict[str, Any]:
         try:
@@ -193,7 +201,13 @@ def run_judgments(
 
     responses_path.parent.mkdir(parents=True, exist_ok=True)
     with responses_path.open("a", encoding="utf-8") as output, ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = [pool.submit(invoke, job) for job in pending]
+        for job in zero_slots:
+            output.write(canonical_json({
+                "job_id": job["job_id"], "status": "invalid", "judgment": None,
+                "validation_reason": "unresolved_zero_slot",
+            }) + "\n")
+            output.flush()
+        futures = [pool.submit(invoke, job) for job in model_jobs]
         for future in as_completed(futures):
             output.write(canonical_json(future.result()) + "\n")
             output.flush()
@@ -251,10 +265,10 @@ def materialize_judgments(jobs: list[dict[str, Any]], responses: list[dict[str, 
             raise ValueError("each E030 condition must contain exactly positions 1 through 10")
         seen_candidates: set[str] = set()
         for row in group:
-            candidate_id = str(row["candidate_id_internal"])
-            if candidate_id not in seen_candidates:
+            candidate_id = row["candidate_id_internal"]
+            if candidate_id is not None and str(candidate_id) not in seen_candidates:
                 row["effective_gain"] = float(row["raw_gain"])
-                seen_candidates.add(candidate_id)
+                seen_candidates.add(str(candidate_id))
         gain_sum = sum(float(row["effective_gain"]) for row in group)
         per_question.append({"family": family, "modality": modality, "qid": qid, "gain_sum": gain_sum, "judge_score_at_10": gain_sum / 10.0})
 
