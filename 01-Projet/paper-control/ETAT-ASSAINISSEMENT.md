@@ -1,7 +1,7 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-e027-completed-e029-k70-article192-gpu-manifest-frozen
+status: b1-g6-lightgcn-final-validated-e027-completed-e029-k70-article192-gpu-submitted
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
@@ -15,7 +15,8 @@ tags: [benchmark, assainissement, k-fold]
 - Audit agrégé exact du template de chat : `.../_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/context_audit.json`, SHA-256 `8e82219ba9cb2ca22c484a709669135ba472627cb9499406f5445e0ee9bc1779`. Il atteste 70/70 conditions compatibles, 52 780 paires question-condition, zéro dépassement de la fenêtre 16 384 (256 tokens de sortie réservés), préfixe Article de 192 tokens Gemma et `synthese` JP complète.
 - Manifeste GPU distinct et gelé : `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_execution_v1.json`, SHA-256 `c9296ceaed851a01ace69e2e2ade42ad35b01dc70107fda21813840b554467c1`. Il lie A3, les prompts, le snapshot Gemma exact, les cinq hashes de lots, les ressources L40S/H100/A100, le runner et l’agrégateur sans modifier les artefacts CPU ni l’archive plein texte.
 - Les protections de code sont vertes : 35 tests E029 ciblés passent. Les réponses historiques plein texte conservent leur hash et leur statut d’archive; elles ne peuvent pas être mélangées aux nouveaux jobs car la représentation visible est incluse dans le hash d’entrée.
-- **Statut présent :** manifeste GPU figé, soumission Slurm à effectuer depuis le commit dédié ; aucun appel modèle, ranking reranké, métrique ou score de ce contrat E029 n’existe encore. E030 reste non lancé.
+- Soumission Télécom H100 effectuée depuis le stage hash-vérifié : `986162` cosine, `986163` PPR, `986164` LightGCN seed 42, `986165` seed 43 et `986166` seed 44. Au contrôle de soumission, les cinq jobs sont `PENDING (Resources)` : aucun appel modèle ni sortie partielle n’est encore observable.
+- **Statut présent :** exécution GPU soumise et surveillée ; aucun ranking reranké, métrique ou score de ce contrat E029 n’existe encore. E030 reste non lancé.
 
 ## E029 — préflight CPU v4 bloqué par la fenêtre de contexte, zéro appel modèle (2026-09-08)
 
