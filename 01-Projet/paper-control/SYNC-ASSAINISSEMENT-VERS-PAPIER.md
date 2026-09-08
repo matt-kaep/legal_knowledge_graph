@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Décision — E030 sera un résultat exploratoire central, après E029 (2026-09-08)
+
+- Dès que les rankings E029 sont complets, contrôlés et gelés, A lancera E030. Le juge recevra seulement la question et une fiche anonymisée par candidat ; aucune information sur la méthode, le graphe, la graine, le rang, le score ou la vérité terrain ne sera visible.
+- Le tableau E030 restera **distinct** du tableau des métriques exactes. Il est scientifiquement utile comme mesure complémentaire de pertinence juridique, même avant l’audit avocat ; son statut sera explicitement `exploratoire`.
+- L’absence actuelle de `lawyer_agreement.json` n’empêche pas le calcul ni la communication descriptive du score. Elle interdit de présenter le juge comme validé par des avocats, ou d’en déduire une conclusion de supériorité entre méthodes ou graphes.
+
 ## Mise à jour — tableau structurel canonique G1/G6/G7 disponible (2026-09-08)
 
 - Source unique : `.../_campaign_b1_a3_structural_graphs_20260908/a3_structural_graphs.csv`, SHA `80ba400a88ebef618df5a9ce1430e66fe637607bf1051f891297bc93774f5b0f`; reçu SHA `2307ac04cfffd4a337211c56037045954d8ee9678212c0ba9c6843260a144bb7`.

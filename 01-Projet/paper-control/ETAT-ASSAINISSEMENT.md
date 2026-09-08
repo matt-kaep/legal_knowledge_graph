@@ -45,6 +45,7 @@ tags: [benchmark, assainissement, k-fold]
 - Les protections de code sont vertes : 35 tests E029 ciblés passent. Les réponses historiques plein texte conservent leur hash et leur statut d’archive; elles ne peuvent pas être mélangées aux nouveaux jobs car la représentation visible est incluse dans le hash d’entrée.
 - Soumission Télécom H100 effectuée depuis le stage hash-vérifié : `986162` cosine, `986163` PPR, `986164` LightGCN seed 42, `986165` seed 43 et `986166` seed 44. Au contrôle de soumission, les cinq jobs sont `PENDING (Resources)` : aucun appel modèle ni sortie partielle n’est encore observable.
 - **Statut présent :** exécution GPU soumise et surveillée ; aucun ranking reranké, métrique ou score de ce contrat E029 n’existe encore. E030 reste non lancé.
+- **Décision de présentation E030 :** dès que les rankings E029 seront complets, gelés et hashés, l’évaluation LLM-as-a-Judge sera lancée comme mesure complémentaire importante de pertinence juridique. Son résultat sera livré dans un tableau distinct des métriques exactes et pourra être décrit comme une observation exploratoire ; l’absence de `lawyer_agreement.json` interdit seulement de l’utiliser pour conclure à une supériorité ou à une validation humaine du juge.
 
 ## E029 — préflight CPU v4 bloqué par la fenêtre de contexte, zéro appel modèle (2026-09-08)
 
