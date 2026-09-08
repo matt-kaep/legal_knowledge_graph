@@ -100,13 +100,48 @@ def ndcg_at_k(ranking: list[str], gold: set[str], k: int) -> float:
     return dcg / idcg
 
 
-def _ranking_groups(frame: pd.DataFrame, *, source: str) -> list[tuple[str, str, str, pd.DataFrame]]:
+def _source_targets(source: str, spec: dict) -> tuple[str, ...]:
+    """Return the explicitly declared retrieval tasks for one frozen source."""
+    raw_targets = spec.get("targets", ("articles", "jurisprudence"))
+    if not isinstance(raw_targets, list | tuple) or not raw_targets:
+        raise ValueError(f"{source}: targets must be a non-empty list")
+    targets = tuple(str(target) for target in raw_targets)
+    allowed = {"articles", "jurisprudence"}
+    if set(targets) - allowed or len(targets) != len(set(targets)):
+        raise ValueError(f"{source}: targets must be unique values from {sorted(allowed)}")
+    return targets
+
+
+def _apply_source_filters(frame: pd.DataFrame, *, source: str, spec: dict) -> pd.DataFrame:
+    """Apply manifest-sealed equality filters to a hash-validated raw ranking file."""
+    filters = spec.get("filters", {})
+    if not isinstance(filters, dict):
+        raise ValueError(f"{source}: filters must be an object")
+    filtered = frame
+    for column, expected in filters.items():
+        if column not in filtered.columns:
+            raise ValueError(f"{source}: filter column is missing from ranking: {column}")
+        expected_values = expected if isinstance(expected, list) else [expected]
+        if not expected_values:
+            raise ValueError(f"{source}: filter {column} must select at least one value")
+        allowed_values = {str(value) for value in expected_values}
+        filtered = filtered.loc[filtered[column].astype(str).isin(allowed_values)].copy()
+    if filtered.empty:
+        raise ValueError(f"{source}: manifest filters selected no frozen ranking rows")
+    return filtered
+
+
+def _ranking_groups(
+    frame: pd.DataFrame, *, source: str, targets: tuple[str, ...]
+) -> list[tuple[str, str, str, pd.DataFrame]]:
     required = {"qid", "modality", "rank", "item_id"}
     missing = sorted(required - set(frame.columns))
     if missing:
         raise ValueError(f"{source}: ranking file missing {missing}")
     rows: list[tuple[str, str, str, pd.DataFrame]] = []
     for modality, target in (("art", "articles"), ("jp", "jurisprudence")):
+        if target not in targets:
+            continue
         sub = frame.loc[frame["modality"].astype(str).eq(modality)].copy()
         if "selected_target" in sub.columns:
             sub = sub.loc[sub["selected_target"].astype(str).eq("art" if modality == "art" else "jp")]
@@ -226,8 +261,13 @@ def derive_curves(
         if not path.is_file():
             raise FileNotFoundError(path)
         source_hashes[source] = validate_frozen_ranking_hash(payload, source, path)
-        frame = pd.read_parquet(path)
-        for source_name, target, seed, group in _ranking_groups(frame, source=source):
+        spec = payload.get("frozen_rankings", {}).get(source, {})
+        if not isinstance(spec, dict):
+            raise ValueError(f"{source}: frozen ranking specification must be an object")
+        frame = _apply_source_filters(pd.read_parquet(path), source=source, spec=spec)
+        for source_name, target, seed, group in _ranking_groups(
+            frame, source=source, targets=_source_targets(source, spec)
+        ):
             scored = score_ranking_group(
                 group,
                 questions=questions,

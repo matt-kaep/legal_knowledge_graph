@@ -150,6 +150,87 @@ def test_b1_depth_derivation_writes_versioned_exact_metrics_at_10(tmp_path, monk
     assert not (tmp_path / "validated" / "depth_curves.png").exists()
 
 
+def test_b1_depth_applies_sealed_source_filters_before_validating_rank_coverage(tmp_path, monkeypatch):
+    curves = _load_module()
+    monkeypatch.setattr(curves, "DATA_REPO", tmp_path)
+    (tmp_path / "eval.json").write_text(json.dumps({"questions": [{
+        "qid": "q1", "articles_attendus": ["a"], "gold_jp_ids": ["j"],
+    }]}), encoding="utf-8")
+    article_ids = ["a", *[f"a{i}" for i in range(1, 101)]]
+    jp_ids = ["j", *[f"j{i}" for i in range(1, 101)]]
+    np.save(tmp_path / "articles.npy", np.asarray(article_ids, dtype=object))
+    np.save(tmp_path / "jp.npy", np.asarray(jp_ids, dtype=object))
+    np.save(tmp_path / "graph_articles.npy", np.asarray(article_ids, dtype=object))
+    np.save(tmp_path / "graph_jp.npy", np.asarray(jp_ids, dtype=object))
+    rows = []
+    for condition_id in ("keep", "drop"):
+        for modality, gold, prefix in (("art", "a", "a"), ("jp", "j", "j")):
+            for rank in range(1, 101):
+                rows.append({
+                    "qid": "q1", "condition_id": condition_id, "modality": modality,
+                    "rank": rank, "item_id": gold if rank == 1 else f"{prefix}{rank}",
+                })
+    ranking_path = tmp_path / "two_conditions.parquet"
+    pd.DataFrame(rows).to_parquet(ranking_path, index=False)
+    payload = {
+        "campaign_id": "test-filtered-b1",
+        "datasets": {"evaluation": {"path": "eval.json", "questions": 1, "sha256": "test"}},
+        "candidate_inputs": {
+            "articles_order": {"path": "articles.npy"}, "jurisprudence_order": {"path": "jp.npy"},
+            "shared_article_ids": {"path": "graph_articles.npy"}, "shared_jp_ids": {"path": "graph_jp.npy"},
+        },
+        "candidate_universe": {"articles": {"count": 101}, "jurisprudence": {"count": 101}},
+        "frozen_rankings": {"ppr_g1": {
+            "sha256": curves._sha256(ranking_path),
+            "filters": {"condition_id": "keep"},
+        }},
+    }
+
+    outputs = curves.derive_curves(payload, {"ppr_g1": ranking_path}, tmp_path / "validated")
+
+    exported = pd.read_csv(outputs["metrics_at_10"])
+    assert set(exported["target"]) == {"articles", "jurisprudence"}
+    assert exported["hit_at_10"].tolist() == pytest.approx([1.0, 1.0])
+
+
+def test_b1_depth_allows_a_source_to_declare_one_target_only(tmp_path, monkeypatch):
+    curves = _load_module()
+    monkeypatch.setattr(curves, "DATA_REPO", tmp_path)
+    (tmp_path / "eval.json").write_text(json.dumps({"questions": [{
+        "qid": "q1", "articles_attendus": ["a"], "gold_jp_ids": ["j"],
+    }]}), encoding="utf-8")
+    article_ids = ["a", *[f"a{i}" for i in range(1, 101)]]
+    jp_ids = ["j", *[f"j{i}" for i in range(1, 101)]]
+    np.save(tmp_path / "articles.npy", np.asarray(article_ids, dtype=object))
+    np.save(tmp_path / "jp.npy", np.asarray(jp_ids, dtype=object))
+    np.save(tmp_path / "graph_articles.npy", np.asarray(article_ids, dtype=object))
+    np.save(tmp_path / "graph_jp.npy", np.asarray(jp_ids, dtype=object))
+    ranking_path = tmp_path / "article_only.parquet"
+    pd.DataFrame({
+        "qid": ["q1"] * 100, "modality": ["art"] * 100,
+        "rank": list(range(1, 101)),
+        "item_id": ["a"] + [f"a{rank}" for rank in range(2, 101)],
+    }).to_parquet(ranking_path, index=False)
+    payload = {
+        "campaign_id": "test-single-target-b1",
+        "datasets": {"evaluation": {"path": "eval.json", "questions": 1, "sha256": "test"}},
+        "candidate_inputs": {
+            "articles_order": {"path": "articles.npy"}, "jurisprudence_order": {"path": "jp.npy"},
+            "shared_article_ids": {"path": "graph_articles.npy"}, "shared_jp_ids": {"path": "graph_jp.npy"},
+        },
+        "candidate_universe": {"articles": {"count": 101}, "jurisprudence": {"count": 101}},
+        "frozen_rankings": {"ppr_g7_articles": {
+            "sha256": curves._sha256(ranking_path),
+            "targets": ["articles"],
+        }},
+    }
+
+    outputs = curves.derive_curves(payload, {"ppr_g7_articles": ranking_path}, tmp_path / "validated")
+
+    exported = pd.read_csv(outputs["metrics_at_10"])
+    assert exported[["target", "hit_at_10"]].to_dict("records") == [{"target": "articles", "hit_at_10": 1.0}]
+
+
 def test_b1_depth_preflights_plot_dependency_before_creating_an_output_directory(tmp_path, monkeypatch):
     curves = _load_module()
     monkeypatch.setattr(curves, "DATA_REPO", tmp_path)

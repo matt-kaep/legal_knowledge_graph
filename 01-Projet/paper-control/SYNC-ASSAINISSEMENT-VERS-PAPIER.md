@@ -8,9 +8,23 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — E028 r5 rétablit le manifeste de code courant, sans changer les résultats (2026-09-08)
+
+- R4 reste une archive intègre de son exécution. R5 est le nouveau manifeste courant : `configs/paper_ready_existing_retrieval_a3_r5.json`, SHA `1d987e9479b30b33d212ba3d9ef79131592f826b8e43310c3322a10d6302d224`, reçu SHA `bcf4aa500cfe9cd6ee80ef5f00dd0634b98260482e448ad65d6445eb17eb4f84`.
+- R5 épingle le script qui sait aussi relire les sources PPR scoped (SHA `abcb08369012b12ca06aacf1362d975851c6b0727dba41d3131846f04d1e8ffd`) et a été dérivé des mêmes rankings cosine/PPR globaux A3. Les métriques restent byte-for-byte identiques à r4 (SHA `fa7abb380c984b652d890576ca2e238f9a7110b9c368b8c0541f152f1d47d5a2`).
+- **Action Papier :** aucune valeur ne change. Employer r5 seulement comme preuve de reproductibilité courante ; il ne crée ni nouveau retrieval, ni nouveau classement, ni nouveau résultat.
+
+## Mise à jour — cellules PPR/LightGCN G1, G6, G7 contrôlées depuis les rankings (2026-09-08)
+
+- A a terminé une dérivation déterministe, sans modèle ni retrieval, des replays scoped PPR et LightGCN G1. Manifeste : `configs/paper_ready_retrieval_a3_scoped_ppr_g1_lightgcn_g1_r1.json`, SHA `f4b0cbb5f459b940c61df22ecfd521228d74dd34060ca96d45d228842d789775`. Reçu : `.../_campaign_b1_a3_scoped_exact_metrics_r1_20260908/depth_curves/depth_curves_manifest.json`, SHA `11539fa232438f0fbde5d0a2b6728894ffcdd65b73dda2c5a3698aa8427df4e5`.
+- Le reçu atteste les 754 questions, les rangs 1--100 sans doublon, les deux univers A3 et les rankings source hashés. Le CSV de métriques exactes est `.../ranking_metrics_at_10.csv`, SHA `69b0243be7d7ea17cfa88745918480b92f4430d01fe39ab9303cc27e8c983e6a`.
+- À reprendre seulement comme cellules scoped / ablations, jamais comme sélection post-évaluation : PPR G1 Articles Hit/Recall@10 `0,5459570123363227`, NDCG@10 `0,311061139772892`, MRR@10 `0,2639015199360027`; PPR G1 JP Hit@10 `0,22855879752431477`, NDCG@10 `0,14533424111226456`, MRR@10 `0,12104385078523008`; PPR G6 JP `0,22822723253757737 / 0,14574720359336762 / 0,12102858826996758`; PPR G7 Articles `0,5531756557618627 / 0,31544924625056936 / 0,26798766367731885`.
+- LightGCN G1, moyenne des graines 42/43/44 : Articles Hit/Recall@10 `0,561023746368574`, NDCG@10 `0,40954248455077263`, MRR@10 `0,40138116991565265`; JP Hit@10 `0,26492042440318303`, NDCG@10 `0,1782094594240493`, MRR@10 `0,15336652491824906`. Configuration gelée avant évaluation : Articles K2/lr 0,0005/lambda 0,5/7 époques ; JP K3/lr 0,001/lambda 1/4 époques.
+- Formulation autorisée : « Les cellules G1/G6/G7 ont été sélectionnées par validation croisée sur l’entraînement, puis leurs rankings top-100 ont été contrôlés contre le contrat A3 avant calcul des métriques. » Ne pas appeler ces cellules un classement causal ou sélectionner G1/G6/G7 après lecture de ces résultats.
+
 ## Mise à jour — E028 r4 répare la reproductibilité, sans changer aucun chiffre (2026-09-08)
 
-- A a conservé le manifeste et les exports r3 comme archive immuable, puis a créé le successeur `configs/paper_ready_existing_retrieval_a3_r4.json` (SHA `0855a35878ff33abdc147637c7d151908fbd5b459c4a0b59d2b0cee2d7a52e89`). Il fixe le script de dérivation courant (SHA `6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20`) au lieu de modifier la preuve historique r3.
+- A a conservé le manifeste et les exports r3 comme archive immuable, puis a créé r4 (SHA `0855a35878ff33abdc147637c7d151908fbd5b459c4a0b59d2b0cee2d7a52e89`). R4 fixe le script qui l'a produit (SHA `6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20`) au lieu de modifier la preuve historique r3; r5 est désormais le successeur de code courant.
 - R4 a relu uniquement les rankings top-100 cosine et PPR B1-A3 déjà gelés, a validé leurs hashes puis a produit courbes K=1–100, CSV de métriques et figures. Reçu : `.../_campaign_b1_a3_paper_ready_existing_retrieval_r4_20260908/depth_curves/depth_curves_manifest.json`, SHA `5229c033d218a858c82ca79956d0a2b791875052b667b1d47d56be2d0e6635a6`.
 - Les métriques et courbes sont byte-for-byte identiques à r3 (métriques SHA `fa7abb380c984b652d890576ca2e238f9a7110b9c368b8c0541f152f1d47d5a2`). **Action Papier :** aucune valeur de tableau ne change et r4 ne remplace pas l’export distinct à trois méthodes cosine/PPR/LightGCN G6 ; il rend seulement la provenance de code de la dérivation cosine/PPR à nouveau rejouable.
 

@@ -5,7 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3_r3.json"
-SUCCESSOR_MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3_r4.json"
+R4_MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3_r4.json"
+SUCCESSOR_MANIFEST = ROOT / "configs" / "paper_ready_existing_retrieval_a3_r5.json"
 HISTORICAL_DEPTH_CURVES_SHA256 = "33219ad466a07c8be9800652913406b6c32399b84fb7457bd94555bafc53b10d"
 
 
@@ -40,11 +41,19 @@ def test_r3_manifest_preserves_the_historical_derivation_script_hash():
     assert payload["code_bundle"]["depth_curves"]["sha256"] == HISTORICAL_DEPTH_CURVES_SHA256
 
 
-def test_r4_manifest_pins_the_current_derivation_script_and_supersedes_r3():
+def test_r4_manifest_preserves_its_then_current_derivation_script_and_supersedes_r3():
+    payload = json.loads(R4_MANIFEST.read_text(encoding="utf-8"))
+
+    assert payload["code_bundle"]["depth_curves"]["sha256"] == "6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20"
+    assert payload["supersedes"]["manifest_path"] == str(MANIFEST.relative_to(ROOT.parents[2]))
+    assert payload["supersedes"]["manifest_sha256"] == hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
+
+
+def test_r5_manifest_pins_the_current_derivation_script_and_supersedes_r4():
     payload = json.loads(SUCCESSOR_MANIFEST.read_text(encoding="utf-8"))
     script = ROOT / "scripts" / "97_build_b1_depth_curves.py"
 
     assert payload["code_bundle"]["depth_curves"]["path"] == str(script.relative_to(ROOT.parents[2]))
     assert payload["code_bundle"]["depth_curves"]["sha256"] == hashlib.sha256(script.read_bytes()).hexdigest()
-    assert payload["supersedes"]["manifest_path"] == str(MANIFEST.relative_to(ROOT.parents[2]))
-    assert payload["supersedes"]["manifest_sha256"] == hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
+    assert payload["supersedes"]["manifest_path"] == str(R4_MANIFEST.relative_to(ROOT.parents[2]))
+    assert payload["supersedes"]["manifest_sha256"] == hashlib.sha256(R4_MANIFEST.read_bytes()).hexdigest()

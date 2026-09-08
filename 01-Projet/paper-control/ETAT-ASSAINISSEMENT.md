@@ -1,17 +1,31 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-e027-completed-e029-k70-article192-gpu-submitted
+status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-e027-completed-e029-k70-article192-gpu-submitted
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
 
+## E028 — dérivation r5, successeur de reproductibilité courant (2026-09-08)
+
+- Le manifeste r4 et ses sorties demeurent immuables. Parce que le script de dérivation a été étendu pour les sources PPR scoped, A a créé `05-Technique/benchmark/etape1_embedding_pur/configs/paper_ready_existing_retrieval_a3_r5.json` (SHA-256 `1d987e9479b30b33d212ba3d9ef79131592f826b8e43310c3322a10d6302d224`) au lieu de réécrire r4.
+- R5 épingle le script courant `97_build_b1_depth_curves.py` (SHA-256 `abcb08369012b12ca06aacf1362d975851c6b0727dba41d3131846f04d1e8ffd`) et relit les mêmes rankings cosine/PPR globaux, hashés avant lecture. La dérivation CPU Télécom a produit le reçu `.../_campaign_b1_a3_paper_ready_existing_retrieval_r5_20260908/depth_curves/depth_curves_manifest.json`, SHA-256 `bcf4aa500cfe9cd6ee80ef5f00dd0634b98260482e448ad65d6445eb17eb4f84`.
+- Les CSV exacts sont byte-for-byte identiques à r4 : métriques SHA-256 `fa7abb380c984b652d890576ca2e238f9a7110b9c368b8c0541f152f1d47d5a2`, courbes SHA-256 `c188b2faabf6951c761b587fbfb73aef07b9bd79da791dd9dfffc319e3e52b93`. R5 est une réparation de traçabilité de code, non un nouveau résultat.
+
+## E024/E025/E028 — métriques exactes dérivées des replays scoped G1/PPR (2026-09-08)
+
+- Une dérivation CPU déterministe successeur a été produite sous `05-Technique/benchmark/etape1_embedding_pur/configs/paper_ready_retrieval_a3_scoped_ppr_g1_lightgcn_g1_r1.json` (SHA-256 `f4b0cbb5f459b940c61df22ecfd521228d74dd34060ca96d45d228842d789775`). Elle ne réentraîne, ne relance, ni ne sélectionne aucun modèle : elle relit seulement les rankings top-100 hashés des replays PPR scoped et LightGCN G1.
+- Le script de dérivation successeur `97_build_b1_depth_curves.py` (SHA-256 `abcb08369012b12ca06aacf1362d975851c6b0727dba41d3131846f04d1e8ffd`) accepte désormais des filtres scellés de source et une cible déclarée. Cela est nécessaire car le Parquet PPR porte quatre conditions dans un même fichier brut. Les nouveaux tests ciblés couvrent le filtrage avant validation de couverture et le cas d'une tâche unique ; `10 passed`.
+- Le reçu `.../_campaign_b1_a3_scoped_exact_metrics_r1_20260908/depth_curves/depth_curves_manifest.json` a le SHA-256 `11539fa232438f0fbde5d0a2b6728894ffcdd65b73dda2c5a3698aa8427df4e5`. Il revalide A3, l'évaluation (754 questions), les deux univers A3 (13 236 Articles, 114 851 JP), les 100 rangs sans doublon et les hashes de rankings PPR `afd1aa5c70c618cd8b43248e91b14266fc5c72507cfc865553dd2cf04cbc14ec` et LightGCN G1 `d6cd2b4beb9ef23c2292653f00bcc25be90654ef618127c8f137dc9427e5751d`.
+- Résultats exacts à K=10, CSV `ranking_metrics_at_10.csv` SHA-256 `69b0243be7d7ea17cfa88745918480b92f4430d01fe39ab9303cc27e8c983e6a` : PPR G1 Articles `0,5459570123363227 / 0,311061139772892 / 0,2639015199360027` (Hit/Recall, NDCG, MRR) ; PPR G1 JP `0,22855879752431477 / 0,14533424111226456 / 0,12104385078523008` ; PPR G6 JP `0,22822723253757737 / 0,14574720359336762 / 0,12102858826996758` ; PPR G7 Articles `0,5531756557618627 / 0,31544924625056936 / 0,26798766367731885` ; LightGCN G1 Articles, moyenne des trois graines `0,561023746368574 / 0,40954248455077263 / 0,40138116991565265` ; LightGCN G1 JP `0,26492042440318303 / 0,1782094594240493 / 0,15336652491824906`.
+- Ces cellules scoped sont reportables comme résultats A3 internes, mais **ne désignent aucun champion inter-graphe** : elles complètent l'inventaire G1/G6/G7 demandé. Les timings bruts restent séparés : PPR `ppr_timings.csv` SHA-256 `bcb2218234491c564114f442c662682eee8100abfefc4b2162b94b5135a51701`, LightGCN G1 `lightgcn_timings.csv` SHA-256 `5ad3c939d99954592afdc514d73c0b19c99b392189bca7bd918fd96fe98b3a4d`.
+
 ## E028 — dérivation r4 des rankings B1-A3 gelés, traçabilité de code réparée (2026-09-08)
 
 - Le manifeste historique `paper_ready_existing_retrieval_a3_r3.json` est conservé inchangé : son hash de script `33219ad466a07c8be9800652913406b6c32399b84fb7457bd94555bafc53b10d` désigne correctement le code qui avait produit r3. Le test ne compare plus un manifeste historique à un script ultérieurement modifié.
-- Le successeur versionné `05-Technique/benchmark/etape1_embedding_pur/configs/paper_ready_existing_retrieval_a3_r4.json` (SHA-256 `0855a35878ff33abdc147637c7d151908fbd5b459c4a0b59d2b0cee2d7a52e89`) référence les mêmes rankings cosine/PPR gelés, A3 et la même formule Hit@K, mais épingle le script courant `97_build_b1_depth_curves.py` (SHA-256 `6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20`). Il ne réentraîne ni ne relance aucun retrieveur.
+- Le successeur versionné `05-Technique/benchmark/etape1_embedding_pur/configs/paper_ready_existing_retrieval_a3_r4.json` (SHA-256 `0855a35878ff33abdc147637c7d151908fbd5b459c4a0b59d2b0cee2d7a52e89`) référence les mêmes rankings cosine/PPR gelés, A3 et la même formule Hit@K, mais épingle le code qui l'a produit (SHA-256 `6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20`). Il ne réentraîne ni ne relance aucun retrieveur; r5 est le successeur qui épingle le code actuel.
 - La dérivation CPU Télécom r4 a terminé en 12 secondes. Reçu : `.../_campaign_b1_a3_paper_ready_existing_retrieval_r4_20260908/depth_curves/depth_curves_manifest.json`, SHA-256 `5229c033d218a858c82ca79956d0a2b791875052b667b1d47d56be2d0e6635a6`. Il valide les deux sources hashées, 754 questions, 13 236 Articles, 114 851 JP et les ordres A3.
 - Les métriques à K=10 sont exactement identiques à r3 (CSV SHA-256 commun `fa7abb380c984b652d890576ca2e238f9a7110b9c368b8c0541f152f1d47d5a2`) et les courbes CSV sont byte-for-byte identiques. R4 est donc une correction de reproductibilité, non un nouveau résultat. Les figures r4 existent séparément : PNG `324e39c17017b6df9bcf2d953eaef636bd6de1b19c4655c96ec07f541ab403eb`, PDF `c9ffa6bb87a5927a371ecb46c6812bf280dc8edfe177c51ce9e31f5d5a428262`.
 
