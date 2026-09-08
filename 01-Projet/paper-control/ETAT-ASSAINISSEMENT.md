@@ -1,7 +1,7 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-k70-article192-gpu-submitted
+status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-k70-article192-l40s-running
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
@@ -50,8 +50,8 @@ tags: [benchmark, assainissement, k-fold]
 - Audit agrégé exact du template de chat : `.../_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/context_audit.json`, SHA-256 `8e82219ba9cb2ca22c484a709669135ba472627cb9499406f5445e0ee9bc1779`. Il atteste 70/70 conditions compatibles, 52 780 paires question-condition, zéro dépassement de la fenêtre 16 384 (256 tokens de sortie réservés), préfixe Article de 192 tokens Gemma et `synthese` JP complète.
 - Manifeste GPU distinct et gelé : `05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_execution_v1.json`, SHA-256 `c9296ceaed851a01ace69e2e2ade42ad35b01dc70107fda21813840b554467c1`. Il lie A3, les prompts, le snapshot Gemma exact, les cinq hashes de lots, les ressources L40S/H100/A100, le runner et l’agrégateur sans modifier les artefacts CPU ni l’archive plein texte.
 - Les protections de code sont vertes : 35 tests E029 ciblés passent. Les réponses historiques plein texte conservent leur hash et leur statut d’archive; elles ne peuvent pas être mélangées aux nouveaux jobs car la représentation visible est incluse dans le hash d’entrée.
-- Soumission Télécom H100 effectuée depuis le stage hash-vérifié : `986162` cosine, `986163` PPR, `986164` LightGCN seed 42, `986165` seed 43 et `986166` seed 44. Au contrôle de soumission, les cinq jobs sont `PENDING (Resources)` : aucun appel modèle ni sortie partielle n’est encore observable.
-- **Statut présent :** exécution GPU soumise et surveillée ; aucun ranking reranké, métrique ou score de ce contrat E029 n’existe encore. E030 reste non lancé.
+- La première soumission H100 (`986162`--`986166`) a été annulée avant tout démarrage, après vérification que le manifeste autorise également L40S et que ce GPU offre les 46 Go nécessaires. Les successeurs L40S, avec les mêmes cinq lots immuables et les mêmes variables d'environnement hashées, sont `986412` cosine, `986413` PPR, `986414` LightGCN seed 42, `986415` seed 43 et `986416` seed 44. À 23:45 CEST, `986412` est **RUNNING** sur `node39`; les quatre autres sont `PENDING (Resources)`. Aucun doublon H100 n'est actif.
+- **Statut présent :** exécution GPU L40S soumise et surveillée ; aucun ranking reranké, métrique ou score de ce contrat E029 n’existe encore. E030 reste non lancé.
 - **Décision de présentation E030 :** dès que les rankings E029 seront complets, gelés et hashés, l’évaluation LLM-as-a-Judge sera lancée comme mesure complémentaire importante de pertinence juridique. Son résultat sera livré dans un tableau distinct des métriques exactes et pourra être décrit comme une observation exploratoire ; l’absence de `lawyer_agreement.json` interdit seulement de l’utiliser pour conclure à une supériorité ou à une validation humaine du juge.
 - **Préparation technique E030 vérifiée :** les tests du runner préparé (`5 passed`, lecture seule, 2026-09-08) confirment les garde-fous de cartes anonymisées : une JP expose exclusivement `synthese`; ni rang, ni méthode, ni graphe, ni graine, ni vérité terrain ne sont dans la fiche visible; dix positions sont obligatoires; les classes et le calcul fixed-K sont contrôlés. Ce runner appartient au chantier distinct et n’est pas intégré à la branche A tant que le manifeste successeur ne lie pas les rankings E029 réels, le modèle/révision gelés, les hashes du snapshot/tokenizer et l’audit de budget.
 
