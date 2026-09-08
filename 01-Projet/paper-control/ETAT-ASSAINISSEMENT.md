@@ -8,6 +8,14 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## Priorité A3 du 2026-09-08 — inventaire ciblé et replays manquants préparés
+
+L’inventaire exclut E017/E021/E022 et tout snapshot antérieur à A3. Il porte sur G1, G6 avec liens Article--Article et G7 avec ces mêmes liens, poids citation 1 / sémantique 0,25.
+
+- **PPR :** les CV A3 sont complètes pour les trois graphes (cinq folds, 5 578 questions, couverture 100 %). Les replays finals déjà présents sont G6--Articles et G7--JP. Le manifeste append-only `confirmatory_campaign_b1_a3_ppr_scoped_missing_replays_v1.json` gèle les quatre cellules manquantes (G1--Articles, G1--JP, G6--JP, G7--Articles) contre les `champions.json` hashés, sans re-sélection sur l’évaluation. Il est préparé pour soumission CPU ; aucun nouveau score n’est encore inscrit dans le registre de résultats.
+- **LightGCN :** G1 possède exactement 120/120 reçus CUDA A3 complets (5 folds × 12 configurations × 2 tâches) ; G6 aussi. G7 n’a aucun reçu CV et ne sera pas lancé. Pour G1, le gel train/CV déterminé avant replay est : Articles K=2, lr=0,0005, lambda=0,5, 7 époques ; JP K=3, lr=0,001, lambda=1, 4 époques. Le successeur `confirmatory_campaign_b1_a3_paper_ready_g1.json` agrège, fige et rejoue uniquement ces configurations sur les graines 42/43/44. Aucun résultat final G1 n’existe encore.
+- Les nouvelles sorties auront des racines séparées, sans écrasement : `_campaign_b1_a3_ppr_scoped_missing_replays_v1_20260908` et `_campaign_b1_a3_paper_ready_g1_20260908`. Elles deviennent reportables seulement après contrôle des rankings top-100, des métriques, des temps et des hashes.
+
 ## Parcours urgent B1-paper-ready — G6 terminé ; expériences LLM séparées
 
 Le parcours urgent autour de `G6-citation-AA-knn5` est terminé et traçable. G6 reste la configuration principale **présélectionnée** du papier, non un champion confirmé des onze graphes : les dix ablations différées ne sont ni exécutées ni utilisées pour une comparaison inter-graphes.

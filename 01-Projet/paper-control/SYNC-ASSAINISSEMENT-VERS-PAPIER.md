@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour A3 ciblée — 2026-09-08
+
+- Un inventaire sans E017/E021/E022 confirme : CV PPR complète pour G1, G6-AA et G7-AA-citation1/sémantique0,25 ; les replays présents ne couvrent que G6--Articles et G7--JP. Quatre replays complémentaires, avec configurations déjà gelées sur train/CV, sont préparés mais n’ont pas encore de score.
+- G1 LightGCN a 120/120 reçus CV A3 valides. Son replay est scellé sur trois graines, avec Articles K2/lr 0,0005/lambda 0,5/7 époques et JP K3/lr 0,001/lambda 1/4 époques ; aucun chiffre G1 n’est encore transmissible. G7 LightGCN n’a aucune CV et ne sera pas lancé dans cette priorité.
+- **Action Papier :** ne rien ajouter au tableau à partir de ces nouvelles cellules avant la transmission post-replay et le contrôle des hashes/rankings. Les résultats G6 déjà transmis restent les seuls chiffres LightGCN reportables.
+
 ## Handoff consolidé — Checkpoints A3, B1 et B2 (2026-09-08)
 
 - **A3 validé :** train/CV 5 578 questions ; évaluation interne inchangée de 754 questions (SHA `850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59`) ; cinq folds groupés sans fuite ; 13 236 candidats Articles et 114 851 JP. Manifeste `benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json`, SHA `c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3`.

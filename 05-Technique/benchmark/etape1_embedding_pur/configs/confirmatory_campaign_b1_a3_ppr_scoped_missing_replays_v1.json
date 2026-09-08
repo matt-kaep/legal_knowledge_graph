@@ -1,0 +1,27 @@
+{
+  "manifest_id": "confirmatory-campaign-b1-a3-ppr-scoped-missing-replays-v1-2026-09-08",
+  "campaign_id": "b1-a3-ppr-scoped-missing-replays-v1-2026-09-08",
+  "schema_version": "b1-a3-scoped-ppr-replay.v1",
+  "status": "authorized_after_complete_train_cv_selection",
+  "purpose": "Materialize only the four missing final PPR method--graph--task cells from hash-checked A3 train/CV champions; neither existing final PPR cells nor historical experiments are reused or overwritten.",
+  "scientific_status": "confirmatory_internal_evaluation_after_train_cv_freeze",
+  "a3": {"manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json", "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3"},
+  "datasets": {
+    "train": {"split": "train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3", "questions": 5578, "sha256": "5ca7f54b944456cb318c028978c35430571b302785d2581348a35db81f8285f5"},
+    "evaluation": {"split": "eval_rich_retrievable_strict", "directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict", "questions": 754, "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59", "access_before_freeze": "forbidden"}
+  },
+  "folds": {"count": 5, "seed": 42, "sha256": "cc872759b5cc2f93aceb54ac2ac5c5c396e236e7198982f720978e82b3920f59"},
+  "selection": {"scope": "train_cv_only", "priority": ["normalized_hit_at_10", "ndcg_at_10", "mrr_at_10"], "freeze_before_evaluation": true, "intergraph_claim": "forbidden"},
+  "replay": {"top_k_out": 100, "require_exact_rankings": true, "require_timings": true},
+  "conditions": [
+    {"id": "G1-art", "graph_version": "G1", "target": "art", "champions_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_cv/G1/champions.json", "champions_sha256": "a2737a60e360a2076e6ff078b32403d964c24909b9c12c2bb08dc365de9a2960", "selected_configuration": {"k_in": 50, "seed_variant": "both", "alpha": 0.5, "method": "PPR-sweep-k50-both-a0.5"}},
+    {"id": "G1-jp", "graph_version": "G1", "target": "jp", "champions_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_cv/G1/champions.json", "champions_sha256": "a2737a60e360a2076e6ff078b32403d964c24909b9c12c2bb08dc365de9a2960", "selected_configuration": {"k_in": 20, "seed_variant": "both", "alpha": 0.5, "method": "PPR-sweep-k20-both-a0.5"}},
+    {"id": "G6-jp", "graph_version": "G6-citation-AA-knn5", "target": "jp", "champions_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_cv/G6-citation-AA-knn5/champions.json", "champions_sha256": "8eee0902ed511720814bc17ac39ab8ffccde822b497a5f3c9f814d877847ed7a", "selected_configuration": {"k_in": 20, "seed_variant": "both", "alpha": 0.5, "method": "PPR-sweep-k20-both-a0.5"}},
+    {"id": "G7-art", "graph_version": "G7-citation-AA-cit1-sem025-knn5", "target": "art", "champions_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_cv/G7-citation-AA-cit1-sem025-knn5/champions.json", "champions_sha256": "386292978ae6347f28d66ddfb5a6d49f518bd9f443b5f4a18afaa6f36a60536b", "selected_configuration": {"k_in": 50, "seed_variant": "both", "alpha": 0.5, "method": "PPR-sweep-k50-both-a0.5"}}
+  ],
+  "metrics": {"primary": "normalized_hit_at_k", "article_hit_equals_recall_at_10": true, "report": ["normalized_hit_at_1_to_100", "ndcg_at_10", "mrr_at_10", "top_100_rankings", "inference_time_per_question"], "forbidden_alias": "exact_any_gold_at_10"},
+  "resources": {"partition": "CPU", "cpus": 4, "memory_gb": 12, "execution": "four sealed replays, serial to keep one append-only receipt"},
+  "outputs": {"root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_ppr_scoped_missing_replays_v1_20260908"},
+  "historical_experiments_excluded": ["E017", "E021", "E022"],
+  "code_bundle": {"scoped_replay": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_replay_b1_a3_scoped_ppr.py", "sha256": "ce631c459a3676ab8e391b5c3a34887939f8f46b5fe4eb4cb3b3e80b31007e18"}, "replay_helper": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py", "sha256": "4dcb1605768cc41370146e9117901d17dc980d83db90540c4e1f35270c39ad66"}}
+}
