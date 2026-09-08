@@ -217,12 +217,13 @@ def audit_fulltext_jobs(
     if expected_questions <= 0:
         raise ValueError("expected_questions must be positive")
     runner = _load_reranking_runner()
-    grouped: dict[tuple[str, str, int], list[tuple[str, int]]] = {}
+    grouped: dict[tuple[str, str, int, str | None], list[tuple[str, int]]] = {}
     for job in jobs:
         family = str(job["family"])
         modality = str(job["modality"])
         qid = str(job["qid"])
         k_in = int(job["k_in"])
+        replay_seed = None if job.get("replay_seed") is None else str(job["replay_seed"])
         if modality not in prompt_templates:
             raise ValueError(f"missing prompt template for modality {modality}")
         candidates = job.get("candidates")
@@ -231,10 +232,10 @@ def audit_fulltext_jobs(
         if any(not isinstance(candidate.get("text"), str) or not candidate["text"].strip() for candidate in candidates):
             raise ValueError(f"{family}/{modality}/{qid}: candidate text must be complete and non-empty")
         prompt = runner.render_reranking_prompt(prompt_templates[modality], job)
-        grouped.setdefault((family, modality, k_in), []).append((qid, int(count_prompt_tokens(prompt))))
+        grouped.setdefault((family, modality, k_in, replay_seed), []).append((qid, int(count_prompt_tokens(prompt))))
 
     conditions: list[dict[str, object]] = []
-    for (family, modality, k_in), token_counts in sorted(grouped.items()):
+    for (family, modality, k_in, replay_seed), token_counts in sorted(grouped.items()):
         qids = [qid for qid, _ in token_counts]
         if len(token_counts) != expected_questions or len(set(qids)) != expected_questions:
             raise ValueError(f"{family}/{modality}/K={k_in}: expected exactly {expected_questions} unique questions")
@@ -243,13 +244,16 @@ def audit_fulltext_jobs(
             context_limit_tokens=context_limit_tokens,
             max_output_tokens=max_output_tokens,
         )
-        conditions.append({
+        condition: dict[str, object] = {
             "family": family,
             "modality": modality,
             "k_in": k_in,
             "candidate_text_policy": "full_text_unmodified",
             **summary,
-        })
+        }
+        if replay_seed is not None:
+            condition["replay_seed"] = replay_seed
+        conditions.append(condition)
     if not conditions:
         raise ValueError("jobs must not be empty")
     return {

@@ -103,6 +103,32 @@ def test_fulltext_audit_groups_conditions_and_retains_overflowing_question():
     assert all("Texte intégral" in prompt for prompt in prompts_seen)
 
 
+def test_fulltext_audit_keeps_lightgcn_replay_seeds_as_distinct_conditions():
+    auditor = _load_auditor()
+    jobs = []
+    for replay_seed in ("42", "43"):
+        jobs.append({
+            "family": "lightgcn_g6",
+            "modality": "article",
+            "qid": "q1",
+            "question": "Question",
+            "k_in": 10,
+            "replay_seed": replay_seed,
+            "candidates": [{"item_id": "a1", "text": "Article complet", "source_rank": 1}] * 10,
+        })
+
+    report = auditor.audit_fulltext_jobs(
+        jobs,
+        prompt_templates={"article": "Instruction Articles.", "jp": "Instruction JP."},
+        count_prompt_tokens=lambda _prompt: 12,
+        context_limit_tokens=16384,
+        max_output_tokens=256,
+        expected_questions=1,
+    )
+
+    assert [(row["replay_seed"], row["questions"]) for row in report["conditions"]] == [("42", 1), ("43", 1)]
+
+
 def test_chat_token_counter_uses_generation_template():
     auditor = _load_auditor()
 
