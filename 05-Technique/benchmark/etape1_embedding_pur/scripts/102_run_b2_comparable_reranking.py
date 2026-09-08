@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 import hashlib
 import json
 import os
@@ -297,40 +298,64 @@ def _latest_terminal(path: Path) -> dict[tuple[str, str, int, str, str], dict[st
     return latest
 
 
-def run_jobs(*, jobs_path: Path, responses_path: Path, endpoint: str, model_id: str, prompts: dict[str, Path]) -> dict[str, int]:
+def run_jobs(
+    *,
+    jobs_path: Path,
+    responses_path: Path,
+    endpoint: str,
+    model_id: str,
+    prompts: dict[str, Path],
+    max_workers: int = 1,
+) -> dict[str, int]:
+    if max_workers <= 0:
+        raise ValueError("max_workers must be positive")
     templates = {modality: path.read_text(encoding="utf-8") for modality, path in prompts.items()}
     terminal = _latest_terminal(responses_path)
     responses_path.parent.mkdir(parents=True, exist_ok=True)
     counts = {"jobs": 0, "skipped": 0, "completed": 0, "invalid": 0, "error": 0}
-    with jobs_path.open(encoding="utf-8") as jobs, responses_path.open("a", encoding="utf-8") as output:
-        for line in jobs:
-            if not line.strip():
+    def execute(job: dict[str, Any]) -> tuple[dict[str, Any], str]:
+        expected_sha = job_input_sha256(job)
+        started = time.monotonic()
+        identity = {name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}
+        try:
+            pool_ids = [str(candidate["item_id"]) for candidate in job["candidates"]]
+            raw = call_openai_compatible(endpoint=endpoint, model=model_id, prompt=render_reranking_prompt(templates[job["modality"]], job), pool_ids=pool_ids, k_out=int(job["k_out"]))
+            raw_ids = parse_ranked_ids(raw, pool_ids, int(job["k_out"]))
+            ranked_ids, fallback_ids = normalize_ranked_ids(raw_ids, pool_ids, int(job["k_out"]))
+            slots = [{"rank": rank, "reference": item, "resolved_item_id": item, "resolution": "unique"} for rank, item in enumerate(ranked_ids, start=1)]
+            return ({**identity, "input_sha256": expected_sha, "raw_response_sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(), "elapsed_seconds": time.monotonic() - started, "slots": slots, "response_normalization": {"duplicate_ids_removed": len(raw_ids) - len(set(raw_ids)), "source_order_fallback_ids": fallback_ids}, "status": "ok"}, "completed")
+        except InvalidRerankingResponse as exc:
+            return ({**identity, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "slots": zero_slots(int(job["k_out"]), resolution="invalid_response"), "status": "invalid"}, "invalid")
+        except Exception as exc:
+            return ({**identity, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "status": "error"}, "error")
+
+    with jobs_path.open(encoding="utf-8") as jobs, responses_path.open("a", encoding="utf-8") as output, ThreadPoolExecutor(max_workers=max_workers) as executor:
+        in_flight: dict[Future[tuple[dict[str, Any], str]], None] = {}
+        exhausted = False
+        while in_flight or not exhausted:
+            while not exhausted and len(in_flight) < max_workers:
+                line = next(jobs, None)
+                if line is None:
+                    exhausted = True
+                    break
+                if not line.strip():
+                    continue
+                job = json.loads(line)
+                counts["jobs"] += 1
+                prior = terminal.get(_key(job))
+                if prior and prior.get("input_sha256") == job_input_sha256(job):
+                    counts["skipped"] += 1
+                    continue
+                in_flight[executor.submit(execute, job)] = None
+            if not in_flight:
                 continue
-            job = json.loads(line)
-            counts["jobs"] += 1
-            key = _key(job)
-            expected_sha = job_input_sha256(job)
-            prior = terminal.get(key)
-            if prior and prior.get("input_sha256") == expected_sha:
-                counts["skipped"] += 1
-                continue
-            started = time.monotonic()
-            try:
-                pool_ids = [str(candidate["item_id"]) for candidate in job["candidates"]]
-                raw = call_openai_compatible(endpoint=endpoint, model=model_id, prompt=render_reranking_prompt(templates[job["modality"]], job), pool_ids=pool_ids, k_out=int(job["k_out"]))
-                raw_ids = parse_ranked_ids(raw, pool_ids, int(job["k_out"]))
-                ranked_ids, fallback_ids = normalize_ranked_ids(raw_ids, pool_ids, int(job["k_out"]))
-                slots = [{"rank": rank, "reference": item, "resolved_item_id": item, "resolution": "unique"} for rank, item in enumerate(ranked_ids, start=1)]
-                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}, "input_sha256": expected_sha, "raw_response_sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest(), "elapsed_seconds": time.monotonic() - started, "slots": slots, "response_normalization": {"duplicate_ids_removed": len(raw_ids) - len(set(raw_ids)), "source_order_fallback_ids": fallback_ids}, "status": "ok"}
-                counts["completed"] += 1
-            except InvalidRerankingResponse as exc:
-                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "slots": zero_slots(int(job["k_out"]), resolution="invalid_response"), "status": "invalid"}
-                counts["invalid"] += 1
-            except Exception as exc:
-                record = {**{name: job[name] for name in ("experiment_id", "family", "modality", "qid", "k_in", "replay_seed")}, "input_sha256": expected_sha, "elapsed_seconds": time.monotonic() - started, "error": str(exc), "status": "error"}
-                counts["error"] += 1
-            output.write(canonical_json(record) + "\n")
-            output.flush()
+            done, _ = wait(in_flight, return_when=FIRST_COMPLETED)
+            for future in done:
+                del in_flight[future]
+                record, status = future.result()
+                counts[status] += 1
+                output.write(canonical_json(record) + "\n")
+                output.flush()
     return counts
 
 
@@ -411,6 +436,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     run.add_argument("--model-id", required=True)
     run.add_argument("--prompt-article", type=Path, required=True)
     run.add_argument("--prompt-jp", type=Path, required=True)
+    run.add_argument("--max-workers", type=int, default=1, help="Bounded concurrent requests to one local vLLM server.")
     materialize = commands.add_parser("materialize")
     materialize.add_argument("--questions", type=Path, required=True)
     materialize.add_argument("--jobs", type=Path, required=True)
@@ -448,7 +474,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "run":
         prompts = {"article": args.prompt_article, "jp": args.prompt_jp}
-        print(json.dumps(run_jobs(jobs_path=args.jobs, responses_path=args.responses, endpoint=args.endpoint, model_id=args.model_id, prompts=prompts)))
+        print(json.dumps(run_jobs(jobs_path=args.jobs, responses_path=args.responses, endpoint=args.endpoint, model_id=args.model_id, prompts=prompts, max_workers=args.max_workers)))
         return 0
     jobs = [json.loads(line) for line in args.jobs.read_text(encoding="utf-8").splitlines() if line.strip()]
     responses = [json.loads(line) for line in args.responses.read_text(encoding="utf-8").splitlines() if line.strip()]

@@ -62,6 +62,41 @@ def test_invalid_reranker_response_is_explicit_zero_not_pool_completion():
     assert [slot["resolution"] for slot in slots] == ["invalid_response"] * 3
 
 
+def test_runner_can_execute_two_independent_jobs_concurrently_and_preserve_hashes(tmp_path, monkeypatch):
+    runner = _load_runner()
+    prompts = {"article": tmp_path / "article.txt", "jp": tmp_path / "jp.txt"}
+    prompts["article"].write_text("Articles.", encoding="utf-8")
+    prompts["jp"].write_text("JP.", encoding="utf-8")
+    common = {
+        "experiment_id": "E029", "family": "cosine", "modality": "article", "question": "Question",
+        "k_in": 2, "k_out": 2, "replay_seed": None, "source_method": "cosine",
+        "source_ranking_sha256": "ranking", "source_texts_sha256": "texts", "prompt_sha256": "prompt",
+        "model_id": "model", "model_revision": "revision", "temperature": 0,
+        "candidate_text_representation": {"source_field": "texte", "projection": "token_prefix", "tokenizer_id": "model", "tokenizer_revision": "revision", "token_cap": 192},
+    }
+    jobs = [
+        {**common, "qid": "q1", "candidates": [{"item_id": "a1", "text": "A1"}, {"item_id": "a2", "text": "A2"}]},
+        {**common, "qid": "q2", "candidates": [{"item_id": "b1", "text": "B1"}, {"item_id": "b2", "text": "B2"}]},
+    ]
+    jobs_path = tmp_path / "jobs.jsonl"
+    jobs_path.write_text("".join(json.dumps(job) + "\n" for job in jobs), encoding="utf-8")
+    responses = tmp_path / "responses.jsonl"
+    monkeypatch.setattr(runner, "call_openai_compatible", lambda **kwargs: json.dumps({"ranked_ids": kwargs["pool_ids"]}))
+
+    result = runner.run_jobs(
+        jobs_path=jobs_path,
+        responses_path=responses,
+        endpoint="http://unused",
+        model_id="model",
+        prompts=prompts,
+        max_workers=2,
+    )
+
+    rows = [json.loads(line) for line in responses.read_text(encoding="utf-8").splitlines()]
+    assert result == {"jobs": 2, "skipped": 0, "completed": 2, "invalid": 0, "error": 0}
+    assert {row["input_sha256"] for row in rows} == {runner.job_input_sha256(job) for job in jobs}
+
+
 def test_jobs_keep_depth_and_replay_seed_as_distinct_frozen_conditions(tmp_path):
     runner = _load_runner()
     pool = tmp_path / "pools.jsonl"
