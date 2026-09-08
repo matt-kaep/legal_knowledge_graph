@@ -8,6 +8,13 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## E037 — paquet GitHub A3/B1 : manifeste de données et tableaux exacts légers (2026-09-08)
+
+- Le README racine décrit désormais la campagne A3/B1 courante, ses limites et les commandes de préflight/rejeu, sans présenter les exports historiques comme résultats principaux. Il renvoie explicitement aux tableaux Articles et Jurisprudence versionnés.
+- Le nouveau manifeste `results/benchmark-a3-b1/data-manifest-a3.json` (SHA-256 `18b486737b6c25abde6a11db5e0df008a61fcabf02c99fa7927e99c13dec5e73`) a relu A3/B1 et rehashé **30 entrées** nécessaires, 5 828 343 343 octets au total. Il consigne pour chaque entrée rôle, taille, SHA-256, provenance et règle de non-redistribution.
+- Les deux tables légères sont matérialisées sans recomputation ni arrondi supplémentaire depuis le CSV source B1-A3 G6 (SHA-256 `9569ea74bb3d7fa50ef5fd80cd86cbc8879ec95fb41686ca8a34bdd79f20f7ad`) : `main_table_articles.csv` SHA-256 `44cb8a4bd81ccc5368cc8f802a242c352076f378100184613a0068159e0b1c9d`, `main_table_jurisprudence.csv` SHA-256 `0ad76a437f903c06acd3d4e8cf824939c0aa2813d158e7d4f41369fbe4c875b0`, reçu `main_table_manifest.json` SHA-256 `f7d2b7399a6a81eb4442020da6a27e858be12ab3d8aa95b5b4295c9c7aeb021b`.
+- Les nouveaux scripts `108_build_a3_data_manifest.py` et `109_materialize_a3_b1_paper_tables.py` sont couverts par quatre tests spécifiques. La suite complète est verte : `393 passed`. Les fichiers lourds et les rankings top-100 restent externes, référencés par leurs hashes.
+
 ## E036 — caractérisation structurelle canonique A3 des graphes pénaux G1/G6/G7 (2026-09-08)
 
 - L'export canonique est `.../_campaign_b1_a3_structural_graphs_20260908/a3_structural_graphs_manifest.json`, SHA-256 `2307ac04cfffd4a337211c56037045954d8ee9678212c0ba9c6843260a144bb7`. Il lie A3, le script `104_characterize_a3_structural_graphs.py` (SHA-256 `f59995ddc5d610121fa231aecd96ab4a48a9edaf7b822ede58c6e0eb188f6455`), le JSON détaillé (`f5f909ff5274e469350321351d3ad237511d4f10b68ad9b9959e2837ded36454`) et le CSV (`80ba400a88ebef618df5a9ce1430e66fe637607bf1051f891297bc93774f5b0f`).

@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — paquet publiable A3/B1 et tableaux exacts versionnés (2026-09-08)
+
+- Les tableaux à reprendre sont maintenant versionnés dans la branche : `results/benchmark-a3-b1/main_table_articles.csv` (SHA `44cb8a4bd81ccc5368cc8f802a242c352076f378100184613a0068159e0b1c9d`) et `main_table_jurisprudence.csv` (SHA `0ad76a437f903c06acd3d4e8cf824939c0aa2813d158e7d4f41369fbe4c875b0`). Le reçu `main_table_manifest.json` (SHA `f7d2b7399a6a81eb4442020da6a27e858be12ab3d8aa95b5b4295c9c7aeb021b`) les relie au CSV source B1-A3 G6, SHA `9569ea74bb3d7fa50ef5fd80cd86cbc8879ec95fb41686ca8a34bdd79f20f7ad`.
+- Ces fichiers reprennent exactement les six cellules canoniques cosine / PPR / LightGCN G6, avec méthode, graphe, tâche, graines, configuration gelée et statut. Ils ne remplacent pas les ablations scoped G1/G7 et ne mélangent ni E017, ni E021, ni E022.
+- Le README racine est désormais l’entrée de reproduction A3/B1 ; `data-manifest-a3.json` (SHA `18b486737b6c25abde6a11db5e0df008a61fcabf02c99fa7927e99c13dec5e73`) inventorie 30 entrées B1 hashées et non redistribuées. La suite complète passe (`393 passed`).
+
 ## Décision — E030 sera un résultat exploratoire central, après E029 (2026-09-08)
 
 - Dès que les rankings E029 sont complets, contrôlés et gelés, A lancera E030. Le juge recevra seulement la question et une fiche anonymisée par candidat ; aucune information sur la méthode, le graphe, la graine, le rang, le score ou la vérité terrain ne sera visible.
