@@ -7,6 +7,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 LIGHTGCN_SCRIPT = ROOT / "scripts" / "101_aggregate_b1_a3_scoped_lightgcn.py"
 PPR_SCRIPT = ROOT / "scripts" / "102_replay_b1_a3_scoped_ppr.py"
+PPR_V2_SCRIPT = ROOT / "scripts" / "103_replay_b1_a3_scoped_ppr_v2.py"
 
 
 def _load(path: Path, name: str):
@@ -47,3 +48,21 @@ def test_scoped_ppr_rejects_unfrozen_or_non_a3_contracts():
     manifest["selection"]["freeze_before_evaluation"] = False
     with pytest.raises(ValueError, match="frozen"):
         runner.validate_manifest(manifest)
+
+
+def test_scoped_ppr_accepts_a_graph_scoped_champion_without_a_redundant_graph_field(tmp_path):
+    runner = _load(PPR_V2_SCRIPT, "scoped_ppr_graph_scope")
+    source = tmp_path / "G1" / "champions.json"
+    source.parent.mkdir()
+    champion = {
+        "modality": "art", "eligible_champion": True, "n_folds_covered": 5,
+        "question_coverage": 1.0, "dataset_sha256": "train", "fold_assignment_sha256": "folds",
+        "k_in": 50, "seed_variant": "both", "alpha": 0.5, "method": "PPR-sweep-k50-both-a0.5",
+    }
+    condition = {
+        "graph_version": "G1", "target": "art",
+        "selected_configuration": {"k_in": 50, "seed_variant": "both", "alpha": 0.5, "method": "PPR-sweep-k50-both-a0.5"},
+    }
+    payload = {"datasets": {"train": {"sha256": "train"}}, "folds": {"sha256": "folds"}}
+
+    runner._validate_champion(champion, condition, payload, source)

@@ -10,7 +10,7 @@ tags: [coordination, benchmark, papier]
 
 ## Mise à jour A3 ciblée — 2026-09-08
 
-- Un inventaire sans E017/E021/E022 confirme : CV PPR complète pour G1, G6-AA et G7-AA-citation1/sémantique0,25 ; les replays présents ne couvrent que G6--Articles et G7--JP. Quatre replays complémentaires, avec configurations déjà gelées sur train/CV, sont préparés mais n’ont pas encore de score.
+- Un inventaire sans E017/E021/E022 confirme : CV PPR complète pour G1, G6-AA et G7-AA-citation1/sémantique0,25 ; les replays présents ne couvrent que G6--Articles et G7--JP. La tentative complémentaire v1 a échoué avant évaluation et sans résultat, faute d’un champ redondant dans les champions locaux ; son successeur v2 vérifie le chemin source et le SHA-256. Les quatre replays restent sans score à ce stade.
 - G1 LightGCN a 120/120 reçus CV A3 valides. Son replay est scellé sur trois graines, avec Articles K2/lr 0,0005/lambda 0,5/7 époques et JP K3/lr 0,001/lambda 1/4 époques ; aucun chiffre G1 n’est encore transmissible. G7 LightGCN n’a aucune CV et ne sera pas lancé dans cette priorité.
 - **Action Papier :** ne rien ajouter au tableau à partir de ces nouvelles cellules avant la transmission post-replay et le contrôle des hashes/rankings. Les résultats G6 déjà transmis restent les seuls chiffres LightGCN reportables.
 
