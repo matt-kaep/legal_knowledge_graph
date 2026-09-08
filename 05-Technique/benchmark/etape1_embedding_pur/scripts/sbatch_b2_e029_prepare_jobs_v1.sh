@@ -42,6 +42,7 @@ payload = json.load(open(sys.argv[1], encoding="utf-8"))
 if payload["experiment_id"] != "E029" or payload["status"] not in {
     "authorized_cpu_jobs_preparation_no_model_call",
     "authorized_cpu_jobs_preparation_no_model_call_successor_v2",
+    "authorized_cpu_jobs_preparation_no_model_call_successor_v3",
 }:
     raise SystemExit("unexpected E029 jobs-preparation manifest identity or status")
 if payload["reranking_contract"]["candidate_text_policy"] != "full_text_unmodified":
