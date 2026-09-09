@@ -1,12 +1,20 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-gpu-v2-authorized
+status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-aggregated-e030-gpu-submitted
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
+
+## E029 terminé, E030 soumis — reranking comparable et jugement LLM (2026-09-09)
+
+- Les cinq shards E029 output-512 ont terminé `0:0` (cosine `986445`, PPR `986446`, LightGCN graines `42/43/44` = `986447/986448/986449`) et l'agrégateur dépendant `986450` a terminé `0:0`. Le reçu d'agrégation est `.../_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/aggregate/aggregation_receipt.json`, SHA-256 `abdf7471e39c18cf7d68c94399031ca64b489c0ed2f9f6b428eef92b0a470153`; les CSV exacts sont `per_seed_exact_metrics.csv` SHA `7ba99db5b979c56b8685e6bb231231820716b4c8d6f70e9edd7daa77f4f9b8d6` et `seed_mean_exact_metrics.csv` SHA `2fdf5016be10bd2d7116e0f5f02ec78907ae81b18ecd5ed33655a6de055c0a04`.
+- Cette exécution correspond uniquement au manifeste E029 output-512 `b2_reranking_comparable_a3_k70_article192_output512_execution_v2.json`, SHA `c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586`. L'archive output-256 reste non reportable et n'est pas lue par E030.
+- Les dix listes E030 rerankées à `K_in=70` sont gelées et les dix audits de contexte exact ont terminé `0:0`, tous `compatible=true`, `model_calls=0`. Leur racine est `.../_campaign_b2_e030_a3_reranked_k70_jobs_freeze_v1_20260909`; une seule condition, LightGCN graine 43 / JP rerankée, porte 20 slots nuls explicitement autorisés, provenant de 20 réponses E029 `invalid_response`. Ces positions restent dans le dénominateur fixe K=10 mais n'exposent aucun document et n'appellent pas le juge.
+- Le manifeste E030 d'exécution gelé est `configs/b2_llm_as_judge_a3_execution_v1.json`, SHA `09f51c04fca0f76927c7d138a4fda3a230195626e35821edf1a3a4a373e02233`. Il lie les 22 listes (direct LLM, cosine, PPR, LightGCN 3 graines, puis leurs variantes rerankées; Articles et JP), leurs audits et le modèle Gemma à température zéro. Les jobs GPU `986652`--`986673` sont soumis : huit démarrent immédiatement, les autres sont en file conformément à `QOSMaxGRESPerUser`. Aucun score E030 n'existe encore.
+- E030 reste une mesure complémentaire **exploratoire** : elle ne sera jamais confondue avec les métriques exactes; l'absence de `lawyer_agreement.json` interdit une validation humaine ou une conclusion de supériorité, sans interdire le calcul descriptif.
 
 ## E037 — paquet GitHub A3/B1 : manifeste de données et tableaux exacts légers (2026-09-08)
 

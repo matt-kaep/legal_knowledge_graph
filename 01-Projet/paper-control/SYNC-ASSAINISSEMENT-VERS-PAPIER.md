@@ -8,6 +8,13 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Mise à jour — E029 complet, E030 en cours de calcul (2026-09-09)
+
+- Le reranking comparable E029 output-512 est **intégralement terminé et agrégé**. Reçu : `.../_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/aggregate/aggregation_receipt.json`, SHA `abdf7471e39c18cf7d68c94399031ca64b489c0ed2f9f6b428eef92b0a470153`; CSV exacts par graine / moyenne des graines : SHA `7ba99db5b979c56b8685e6bb231231820716b4c8d6f70e9edd7daa77f4f9b8d6` / `2fdf5016be10bd2d7116e0f5f02ec78907ae81b18ecd5ed33655a6de055c0a04`. C'est le seul contrat E029 à utiliser : manifeste SHA `c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586`; l'archive output-256 reste exclue.
+- Les cellules numériques E029 ne sont pas encore transmises comme tableau pour le manuscrit : A doit les enregistrer depuis ces CSV hashés, par méthode, modalité et profondeur, sans sélection après lecture. Ne reprendre aucun nombre depuis les logs.
+- E030 est désormais lancé : manifeste `configs/b2_llm_as_judge_a3_execution_v1.json`, SHA `09f51c04fca0f76927c7d138a4fda3a230195626e35821edf1a3a4a373e02233`; 22 listes immuables de 754 × 10 positions et leurs gates de contexte sont liés au modèle Gemma/température zéro. Les GPU `986652`--`986673` ont été soumis. Aucun score de juge n'est encore disponible.
+- Si E030 aboutit, le tableau sera séparé des métriques exactes et portera le statut **exploratoire**. L'absence de l'accord avocat interdit toujours toute formulation de validation humaine ou de supériorité. Une unique liste rerankée (LightGCN graine 43, JP) contient 20 slots nuls explicitement tracés depuis des réponses invalides du reranker; ils comptent comme zéros dans K=10 et ne sont jamais remplacés.
+
 ## Mise à jour — E029 autorisé sur GPU, aucun score encore disponible (2026-09-09)
 
 - Le préflight CPU output-512 est terminé sur Télécom (`986427`, `0:0`, 18 min 56 s), sans appel de modèle. Son reçu hashé `.../_campaign_b2_e029_a3_k70_article192_output512_preflight_v1_20260909/preflight_receipt.json` vaut `da5033e7be5a0e59f0ffdf5172a5a3e976cdc58227f11baefc83f9deea5a9d8d` : 70 conditions compatibles, 52 780 appels prévus, zéro dépassement de contexte et zéro incompatibilité de budget de réponse. Les audits associés valent `86a6ee8d83467b96ac373921d574dfd6efdb1a471595d5591203d1c4c3005811` (contexte) et `3049cb4d8776bb2416e0a9bb97a9ecd23f4bb73aade3ac2733f43d6e4f6a1120` (sortie ; maximum conservatif 425 tokens).
