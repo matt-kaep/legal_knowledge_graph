@@ -54,6 +54,6 @@ import json, os, subprocess, sys
 root, served, model, revision, port, manifest_sha = sys.argv[1:]
 models=json.load(open(os.path.join(root,"v1_models.json")))
 if served not in [x.get("id") for x in models.get("data",[])]: raise SystemExit("/v1/models identity mismatch")
-payload={"status":"pass","manifest_sha256":manifest_sha,"node":os.environ.get("HOSTNAME"),"slurm_job_id":os.environ.get("SLURM_JOB_ID"),"port":int(port),"listener":"127.0.0.1","gpu":subprocess.check_output(["nvidia-smi","--query-gpu=name,memory.total","--format=csv,noheader"],text=True).strip(),"model_id":model,"model_revision":revision,"served_model_id":served,"v1_models":models}
+payload={"status":"pass","manifest_sha256":manifest_sha,"model_calls":0,"judgment_rows":0,"node":os.environ.get("HOSTNAME"),"slurm_job_id":os.environ.get("SLURM_JOB_ID"),"port":int(port),"listener":"127.0.0.1","gpu":subprocess.check_output(["nvidia-smi","--query-gpu=name,memory.total","--format=csv,noheader"],text=True).strip(),"model_id":model,"model_revision":revision,"served_model_id":served,"v1_models":models}
 open(os.path.join(root,"smoke_receipt.json"),"w").write(json.dumps(payload,indent=2)+"\n")
 PY

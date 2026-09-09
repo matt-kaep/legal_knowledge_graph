@@ -29,6 +29,6 @@ def test_v3_full_launcher_fails_closed_and_records_service_identity():
 def test_v3_smoke_launcher_checks_the_same_identity_without_judging():
     source = SMOKE.read_text(encoding="utf-8")
 
-    for required in ("/v1/models", "MODEL_REVISION", "smoke_receipt.json", "port_must_be_unbound", "LKG_DATA_ROOT"):
+    for required in ("/v1/models", "MODEL_REVISION", "smoke_receipt.json", "model_calls", "port_must_be_unbound", "LKG_DATA_ROOT"):
         assert required in source
     assert "110_run_b2_e030_llm_judge.py" not in source
