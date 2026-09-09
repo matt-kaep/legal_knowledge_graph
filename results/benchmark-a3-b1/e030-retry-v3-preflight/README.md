@@ -10,8 +10,10 @@ manifeste ni les sorties v2.
   SHA-256 `7eb5d08758b3f833cfdb0f2c880066b8cbbe481cd2c252f20ed5582c8e3ea16f`.
 - Audit public v2 : `results/benchmark-a3-b1/e030-aggregation-audit-v1/aggregation_receipt_public.json`,
   SHA-256 `50cecfddfe450f93353acee101b979b1a53b7bfc4f2921e1a5120871fd57ac9b`.
-- Manifeste successeur v3 : `configs/b2_llm_as_judge_a3_retry_v3_preflight.json`,
-  SHA-256 `482a8c45eecc00dddf9a3491a567b432ce6eda6235ca9a430f5b26a92b1ee411`.
+- Manifeste opérationnel successeur v3-r1 : `configs/b2_llm_as_judge_a3_retry_v3_preflight_r1.json`,
+  SHA-256 `505e645ec2f1f1dc7950c22d01d09f1b6b27c68c9b02adb7d48e7a7771978d65`.
+  Le premier manifeste v3 (`482a8c45…`) reste archivé : v3-r1 corrige uniquement
+  la racine de stockage du reçu de smoke, sans modifier les entrées scientifiques.
 
 Les cinq shards v2 `complete_clean` restent des diagnostics archivés et ne
 sont ni rejoués ni agrégés. La liste exacte des dix-sept reprises et leur port

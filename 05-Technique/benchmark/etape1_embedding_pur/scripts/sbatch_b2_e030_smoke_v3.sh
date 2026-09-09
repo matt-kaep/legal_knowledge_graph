@@ -10,6 +10,7 @@
 
 set -eEuo pipefail
 : "${LKG_REPO:?Set LKG_REPO.}"
+: "${LKG_DATA_ROOT:?Set the data root containing doctrine_v3plus_bench.}"
 : "${E030_EXECUTION_MANIFEST:?Set absolute v3 manifest path.}"
 : "${E030_EXECUTION_MANIFEST_SHA:?Set v3 manifest SHA-256.}"
 : "${E030_SHARD:?Set one v3 retry shard id.}"
@@ -39,7 +40,7 @@ m=p["model"]
 for k,v in {"MODEL":m["id"],"MODEL_REVISION":m["revision"],"MODEL_SNAPSHOT":m["snapshot"],"PORT":s["vllm_port"],"OUT_REL":p["outputs"]["root"],"MAX_MODEL_TOKENS":m["max_model_tokens"],"MAX_NUM_SEQS":m["max_num_seqs"]}.items(): print(f'{k}={shlex.quote(str(v))}')
 PY
 )"
-RUN_ROOT="$LKG_REPO/05-Technique/benchmark/etape1_embedding_pur/data/$OUT_REL/smoke/$E030_SHARD"
+RUN_ROOT="$LKG_DATA_ROOT/$OUT_REL/smoke/$E030_SHARD"
 mkdir -p "$RUN_ROOT"
 [[ "$(basename "$(readlink -f "$MODEL_SNAPSHOT")")" == "$MODEL_REVISION" ]] || { echo "snapshot revision mismatch" >&2; exit 2; }
 port_must_be_unbound() { ! ss -ltnH "sport = :$PORT" | grep -q .; }
