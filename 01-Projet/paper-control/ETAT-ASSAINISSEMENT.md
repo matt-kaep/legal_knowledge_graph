@@ -1,5 +1,5 @@
 ---
-date: 2026-07-26
+date: 2026-09-09
 type: etat-projet
 status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-aggregated-e030-gpu70-running
 owner: assainissement
@@ -7,6 +7,14 @@ tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
+
+## E038 — figure combinée des profondeurs A3/E029 livrée à Papier (2026-09-09)
+
+- La figure publication-ready à quatre panneaux est `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/paper_depth_figure.pdf` (vectoriel, SHA-256 `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`) et son PNG 320 dpi est `paper_depth_figure.png` (SHA-256 `b5968ad16af04f68e49edc40751b70be9a9a9c9bd03d827e0bb7a2d6a26ea112`). Les deux CSV source dérivés sont `retrieval_depth_tidy.csv` (SHA-256 `47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b`) et `reranking_depth_tidy.csv` (SHA-256 `27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162`).
+- La dérivation relit seulement 754 questions A3 et les classements top-100 figés : retrieval `K=1..100`; E029 `K_in=10,20,30,40,50,60,70`, `K_out=10`. Aucun entraînement, retrieval, appel LLM ni travail E030 n’a été lancé ou modifié.
+- Important pour Papier : le panneau retrieval JP utilise PPR G7-AA (ligne principale, NHit@10 `0,230659`), alors que le panneau reranking JP utilise PPR G6-AA et sa baseline réelle `0,22822723253757737`, car E029 a reranké des viviers PPR G6-AA gelés. Ce panneau n’est donc pas le reranking de la ligne PPR G7-AA du tableau principal.
+- Le manifeste de rendu v3, autonome, vaut SHA-256 `92d42439d827217a2700d5c6ab6565e49e467be0eecee4b2901c5a7a58801ed9`. Le reçu de sortie `depth_figure_manifest.json` vaut SHA-256 `3954b06f9d383de21da7788993a6a16a7a68e5e48dad71195375e3466fb02f75`.
+- Statut : les courbes retrieval sont une évaluation interne A3 après gel train/CV; E029 est une analyse annexe exploratoire. Aucune conclusion de supériorité confirmatoire ne doit être attribuée au reranking.
 
 ## E029 terminé, E030 v2 GPU compatible en cours — reranking comparable et jugement LLM (2026-09-09)
 

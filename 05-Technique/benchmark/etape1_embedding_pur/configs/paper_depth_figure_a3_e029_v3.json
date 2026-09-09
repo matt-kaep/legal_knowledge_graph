@@ -1,0 +1,54 @@
+{
+  "manifest_id": "paper-depth-figure-a3-e029-v3-2026-09-09",
+  "purpose": "Derive a publication figure from frozen A3 retrieval and E029 output-512 aggregates only. Rendering revision 3 corrects presentation only. No model, retrieval, training, selection, or E030 execution is permitted.",
+  "a3": {
+    "evaluation_questions": 754,
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "status": "internal_evaluation_after_train_cv_freeze"
+  },
+  "retrieval": {
+    "r5_manifest": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/configs/paper_ready_existing_retrieval_a3_r5.json",
+      "sha256": "1d987e9479b30b33d212ba3d9ef79131592f826b8e43310c3322a10d6302d224"
+    },
+    "r5_depth_curves": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_existing_retrieval_r5_20260908/depth_curves/depth_curves.csv",
+      "sha256": "c188b2faabf6951c761b587fbfb73aef07b9bd79da791dd9dfffc319e3e52b93",
+      "receipt_sha256": "bcf4aa500cfe9cd6ee80ef5f00dd0634b98260482e448ad65d6445eb17eb4f84"
+    },
+    "lightgcn_g6_depth_curves": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_retrieval_g6_lightgcn_v2_20260907/depth_curves/depth_curves.csv",
+      "sha256": "98f7db2e44a4ab8ce82f334e23d21e09dcaa366b727f7e6b62fb13d2a45e614d",
+      "receipt_sha256": "0913a9b1b83dae34f2cd55f84ae772ab5c73202e225b5f98c982c309035914de",
+      "seeds": [42, 43, 44]
+    },
+    "ppr_g6_jp_baseline": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_scoped_exact_metrics_r1_20260908/depth_curves/depth_curves.csv",
+      "sha256": "c3ce0b6e26d038aba5913c4bbd64dc0dc9e270869a08716ddbadc7b3ae8f09e1",
+      "receipt_sha256": "11539fa232438f0fbde5d0a2b6728894ffcdd65b73dda2c5a3698aa8427df4e5",
+      "filter": {"source": "ppr_g6_jurisprudence", "target": "jurisprudence", "k": 10, "nhit_at_k": 0.22822723253757737}
+    },
+    "panel_mapping": {
+      "statutory_articles": "cosine; PPR G6-AA; LightGCN G6",
+      "judicial_decisions": "cosine; PPR G7-AA; LightGCN G6"
+    }
+  },
+  "reranking": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_output512_execution_v2.json",
+    "manifest_sha256": "c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586",
+    "aggregate_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/aggregate",
+    "aggregation_receipt_sha256": "abdf7471e39c18cf7d68c94399031ca64b489c0ed2f9f6b428eef92b0a470153",
+    "per_seed_exact_metrics_sha256": "7ba99db5b979c56b8685e6bb231231820716b4c8d6f70e9edd7daa77f4f9b8d6",
+    "seed_mean_exact_metrics_sha256": "2fdf5016be10bd2d7116e0f5f02ec78907ae81b18ecd5ed33655a6de055c0a04",
+    "k_in": [10, 20, 30, 40, 50, 60, 70],
+    "k_out": 10,
+    "lightgcn_seeds": [42, 43, 44],
+    "jp_ppr_scope": "PPR G6-AA frozen pools only; distinct from the PPR G7-AA main-table retrieval configuration",
+    "scientific_status": "exploratory_reranking_annex"
+  },
+  "rendering_revision": 3,
+  "outputs": {
+    "root": "results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3",
+    "files": ["paper_depth_figure.pdf", "paper_depth_figure.png", "retrieval_depth_tidy.csv", "reranking_depth_tidy.csv", "depth_figure_manifest.json", "README.md"]
+  }
+}

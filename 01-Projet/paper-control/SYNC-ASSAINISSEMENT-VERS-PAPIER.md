@@ -1,5 +1,5 @@
 ---
-date: 2026-09-08
+date: 2026-09-09
 type: synchronisation
 owner: assainissement
 recipient: papier
@@ -7,6 +7,16 @@ tags: [coordination, benchmark, papier]
 ---
 
 # Canal A vers B — Assainissement vers papier
+
+## Transmission E038 — figure 2x2 A3/E029 prête à insérer (2026-09-09)
+
+À reprendre depuis `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/` : PDF vectoriel `paper_depth_figure.pdf` (SHA-256 `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`), PNG 320 dpi `paper_depth_figure.png` (SHA-256 `b5968ad16af04f68e49edc40751b70be9a9a9c9bd03d827e0bb7a2d6a26ea112), CSV retrieval (SHA-256 `47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b), CSV reranking (SHA-256 `27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162) et reçu `depth_figure_manifest.json` (SHA-256 `3954b06f9d383de21da7788993a6a16a7a68e5e48dad71195375e3466fb02f75`).
+
+Caption proposée : *Retrieval and reranking depth on the frozen A3 internal evaluation (754 questions). Top panels report exact NHit@K from frozen top-100 rankings. Bottom panels report final NHit@10 after E029 reranking at K_out=10; solid curves are reranked results and dashed lines are the corresponding retriever NHit@10. The jurisprudence PPR reranking curve uses G6-AA frozen pools and is distinct from the PPR G7-AA retrieval line in the main table. E029 is exploratory.*
+
+Convention indispensable : panneaux A/B (retrieval) utilisent PPR G6-AA pour Articles et PPR G7-AA pour Judicial Decisions, conformément aux lignes principales gelées. Le panneau D (reranking JP) est **PPR G6-AA** : baseline retrieval exacte `0.22822723253757737`, E029 rerankée à `K_in=70` `0.308576480990274`. Il ne faut ni l’étiqueter G7-AA ni le présenter comme le reranking de la ligne principale PPR G7-AA (`0.23065870910698497`). Les vérifications K=70 sont : Articles cosine/PPR/LightGCN `0.570/0.666/0.654`; JP `0.298/0.309/0.329` après arrondi à trois décimales.
+
+Statut : les courbes retrieval sont des résultats de l’évaluation interne A3 après gel train/CV; E029 est une annexe exploratoire. Ne modifier ni E030 ni le manuscrit à partir de cette transmission; le script n’a lancé aucun calcul de modèle.
 
 ## Mise à jour — E029 complet, E030 en cours de calcul (2026-09-09)
 
