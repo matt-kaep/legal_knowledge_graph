@@ -16,6 +16,9 @@ def test_v3_full_launcher_fails_closed_and_records_service_identity():
         "MODEL_REVISION",
         "E030_ALLOW_FULL_RETRY",
         "121_run_b2_e030_judge_fail_closed_v3.py",
+        "RUNNER_SHA",
+        "CONTEXT_SHA",
+        "nvidia-smi",
         "technical_failure_receipt.json",
         "listener",
     ):
