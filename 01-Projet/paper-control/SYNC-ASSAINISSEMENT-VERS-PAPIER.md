@@ -8,13 +8,13 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
-## Transmission E042 — E030 v3 préparé, aucun score nouveau (2026-09-09)
+## Transmission E042 — E030 v3 r6 soumis, aucun score nouveau (2026-09-09)
 
-Mise à jour : l'autorisation de reprise a été reçue. La soumission utilise désormais le manifeste fail-closed v3-r2 `configs/b2_llm_as_judge_a3_retry_v3_preflight_r2.json`, SHA `b0f502614c72bed52d69cef2653bb42f63908a2b92afc2a658bc0fa0c82d8228`; aucune sortie v2 partielle n'est réutilisée.
+Mise à jour : l'autorisation de reprise a été reçue. La soumission utilise désormais le manifeste fail-closed v3-r6 `configs/b2_llm_as_judge_a3_retry_v3_preflight_r6.json`, SHA `b4bb39dcbfff639f3c2cc5a3aecc637f2ff6475c6f1e17dcf61a91a6472746cd`; aucune sortie v2 partielle n'est réutilisée et les manifestes r1--r5 restent archivés.
 
 E030 v2 reste techniquement incomplet et non reportable. Le successeur opérationnel préflight est `configs/b2_llm_as_judge_a3_retry_v3_preflight_r1.json`, SHA `505e645ec2f1f1dc7950c22d01d09f1b6b27c68c9b02adb7d48e7a7771978d65`; il ne reprend aucun score v2 et sélectionne exactement les 17 shards `partial_technical` depuis l'audit public v2 SHA `50cecfddfe450f93353acee101b979b1a5120871fd57ac9b`. Les cinq shards propres restent seulement des diagnostics archivés.
 
-Le tableau de suivi des 17 conditions et ports est `results/benchmark-a3-b1/e030-retry-v3-preflight/retry_shards.csv`, SHA `395d701cd1403f945f7f20ba16b2bb51cf8cfb4bf7e7899efdee1c4054df206b`; le protocole et l’estimation sont dans le README associé. Le smoke GPU sans jugement est vert : Slurm `987291`, A100 `node05`, reçu public SHA `342547cca2fafc1eb35d15b887e7c4e065308f14800f75e6e47d61d6f1087eb3`, port/listener/snapshot/GPU et `/v1/models` contrôlés, zéro appel et zéro score. **Action Papier : ne rien intégrer et conserver les cellules Judge à `--`**. Même après reprise complète, E030 est exploratoire jusqu’à `lawyer_agreement.json`.
+Le tableau de suivi des 17 conditions et ports est `results/benchmark-a3-b1/e030-retry-v3-preflight/retry_shards.csv`, SHA `395d701cd1403f945f7f20ba16b2bb51cf8cfb4bf7e7899efdee1c4054df206b`; le protocole et l’estimation sont dans le README associé. Le smoke GPU sans jugement r6 est vert : Slurm `987373`, A100 `node56`, reçu distant SHA `1622a20d4fac4b7f4cac2aeb66e84a9dadbab036c813c2354e66f959328bddd8`, port/listener/snapshot/GPU et `/v1/models` contrôlés, `model_calls=0`, `judgment_rows=0`. Les 17 reprises Slurm `987376`--`987392` sont soumises. **Action Papier : ne rien intégrer et conserver les cellules Judge à `--`** jusqu’à l'audit global complet. Même après reprise complète, E030 est exploratoire jusqu’à `lawyer_agreement.json`.
 
 ## Transmission E041 — figure retrieval compacte à insérer (2026-09-09)
 
