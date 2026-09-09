@@ -26,6 +26,13 @@ class E030SlurmRunnerTest(unittest.TestCase):
         self.assertNotEqual(completed.returncode, 0)
         self.assertIn("Set LKG_REPO", completed.stderr)
 
+    def test_refuses_gpu_below_the_quantized_model_minimum_compute_capability(self):
+        """A P100 must be rejected before vLLM is started for compressed-tensors Gemma."""
+        source = SCRIPT.read_text(encoding="utf-8")
+
+        self.assertIn("compute_capability", source)
+        self.assertIn("minimum required capability 7.0", source)
+
 
 if __name__ == "__main__":
     unittest.main()

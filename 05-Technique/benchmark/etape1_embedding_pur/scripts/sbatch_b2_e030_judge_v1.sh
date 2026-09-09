@@ -2,6 +2,7 @@
 # Execute one immutable E030 LLM-as-a-Judge shard after its context gate.
 # The execution manifest is intentionally created only after final rankings exist.
 #SBATCH --job-name=lkg-b2-e030
+#SBATCH --partition=A100,L40S,H100
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
@@ -132,7 +133,12 @@ fi
 
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 export OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2
-nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
+gpu_compute_capability="$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader,nounits)"
+if awk 'BEGIN { rejected = 0 } { if ($1 + 0 < 7.0) rejected = 1 } END { exit rejected ? 0 : 1 }' <<< "$gpu_compute_capability"; then
+  echo "GPU compute_capability $gpu_compute_capability is below the minimum required capability 7.0 for compressed-tensors Gemma" >&2
+  exit 2
+fi
+nvidia-smi --query-gpu=name,memory.total,compute_cap,driver_version --format=csv,noheader
 "$VLLM_BIN" serve "$MODEL_SNAPSHOT" --served-model-name "$MODEL" --host 127.0.0.1 --port "$PORT" \
   --max-model-len "$MAX_MODEL_TOKENS" --max-num-seqs "$MAX_NUM_SEQS" --gpu-memory-utilization 0.90 > "$RUN_ROOT/vllm.log" 2>&1 &
 SERVER_PID=$!

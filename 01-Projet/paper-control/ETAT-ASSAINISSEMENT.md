@@ -1,19 +1,21 @@
 ---
 date: 2026-07-26
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-aggregated-e030-gpu-submitted
+status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-aggregated-e030-gpu70-running
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
 
-## E029 terminé, E030 soumis — reranking comparable et jugement LLM (2026-09-09)
+## E029 terminé, E030 v2 GPU compatible en cours — reranking comparable et jugement LLM (2026-09-09)
 
 - Les cinq shards E029 output-512 ont terminé `0:0` (cosine `986445`, PPR `986446`, LightGCN graines `42/43/44` = `986447/986448/986449`) et l'agrégateur dépendant `986450` a terminé `0:0`. Le reçu d'agrégation est `.../_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/aggregate/aggregation_receipt.json`, SHA-256 `abdf7471e39c18cf7d68c94399031ca64b489c0ed2f9f6b428eef92b0a470153`; les CSV exacts sont `per_seed_exact_metrics.csv` SHA `7ba99db5b979c56b8685e6bb231231820716b4c8d6f70e9edd7daa77f4f9b8d6` et `seed_mean_exact_metrics.csv` SHA `2fdf5016be10bd2d7116e0f5f02ec78907ae81b18ecd5ed33655a6de055c0a04`.
 - Cette exécution correspond uniquement au manifeste E029 output-512 `b2_reranking_comparable_a3_k70_article192_output512_execution_v2.json`, SHA `c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586`. L'archive output-256 reste non reportable et n'est pas lue par E030.
 - Les dix listes E030 rerankées à `K_in=70` sont gelées et les dix audits de contexte exact ont terminé `0:0`, tous `compatible=true`, `model_calls=0`. Leur racine est `.../_campaign_b2_e030_a3_reranked_k70_jobs_freeze_v1_20260909`; une seule condition, LightGCN graine 43 / JP rerankée, porte 20 slots nuls explicitement autorisés, provenant de 20 réponses E029 `invalid_response`. Ces positions restent dans le dénominateur fixe K=10 mais n'exposent aucun document et n'appellent pas le juge.
-- Le manifeste E030 d'exécution gelé est `configs/b2_llm_as_judge_a3_execution_v1.json`, SHA `09f51c04fca0f76927c7d138a4fda3a230195626e35821edf1a3a4a373e02233`. Il lie les 22 listes (direct LLM, cosine, PPR, LightGCN 3 graines, puis leurs variantes rerankées; Articles et JP), leurs audits et le modèle Gemma à température zéro. Les jobs GPU `986652`--`986673` sont soumis : huit démarrent immédiatement, les autres sont en file conformément à `QOSMaxGRESPerUser`. Aucun score E030 n'existe encore.
+- La première soumission E030 v1 (`986652`--`986673`) est une archive d'échec **pré-modèle** : Slurm l'avait placée sur Tesla P100 (capacité CUDA 6.0), alors que le format `compressed-tensors` de Gemma exige au moins 7.0. Les 22 jobs ont échoué avant tout appel, sans `responses.jsonl`, matérialisation ni score; ils ne sont jamais lus comme résultats.
+- Le successeur gelé est `configs/b2_llm_as_judge_a3_execution_v2_gpu70.json`, SHA `7eb5d08758b3f833cfdb0f2c880066b8cbbe481cd2c252f20ed5582c8e3ea16f`. Il réutilise strictement les mêmes 22 listes et audits, mais lie le lanceur hashé `a989d28a661609a80d8a2ae8ab3e62299113e024a0d24299607016c4b8bb70dd`, impose les partitions A100/L40S/H100 et refuse au runtime une capacité GPU inférieure à 7.0.
+- Le smoke sans complétion `987034` a terminé `0:0` sur NVIDIA A100 40 Go, capacité 8.0 : Gemma a chargé et `/health` a répondu. Les 22 shards v2 `987039`--`987060` sont alors soumis; les cinq premiers démarrent sur A100 et les autres attendent exclusivement des ressources compatibles. Aucun score E030 n'existe encore.
 - E030 reste une mesure complémentaire **exploratoire** : elle ne sera jamais confondue avec les métriques exactes; l'absence de `lawyer_agreement.json` interdit une validation humaine ou une conclusion de supériorité, sans interdire le calcul descriptif.
 
 ## E037 — paquet GitHub A3/B1 : manifeste de données et tableaux exacts légers (2026-09-08)
