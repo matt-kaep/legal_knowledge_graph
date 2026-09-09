@@ -1,7 +1,7 @@
 ---
 date: 2026-09-09
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-aggregated-e030-gpu70-running
+status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-aggregated-e030-v2-audited-incomplete
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
