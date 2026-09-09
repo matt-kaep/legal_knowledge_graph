@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission E040 — audit final de la figure A3/E029 v3 (2026-09-09)
+
+La figure existante est conforme et peut être utilisée directement, sans régénération : `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/paper_depth_figure.pdf` (PDF vectoriel, SHA `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`), PNG 320 dpi (SHA `b5968ad16af04f68e49edc40751b70be9a9a9c9bd03d827e0bb7a2d6a26ea112`), CSV retrieval (SHA `47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b) et reranking (SHA `27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162`). Le paquet de handoff est `.../audit-v1/README.md`; son reçu est SHA `8061022f79122734c066187d508762c6fbf3a9e3ceb1eed0785f15e889b1a9b8`.
+
+Le contrôle couvre le rendu 2×2, les 754 questions, retrieval `K=1..100`, reranking E029 **output-512 seulement** `K_in=10..70`, les six valeurs à `K_in=70`, l’absence de Direct LLM/barres d’erreur et les couleurs/strokes. PPR JP doit rester lu ainsi : retrieval principal = G7-AA (`0,230659`) ; reranking E029 = G6-AA, baseline `0,22822723253757737`, point 70 `0,308576`. E029 est exploratoire, retrieval est l’évaluation interne A3; E030 n’a été ni lu ni modifié.
+
 ## Transmission E039 — E030 v2 ne fournit aucun score utilisable (2026-09-09)
 
 L’audit complet de la campagne LLM-as-a-Judge E030 v2 GPU70 est disponible dans `results/benchmark-a3-b1/e030-aggregation-audit-v1/` : reçu public, CSV par shard et sous-ensemble technique. Le contrat d’audit est `configs/b2_llm_as_judge_a3_aggregation_audit_v1.json`; les hashes sont dans le reçu public. La preuve distante immuable est `.../_campaign_b2_e030_a3_execution_v2_gpu70_20260909/aggregate_audit_v1/aggregation_receipt.json`, SHA `d6f3afa59efb9ec7ab04a0b5218d2ea9fc028b298efb60a6273484f7e471588a`; les CSV GitHub sont normalisés LF, tandis que leurs hashes source Télécom CRLF restent consignés pour vérification.

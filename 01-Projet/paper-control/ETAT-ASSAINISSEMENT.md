@@ -8,6 +8,12 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## E040 — audit de la figure A3/E029 v3, conforme au contrat Papier (2026-09-09)
+
+- Audit lecture seule terminé : PDF vectoriel mono-page, rendu visuel 2×2 lisible, PNG `2400×1500` à 320 dpi et CSV tidy existants. Le PDF `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/paper_depth_figure.pdf` est byte-identique au SHA demandé `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`. Les CSV couvrent respectivement `600` lignes (`2×3×K=1..100`) et `42` lignes (`2×3×K_in=10..70`).
+- Les cinq sources Télécom ont été rehashées et correspondent au manifeste de figure : retrieval r5 `c188b2…`, LightGCN G6 `98f7db…`, PPR G6 JP scoped `c3ce0b…`, E029 output-512 per-seed `7ba99d…` et moyenne `2fdf50…`. Le manifeste E029 v2 vaut bien `c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586`; ni output-256, ni E017/E021/E022 n’est lu.
+- La convention PPR JP est correcte : retrieval `PPR G7-AA` (`NHit@10=0,230659`), reranking E029 `PPR G6-AA` (baseline `0,22822723253757737`, `K_in=70=0,308576`). Les six valeurs `K_in=70` sont contrôlées dans le reçu d’audit, sans Direct LLM ni barre d’erreur. Paquet Papier : `.../paper-depth-figure-a3-e029-v3/audit-v1/`, reçu SHA-256 `8061022f79122734c066187d508762c6fbf3a9e3ceb1eed0785f15e889b1a9b8`.
+
 ## E039 — audit d’agrégation E030 v2 : campagne techniquement incomplète (2026-09-09)
 
 - Les 22 shards E030 v2 GPU70 ont quitté Slurm `0:0`, mais l’audit des ledgers et matérialisations exclut de confondre fin Slurm et résultat scientifique : tous les hashes de jobs/manifeste, les 754 questions et les dix positions par question sont cohérents, mais seulement **5/22** shards ont 7 540 réponses `ok`. Les 17 autres contiennent des réponses `invalid` ou `error` et sont `partial_technical`.
