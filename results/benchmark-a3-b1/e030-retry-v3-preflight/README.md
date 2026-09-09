@@ -35,6 +35,16 @@ LightGCN reste interdite tant que les trois graines de chaque modalité ne sont
 pas complètes et propres. E030 demeure exploratoire jusqu’à
 `lawyer_agreement.json`.
 
+## Smoke exécuté
+
+Le smoke Slurm `987291` a terminé `0:0` sur `node05` (A100 40 Go) en 1 min 57
+s. Le reçu distant immuable est hashé
+`6105396bd32e4212f5d3fc563b5e5ac5ab8ea01c01453835a7292a3140de792a` et son
+export léger est `smoke_receipt_public.json`. Il confirme le port `18403`, le
+listener `127.0.0.1`, le snapshot et la révision Gemma attendue, ainsi que le
+nom `model@revision` retourné par `/v1/models`. Il contient `model_calls=0` et
+`judge_scores=0`.
+
 ## Estimation fondée sur v2
 
 Les sept shards v2 ayant effectivement travaillé ont consommé entre 15 min 44
