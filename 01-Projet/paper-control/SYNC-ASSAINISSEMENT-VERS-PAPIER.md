@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission E042 — E030 v3 préparé, aucun score nouveau (2026-09-09)
+
+E030 v2 reste techniquement incomplet et non reportable. Le successeur préflight est `configs/b2_llm_as_judge_a3_retry_v3_preflight.json`, SHA `482a8c45eecc00dddf9a3491a567b432ce6eda6235ca9a430f5b26a92b1ee411`; il ne reprend aucun score v2 et sélectionne exactement les 17 shards `partial_technical` depuis l'audit public v2 SHA `50cecfddfe450f93353acee101b979b1a53b7bfc4f2921e1a5120871fd57ac9b`. Les cinq shards propres restent seulement des diagnostics archivés.
+
+Le tableau de suivi des 17 conditions et ports est `results/benchmark-a3-b1/e030-retry-v3-preflight/retry_shards.csv`, SHA `395d701cd1403f945f7f20ba16b2bb51cf8cfb4bf7e7899efdee1c4054df206b`; le protocole et l’estimation sont dans le README associé. Prochaine étape A : smoke GPU sans jugement, contrôlant port/listener, snapshot, GPU et `/v1/models`. **Action Papier : ne rien intégrer et conserver les cellules Judge à `--`**. Même après reprise complète, E030 est exploratoire jusqu’à `lawyer_agreement.json`.
+
 ## Transmission E041 — figure retrieval compacte à insérer (2026-09-09)
 
 Utiliser désormais si vous souhaitez la version sans reranking : `results/benchmark-a3-b1/figures/paper-retrieval-figure-a3-v4/paper_retrieval_figure.pdf` (PDF vectoriel, SHA `75bc1a99570e66205e0a5788299eeffd3a93d6b0f09ed39da170f5e906066a95`) ou son PNG 320 dpi (SHA `28901cd69dd737a999ff9571a288db5fe05f14a379ae2392cdd2ee462f9f5ce2`). Elle contient uniquement les panneaux A/B retrieval A3 `K=1..100` pour les 754 questions, et aucun résultat E029/E030.

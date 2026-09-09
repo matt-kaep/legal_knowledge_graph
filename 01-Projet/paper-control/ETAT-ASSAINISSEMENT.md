@@ -8,6 +8,13 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## E042 — reprise E030 v3 préparée, smoke GPU requis (2026-09-09)
+
+- V2 demeure immuable et non reportable : reçu public SHA `50cecfddfe450f93353acee101b979b1a53b7bfc4f2921e1a5120871fd57ac9b`, 5 shards propres archivés, 17 `partial_technical` sans score réutilisé. Le manifeste successeur est `configs/b2_llm_as_judge_a3_retry_v3_preflight.json`, SHA `482a8c45eecc00dddf9a3491a567b432ce6eda6235ca9a430f5b26a92b1ee411`.
+- Les 17 reprises sont sélectionnées mécaniquement depuis l'audit v2, avec ports réservés `18401..18417`, listes A3/E029, modèle/révision, température, prompts et K=10 inchangés. Tableau : `results/benchmark-a3-b1/e030-retry-v3-preflight/retry_shards.csv`, SHA `395d701cd1403f945f7f20ba16b2bb51cf8cfb4bf7e7899efdee1c4054df206b`.
+- Le smoke v3 démarrera le snapshot Gemma mais ne lira ni jobs ni question et ne produira aucun jugement. Il exige un port libre, `/health`, `/v1/models`, le nom servi `model@revision` et le chemin de snapshot correspondant à la révision; il inscrit nœud/GPU/port/listener/modèle/révision dans un reçu. Aucun shard GPU complet n'est soumis avant ce reçu et une autorisation explicite.
+- Estimation issue des shards v2 ayant réellement travaillé : 15–60 min GPU par reprise, environ 4–17 GPU-h et ~1 h mur avec 17 GPU disponibles, plus la queue. E030 reste exploratoire même après succès technique; `lawyer_agreement.json` reste requis pour toute conclusion comparative.
+
 ## E041 — figure retrieval A3 v4 à deux panneaux (2026-09-09)
 
 - À la demande Papier, la v3 2×2 est conservée immuable et un successeur de présentation est dérivé exclusivement de son CSV retrieval hashé, sans modèle ni recomputation : `results/benchmark-a3-b1/figures/paper-retrieval-figure-a3-v4/paper_retrieval_figure.pdf` SHA-256 `75bc1a99570e66205e0a5788299eeffd3a93d6b0f09ed39da170f5e906066a95`, PNG 320 dpi SHA `28901cd69dd737a999ff9571a288db5fe05f14a379ae2392cdd2ee462f9f5ce2`.
