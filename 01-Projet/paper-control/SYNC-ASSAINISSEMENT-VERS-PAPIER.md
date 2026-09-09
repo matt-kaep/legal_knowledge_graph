@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission E039 — E030 v2 ne fournit aucun score utilisable (2026-09-09)
+
+L’audit complet de la campagne LLM-as-a-Judge E030 v2 GPU70 est disponible dans `results/benchmark-a3-b1/e030-aggregation-audit-v1/` : reçu public, CSV par shard et sous-ensemble technique. Le contrat d’audit est `configs/b2_llm_as_judge_a3_aggregation_audit_v1.json`; les hashes sont dans le reçu public. La preuve distante immuable est `.../_campaign_b2_e030_a3_execution_v2_gpu70_20260909/aggregate_audit_v1/aggregation_receipt.json`, SHA `d6f3afa59efb9ec7ab04a0b5218d2ea9fc028b298efb60a6273484f7e471588a`; les CSV GitHub sont normalisés LF, tandis que leurs hashes source Télécom CRLF restent consignés pour vérification.
+
+Les 22 shards respectent les hashes, 754 questions et K=10 fixe, mais seulement 5 sont techniquement propres; 17 portent des `invalid`/`error`. Les sorties de masse à zéro proviennent de `HTTP Error 404: Not Found` et ne sont pas des classes `non_jugeable` produites par le juge. En conséquence, ne reprendre **aucun score E030**, ne calculer aucune moyenne LightGCN et ne remplir aucune table/figure de Papier avec cette campagne. Une reprise technique successeur est requise; même après reprise, E030 reste exploratoire jusqu’à l’audit avocat.
+
 ## Transmission E038 — figure 2x2 A3/E029 prête à insérer (2026-09-09)
 
 À reprendre depuis `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/` : PDF vectoriel `paper_depth_figure.pdf` (SHA-256 `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`), PNG 320 dpi `paper_depth_figure.png` (SHA-256 `b5968ad16af04f68e49edc40751b70be9a9a9c9bd03d827e0bb7a2d6a26ea112), CSV retrieval (SHA-256 `47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b), CSV reranking (SHA-256 `27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162) et reçu `depth_figure_manifest.json` (SHA-256 `3954b06f9d383de21da7788993a6a16a7a68e5e48dad71195375e3466fb02f75`).

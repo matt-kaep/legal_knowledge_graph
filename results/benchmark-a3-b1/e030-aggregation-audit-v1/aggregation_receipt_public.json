@@ -1,0 +1,22 @@
+{
+  "schema_version": "b2-e030-aggregation-audit-public.v1",
+  "experiment_id": "E030",
+  "execution_manifest_sha256": "7eb5d08758b3f833cfdb0f2c880066b8cbbe481cd2c252f20ed5582c8e3ea16f",
+  "aggregation_script_sha256": "09d2fb6d0d78100b67306177bf62998570bfe806b317e46c3fa4e13be23c21b9",
+  "remote_immutable_aggregation_receipt_sha256": "d6f3afa59efb9ec7ab04a0b5218d2ea9fc028b298efb60a6273484f7e471588a",
+  "shards_expected": 22,
+  "shards_complete_clean": 5,
+  "shards_partial_or_missing": 17,
+  "lightgcn_seed_mean_allowed": false,
+  "campaign_verdict": "incomplete_technical_failures",
+  "scientific_status": "exploratory_until_lawyer_audit",
+  "paper_status": "no E030 score is reportable",
+  "remote_source_files": {
+    "per_shard_audit.csv": "018acf30100187b75c419cea7d1614993966c97069ed3c0f9fb4c248fa8ee137",
+    "complete_clean_scores.csv": "20514b0db028994a94f8258ca582cf8349badcc08a84fce37fbfe8e2f0ee0423"
+  },
+  "published_lf_files": {
+    "per_shard_audit.csv": "0b9f8a8d31c4fa764ca878805949ae36e65111adc41f713f8d84ca7ed1803141",
+    "complete_clean_scores.csv": "462c3d3157df633c2be240cf9dd86434f943d19e81b8f77692188b6897f7eeeb"
+  }
+}

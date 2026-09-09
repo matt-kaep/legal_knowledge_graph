@@ -8,6 +8,13 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## E039 — audit d’agrégation E030 v2 : campagne techniquement incomplète (2026-09-09)
+
+- Les 22 shards E030 v2 GPU70 ont quitté Slurm `0:0`, mais l’audit des ledgers et matérialisations exclut de confondre fin Slurm et résultat scientifique : tous les hashes de jobs/manifeste, les 754 questions et les dix positions par question sont cohérents, mais seulement **5/22** shards ont 7 540 réponses `ok`. Les 17 autres contiennent des réponses `invalid` ou `error` et sont `partial_technical`.
+- Reçu immuable Télécom : `.../_campaign_b2_e030_a3_execution_v2_gpu70_20260909/aggregate_audit_v1/aggregation_receipt.json`, SHA-256 `d6f3afa59efb9ec7ab04a0b5218d2ea9fc028b298efb60a6273484f7e471588a`. Exports légers versionnés (normalisés LF) : `results/benchmark-a3-b1/e030-aggregation-audit-v1/per_shard_audit.csv` SHA `0b9f8a8d31c4fa764ca878805949ae36e65111adc41f713f8d84ca7ed1803141`, sous-ensemble technique `complete_clean_scores.csv` SHA `462c3d3157df633c2be240cf9dd86434f943d19e81b8f77692188b6897f7eeeb`; leurs hashes source Télécom CRLF sont consignés dans le reçu public. Contrat d’audit : `configs/b2_llm_as_judge_a3_aggregation_audit_v1.json`.
+- Cause observée des échecs massifs : `HTTP Error 404: Not Found` enregistré dans les responses, concentré sur les shards exécutés très rapidement sur `nodeaudible01`. Le même runner avait produit des réponses valides sur les A100 précédents. Cela est compatible avec un service local non-vLLM ou une collision de port, mais l’identité du listener n’est pas reconstructible a posteriori; les sorties nulles ne sont donc pas des jugements.
+- Conséquence : aucune moyenne LightGCN n’est autorisée (graines 43/44 incomplètes) et **aucun score E030 n’est reportable**. Le statut resterait exploratoire après une reprise techniquement complète, jusqu’à `lawyer_agreement.json`.
+
 ## E038 — figure combinée des profondeurs A3/E029 livrée à Papier (2026-09-09)
 
 - La figure publication-ready à quatre panneaux est `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/paper_depth_figure.pdf` (vectoriel, SHA-256 `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`) et son PNG 320 dpi est `paper_depth_figure.png` (SHA-256 `b5968ad16af04f68e49edc40751b70be9a9a9c9bd03d827e0bb7a2d6a26ea112`). Les deux CSV source dérivés sont `retrieval_depth_tidy.csv` (SHA-256 `47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b`) et `reranking_depth_tidy.csv` (SHA-256 `27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162`).
