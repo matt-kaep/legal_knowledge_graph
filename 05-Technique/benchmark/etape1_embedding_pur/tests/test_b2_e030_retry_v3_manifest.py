@@ -29,6 +29,7 @@ def test_v3_manifest_retries_only_the_17_partial_shards_with_unique_ports(tmp_pa
         output_path=output,
         launcher_path=ROOT / "scripts" / "sbatch_b2_e030_judge_v3.sh",
         smoke_launcher_path=ROOT / "scripts" / "sbatch_b2_e030_smoke_v3.sh",
+        fail_closed_runner_path=ROOT / "scripts" / "121_run_b2_e030_judge_fail_closed_v3.py",
     )
 
     payload = json.loads(output.read_text(encoding="utf-8"))
@@ -56,6 +57,7 @@ def test_v3_manifest_refuses_an_audit_that_does_not_select_exactly_17_shards(tmp
             output_path=tmp_path / "should-not-exist.json",
             launcher_path=ROOT / "scripts" / "sbatch_b2_e030_judge_v3.sh",
             smoke_launcher_path=ROOT / "scripts" / "sbatch_b2_e030_smoke_v3.sh",
+            fail_closed_runner_path=ROOT / "scripts" / "121_run_b2_e030_judge_fail_closed_v3.py",
         )
     except ValueError as exc:
         assert "shard identifiers" in str(exc)

@@ -56,11 +56,12 @@ def create_manifest(
     output_path: Path,
     launcher_path: Path,
     smoke_launcher_path: Path,
+    fail_closed_runner_path: Path,
 ) -> dict[str, Any]:
     """Write an immutable E030 v3 preflight manifest and return its content."""
     if output_path.exists():
         raise FileExistsError(f"refusing to overwrite immutable E030 v3 manifest: {output_path}")
-    for path in (v2_manifest_path, audit_csv_path, launcher_path, smoke_launcher_path):
+    for path in (v2_manifest_path, audit_csv_path, launcher_path, smoke_launcher_path, fail_closed_runner_path):
         if not path.is_file():
             raise FileNotFoundError(path)
 
@@ -76,8 +77,8 @@ def create_manifest(
         retry_shards.append(shard)
 
     payload: dict[str, Any] = {
-        "manifest_id": "b2-e030-llm-as-a-judge-a3-retry-v3-preflight-r1-2026-09-09",
-        "campaign_id": "b2-llm-as-a-judge-a3-retry-v3-preflight-r1-2026-09-09",
+        "manifest_id": "b2-e030-llm-as-a-judge-a3-retry-v3-preflight-r2-2026-09-09",
+        "campaign_id": "b2-llm-as-a-judge-a3-retry-v3-preflight-r2-2026-09-09",
         "schema_version": "b2-llm-as-a-judge-retry.v3",
         "experiment_id": "E030",
         "status": "frozen_preflight_only",
@@ -99,6 +100,7 @@ def create_manifest(
         "code_bundle": {
             "v3_launcher": {"path": str(launcher_path), "sha256": sha256(launcher_path)},
             "v3_smoke_launcher": {"path": str(smoke_launcher_path), "sha256": sha256(smoke_launcher_path)},
+            "v3_fail_closed_runner": {"path": str(fail_closed_runner_path), "sha256": sha256(fail_closed_runner_path)},
             "v2_judge_runner": copy.deepcopy(v2["code_bundle"]["judge_runner"]),
             "context_auditor": copy.deepcopy(v2["code_bundle"]["context_auditor"]),
         },
@@ -147,6 +149,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--launcher", type=Path, required=True)
     parser.add_argument("--smoke-launcher", type=Path, required=True)
+    parser.add_argument("--fail-closed-runner", type=Path, required=True)
     return parser.parse_args(argv)
 
 
@@ -158,6 +161,7 @@ def main(argv: list[str] | None = None) -> int:
         output_path=args.output,
         launcher_path=args.launcher,
         smoke_launcher_path=args.smoke_launcher,
+        fail_closed_runner_path=args.fail_closed_runner,
     )
     print(json.dumps({"manifest": str(args.output), "sha256": sha256(args.output), "shards": len(payload["shards"])}))
     return 0
