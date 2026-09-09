@@ -1,0 +1,36 @@
+{
+  "schema_version": "paper-retrieval-figure.v1",
+  "layout": {
+    "panel_count": 2,
+    "panels": [
+      "A",
+      "B"
+    ],
+    "reranking_panels": false
+  },
+  "coverage": {
+    "rows": 600,
+    "k": "1..100",
+    "questions": 754,
+    "methods_per_task": 3
+  },
+  "source": {
+    "path": "results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/retrieval_depth_tidy.csv",
+    "sha256": "47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b"
+  },
+  "y_limits": {
+    "judicial_decisions": [
+      0.0,
+      0.5
+    ],
+    "statutory_articles": [
+      0.0,
+      0.9
+    ]
+  },
+  "outputs_sha256": {
+    "retrieval_depth_tidy.csv": "47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b",
+    "paper_retrieval_figure.pdf": "75bc1a99570e66205e0a5788299eeffd3a93d6b0f09ed39da170f5e906066a95",
+    "paper_retrieval_figure.png": "28901cd69dd737a999ff9571a288db5fe05f14a379ae2392cdd2ee462f9f5ce2"
+  }
+}

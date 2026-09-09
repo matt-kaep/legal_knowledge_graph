@@ -8,6 +8,12 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
+## Transmission E041 — figure retrieval compacte à insérer (2026-09-09)
+
+Utiliser désormais si vous souhaitez la version sans reranking : `results/benchmark-a3-b1/figures/paper-retrieval-figure-a3-v4/paper_retrieval_figure.pdf` (PDF vectoriel, SHA `75bc1a99570e66205e0a5788299eeffd3a93d6b0f09ed39da170f5e906066a95`) ou son PNG 320 dpi (SHA `28901cd69dd737a999ff9571a288db5fe05f14a379ae2392cdd2ee462f9f5ce2`). Elle contient uniquement les panneaux A/B retrieval A3 `K=1..100` pour les 754 questions, et aucun résultat E029/E030.
+
+La limite JP est explicitement portée à `0,50`, au-dessus du maximum LightGCN, afin que la courbe ne dépasse pas le panneau. Les données sont le CSV retrieval E038 v3 inchangé (SHA `47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b`), avec PPR G6-AA Articles et PPR G7-AA JP. Caption proposée : *Retrieval depth on the frozen A3 internal evaluation (754 questions). Curves report exact NHit@K from frozen top-100 rankings for BGE-M3 cosine, PPR, and LightGCN G6. Articles use PPR G6-AA and judicial decisions use PPR G7-AA. Retrieval parameters were selected on grouped training cross-validation before this internal evaluation.*
+
 ## Transmission E040 — audit final de la figure A3/E029 v3 (2026-09-09)
 
 La figure existante est conforme et peut être utilisée directement, sans régénération : `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/paper_depth_figure.pdf` (PDF vectoriel, SHA `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`), PNG 320 dpi (SHA `b5968ad16af04f68e49edc40751b70be9a9a9c9bd03d827e0bb7a2d6a26ea112`), CSV retrieval (SHA `47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b) et reranking (SHA `27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162`). Le paquet de handoff est `.../audit-v1/README.md`; son reçu est SHA `8061022f79122734c066187d508762c6fbf3a9e3ceb1eed0785f15e889b1a9b8`.

@@ -8,6 +8,12 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
+## E041 — figure retrieval A3 v4 à deux panneaux (2026-09-09)
+
+- À la demande Papier, la v3 2×2 est conservée immuable et un successeur de présentation est dérivé exclusivement de son CSV retrieval hashé, sans modèle ni recomputation : `results/benchmark-a3-b1/figures/paper-retrieval-figure-a3-v4/paper_retrieval_figure.pdf` SHA-256 `75bc1a99570e66205e0a5788299eeffd3a93d6b0f09ed39da170f5e906066a95`, PNG 320 dpi SHA `28901cd69dd737a999ff9571a288db5fe05f14a379ae2392cdd2ee462f9f5ce2`.
+- La figure ne garde que les deux panneaux retrieval `K=1..100` et les 600 points source A3 : Articles (cosine, PPR G6-AA, LightGCN G6) et JP (cosine, PPR G7-AA, LightGCN G6). Les deux panneaux E029 de reranking sont absents. Les limites verticales ont une marge contrôlée : `0–0,90` Articles, `0–0,50` JP, évitant tout dépassement de LightGCN.
+- Reçu : `retrieval_figure_manifest.json`, SHA `df84e5f8e05ea41c01240c52a5dcd2de65f8274688d95e4c2cd9897d53b7977f`; générateur isolé `scripts/118_build_paper_retrieval_figure.py`, SHA `b7cbb783970614e121c6ec5ed30a0a183d23732aabf0b8ddce3e2fedf2b9878d`. Statut : évaluation interne A3 après gel train/CV.
+
 ## E040 — audit de la figure A3/E029 v3, conforme au contrat Papier (2026-09-09)
 
 - Audit lecture seule terminé : PDF vectoriel mono-page, rendu visuel 2×2 lisible, PNG `2400×1500` à 320 dpi et CSV tidy existants. Le PDF `results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/paper_depth_figure.pdf` est byte-identique au SHA demandé `e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2`. Les CSV couvrent respectivement `600` lignes (`2×3×K=1..100`) et `42` lignes (`2×3×K_in=10..70`).
