@@ -77,8 +77,8 @@ def create_manifest(
         retry_shards.append(shard)
 
     payload: dict[str, Any] = {
-        "manifest_id": "b2-e030-llm-as-a-judge-a3-retry-v3-preflight-r2-2026-09-09",
-        "campaign_id": "b2-llm-as-a-judge-a3-retry-v3-preflight-r2-2026-09-09",
+        "manifest_id": "b2-e030-llm-as-a-judge-a3-retry-v3-preflight-r3-2026-09-09",
+        "campaign_id": "b2-llm-as-a-judge-a3-retry-v3-preflight-r3-2026-09-09",
         "schema_version": "b2-llm-as-a-judge-retry.v3",
         "experiment_id": "E030",
         "status": "frozen_preflight_only",
@@ -105,7 +105,7 @@ def create_manifest(
             "context_auditor": copy.deepcopy(v2["code_bundle"]["context_auditor"]),
         },
         "outputs": {
-            "root": "doctrine_v3plus_bench/_campaign_b2_e030_a3_retry_v3_r1_20260909",
+            "root": "doctrine_v3plus_bench/_campaign_b2_e030_a3_retry_v3_r3_20260909",
             "immutable": True,
         },
         "retry_policy": {
