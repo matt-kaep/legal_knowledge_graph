@@ -49,11 +49,11 @@ SERVICE_MODEL="${MODEL}@${MODEL_REVISION}"
 "$VLLM_BIN" serve "$MODEL_SNAPSHOT" --served-model-name "$SERVICE_MODEL" --host 127.0.0.1 --port "$PORT" --max-model-len "$MAX_MODEL_TOKENS" --max-num-seqs "$MAX_NUM_SEQS" --gpu-memory-utilization 0.90 > "$RUN_ROOT/vllm.log" 2>&1 & SERVER_PID=$!
 for _ in $(seq 1 120); do curl --fail --silent "http://127.0.0.1:$PORT/health" >/dev/null && break; kill -0 "$SERVER_PID" 2>/dev/null || { tail -100 "$RUN_ROOT/vllm.log" >&2; exit 1; }; sleep 5; done
 curl --fail --silent "http://127.0.0.1:$PORT/v1/models" > "$RUN_ROOT/v1_models.json"
-"$PYTHON_BIN" - "$RUN_ROOT" "$SERVICE_MODEL" "$MODEL" "$MODEL_REVISION" "$PORT" <<'PY'
+"$PYTHON_BIN" - "$RUN_ROOT" "$SERVICE_MODEL" "$MODEL" "$MODEL_REVISION" "$PORT" "$E030_EXECUTION_MANIFEST_SHA" <<'PY'
 import json, os, subprocess, sys
-root, served, model, revision, port = sys.argv[1:]
+root, served, model, revision, port, manifest_sha = sys.argv[1:]
 models=json.load(open(os.path.join(root,"v1_models.json")))
 if served not in [x.get("id") for x in models.get("data",[])]: raise SystemExit("/v1/models identity mismatch")
-payload={"status":"pass","node":os.environ.get("HOSTNAME"),"slurm_job_id":os.environ.get("SLURM_JOB_ID"),"port":int(port),"listener":"127.0.0.1","gpu":subprocess.check_output(["nvidia-smi","--query-gpu=name,memory.total","--format=csv,noheader"],text=True).strip(),"model_id":model,"model_revision":revision,"served_model_id":served,"v1_models":models}
+payload={"status":"pass","manifest_sha256":manifest_sha,"node":os.environ.get("HOSTNAME"),"slurm_job_id":os.environ.get("SLURM_JOB_ID"),"port":int(port),"listener":"127.0.0.1","gpu":subprocess.check_output(["nvidia-smi","--query-gpu=name,memory.total","--format=csv,noheader"],text=True).strip(),"model_id":model,"model_revision":revision,"served_model_id":served,"v1_models":models}
 open(os.path.join(root,"smoke_receipt.json"),"w").write(json.dumps(payload,indent=2)+"\n")
 PY

@@ -12,14 +12,14 @@ set -eEuo pipefail
 PYTHON_BIN="${LKG_PYTHON:-$HOME/work/.venv-benchmark/bin/python}"; VLLM_BIN="${VLLM_BIN:-${PYTHON_BIN%/python}/vllm}"; ROOT="$LKG_REPO/05-Technique/benchmark/etape1_embedding_pur"; RUNNER="$ROOT/scripts/121_run_b2_e030_judge_fail_closed_v3.py"; PORT=""; RUN_ROOT=""; SERVER_PID=""
 failure() { code=$?; if [[ -n "$RUN_ROOT" && "$code" -ne 0 ]]; then printf '{"status":"fail","exit_code":%s,"node":"%s","slurm_job_id":"%s","port":"%s"}\n' "$code" "${HOSTNAME:-unknown}" "${SLURM_JOB_ID:-manual}" "${PORT:-unknown}" > "$RUN_ROOT/technical_failure_receipt.json"; fi; [[ -z "$SERVER_PID" ]] || kill "$SERVER_PID" 2>/dev/null || true; exit "$code"; }; trap failure EXIT
 [[ "$(sha256sum "$E030_EXECUTION_MANIFEST"|awk '{print $1}')" == "$E030_EXECUTION_MANIFEST_SHA" ]] || exit 2
-eval "$("$PYTHON_BIN" - "$E030_EXECUTION_MANIFEST" "$E030_SHARD" "$E030_SMOKE_RECEIPT" <<'PY'
+assignments="$("$PYTHON_BIN" - "$E030_EXECUTION_MANIFEST" "$E030_SHARD" "$E030_SMOKE_RECEIPT" <<'PY'
 import hashlib,json,shlex,sys
 p=json.load(open(sys.argv[1])); s=next((x for x in p['shards'] if x['id']==sys.argv[2]),None); smoke=json.load(open(sys.argv[3]))
 if not s or smoke.get('manifest_sha256')!=hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest() or smoke.get('model_calls')!=0: raise SystemExit('smoke receipt mismatch')
 m=p['model']; prompt=p['prompts'][s['modality']]
 for k,v in {'MODEL':m['id'],'MODEL_REVISION':m['revision'],'SNAPSHOT':m['snapshot'],'PORT':s['vllm_port'],'OUT':p['outputs']['root'],'JOBS':s['jobs']['path'],'JOBS_SHA':s['jobs']['sha256'],'PROMPT':prompt['path'],'PROMPT_SHA':prompt['sha256'],'MAXLEN':m['max_model_tokens'],'MAXTOK':m['max_output_tokens'],'WORKERS':m['max_workers']}.items(): print(f'{k}={shlex.quote(str(v))}')
 PY
-)"
+)"; eval "$assignments"
 RUN_ROOT="$LKG_DATA_ROOT/$OUT/shards/$E030_SHARD"; mkdir -p "$RUN_ROOT"; JOBS="$LKG_DATA_ROOT/$JOBS"; PROMPT="$LKG_REPO/$PROMPT"
 [[ -f "$JOBS" && -f "$PROMPT" && -x "$PYTHON_BIN" && -x "$VLLM_BIN" ]] || exit 2; [[ "$(sha256sum "$JOBS"|awk '{print $1}')" == "$JOBS_SHA" && "$(sha256sum "$PROMPT"|awk '{print $1}')" == "$PROMPT_SHA" ]] || exit 2; [[ "$(basename "$(readlink -f "$SNAPSHOT")")" == "$MODEL_REVISION" ]] || exit 2
 port_must_be_unbound() { ! ss -ltnH "sport = :$PORT" | grep -q .; }; port_must_be_unbound || exit 2
