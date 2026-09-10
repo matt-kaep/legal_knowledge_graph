@@ -1,0 +1,82 @@
+{
+  "k": 10,
+  "modality": "jp",
+  "families": {
+    "cosine_bge_m3": {
+      "expected_questions": 754,
+      "questions_with_gold": 754,
+      "valid_responses": 754,
+      "missing_questions": 0,
+      "missing_qids": [],
+      "coverage": 1.0,
+      "status": "complete",
+      "metrics": {
+        "recall_at_10": 0.2708885941644562,
+        "official_hit_at_10": 0.2708885941644562,
+        "ndcg_at_10": 0.2202137203940621,
+        "mrr_at_10": 0.20725811544777065,
+        "exact_any_gold_at_10": 0.28249336870026526
+      },
+      "dispersion": {
+        "recall_at_10": 0.43850079642961826,
+        "official_hit_at_10": 0.43850079642961826,
+        "ndcg_at_10": 0.3816775665306084,
+        "mrr_at_10": 0.3777762464492308,
+        "exact_any_gold_at_10": 0.450510869032766
+      },
+      "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+    },
+    "lightgcn": {
+      "expected_questions": 754,
+      "questions_with_gold": 754,
+      "valid_responses": 754,
+      "missing_questions": 0,
+      "missing_qids": [],
+      "coverage": 1.0,
+      "status": "complete",
+      "metrics": {
+        "recall_at_10": 0.29288240495137047,
+        "official_hit_at_10": 0.29288240495137047,
+        "ndcg_at_10": 0.24367187435123838,
+        "mrr_at_10": 0.23235916382468108,
+        "exact_any_gold_at_10": 0.3090185676392573
+      },
+      "dispersion": {
+        "recall_at_10": 0.4476458218115361,
+        "official_hit_at_10": 0.4476458218115361,
+        "ndcg_at_10": 0.3969293744750484,
+        "mrr_at_10": 0.3949335717212527,
+        "exact_any_gold_at_10": 0.46239556624317385
+      },
+      "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+    },
+    "ppr": {
+      "expected_questions": 754,
+      "questions_with_gold": 754,
+      "valid_responses": 754,
+      "missing_questions": 0,
+      "missing_qids": [],
+      "coverage": 1.0,
+      "status": "complete",
+      "metrics": {
+        "recall_at_10": 0.276525198938992,
+        "official_hit_at_10": 0.276525198938992,
+        "ndcg_at_10": 0.22805469725764663,
+        "mrr_at_10": 0.21645404404025095,
+        "exact_any_gold_at_10": 0.29045092838196285
+      },
+      "dispersion": {
+        "recall_at_10": 0.44036844946464854,
+        "official_hit_at_10": 0.44036844946464854,
+        "ndcg_at_10": 0.38745535216943944,
+        "mrr_at_10": 0.3847236266135594,
+        "exact_any_gold_at_10": 0.4542718100464252
+      },
+      "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+    }
+  },
+  "response_history": {
+    "latest_valid_unique_keys": 2262,
+    "invalid_records": 164
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E021",
+  "experiment_run_id": "E021-reranking-comparable-v1-cluster-gpu-runtime-v5-resume-v3-2026-09-01",
+  "completion_status": "complete",
+  "materializer_script_sha256": "cd99d5ed84612a3c021b4f0311a9f143b57c220edb0a82df20870383228f8d57",
+  "rows": 9,
+  "outputs": {
+    "internal_eval_jp_reranking_exact.csv": "8020ee093ce4822425731602bcb24ff6222c9cdf0c42fd76a3e3a4b90dac16f5",
+    "table_jp_reranking_exact.csv": "cbf3785e2afa394e755372dca2a81012f82991493317cec45f6ad50a8dd05b4b"
+  }
+}

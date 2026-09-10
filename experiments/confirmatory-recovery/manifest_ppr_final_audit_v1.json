@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E022-ppr-final-audit-v1-2026-08-31",
+  "status": "prepared",
+  "scientific_status": "internal_evaluation_results_pending_audit",
+  "purpose": "Verify the existing PPR final replay against its sealed Télécom campaign manifest, its selected train-only five-fold champions, and rankings recomputed at top-10. This audit never reruns PPR and never overwrites historical outputs.",
+  "campaign_manifest": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2_repro_v1_cluster_node_runtime.json",
+  "campaign_manifest_sha256_canonical": "3787811ba0877278522db54bcccd6efdd6aa1b2d66132541f64a362cc5681c18",
+  "ppr_final_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_final_grouped_v2",
+  "audit_output": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/ppr_final_audit_v1/audit.json",
+  "accepted_result_manifest_sha256s": [
+    "3787811ba0877278522db54bcccd6efdd6aa1b2d66132541f64a362cc5681c18"
+  ],
+  "selection_contract": {
+    "source": "existing _cv_grouped_v2 PPR champions",
+    "training_split": "train_augmented_retrievable_strict",
+    "folds": 5,
+    "new_hyperparameter_selection": false,
+    "families": ["ppr"],
+    "graph_count": 11
+  },
+  "audit_contract": {
+    "evaluation_split": "eval_rich_retrievable_strict",
+    "reported_metrics_k": 10,
+    "verify_rankings": true,
+    "verify_summary_metrics": true,
+    "verify_file_sha256": true,
+    "overwrite_historical_outputs": false,
+    "rerun_ppr": false
+  },
+  "cluster": {
+    "partition": "CPU",
+    "cpus_per_task": 2,
+    "memory": "12G",
+    "time_limit": "00:30:00",
+    "gpu_required": false
+  },
+  "scripts": {
+    "audit": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/71_audit_ppr_final_recovery.py",
+      "sha256": "bfc2e9bb68ee37b41078aa3877ddfba0a24267a03670b0622be6912aef931a7d"
+    },
+    "batch": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_ppr_final_audit.sh",
+      "sha256": "ec2c3e3eee4aabb413ba805c6f9bf720e83b931c8cb482f5d4051a8129c83488"
+    }
+  }
+}

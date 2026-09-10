@@ -1,0 +1,60 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-k70-article192-preflight-v1-2026-09-08",
+  "campaign_id": "b2-e029-reranking-comparable-a3-k70-article192-v1-2026-09-08",
+  "schema_version": "b2-comparable-reranking-k70-article192-preflight.v1",
+  "experiment_id": "E029",
+  "status": "authorized_cpu_preflight_no_model_call",
+  "scientific_status": "exploratory_reranking_annex",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_questions": 754,
+    "retrieval_candidate_universe": {"articles": 13236, "decisions": 114851}
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 256,
+    "tokenizer_snapshot": "/home/ids/kaeppelin-22/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/4033b16200f4152e55e100ea12dc388c537df622"
+  },
+  "prompts": {
+    "article": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt", "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"},
+    "jp": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt", "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"}
+  },
+  "reranking_contract": {
+    "depth_grid": [10, 20, 30, 40, 50, 60, 70],
+    "k_out": 10,
+    "representation": {
+      "article": {"source_field": "texte", "projection": "token_prefix", "token_cap": 192},
+      "jp": {"source_field": "synthese", "projection": "complete_unmodified"}
+    },
+    "source_order_hidden_from_model": true,
+    "same_representation_for_all_families_questions_and_lightgcn_seeds": true,
+    "lightgcn_seed_policy": "seeds 42, 43 and 44 remain distinct through jobs, responses and metrics",
+    "selection_policy": "no retriever, graph, K_in, hyperparameter, epoch or seed is selected from E029 outputs"
+  },
+  "source_pools": {
+    "receipt_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_fullmatrix_cpu_preflight_v2_20260908/cpu_preflight_receipt.json",
+    "receipt_sha256": "22b9bcc698deee29d38623fff7f65bb382da97822ff56ebab8b33876980ea079",
+    "pools_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_fullmatrix_cpu_preflight_v2_20260908/pools",
+    "selection": "Reuse only K_in 10,20,30,40,50,60,70 pools; retain frozen candidate ids and source metadata; materialize a new text representation without modifying those pools."
+  },
+  "code_bundle": {
+    "reranking_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py", "sha256": "649e3a8eea9abee7712815fb444e128b5c1d5995126fdced81daf524a67cc112"},
+    "context_auditor": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_audit_b2_fulltext_context.py", "sha256": "fbbf430f89393d9fba2b23c962b84636ab4e442b3938932ce6eda2314d3854b5"},
+    "context_audit_aggregator": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/105_aggregate_b2_fulltext_context_audits.py", "sha256": "0843cff35177383f8375d32697ce777875d431331c14948eaa6dbcc6f5ab4772"},
+    "preflight_orchestrator": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/106_prepare_b2_e029_article192_preflight.sh", "sha256": "693af009039fdf51eb29baf2c59fc1c0a75b22c42ad0e22cbb3bc37c3cffaaca"}
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908",
+    "required": ["jobs/cosine.jsonl", "jobs/ppr.jsonl", "jobs/lightgcn-seed42.jsonl", "jobs/lightgcn-seed43.jsonl", "jobs/lightgcn-seed44.jsonl", "context_audit.json", "preflight_receipt.json"]
+  },
+  "totals": {"shards": 5, "conditions": 70, "questions_per_condition": 754, "model_calls": 52780},
+  "execution_gate": {
+    "allowed": ["verify frozen source pools", "materialize Article token-prefix and JP synthese jobs", "audit exact prompts with 256 completion tokens reserved", "write immutable CPU-only receipts"],
+    "forbidden": ["model calls", "mutation of archived pools", "reuse of historical E029 responses", "evaluation-based selection"],
+    "next_gate": "Create the separate GPU execution manifest only if all 70 conditions are context-compatible, the receipt reports 52,780 jobs and model_calls remains zero."
+  }
+}

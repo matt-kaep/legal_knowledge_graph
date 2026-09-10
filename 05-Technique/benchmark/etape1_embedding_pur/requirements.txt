@@ -1,0 +1,20 @@
+numpy>=1.26
+pyarrow>=15
+scipy>=1.12
+pandas>=2.1
+sentence-transformers>=2.7
+transformers>=4.42,<5.0          # Compat torch 2.3 (Mac env)
+torch>=2.3
+tqdm>=4.66
+pytest>=8.0
+psutil>=5.9
+psycopg2-binary>=2.9
+
+# LEGI ingestion — hunspell C lib non-disponible sur ce Mac, donc on installe
+# legi sans deps puis on ajoute seulement ce que `tar2sqlite` utilise réellement.
+# Commandes équivalentes :
+#   pip install --no-deps legi
+#   pip install libarchive-c appdirs
+# (le warning "spellchecking won't work" est sans incidence pour Étape 1)
+libarchive-c>=5.3
+appdirs>=1.4

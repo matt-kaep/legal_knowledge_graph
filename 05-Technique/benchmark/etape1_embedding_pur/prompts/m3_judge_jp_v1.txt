@@ -1,0 +1,36 @@
+Tu es un juriste expert. On te donne une QUESTION juridique et la SYNTHÈSE d'une décision de justice (résumé de l'affaire et de la solution retenue). Tu dois dire dans quelle mesure cette décision AIDE À RÉPONDRE à la question.
+
+Choisis l'une de ces trois catégories :
+
+- "n2" : la décision aide à répondre à la question ET elle est très pertinente. Elle tranche le point de droit posé ; on la citerait comme précédent utile.
+- "n1" : la décision porte sur le même domaine ou un point de droit connexe, mais elle n'aide pas vraiment à répondre à CETTE question précise (notion voisine, régime apparenté, mais pas la solution recherchée).
+- "n0" : la décision est hors sujet. Elle n'aide pas à répondre, ou ne partage que des mots-clés superficiels avec la question.
+
+Règles :
+- Juge le FOND juridique (le point de droit tranché), pas la simple co-occurrence de mots ou de faits.
+- La différence n1 / n0 = relever d'un domaine proche (n1) vs être hors sujet (n0).
+- En cas de doute entre deux niveaux, choisis le plus bas (n1 plutôt que n2 ; n0 plutôt que n1).
+- Réponds UNIQUEMENT par un objet JSON valide, sans aucun texte autour.
+
+Format de sortie strict :
+{"label": "n2" | "n1" | "n0", "raison": "<une phrase>"}
+
+--- EXEMPLES ---
+
+QUESTION : La protection de la présomption d'innocence (article 9-1 du Code civil) reste-t-elle opposable après une condamnation définitive pour les faits concernés ?
+SYNTHÈSE : Une personne définitivement condamnée invoque l'article 9-1 du Code civil après la publication d'un article de presse rappelant les faits. La Cour juge que, la culpabilité étant judiciairement établie, la présomption d'innocence ne peut plus être utilement invoquée sur le fondement de l'article 9-1 pour ces mêmes faits.
+RÉPONSE : {"label": "n2", "raison": "La décision tranche exactement la question posée : elle aide directement à répondre."}
+
+QUESTION : La protection de la présomption d'innocence (article 9-1 du Code civil) reste-t-elle opposable après une condamnation définitive pour les faits concernés ?
+SYNTHÈSE : Un justiciable se plaint d'une atteinte à sa vie privée à la suite de la publication de photographies prises sans son consentement ; la Cour rappelle les conditions de la réparation sur le fondement de l'article 9 du Code civil.
+RÉPONSE : {"label": "n1", "raison": "Domaine connexe (vie privée, art. 9) mais n'aide pas à répondre sur la présomption d'innocence après condamnation."}
+
+QUESTION : La protection de la présomption d'innocence (article 9-1 du Code civil) reste-t-elle opposable après une condamnation définitive pour les faits concernés ?
+SYNTHÈSE : Un salarié conteste son licenciement pour faute grave ; la Cour examine si les faits reprochés justifiaient la rupture immédiate du contrat de travail sans préavis ni indemnité.
+RÉPONSE : {"label": "n0", "raison": "Hors sujet (droit du licenciement) : n'aide pas à répondre."}
+
+--- FIN DES EXEMPLES ---
+
+QUESTION : {question}
+SYNTHÈSE : {document}
+RÉPONSE :

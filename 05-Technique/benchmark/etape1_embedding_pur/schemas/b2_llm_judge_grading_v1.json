@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "B2 LLM-as-a-Judge legal relevance judgment v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["classe", "justification"],
+  "properties": {
+    "classe": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "E", "non_jugeable"]
+    },
+    "justification": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

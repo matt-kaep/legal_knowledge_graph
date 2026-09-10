@@ -1,0 +1,147 @@
+{
+  "schema_version": "benchmark-freeze-checkpoint-a2.v1",
+  "freeze_id": "train-no-eval-overlap-candidate-coverage-v2",
+  "status": "blocked_pending_effective_candidate_space_definition",
+  "created_at": "2026-09-02",
+  "purpose": "Checkpoint A2: preserve the option-1 data freeze and expose the raw-graph versus effective-scoring candidate-space discrepancy before any model computation.",
+  "source_snapshot": {
+    "split": "train_augmented_retrievable_strict_no_eval_overlap_v1",
+    "bench_global_sha256": "0ae7cfe6dbc0e46b9b8a59b520fe8a8d5e84a0b040a6b42db8d1c08e8e1ad73e"
+  },
+  "frozen_snapshot": {
+    "split": "train_augmented_retrievable_strict_no_eval_overlap_candidate_covered_v2",
+    "relative_directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_candidate_covered_v2",
+    "policy": "Remove a training question when at least one strict Article or jurisprudence label is absent from the raw graph candidate spaces. Do not modify the evaluation split.",
+    "counts": {
+      "train_before": 5600,
+      "strict_label_exclusions": 22,
+      "train_after": 5578,
+      "evaluation_preserved": 754,
+      "cross_split_qid": 0,
+      "cross_split_normalized_text": 0
+    },
+    "files": {
+      "bench_global.json": "5ca7f54b944456cb318c028978c35430571b302785d2581348a35db81f8285f5",
+      "questions_ids.npy": "5fcaa3dfc259b53d9186a6f4a7f4ad0dda4955fa357ed2456c4140e23e75d12b",
+      "questions_emb.npy": "d33f8734fee9cd23a464ef8933278e392c8304daad246897fdd5b6f6d8be1634",
+      "lightgcn_article_positive_projection.json": "d72db18229c5f7bee0516a35c23e7e7292b7a186fbfd25327f909737b8a184b2",
+      "stats.json": "f391d6d2f1f450256e89b7bc22294f5199a9084bf8bcdc9bf5fa13ef3654ccdb",
+      "freeze_manifest.json": "cb8e1a38be30db0335706c77d28912e78621f3fe2686bbea9c1f1d325b3cf11a"
+    }
+  },
+  "evaluation_snapshot": {
+    "split": "eval_rich_retrievable_strict",
+    "questions": 754,
+    "bench_global_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "mutation": "none"
+  },
+  "raw_graph_candidate_space": {
+    "definition": "Deduplicated node identifiers stored in the G6-citation-AA-knn5 graph artifacts; this is the universe required by the approved checkpoint decision.",
+    "articles": {
+      "relative_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy",
+      "raw_rows": 23859,
+      "unique_ids": 23859,
+      "file_sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a",
+      "stable_unique_sequence_sha256": "dee67f7672a6159a429a4f8a153b1980dcd1dc5490b48a3dae18033ad05eacfe"
+    },
+    "jurisprudence": {
+      "relative_path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy",
+      "raw_rows": 117374,
+      "unique_ids": 115304,
+      "file_sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f",
+      "stable_unique_sequence_sha256": "ea4d4e62b9a22b1f942aefc0d263d6417e72072a16289c8a80173b74d7b2eb9a"
+    }
+  },
+  "effective_scoring_candidate_space": {
+    "definition": "Identifiers actually returned by etape1.graph_versions.load_retrieval_view(): embedding/synthesis orders intersected with graph node identifiers. This is the universe used today by cosine/BGE-M3, PPR and LightGCN runners.",
+    "all_11_protocol_graphs_have_identical_effective_orders": true,
+    "articles": {
+      "raw_rows": 13236,
+      "unique_ids": 13236,
+      "stable_unique_sequence_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c",
+      "embedding_order_file": {
+        "relative_path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_order_all.npy",
+        "sha256": "06f5551d6a38f8f7887d760461b7f7460b2e738e062a8bed4b9c598b34c0fbb0"
+      },
+      "embedding_file": {
+        "relative_path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_articles_all.npy",
+        "sha256": "9d10884944d7184aeeb95d64dfec79bc97044c3364c6e40ee60e940f61c1c944"
+      }
+    },
+    "jurisprudence": {
+      "raw_rows": 116017,
+      "unique_ids": 114851,
+      "stable_unique_sequence_sha256": "065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a",
+      "summary_order_file": {
+        "relative_path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summary_order.npy",
+        "sha256": "985e83bfbee610117fcf8873b8a58eb61ffd1e35bf1423f95985a375a3012c5b"
+      },
+      "summary_embedding_file": {
+        "relative_path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_jp_synthese.npy",
+        "sha256": "1f7eb3f6723c956d745dbdfc851730eba8af37a3dfea06c8354d191f433eead9"
+      }
+    }
+  },
+  "coverage_audit": {
+    "raw_graph_candidate_space": {
+      "train_strict_article_labels_absent": 0,
+      "train_strict_jp_labels_absent": 0,
+      "evaluation_strict_article_labels_absent": 0,
+      "evaluation_strict_jp_labels_absent": 0
+    },
+    "effective_scoring_candidate_space": {
+      "train_strict_article_labels_absent": 0,
+      "train_strict_jp_labels_absent": 0,
+      "evaluation_strict_article_labels_absent": 0,
+      "evaluation_strict_jp_labels_absent": 0
+    }
+  },
+  "lightgcn_extended_article_labels": {
+    "raw_graph_projection": {
+      "projection_file_sha256": "d72db18229c5f7bee0516a35c23e7e7292b7a186fbfd25327f909737b8a184b2",
+      "candidate_sequence_sha256": "dee67f7672a6159a429a4f8a153b1980dcd1dc5490b48a3dae18033ad05eacfe",
+      "extended_label_occurrences": 51137,
+      "labels_present": 49186,
+      "labels_absent": 1951,
+      "questions_with_absent_labels": 1331,
+      "questions_without_retrievable_positive": 0
+    },
+    "effective_scoring_audit": {
+      "candidate_sequence_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c",
+      "extended_label_occurrences": 51137,
+      "labels_absent": 4531,
+      "questions_without_retrievable_positive": 0,
+      "consequence": "The raw-graph projection is deliberately rejected by the LightGCN runner until the candidate-space definition is reconciled; no labels may be silently filtered."
+    }
+  },
+  "grouped_folds": {
+    "protocol_version": "grouped_v4_no_eval_overlap_candidate_coverage_v2",
+    "seed": 42,
+    "relative_directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v4_no_eval_overlap_candidate_coverage_v2/train_augmented_retrievable_strict_no_eval_overlap_candidate_covered_v2",
+    "files": {
+      "fold_assignments.csv": "cc872759b5cc2f93aceb54ac2ac5c5c396e236e7198982f720978e82b3920f59",
+      "fold_metadata.json": "df057f38b02721e9347415693596a0bb1aaeda968c6693e53badf8014ac856e5"
+    },
+    "fold_question_counts": {
+      "0": 1116,
+      "1": 1115,
+      "2": 1116,
+      "3": 1115,
+      "4": 1116
+    },
+    "provenance_groups_crossing_folds": 0,
+    "normalized_text_groups_crossing_folds": 0
+  },
+  "implementation_hashes": {
+    "scripts/92_freeze_train_candidate_coverage.py": "7098e87b2390f9ffa6b929ade575e79e558bbe561c6c8ea13bc9bfa97a235764",
+    "scripts/benchmark_labels.py": "493024b1bb8f7fb93cc643c03e5b5a75cf6f7d2b1bfe1b559197c1fca4330b76",
+    "scripts/41_make_kfold_assignments.py": "ed974ea7561e4275896e9ebe984ee2f9e7ab58c4b3efeddcd38de9b40c300ef7",
+    "scripts/32_lightgcn_strict.py": "5268d859afde6b51c5e3c7f823203add89997eece234e6e59b06a7129ed3d613",
+    "scripts/43_run_cv_ppr.py": "3acef2e7a73303693802875d392437109a9f0fca0c4c8090c79f7ab99ac255d3",
+    "scripts/44_run_cv_lightgcn.py": "553cfb2f94e31b147ddceac3a8400a59a1a68ea95648b2360113bd7c7d7fdbe2"
+  },
+  "replay_gate": {
+    "model_computation_started": false,
+    "required_decision": "Either make the 23,859/115,304 raw graph universe executable by all runners, including the missing representations, or redefine the declared candidate universe as the current 13,236/114,851 embedding-eligible universe and regenerate the LightGCN projection. Do not run a model before choosing one definition."
+  }
+}

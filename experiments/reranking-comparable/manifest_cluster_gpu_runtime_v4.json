@@ -1,0 +1,101 @@
+{
+  "schema_version": 4,
+  "experiment_id": "E021-reranking-comparable-v1-cluster-gpu-runtime-v4-2026-08-18",
+  "parent_manifest": "experiments/reranking-comparable/manifest_cluster_gpu_runtime_v3.json",
+  "parent_manifest_sha256": "41fa42b010263ec21dfd90954e7eb3c3de79fbffb51accf729714eeaac8c02b2",
+  "status": "prepared_cluster_model_frozen_not_executed",
+  "scientific_status": "exploratory_not_executed",
+  "purpose": "Apply one frozen reranker to three independently materialized real JP pools.",
+  "dataset_split": "eval_rich_retrievable_strict",
+  "dataset_status": "already_consulted_internal_evaluation",
+  "questions": 754,
+  "k_in": 20,
+  "k_out": 10,
+  "candidate_families": ["cosine_bge_m3", "ppr", "lightgcn"],
+  "reranker": {
+    "provider": "vllm_openai_compatible",
+    "model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "model_revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "max_tokens": 256,
+    "prompt": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_v1.txt",
+    "prompt_sha256": "15654e1e545d3f7613b5d831382ab8d9dc6c9a88de5d240d60bf91d2951c7db0",
+    "parser": "strict_json_distinct_ids",
+    "response_format": "json_schema_without_uniqueItems",
+    "response_schema_name": "ranked_jp_ids",
+    "provider_constraints": "minItems=maxItems=k_out; uniqueness enforced by local parser",
+    "retry_policy": "one_retry_only_same_input_and_parameters"
+  },
+  "runner": {
+    "materializer_path": "05-Technique/benchmark/etape1_embedding_pur/scripts/69_materialize_e021_pools.py",
+    "materializer_sha256": "37b3716529f0dcdc66712ef5c493ec6670fc812ef02945167c957d13d09dff99",
+    "executor_path": "05-Technique/benchmark/etape1_embedding_pur/scripts/68_run_e021_reranking.py",
+    "executor_sha256": "c731c78b3ba780509d70de705becb530bc00f2ccd95fe2e58ac413e62f726b88"
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "packages": {
+      "numpy": "2.2.6",
+      "pandas": "3.0.2",
+      "psutil": "7.2.2",
+      "scipy": "1.13.1",
+      "torch": "2.10.0",
+      "vllm": "0.19.1"
+    },
+    "node_observed": "node57",
+    "gpu": "NVIDIA L40S 46068 MiB",
+    "max_model_len": 16384,
+    "max_num_seqs": 2,
+    "gpu_memory_utilization": 0.9,
+    "slurm_job": "948203"
+  },
+  "model_artifact": {
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "inherited_file_hashes_from": "experiments/reranking-comparable/manifest_cluster_gpu_runtime_v2.json"
+  },
+  "candidate_pools": {
+    "question_benchmark_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "decision_cards_sha256": "acd2ebfbb78852539dfda66c3595266599a339b879ce8c4cd53c0eae691a524c",
+    "complete_summary_source_sha256": "e63e71cd7fea04b461bf67d85ed452f922f1967e5659e5082e7925f5c2bd810c",
+    "families": {
+      "cosine_bge_m3": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_pools/cosine_bge_m3.jsonl", "sha256": "a16eac24c3a7e79ed29dbbae900b3694992eb37d651aa7c094175a9c68252651"},
+      "ppr": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_pools/ppr.jsonl", "sha256": "4827fdaf4957993e44c4ffa542155d64bed19f6200246642fd8bb301a9ba127b"},
+      "lightgcn": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_pools/lightgcn.jsonl", "sha256": "99f87a7c62e8ee323852a7df95c69bf0cfb0e0a72e7f596540c7dd38b99c9df7"}
+    }
+  },
+  "job_contract": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_e021_jobs/E021-cluster-gpu-runtime-v4/jobs.jsonl",
+    "sha256": "2e2864e16843fa62d347098c240e84acbc5c21abf55bc28d9e98ac8649b86faa",
+    "jobs": 2262,
+    "families": 3,
+    "questions_per_family": 754,
+    "input_hash_per_job": true
+  },
+  "candidate_pool_contract": {
+    "source_must_be_real": true,
+    "same_questions": true,
+    "same_k_in": true,
+    "same_k_out": true,
+    "no_synthetic_or_cross_family_pool": true,
+    "required_input_sha256_per_question": true
+  },
+  "metrics": {
+    "articles": ["recall_at_10", "ndcg_at_10", "mrr_at_10"],
+    "jp": ["official_hit_at_10", "ndcg_at_10", "mrr_at_10"],
+    "exact_any_gold_at_10": "diagnostic_only_not_official_hit"
+  },
+  "resume_contract": {
+    "unit": "family/question",
+    "output": "one_jsonl_record_with_input_hash_and_response_hash",
+    "rerun_policy": "resume_only_missing_or_invalid_records"
+  },
+  "planned_calls": 2262,
+  "pilot": {"jobs": 30, "selection": "first 10 questions per family", "status": "pending"},
+  "cost_note": "Estimate tokens and wall time after a measured 10-question pilot; no provider price is assumed.",
+  "outputs": {
+    "jobs": "results/reranking-comparable/E021-cluster-gpu-runtime-v4/jobs.jsonl",
+    "responses": "results/reranking-comparable/E021-cluster-gpu-runtime-v4/responses.jsonl",
+    "metrics": "results/reranking-comparable/E021-cluster-gpu-runtime-v4/metrics.json",
+    "audit": "results/reranking-comparable/E021-cluster-gpu-runtime-v4/audit.json"
+  }
+}

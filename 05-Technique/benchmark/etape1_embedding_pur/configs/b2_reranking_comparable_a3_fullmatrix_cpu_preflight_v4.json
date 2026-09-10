@@ -1,0 +1,48 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-fullmatrix-cpu-preflight-v4-2026-09-08",
+  "campaign_id": "b2-e029-reranking-comparable-a3-fullmatrix-v4-2026-09-08",
+  "schema_version": "b2-comparable-reranking-fullmatrix-cpu-preflight.v4",
+  "experiment_id": "E029",
+  "status": "authorized_cpu_pool_and_context_preflight_no_model_call",
+  "scientific_status": "exploratory_reranking_annex",
+  "inherits_contract": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_fullmatrix_cpu_preflight_v3.json",
+    "sha256": "f2219c22041edff90c3cd401c973ac704f4b16fcf4c18f8d964fed7c2ea0106b",
+    "a3_sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "reason": "V3 stopped before token counting because the auditor imported the full reranking runner, which requires metrics.py. V4 calls the same extracted pure prompt renderer as the runner and needs only tokenizer dependencies."
+  },
+  "unchanged_scientific_contract": {
+    "evaluation_questions": 754,
+    "candidate_universe": {"articles": 13236, "jurisprudence": 114851},
+    "families": ["cosine", "ppr_g6", "lightgcn_g6"],
+    "lightgcn_replay_seeds": [42, 43, 44],
+    "depth_grid": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+    "conditions": 100,
+    "questions_per_condition": 754,
+    "model": {"id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit", "revision": "4033b16200f4152e55e100ea12dc388c537df622", "temperature": 0, "context_limit_tokens": 16384, "max_output_tokens": 256},
+    "representation": {"article": "texte complete_unmodified", "jp": "synthese complete_unmodified", "truncation": "forbidden", "k_out": 10},
+    "sources": "Exactly those frozen and hash-declared in v3; no ranking, pool, prompt, text source, graph, seed or model change is authorized."
+  },
+  "validated_inputs": {
+    "v2_pool_receipt": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_fullmatrix_cpu_preflight_v2_20260908/cpu_preflight_receipt.json",
+    "v2_pool_receipt_sha256": "22b9bcc698deee29d38623fff7f65bb382da97822ff56ebab8b33876980ea079",
+    "v3_input_validation": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_fullmatrix_cpu_preflight_v3_20260908/input_pool_validation.json",
+    "v3_input_validation_sha256": "0a95bc75c0750c1b2de7acae19843ce000e50a2abffd7599f469047a1985ce06"
+  },
+  "code_bundle": {
+    "reranking_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py", "sha256": "1f37f1e8b74384340288e054dd4c9b9a6dd8a65b40b1f49abe8f36cae98ef8be"},
+    "context_auditor": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_audit_b2_fulltext_context.py", "sha256": "fdfeb7de7aa95b564f989aa665a455915ce6f02bcc77d99bbb0b9096a0e51c6c"},
+    "prompt_renderer": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/b2_reranking_prompt.py", "sha256": "dcf625701e9ec2bb4b6ce192becaf7dc9b6d9604349b19fe3df9c7215fd69413"},
+    "context_audit_aggregator": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/105_aggregate_b2_fulltext_context_audits.py", "sha256": "1c6bc5263183ccc3696b0fa87534e6997f5a37a92bec07cfc29353d6dc5ec2d6"}
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_fullmatrix_cpu_preflight_v4_20260908",
+    "context_audit": "fullmatrix_context_audit.json",
+    "receipt": "cpu_preflight_receipt.json"
+  },
+  "execution_gate": {
+    "allowed": ["reuse only the hash-validated v2 pools", "load the exact tokenizer revision", "count the shared fully-rendered prompt with 256 output tokens reserved", "write immutable receipts"],
+    "forbidden": ["any reranker model call", "any text truncation", "any source/model/prompt/seed substitution", "mixing archived E029 responses"],
+    "next_gate": "A GPU manifest may be created only after one complete 100-condition v4 audit has zero overflow and a hash-validated aggregate receipt."
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-lightgcn-g6-preflight-v1-2026-09-07",
+  "campaign_id": "b2-reranking-comparable-a3-lightgcn-g6-preflight-v1-2026-09-07",
+  "schema_version": "b2-comparable-reranking-lightgcn-g6-preflight.v1",
+  "experiment_id": "E029",
+  "status": "authorized_cpu_preflight_no_model_call",
+  "purpose": "Materialize and audit the real G6 LightGCN final pools before any E029 reranker call. Each final replay seed is kept separate; no seed, graph, depth or model configuration is selected from evaluation results.",
+  "parent_manifest": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_fulltext_v1.json",
+    "sha256": "948bc27f9d9c97f7afe3a9f89a692721e360d69b15b4610d5f475299d20750b2",
+    "status": "context_validated_for_cosine_and_ppr_only"
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754,
+    "candidate_universe": {
+      "articles": 13236,
+      "jurisprudence": 114851
+    }
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 256,
+    "max_input_tokens": 16128,
+    "tokenizer_counting": "exact apply_chat_template with add_generation_prompt=true; count input_ids, not the BatchEncoding mapping length"
+  },
+  "reranking_contract": {
+    "candidate_text_policy": "full_text_unmodified",
+    "truncation": "forbidden",
+    "overflow_behavior": "mark the seed/modality/K_in condition model_incompatible_full_text and display --; never shorten, summarize or substitute candidate text",
+    "k_in_sweep": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+    "k_out": 10,
+    "questions_per_condition": 754,
+    "lightgcn_seed_policy": "materialize, audit and later rerank each frozen final replay seed 42, 43 and 44 separately; aggregate only the final exact metrics by arithmetic mean"
+  },
+  "frozen_sources": {
+    "lightgcn_g6_final_rankings": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_replay_v2_20260907/lightgcn_final/lightgcn_rankings_top100.parquet",
+      "sha256": "b1448dd5bfeda2438655dacdd5edb00445672d53a2f240a3f26f32879ee5a1fc",
+      "graph": "G6",
+      "replay_seeds": [42, 43, 44],
+      "article_method": "LightGCN-trained_K2",
+      "jurisprudence_method": "LightGCN-trained_K3"
+    },
+    "article_texts": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_all.parquet",
+      "sha256": "79ed64d48bbd066083d03ab7e8d8b728ed99975c9ba71cda8a98346c19025f6b"
+    },
+    "jurisprudence_texts": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summaries_penal.parquet",
+      "sha256": "e63e71cd7fea04b461bf67d85ed452f922f1967e5659e5082e7925f5c2bd810c"
+    }
+  },
+  "prompts": {
+    "article": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt",
+      "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"
+    },
+    "jurisprudence": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt",
+      "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"
+    }
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_fulltext_depths_a3_g6_v1_20260907",
+    "audit_pattern": "fulltext_context_audit_lightgcn_g6_seed{seed}.json",
+    "receipt": "preflight_receipt.json"
+  },
+  "code_bundle": {
+    "pool_materializer": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/101_materialize_b2_reranking_pools.py",
+      "sha256": "380bf54d58f20c7e0a8f42882283359b93bb948f6cf67d25a39d814dca0cbdb7"
+    },
+    "context_auditor": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_audit_b2_fulltext_context.py",
+      "sha256": "39e17fd7e7b6c3a2bce774a294cd828e1c1495711fe2e94358ebb073c5565bb9"
+    },
+    "scheduler": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b2_e029_lightgcn_g6_preflight.sh",
+      "sha256": "c8ad8b470b5a401d5bf15a7de3fae8844b9fa5615cbc63f818f4ffa05b9a8e62"
+    }
+  },
+  "execution_gate": {
+    "allowed": [
+      "CPU-only materialization of frozen pools",
+      "CPU-only exact token audit against the local frozen tokenizer snapshot"
+    ],
+    "forbidden": [
+      "any vLLM server or reranker model call",
+      "truncation or substitution of candidate text",
+      "merging LightGCN replay seeds into one ranking",
+      "using E029 to select a graph, a seed or a retrieval configuration"
+    ],
+    "next_gate": "A successor E029 execution manifest may be frozen only after all three receipts are validated and the compatible matrix is known."
+  },
+  "scientific_status": "exploratory_reranking_annex_preflight_only"
+}

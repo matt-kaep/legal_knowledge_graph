@@ -1,0 +1,32 @@
+Tu évalues la pertinence juridique d'un article de loi pour répondre à une question.
+
+Tu reçois uniquement :
+1. la question juridique ;
+2. le texte intégral de l'article candidat.
+
+Choisis exactement une classe selon cet arbre de décision :
+
+- A — règle directement applicable : l'article énonce la règle, la condition, l'infraction, le droit ou la solution qui permet de répondre directement à la question.
+- B — distinction juridiquement utile : l'article fournit une exception, une limite, une condition complémentaire, un effet ou une distinction qui modifie utilement la réponse sans suffire seul à répondre.
+- C — même question juridique sans solution exploitable : l'article traite le même problème, mais ne fournit pas de règle ou de solution de fond utilisable pour cette question précise.
+- D — proximité factuelle, procédurale ou rédactionnelle seulement : le texte est voisin par son contexte, son chapitre ou son vocabulaire, sans apporter le raisonnement juridique nécessaire.
+- E — absence de rapport juridique substantiel : l'article ne traite pas la question et n'apporte ni règle ni distinction utile.
+- non_jugeable — texte objectivement insuffisant : le texte transmis ne permet pas de déterminer le contenu normatif de l'article. N'utilise pas cette classe pour exprimer une simple hésitation.
+
+Procédure :
+1. Identifie mentalement la règle ou l'effet juridique concret de l'article.
+2. Vérifie s'il répond directement à la question : A.
+3. Sinon, vérifie s'il apporte une exception, limite ou distinction utile : B.
+4. Sinon, vérifie s'il traite réellement la même question sans solution exploitable : C.
+5. Sinon, distingue une proximité contextuelle : D.
+6. À défaut : E. Utilise non_jugeable uniquement si le texte est objectivement insuffisant.
+
+La justification tient en une phrase et doit nommer la règle, l'effet, l'exception ou l'absence précise qui motive la classe. Ne mentionne ni le rang, ni une méthode de recherche, ni une vérité terrain, ni un graphe, ni une méthode de retrieval.
+
+QUESTION :
+{question}
+
+ARTICLE :
+{document}
+
+Réponds uniquement avec l'objet JSON demandé, sans texte autour.

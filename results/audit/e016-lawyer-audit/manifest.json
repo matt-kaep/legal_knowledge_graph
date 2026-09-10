@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E016",
+  "status": "blocked_human_review",
+  "scientific_status": "exploratoire_en_attente_audit_avocat",
+  "sample": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/G7-citation-JJ-cit1-sem025-knn5/eval_rich_retrievable_strict/E016-g7-graded-jp-v1/lawyer_audit/lawyer_audit_sample.csv",
+    "rows": 100,
+    "sha256": "d402bfb16e14caf1a4afeabd4fa139839c5648420f475b4738864fc8eed6f303"
+  },
+  "private_key": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/G7-citation-JJ-cit1-sem025-knn5/eval_rich_retrievable_strict/E016-g7-graded-jp-v1/lawyer_audit/lawyer_audit_key.csv",
+    "rows": 100,
+    "sha256": "b7aed2bd266402c3f93361b929dccd9ba477ac6af3713651ab6c330f70bd7153"
+  },
+  "strata": {"A": 27, "B": 22, "C": 17, "D": 17, "E": 17},
+  "required_output": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/G7-citation-JJ-cit1-sem025-knn5/eval_rich_retrievable_strict/E016-g7-graded-jp-v1/lawyer_audit/lawyer_agreement.json",
+    "status": "missing"
+  },
+  "privacy": "Raw legal text and the private key remain outside Git; use the local or approved secure review environment."
+}

@@ -1,0 +1,101 @@
+{
+  "manifest_id": "confirmatory-campaign-b1-a3-paper-ready-g6-replay-v2-2026-09-07",
+  "campaign_id": "b1-paper-ready-g6-a3-replay-v2-2026-09-07",
+  "schema_version": "b1-paper-ready-g6-replay.v2",
+  "status": "authorized_after_train_cv_freeze",
+  "purpose": "Replay the already complete and train/CV-frozen G6 LightGCN configurations after correcting the final replay staging of the explicit A3 LightGCN positive projection. The original paper-ready G6 manifest and every artifact it produced remain immutable.",
+  "scientific_status": "confirmatory_internal_evaluation_after_train_cv_freeze",
+  "supersedes": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_paper_ready_g6.json",
+    "manifest_sha256": "a1ab880b8ce7f01d36e851feaec9797f9a1b9af744588c7646375a733960c737",
+    "reason": "The former final replay stopped before evaluation because its temporary training directory omitted lightgcn_article_positive_projection.json. No final ranking or metric was written."
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3"
+  },
+  "source_cv": {
+    "parent_b1_r2_manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r2.json",
+    "parent_b1_r2_manifest_sha256": "9427430f436ca5fc1e2d2bdc9858880c7ed45daaaf48d6b88ca170df614e440c",
+    "aggregation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_20260907/g6_subset_aggregation.json",
+    "aggregation_sha256": "2d525254b10e263ff3f25ac4bc8e2e4c9c56b974d71f0653bfc45276a5d13fab",
+    "previous_freeze_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_20260907/frozen/lightgcn_champions.json",
+    "previous_freeze_sha256": "afa4aef329ff833c2199af7086e359505575b89dbe0a26f6c39863bccd3884b8",
+    "atomic_task_count": 120,
+    "atomic_task_plan_sha256": "37fce90ff05643b54502ae5b40b22154792d94bb691880401de6ec0e89de5c4d",
+    "atomic_preflight_sha256": "9d816a7ec6c9af83d7e66a2c7a403257e990e388aecd692181b57a72240d3f0a"
+  },
+  "scope": {
+    "graph_version": "G6-citation-AA-knn5",
+    "role": "preselected_paper_main_configuration_not_intergraph_champion",
+    "intergraph_claim": "forbidden"
+  },
+  "protocol_version": "grouped_v5_no_eval_overlap_effective_retrieval_v3",
+  "datasets": {
+    "train": {
+      "split": "train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3",
+      "directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3",
+      "questions": 5578,
+      "sha256": "5ca7f54b944456cb318c028978c35430571b302785d2581348a35db81f8285f5",
+      "requires_lightgcn_positive_projection": true
+    },
+    "evaluation": {
+      "split": "eval_rich_retrievable_strict",
+      "directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict",
+      "questions": 754,
+      "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+      "access_before_freeze": "forbidden"
+    }
+  },
+  "folds": {
+    "count": 5,
+    "seed": 42,
+    "sha256": "cc872759b5cc2f93aceb54ac2ac5c5c396e236e7198982f720978e82b3920f59"
+  },
+  "graphs": ["G6-citation-AA-knn5"],
+  "parameters": {
+    "lightgcn": {
+      "final_seeds": [42, 43, 44],
+      "top_k_out": 100,
+      "frozen_articles": {"train_k": 2, "learning_rate": 0.0005, "lambda_anchor": 0.5, "replay_epochs": 9},
+      "frozen_jurisprudence": {"train_k": 3, "learning_rate": 0.0005, "lambda_anchor": 0.5, "replay_epochs": 5},
+      "negative_sampling_strategy": "random"
+    }
+  },
+  "selection": {
+    "source": "complete_train_cv_only_freeze",
+    "new_selection": "forbidden",
+    "frozen_before_evaluation": true
+  },
+  "replay": {
+    "sequential": true,
+    "top_k_out": 100,
+    "require_exact_rankings": true,
+    "require_timings": true
+  },
+  "metrics": {
+    "primary": "normalized_hit_at_k",
+    "article_hit_equals_recall_at_10": true,
+    "report": ["normalized_hit_at_1_to_100", "ndcg_at_10", "mrr_at_10", "top_100_rankings", "inference_time_per_question"],
+    "forbidden_alias": "exact_any_gold_at_10"
+  },
+  "resources": {
+    "partition": "A40",
+    "gpu": 1,
+    "cpus": 5,
+    "memory_gb": 20,
+    "minimum_available_memory_gib": 9.1
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_replay_v2_20260907",
+    "lightgcn_cv": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_20260907/lightgcn_cv",
+    "lightgcn_final": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_replay_v2_20260907/lightgcn_final"
+  },
+  "historical_experiments_excluded": ["E017", "E021", "E022"],
+  "not_authorized": ["new_hyperparameter_selection", "intergraph_lightgcn_champion_claim", "E027", "E029", "E030"],
+  "code_bundle": {
+    "freeze_champions": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/95_freeze_b1_a3_champions.py", "sha256": "69e4898a6e5d3a4b5a10525e7e3e65449b3338f1e758baabdec4c1e9743781ee"},
+    "final_replay": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/96_replay_b1_a3_champions.py", "sha256": "96bd6a2c8c56960d80049393d6e82bc19ffb8befe4aa8a4feed4c697e5a6435b"},
+    "replay_helper": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py", "sha256": "4dcb1605768cc41370146e9117901d17dc980d83db90540c4e1f35270c39ad66"}
+  }
+}

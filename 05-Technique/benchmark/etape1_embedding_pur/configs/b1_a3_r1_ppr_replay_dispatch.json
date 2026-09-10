@@ -1,0 +1,68 @@
+{
+  "dispatch_id": "b1-a3-effective-retrieval-r1-ppr-replay-dispatch-2026-09-03",
+  "kind": "append_only_frozen_replay_dispatch",
+  "parent_campaign": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r1.json",
+    "sha256": "1b612a182742244dad59006e6d01b826a0285f01123aeeae67321b48c9de5e9a"
+  },
+  "frozen_champions": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/frozen/ppr_champions.json",
+    "sha256": "61e80ca1d1f746f4c759c6c118bb79fa605ed6c869bb04498b9b6abeee48db6d",
+    "selection_data": "train_cv_only"
+  },
+  "evaluation": {
+    "split": "eval_rich_retrievable_strict",
+    "questions": 754,
+    "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59"
+  },
+  "top_k_out": 100,
+  "command": {
+    "script": "05-Technique/benchmark/etape1_embedding_pur/scripts/96_replay_b1_a3_champions.py",
+    "family": "ppr",
+    "parent_manifest_argument": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r1.json"
+  },
+  "outputs": {
+    "ppr_final": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_final",
+    "expected_files": [
+      "ppr_eval_per_question.csv",
+      "ppr_rankings_top100.parquet",
+      "ppr_timings.csv"
+    ]
+  },
+  "resources": {
+    "partition": "CPU",
+    "cpus_per_task": 4,
+    "memory": "12G",
+    "time_limit": "08:00:00"
+  },
+  "code_bundle": {
+    "final_replay": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/96_replay_b1_a3_champions.py",
+      "sha256": "96bd6a2c8c56960d80049393d6e82bc19ffb8befe4aa8a4feed4c697e5a6435b"
+    },
+    "replay_helper": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py",
+      "sha256": "e8a037894ebfd0b8bb1231add1e9795263697ef741b75642564c8ab47a76feb1"
+    },
+    "ppr": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py",
+      "sha256": "b998b384f6cf5dcc0fee7a944d97034d5e2f5e515d2fc4b034b4479c2399a47e"
+    },
+    "candidate_loader": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/etape1/retrieval_candidate_universe.py",
+      "sha256": "6c0c6a22f03bc6507d32946feda8f19b468868b05dba9301901df2de754c6a77"
+    }
+  },
+  "historical_experiments_excluded": [
+    "E017",
+    "E021",
+    "E022"
+  ],
+  "invariants": [
+    "verify_parent_campaign_hash_before_replay",
+    "verify_frozen_champions_hash_before_replay",
+    "require_train_cv_only_champion_selection",
+    "refuse_nonempty_final_output_directory",
+    "no_hyperparameter_or_graph_selection_during_evaluation"
+  ]
+}
