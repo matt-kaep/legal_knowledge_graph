@@ -1,0 +1,3 @@
+family,modality,seeds,judge_score_at_10_mean,shards,technical_verdict
+reranked-lightgcn,article,42;43;44,0.32460212201591515,3,complete_clean
+reranked-lightgcn,jp,42;43;44,0.57236958443855,3,complete_clean

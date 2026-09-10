@@ -8,12 +8,13 @@ tags: [benchmark, assainissement, k-fold]
 
 # État A — Assainissement scientifique
 
-## E042 — reprise E030 v3 r6 soumise, aucun score (2026-09-09)
+## E042 — reprise E030 v3 r6 auditée, résultats exploratoires (2026-09-10)
 
 - V2 demeure immuable et non reportable : reçu public SHA `50cecfddfe450f93353acee101b979b1a53b7bfc4f2921e1a5120871fd57ac9b`, 5 shards propres archivés, 17 `partial_technical` sans score réutilisé. Les manifestes r1--r5 restent archivés. Le contrat opérationnel actif est `configs/b2_llm_as_judge_a3_retry_v3_preflight_r6.json`, SHA `b4bb39dcbfff639f3c2cc5a3aecc637f2ff6475c6f1e17dcf61a91a6472746cd`.
 - Les 17 reprises sont sélectionnées mécaniquement depuis l'audit v2, avec ports réservés `18401..18417`, listes A3/E029, modèle/révision, température, prompts et K=10 inchangés. Tableau : `results/benchmark-a3-b1/e030-retry-v3-preflight/retry_shards.csv`, SHA `395d701cd1403f945f7f20ba16b2bb51cf8cfb4bf7e7899efdee1c4054df206b`.
 - Le smoke r6 ne lit ni jobs ni question et ne produit aucun jugement. Il exige un port libre, `/health`, `/v1/models`, le nom servi `model@revision` et le chemin de snapshot correspondant à la révision; le reçu atteste aussi `model_calls=0` et `judgment_rows=0`.
-- Smoke r6 exécuté : Slurm `987373` est `COMPLETED 0:0` sur `node56` / A100 40 Go en 2 min 01 s. Reçu distant `.../_campaign_b2_e030_a3_retry_v3_r6_20260909/smoke/cosine-article/smoke_receipt.json`, SHA `1622a20d4fac4b7f4cac2aeb66e84a9dadbab036c813c2354e66f959328bddd8` : port `18403`, listener `127.0.0.1`, modèle/révision et `/v1/models` conformes, zéro appel et zéro jugement. Les 17 reprises autorisées sont soumises sous Slurm `987376`--`987392`; aucun score n'existe et l'agrégation est interdite avant couverture complète et audit global.
+- Smoke r6 exécuté : Slurm `987373` est `COMPLETED 0:0` sur `node56` / A100 40 Go en 2 min 01 s. Reçu distant SHA `1622a20d4fac4b7f4cac2aeb66e84a9dadbab036c813c2354e66f959328bddd8` : port `18403`, listener `127.0.0.1`, modèle/révision et `/v1/models` conformes, zéro appel et zéro jugement.
+- Les 17 reprises `987376`--`987392` ont toutes terminé `0:0`, avec 7 540 positions chacune. L'audit r1 confirme 17/17 `complete_clean`, tous les hashes, 754 questions et K=10. Reçu distant SHA `14cfda37fcce41bc4bf9b0e0a49da21b85b3d9ca5517655e4f90be950136d413`; exports GitHub légers : `results/benchmark-a3-b1/e030-retry-v3-aggregation-audit-r1/`, reçu public SHA `83e850b33cc84e3990d8c5ce471bdb5e6188124d6e3306713ccb16c05a36b24b`. Les cinq shards v2 restent diagnostics non réutilisés. Les scores Judge sont exploitables descriptivement mais restent exploratoires jusqu'à `lawyer_agreement.json`.
 - Estimation issue des shards v2 ayant réellement travaillé : 15–60 min GPU par reprise, environ 4–17 GPU-h et ~1 h mur avec 17 GPU disponibles, plus la queue. E030 reste exploratoire même après succès technique; `lawyer_agreement.json` reste requis pour toute conclusion comparative.
 
 ## E041 — figure retrieval A3 v4 à deux panneaux (2026-09-09)
