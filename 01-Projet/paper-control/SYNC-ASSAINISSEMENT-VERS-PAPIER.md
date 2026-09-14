@@ -564,3 +564,8 @@ Le replay PPR B1-r1 a terminé sur Télécom (`978600`, `0:0`, 4 min 55 s) aprè
 - Les valeurs et le hash sont dans `REGISTRE-RESULTATS.csv` (lignes `R-E024-B1R1-PPR-*`). Les courbes PPR K=1–100 existent également en CSV (SHA-256 `a52373c8f1c027244f4369149f2bbcb50f57f2635c5d988ecb70bf550f0f5258`). La figure comparative doit attendre LightGCN B1-r2, qui n'est pas encore calculé.
 
 Formulation utilisable : « Après sélection des configurations exclusivement sur les cinq folds d'entraînement, nous avons gelé un champion PPR distinct par tâche et l'avons rejoué sur les 754 questions d'évaluation. » Ne pas présenter les valeurs train/CV de sélection comme résultats d'évaluation, ne pas mélanger les expériences historiques et ne pas annoncer de comparaison PPR–LightGCN avant le run LightGCN B1-r2.
+
+### 2026-09-14 — Stockage : aucun impact sur les sources du papier
+
+- Les corpus/index locaux historiques `database-judilibre-v5` et `baseline_b2` sont désormais archivés sur Télécom après contrôle SHA-256 complet. Ils ne figurent pas dans Git et aucun fichier de rédaction, manifeste A3/B1, ranking gelé ou export de résultat n'a été déplacé.
+- Aucun changement n'est demandé à la session Papier. Si une reconstruction historique requiert ces données, les archives vérifiées sont sous `/home/ids/kaeppelin-22/legal_knowledge_graph_mac_archive_20260910/` ; les manifestes de vérification sont consignés dans `ETAT-ASSAINISSEMENT.md`.
