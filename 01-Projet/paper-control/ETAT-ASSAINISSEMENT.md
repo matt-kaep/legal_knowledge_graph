@@ -1,12 +1,22 @@
 ---
-date: 2026-09-09
+date: 2026-09-14
 type: etat-projet
-status: b1-g6-lightgcn-final-validated-g1-scoped-results-derived-structural-g1-g6-g7-validated-e027-completed-e029-output512-aggregated-e030-v2-audited-incomplete
+status: judge-six-completions-running-depth-export-ready
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
+
+## 2026-09-14 — Complément ciblé Judge et export de profondeur
+
+- E043 (complément E030) : inventaire avant tout modèle, puis 17 résultats r6 revérifiés sans variation de score. Contrôles : hashes des entrées/réponses/matérialisations, identité question–rang–candidat, question et carte source, modèle/révision/prompt, 754×10 positions, recalcul indépendant des gains. Ancienne v2 exclue intégralement.
+- Six conditions autorisées uniquement : cosine JP ; PPR G6 Articles ; PPR G7 JP principal ; PPR G6 JP avant reranking ; LightGCN G6 seed42 Articles et JP. Attention : la liste historique `ppr_jp` préparée pour le Judge est G7-AA, vérifiée dans le parquet. La nouvelle liste G6-AA provient du replay scoped A3 déjà figé, sans nouveau retrieval.
+- Manifeste : `results/benchmark-a3-b1/judge-table-completion-a3-v1/preflight/judge_table_completion_manifest.json`, SHA `a22c65803bf1cb39a9992f563746b6fb26f564e7fc1fc0a704ebab789bd404ee`. Préflight CPU 992266 réussi ; smoke 992269 passé sur L40S/node52 en 1m46s, zéro jugement, reçu SHA `e86576ecca38f21d4266400459552d31b14582457f6968df0ceaa85b31170e77`.
+- Jobs GPU 992279–992284 soumis et observés RUNNING ; ports uniques 18501–18506. Audit CPU 992285 en dépendance `afterok` des six. Estimation au lancement : 45–75 minutes hors incident, environ 4–7,5 GPU-heures. Aucun entraînement ni nouveau reranking.
+- Résultats disponibles immédiatement : `results/benchmark-a3-b1/judge-table-completion-a3-v1/available/`, reçu public SHA `40a3e2e8800c9cd47d8b8cc48fc91415b10b56600aaf83783784796fc146736a`. 17 scores complets ; six cellules en attente. Moyennes LightGCN brutes interdites avant seed42 ; moyennes rerankées sur seeds 42/43/44 disponibles. Les scores demeurent exploratoires avant audit juridique aveugle.
+- E044 (export E029) terminé sans GPU : `results/benchmark-a3-b1/reranking-depth-table-a3-v1/reranking_depth.csv`, SHA `8f00ba78e88c1b222fcee9061addbee442b5fdd4cf05fb050cdfd7fb437faf1a`. 42 lignes, deux tâches, trois retrievers, K_in=10..70 par pas de 10, K_out=10. Sources output-512 seulement, valeurs avant/après et hashes des rankings ; PPR G6-AA dans les deux tâches ; LightGCN moyenne seeds42/43/44. Reçu SHA `413f450b456bf3cc6a1ba7e0148a94c9fa7f915ff96604fb3a3250d981837ba9`.
+- Tests ciblés dans la `.venv` du benchmark : 22 passés. Le Python système et la venv d'inférence ne contiennent pas pytest ; leurs essais de collecte ne constituent pas une régression du pipeline. Aucun fichier du manuscrit ni aucune figure modifiés. Handoff détaillé : `results/benchmark-a3-b1/judge-table-completion-a3-v1/README.md`.
 
 ## E042 — reprise E030 v3 r6 auditée, résultats exploratoires (2026-09-10)
 

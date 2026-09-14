@@ -1,0 +1,302 @@
+{
+  "manifest_id": "judge-table-completion-a3-v1-2026-09-14",
+  "campaign_id": "judge-table-completion-a3-v1-2026-09-14",
+  "schema_version": "b2-llm-as-a-judge-retry.v3",
+  "experiment_id": "E030",
+  "status": "frozen_preflight_only",
+  "scientific_status": "exploratory_until_lawyer_audit",
+  "source_v2": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_llm_as_judge_a3_execution_v2_gpu70.json",
+    "sha256": "7eb5d08758b3f833cfdb0f2c880066b8cbbe481cd2c252f20ed5582c8e3ea16f",
+    "audit_csv_path": "results/benchmark-a3-b1/e030-aggregation-audit-v1/per_shard_audit.csv",
+    "audit_csv_sha256": "0b9f8a8d31c4fa764ca878805949ae36e65111adc41f713f8d84ca7ed1803141",
+    "complete_clean_archived_only": 5,
+    "partial_technical_retried": 17
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_questions": 754,
+    "candidate_universe": {
+      "articles": 13236,
+      "jurisprudence": 114851
+    }
+  },
+  "e029": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_output512_execution_v2.json",
+    "sha256": "c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586",
+    "aggregation_receipt_sha256": "abdf7471e39c18cf7d68c94399031ca64b489c0ed2f9f6b428eef92b0a470153",
+    "reranked_k_in": 70
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "snapshot": "/home/ids/kaeppelin-22/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "max_model_tokens": 16384,
+    "max_output_tokens": 256,
+    "max_num_seqs": 2,
+    "max_workers": 2
+  },
+  "prompts": {
+    "article": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/b2_llm_judge_articles_v1.txt",
+      "sha256": "a690d4fe92b17fdbf9eec90ca47b35a2d8339217e86f38b15c659088bbb43433"
+    },
+    "jp": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/b2_llm_judge_jurisprudence_v1.txt",
+      "sha256": "0b396b3208a119dca01fb1b25ea4e2e7b6c17fdc43af7c5c45074a6070274751"
+    }
+  },
+  "grading": {
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "non_jugeable"
+    ],
+    "gains": {
+      "A": 1.0,
+      "B": 0.5,
+      "C": 0.0,
+      "D": 0.0,
+      "E": 0.0,
+      "non_jugeable": 0.0
+    },
+    "k": 10,
+    "denominator": "fixed_K_10",
+    "duplicate_candidate_gain": 0.0
+  },
+  "visibility_contract": {
+    "article": "question plus texte only",
+    "jp": "question plus synthese only",
+    "forbidden": [
+      "rank",
+      "retriever",
+      "graph",
+      "seed",
+      "ground_truth",
+      "gold_label",
+      "LLM_judge_history"
+    ]
+  },
+  "code_bundle": {
+    "v3_launcher": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b2_e030_judge_v3.sh",
+      "sha256": "5e388b7e43fa3a4f6255e7301e91e760c1bbe2b3d9c54370564523f3d0a15e5d"
+    },
+    "v3_smoke_launcher": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_b2_e030_smoke_v3.sh",
+      "sha256": "4099be54a264a58b92c9274e5ef1e839f5611103782495fa13b27c3168a43eb1"
+    },
+    "v3_fail_closed_runner": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/121_run_b2_e030_judge_fail_closed_v3.py",
+      "sha256": "30b7a08406c54edbb8865d2560e6c62ad553c24be5748d6c40ff17e6dee2b0f5"
+    },
+    "v2_judge_runner": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/110_run_b2_e030_llm_judge.py",
+      "sha256": "ca137cae20048d93f244bbd97870eb8637238f664775bb4f3a44b61e685fe731"
+    },
+    "context_auditor": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/114_audit_b2_e030_context.py",
+      "sha256": "f3346886e0e8b2a8b76dcd88f007356e15c98b9e7a1b65095aa35e39239e7aa1"
+    }
+  },
+  "outputs": {
+    "root": "doctrine_v3plus_bench/_judge_table_completion_a3_v1_20260914",
+    "immutable": true
+  },
+  "retry_policy": {
+    "reuse_r6_scores": "only after fresh hashes, ranking identity and independent gain audit",
+    "reuse_v2_scores": false,
+    "http_failure": "fail_closed_no_score"
+  },
+  "service_identity_contract": {
+    "bind_host": "127.0.0.1",
+    "ports": {
+      "cosine-jp": 18501,
+      "ppr-article": 18504,
+      "ppr-jp": 18506,
+      "lightgcn-seed42-article": 18502,
+      "lightgcn-seed42-jp": 18503,
+      "ppr-g6-jp": 18505
+    },
+    "pre_start": [
+      "port_must_be_unbound",
+      "no_listener_on_reserved_port"
+    ],
+    "post_start": [
+      "health_endpoint",
+      "v1_models_endpoint",
+      "served_model_id_includes_frozen_revision"
+    ],
+    "receipt_fields": [
+      "slurm_job_id",
+      "node",
+      "port",
+      "listener",
+      "gpu",
+      "model_id",
+      "model_revision",
+      "v1_models"
+    ]
+  },
+  "execution_gate": {
+    "smoke_test": "required; model identity only; no judgments",
+    "full_submission": "authorized by user after successful smoke",
+    "smoke_anomaly": "stop"
+  },
+  "post_execution_audit": {
+    "conditions_total": 23,
+    "reused": 17,
+    "new": 6,
+    "questions": 754,
+    "positions": 7540,
+    "lightgcn_seed_mean": "exactly clean seeds 42,43,44 per task and stage"
+  },
+  "shards": [
+    {
+      "id": "cosine-jp",
+      "modality": "jp",
+      "jobs": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_frozen_nonreranked_jobs_preflight_v1_20260909/cosine_jp.jsonl",
+        "sha256": "9041b54c0b9b1a122e212d9894d62bd5e7cda38b35ffbe79a2fbd062e20b73e8",
+        "count": 7540
+      },
+      "context_audit": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_frozen_nonreranked_jobs_preflight_v1_20260909/cosine_jp_context256/context_audit_receipt.json",
+        "sha256": "5abebb0f4a909c27a958b8bb0427b7582abf8233c8010f9c85b3b35d24a28b43"
+      },
+      "vllm_port": 18501,
+      "provenance": {
+        "source_ranking_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e030_a3_top10_projection_preflight_v1_20260909/cosine_rankings_top10.parquet",
+        "source_ranking_hash": "1ac8d39fe508f8f5f1a0aa177cd2b51581b0ae84a26260d4f41ccf3f39787a56",
+        "ranking_identity_hash": "011ee9f712926a67951bee852b385f86b3207ba7b0f45de055746b7bdb33a7dc",
+        "observed_graph": "",
+        "jobs_hash": "9041b54c0b9b1a122e212d9894d62bd5e7cda38b35ffbe79a2fbd062e20b73e8",
+        "context_hash": "5abebb0f4a909c27a958b8bb0427b7582abf8233c8010f9c85b3b35d24a28b43"
+      }
+    },
+    {
+      "id": "ppr-article",
+      "modality": "article",
+      "jobs": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/ppr_article.jsonl",
+        "sha256": "3c660bf33ea19f99371e74fdaf5e3fc90b4c9de66264a7ddbdcc8ff6ccb9c652",
+        "count": 7540
+      },
+      "context_audit": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/ppr_article_context256/context_audit_receipt.json",
+        "sha256": "538e70830f304c197cf8a4a0c19fee449ee6dc79c11f7cfa30a2241a7826f21d"
+      },
+      "vllm_port": 18504,
+      "provenance": {
+        "source_ranking_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e030_a3_top10_projection_preflight_v1_20260909/ppr_rankings_top10.parquet",
+        "source_ranking_hash": "eae969fa44f917bb4d36e2eb19b75042f2e4ac96d46c6bc7ffee7f1acab8a161",
+        "ranking_identity_hash": "f749e9a3b0d4d56263023fa1c9a034beb9c44e865bb4faa23ae5fccb7d0ed5cc",
+        "observed_graph": "G6-citation-AA-knn5",
+        "jobs_hash": "3c660bf33ea19f99371e74fdaf5e3fc90b4c9de66264a7ddbdcc8ff6ccb9c652",
+        "context_hash": "538e70830f304c197cf8a4a0c19fee449ee6dc79c11f7cfa30a2241a7826f21d"
+      }
+    },
+    {
+      "id": "ppr-jp",
+      "modality": "jp",
+      "jobs": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/ppr_jp.jsonl",
+        "sha256": "f367366039f99c08a9763d73029c079db1e81039604739ce289cace82f883eed",
+        "count": 7540
+      },
+      "context_audit": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/ppr_jp_context256/context_audit_receipt.json",
+        "sha256": "261598775bd56c9df5e5550df6ee961d93594f64783e14d01d3e1dfb279d2092"
+      },
+      "vllm_port": 18506,
+      "provenance": {
+        "source_ranking_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e030_a3_top10_projection_preflight_v1_20260909/ppr_rankings_top10.parquet",
+        "source_ranking_hash": "eae969fa44f917bb4d36e2eb19b75042f2e4ac96d46c6bc7ffee7f1acab8a161",
+        "ranking_identity_hash": "e3de79943421a3c9bbb5fa73d2af52ee8186fe2cb11b2cfec246603c174fa488",
+        "observed_graph": "G7-citation-AA-cit1-sem025-knn5",
+        "jobs_hash": "f367366039f99c08a9763d73029c079db1e81039604739ce289cace82f883eed",
+        "context_hash": "261598775bd56c9df5e5550df6ee961d93594f64783e14d01d3e1dfb279d2092"
+      }
+    },
+    {
+      "id": "lightgcn-seed42-article",
+      "modality": "article",
+      "jobs": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/lightgcn_seed42_article.jsonl",
+        "sha256": "22b581718f3561cbb9432cfad14e218584720113a3fef6e5652d8086e410aad2",
+        "count": 7540
+      },
+      "context_audit": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/lightgcn_seed42_article_context256/context_audit_receipt.json",
+        "sha256": "20caa6c65f7636feb388533bced32c192f8f2ae624eff8faa22bb79f08ba508e"
+      },
+      "vllm_port": 18502,
+      "provenance": {
+        "source_ranking_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e030_a3_top10_projection_preflight_v1_20260909/lightgcn_rankings_top10.parquet",
+        "source_ranking_hash": "9b4ab7cabe3fb6aca1817f349b1200e92bacfef2b1994f34f698001856be07c8",
+        "ranking_identity_hash": "2a340da80f7877f1056ca55313dbd3c14f756656124b9f093a4da86ad99d5548",
+        "observed_graph": "G6-citation-AA-knn5",
+        "jobs_hash": "22b581718f3561cbb9432cfad14e218584720113a3fef6e5652d8086e410aad2",
+        "context_hash": "20caa6c65f7636feb388533bced32c192f8f2ae624eff8faa22bb79f08ba508e"
+      }
+    },
+    {
+      "id": "lightgcn-seed42-jp",
+      "modality": "jp",
+      "jobs": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/lightgcn_seed42_jp.jsonl",
+        "sha256": "7e6552e45b7c976567cff966912249855c8a9194ef255a7636559264aad9b0c9",
+        "count": 7540
+      },
+      "context_audit": {
+        "path": "doctrine_v3plus_bench/_campaign_b2_e030_a3_nonreranked_ppr_light_context_preflight_v1_20260909/lightgcn_seed42_jp_context256/context_audit_receipt.json",
+        "sha256": "9cec7acebb486e1ba0be6a584b99d8b6f628943ef8c5cdbcc585f6ff5f991fcd"
+      },
+      "vllm_port": 18503,
+      "provenance": {
+        "source_ranking_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e030_a3_top10_projection_preflight_v1_20260909/lightgcn_rankings_top10.parquet",
+        "source_ranking_hash": "9b4ab7cabe3fb6aca1817f349b1200e92bacfef2b1994f34f698001856be07c8",
+        "ranking_identity_hash": "7ff16ed736c5c5e373c229aa5808eca037099244988e145943b904ac23fe8197",
+        "observed_graph": "G6-citation-AA-knn5",
+        "jobs_hash": "7e6552e45b7c976567cff966912249855c8a9194ef255a7636559264aad9b0c9",
+        "context_hash": "9cec7acebb486e1ba0be6a584b99d8b6f628943ef8c5cdbcc585f6ff5f991fcd"
+      }
+    },
+    {
+      "id": "ppr-g6-jp",
+      "modality": "jp",
+      "jobs": {
+        "path": "doctrine_v3plus_bench/_judge_table_completion_a3_v1_20260914/inputs/ppr_g6_jp.jsonl",
+        "sha256": "157276e1e60f23c5ece857e9c50447944eb6456e0fad5f70519eb4fb4560684b",
+        "count": 7540
+      },
+      "context_audit": {
+        "path": "doctrine_v3plus_bench/_judge_table_completion_a3_v1_20260914/inputs/ppr_g6_jp_context256/context_audit_receipt.json",
+        "sha256": "6489750ece99b6725ffd8bc428c013f0faa51a4b4824b8bdce7eeb1e06c872b4"
+      },
+      "vllm_port": 18505,
+      "provenance": {
+        "source_ranking_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_judge_table_completion_a3_v1_20260914/inputs/ppr_g6_jp_top10.parquet",
+        "source_ranking_hash": "4d1bcb8c4e2cf7fc88cf2a094a703026b439fca02c0797e2de43b43abfce7d77",
+        "ranking_identity_hash": "d53b328d68040e8ab32e5a00e9e1bd9a24758a04d3a928f734c01dc7430cc764",
+        "observed_graph": "G6-citation-AA-knn5",
+        "jobs_hash": "157276e1e60f23c5ece857e9c50447944eb6456e0fad5f70519eb4fb4560684b",
+        "context_hash": "6489750ece99b6725ffd8bc428c013f0faa51a4b4824b8bdce7eeb1e06c872b4"
+      }
+    }
+  ],
+  "parent": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_llm_as_judge_a3_retry_v3_preflight_r6.json",
+    "sha256": "b4bb39dcbfff639f3c2cc5a3aecc637f2ff6475c6f1e17dcf61a91a6472746cd"
+  },
+  "preparation": {
+    "script_sha256": "703cc4db0706e235834bc735d6d8831ae8a5da8b9db38a853910f7f57c797a55",
+    "model_calls": 0,
+    "reused_evidence_audit_sha256": "53118c939f9d86cfb3dd0067a959d621bece9afc472ace94d08773f5ece333d8"
+  }
+}

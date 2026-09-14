@@ -1,0 +1,44 @@
+{
+  "status": "pass",
+  "manifest_sha256": "a22c65803bf1cb39a9992f563746b6fb26f564e7fc1fc0a704ebab789bd404ee",
+  "model_calls": 0,
+  "judgment_rows": 0,
+  "node": "node52",
+  "slurm_job_id": "992269",
+  "port": 18501,
+  "listener": "127.0.0.1",
+  "gpu": "NVIDIA L40S, 46068 MiB",
+  "model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+  "model_revision": "4033b16200f4152e55e100ea12dc388c537df622",
+  "served_model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit@4033b16200f4152e55e100ea12dc388c537df622",
+  "v1_models": {
+    "object": "list",
+    "data": [
+      {
+        "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit@4033b16200f4152e55e100ea12dc388c537df622",
+        "object": "model",
+        "created": 1789390295,
+        "owned_by": "vllm",
+        "root": "/home/ids/kaeppelin-22/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/4033b16200f4152e55e100ea12dc388c537df622",
+        "parent": null,
+        "max_model_len": 16384,
+        "permission": [
+          {
+            "id": "modelperm-ba8761d37b8f372a",
+            "object": "model_permission",
+            "created": 1789390295,
+            "allow_create_engine": false,
+            "allow_sampling": true,
+            "allow_logprobs": true,
+            "allow_search_indices": false,
+            "allow_view": true,
+            "allow_fine_tuning": false,
+            "organization": "*",
+            "group": null,
+            "is_blocking": false
+          }
+        ]
+      }
+    ]
+  }
+}

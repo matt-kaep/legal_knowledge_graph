@@ -1,5 +1,5 @@
 ---
-date: 2026-09-09
+date: 2026-09-14
 type: synchronisation
 owner: assainissement
 recipient: papier
@@ -7,6 +7,18 @@ tags: [coordination, benchmark, papier]
 ---
 
 # Canal A vers B — Assainissement vers papier
+
+## Résumé courant — 2026-09-14 : exports prêts, six Judge en cours
+
+**Disponible maintenant :** `results/benchmark-a3-b1/reranking-depth-table-a3-v1/reranking_depth.csv` SHA `8f00ba78e88c1b222fcee9061addbee442b5fdd4cf05fb050cdfd7fb437faf1a`, reçu `audit_receipt.json` SHA `413f450b456bf3cc6a1ba7e0148a94c9fa7f915ff96604fb3a3250d981837ba9`. Les 42 valeurs exactes couvrent les deux tâches et K_in=10,20,30,40,50,60,70, K_out=10. Valeurs avant/après non arrondies et hashes des classements fournis ; PPR G6-AA Articles et JP ; moyenne LightGCN G6 sur seeds42/43/44. Ne pas appeler la courbe JP un reranking du PPR G7-AA principal.
+
+**Judge réutilisable descriptivement :** `results/benchmark-a3-b1/judge-table-completion-a3-v1/available/judge_scores_for_paper.csv` SHA `8c20214fdafd71fa45d078a288352c061bb26c895e175cdd8898ffa3fd093660` ; reçu public SHA `40a3e2e8800c9cd47d8b8cc48fc91415b10b56600aaf83783784796fc146736a`. Les 17 conditions r6 ont été intégralement revérifiées et les scores recomputés depuis leurs classes, sans nouvel appel. Les colonnes `stage`, `graph_label`, `seeds`, `comparison_role` empêchent les substitutions de conditions. Les six scores manquants sont vides ; aucune moyenne LightGCN brute n'est autorisée à ce stade. Les moyennes rerankées sur trois seeds restent disponibles.
+
+**En cours :** six jobs GPU 992279–992284 pour cosine JP, PPR G6 Articles, PPR G7 JP principal, PPR G6 JP avant reranking, LightGCN G6 seed42 Articles et JP. Manifeste `preflight/judge_table_completion_manifest.json` SHA `a22c65803bf1cb39a9992f563746b6fb26f564e7fc1fc0a704ebab789bd404ee`. Smoke L40S validé, modèle/révision/prompt/rubriques inchangés, aucun entraînement. Audit final CPU 992285 dépend de la réussite des six et doit valider 23 conditions et quatre moyennes LightGCN propres. Estimation au lancement 45–75 minutes, sous réserve d'incident ; `final/` n'est pas encore un résultat livré.
+
+**Formulation autorisée :** scores LLM-as-a-Judge exploratoires sur l'évaluation interne A3. Audit juridique aveugle et `lawyer_agreement.json` toujours requis avant validation humaine ou conclusion comparative. Le zéro Direct LLM JP provient de slots de références non résolus, pas de jugements négatifs calculés. Aucun score technique en erreur ni aucune sortie v2 réutilisé.
+
+**Accès :** tous ces chemins sont dans la branche `paper/ecir-2027-reproducibility-clean`, worktree `.worktrees/paper-ecir-2027-reproducibility-clean`. Le README du paquet Judge donne les chemins Télécom, les hashes complets, les commandes et la liste des jobs. Le manuscrit et ses figures n'ont pas été modifiés. Les identifiants E043/E044/E030/E029 restent internes à la coordination et aux manifestes.
 
 ## Transmission E042 — E030 v3 r6 auditée, résultats exploratoires disponibles (2026-09-10)
 
