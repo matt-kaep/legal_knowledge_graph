@@ -8,7 +8,17 @@ tags: [coordination, benchmark, papier]
 
 # Canal A vers B — Assainissement vers papier
 
-## Résumé courant — 2026-09-14 : exports prêts, six Judge en cours
+## Livraison courante — 2026-09-14 : complément Judge terminé et audité
+
+Les six calculs demandés sont terminés, ainsi que leur audit global. Utiliser `results/benchmark-a3-b1/judge-table-completion-a3-v1/final/judge_scores_for_paper.csv` SHA `adbd1970ad0b4035abd122b2915c5c601dd2721aebf0cb98e3c71a5e5dc75cc3`. Le reçu public `final/audit_receipt_public.json` SHA `9096cc92fe77af1e05c790edeced42fa193816cbbe14ebde1c0506c17f112d43` atteste 23 conditions propres, 754×10 positions chacune et quatre moyennes LightGCN propres sur seeds 42/43/44. Les 29 hashes du paquet transféré et les quatre moyennes ont été contrôlés localement.
+
+Le détail par seed est `final/judge_scores_by_condition.csv` SHA `79ccdb35f72acf0c859361cfd0bf2be5a7a77ad71b6bc04064d8643b1ea51055` ; les moyennes sont `final/lightgcn_three_seed_means.csv` SHA `5fe523b7a088381b2d596fd8bf08c41e5b7a26223c52261620e671ff8c8feb24`. Chaque condition dispose de son CSV dans `final/shards/`. Le README parent est le handoff complet : inventaire, contrat, scores, accès Télécom, provenance et hashes. Les valeurs non arrondies des CSV font foi.
+
+PPR JP principal = G7-AA (Judge 0.4350132625994695) ; PPR JP avant reranking = G6-AA (0.4437002652519894), après reranking G6-AA = 0.53342175066313. Ne pas substituer ces conditions. Moyennes LightGCN brutes Articles/JP : 0.23183023872679046 / 0.4474137931034483 ; rerankées : 0.32460212201591515 / 0.57236958443855. L'export exact de profondeur décrit ci-dessous est également terminé, sans nouveau calcul GPU.
+
+**Cadre autorisé :** analyse LLM-as-a-Judge exploratoire sur A3, aucune validation humaine ni conclusion comparative avant audit juridique aveugle et `lawyer_agreement.json`. Direct LLM JP = zéro pour références non résolues, non pour jugements négatifs. Rien ne reste à calculer dans le périmètre demandé. Ni manuscrit ni figures modifiés ; ne pas utiliser les identifiants d'expérience dans le texte publié.
+
+## Archive du lancement — 2026-09-14 : exports prêts, six Judge en cours
 
 **Disponible maintenant :** `results/benchmark-a3-b1/reranking-depth-table-a3-v1/reranking_depth.csv` SHA `8f00ba78e88c1b222fcee9061addbee442b5fdd4cf05fb050cdfd7fb437faf1a`, reçu `audit_receipt.json` SHA `413f450b456bf3cc6a1ba7e0148a94c9fa7f915ff96604fb3a3250d981837ba9`. Les 42 valeurs exactes couvrent les deux tâches et K_in=10,20,30,40,50,60,70, K_out=10. Valeurs avant/après non arrondies et hashes des classements fournis ; PPR G6-AA Articles et JP ; moyenne LightGCN G6 sur seeds42/43/44. Ne pas appeler la courbe JP un reranking du PPR G7-AA principal.
 

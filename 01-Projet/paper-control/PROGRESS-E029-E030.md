@@ -2,7 +2,7 @@
 date: 2026-09-14
 type: suivi
 owner: assainissement
-status: judge-six-completions-running-depth-export-ready
+status: judge-complete-exploratory-depth-export-ready
 tags: [e029, e030, benchmark]
 ---
 
@@ -15,8 +15,8 @@ tags: [e029, e030, benchmark]
 | Inventaire et audit des 17 Judge r6 | terminé | `judge-table-completion-a3-v1/available/audit_receipt_public.json`, SHA `40a3e2e8800c9cd47d8b8cc48fc91415b10b56600aaf83783784796fc146736a` | réutiliser descriptivement |
 | Six listes Judge manquantes | figées, contexte vérifié | manifeste SHA `a22c65803bf1cb39a9992f563746b6fb26f564e7fc1fc0a704ebab789bd404ee` | pas de nouvelle sélection |
 | Smoke service | réussi sur L40S | 992269, SHA `e86576ecca38f21d4266400459552d31b14582457f6968df0ceaa85b31170e77` | gate satisfait |
-| Six calculs Judge | RUNNING observé | 992279–992284 | suivre réponses et reçus |
-| Audit global / moyennes trois seeds | PENDING Dependency | 992285, après réussite des six | exiger 23 conditions propres et quatre moyennes avant livraison finale |
+| Six calculs Judge | COMPLETED 0:0 | 992279–992284 ; 29m08s–43m00s | terminé ; aucune relance |
+| Audit global / moyennes trois seeds | COMPLETED 0:0 ; 23 conditions propres ; quatre moyennes | 992285 ; `judge-table-completion-a3-v1/final/audit_receipt_public.json` SHA `9096cc92fe77af1e05c790edeced42fa193816cbbe14ebde1c0506c17f112d43` | transféré ; 29 hashes et moyennes vérifiés localement ; exploratoire |
 | 42 valeurs exactes de profondeur | terminé sans GPU | `reranking-depth-table-a3-v1/reranking_depth.csv`, SHA `8f00ba78e88c1b222fcee9061addbee442b5fdd4cf05fb050cdfd7fb437faf1a` | transmis au Papier |
 | Audit juridique aveugle | humain en attente | `lawyer_agreement.json` absent | conserver tous les scores Judge exploratoires |
 

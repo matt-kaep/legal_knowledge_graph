@@ -1,12 +1,19 @@
 ---
 date: 2026-09-14
 type: etat-projet
-status: judge-six-completions-running-depth-export-ready
+status: judge-complete-exploratory-depth-export-ready
 owner: assainissement
 tags: [benchmark, assainissement, k-fold]
 ---
 
 # État A — Assainissement scientifique
+
+## Livraison finale — 2026-09-14, 13:40 UTC
+
+- Six jobs 992279–992284 et audit 992285 terminés `COMPLETED 0:0`. Durées GPU 29m08s–43m00s, total 3,899 GPU-heures ; audit 36s. Aucun calcul restant dans ce complément.
+- Paquet local et public : `results/benchmark-a3-b1/judge-table-completion-a3-v1/final/`. 23 conditions propres (17 réutilisées, 6 nouvelles), 754 questions × 10 positions chacune, 15 lignes Papier et quatre moyennes LightGCN sur exactement 42/43/44. 29 hashes vérifiés après transfert ; quatre moyennes recalculées indépendamment. PPR G7 JP principal et PPR G6 JP avant/après reranking restent distincts.
+- Table `judge_scores_for_paper.csv` SHA `adbd1970ad0b4035abd122b2915c5c601dd2721aebf0cb98e3c71a5e5dc75cc3` ; détail `judge_scores_by_condition.csv` SHA `79ccdb35f72acf0c859361cfd0bf2be5a7a77ad71b6bc04064d8643b1ea51055` ; moyennes `lightgcn_three_seed_means.csv` SHA `5fe523b7a088381b2d596fd8bf08c41e5b7a26223c52261620e671ff8c8feb24` ; reçu public SHA `9096cc92fe77af1e05c790edeced42fa193816cbbe14ebde1c0506c17f112d43`.
+- Tous les scores Judge restent exploratoires, sans validation humaine jusqu'à l'audit juridique aveugle. Le zéro Direct LLM JP reste celui de références non résolues, pas de jugements négatifs. Export des 42 valeurs exactes de profondeur déjà livré ; aucun nouveau reranking, entraînement, figure ou manuscrit modifié. Les états ci-dessous sont historiques.
 
 ## 2026-09-14 — Complément ciblé Judge et export de profondeur
 

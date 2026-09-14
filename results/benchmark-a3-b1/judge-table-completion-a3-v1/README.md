@@ -1,13 +1,54 @@
 ---
 date: 2026-09-14
 type: result-handoff
-status: six-conditions-running
+status: complete-exploratory
 owner: assainissement
 ---
 
 # Frozen legal retrieval results — table completion
 
 ## Current deliverables
+
+Final delivery verified on 2026-09-14 at 13:40 UTC: all six GPU jobs and
+CPU audit 992285 completed with exit code 0. The six runtimes were 38m33s,
+38m52s, 42m46s, 43m00s, 41m38s and 29m08s (3.899 GPU-hours total);
+the final audit took 36 seconds. No calculation remains pending in this scope.
+
+Use `final/judge_scores_for_paper.csv`, not the earlier partial snapshot.
+The final package contains 23 complete conditions (17 reused + 6 new),
+754 questions and 7,540 fixed slots each, 15 paper-table rows and four
+LightGCN means over exactly seeds 42,43,44. All 29 packaged hashes were
+checked after transfer; all four means were independently recomputed locally.
+
+| Final artifact | SHA-256 |
+|---|---|
+| `final/judge_scores_for_paper.csv` | `adbd1970ad0b4035abd122b2915c5c601dd2721aebf0cb98e3c71a5e5dc75cc3` |
+| `final/judge_scores_by_condition.csv` | `79ccdb35f72acf0c859361cfd0bf2be5a7a77ad71b6bc04064d8643b1ea51055` |
+| `final/lightgcn_three_seed_means.csv` | `5fe523b7a088381b2d596fd8bf08c41e5b7a26223c52261620e671ff8c8feb24` |
+| `final/audit_receipt_public.json` | `9096cc92fe77af1e05c790edeced42fa193816cbbe14ebde1c0506c17f112d43` |
+| `final/evidence_manifest.json` | `0e9ebae7ad3ad8841e3d3c79bb74f761ec6cb980ed1967c2a3f9b6959d66ad80` |
+| `final/package_hashes.json` | `615427de9190fbf049df603973cd8a9c886bc638554bbae2ecbf93a49965bc30` |
+
+The CSVs retain unrounded values. The following overview is rounded to six
+decimals for reading only; copy exact values from the CSV for downstream work.
+
+| Method | Articles raw | Decisions raw | Articles reranked | Decisions reranked |
+|---|---|---|---|---|
+| Direct LLM | 0.042440 | 0.000000 (unresolved references) | not applicable | not applicable |
+| BGE-M3 cosine | 0.231764 | 0.437599 | 0.320756 | 0.573276 |
+| PPR G6-AA | 0.236605 | 0.443700 | 0.327188 | 0.533422 |
+| PPR G7-AA | not in this table | 0.435013 | not in this table | not calculated |
+| LightGCN G6, mean 42/43/44 | 0.231830 | 0.447414 | 0.324602 | 0.572370 |
+
+PPR G7-AA Decisions is the main retrieval comparison; PPR G6-AA Decisions
+is the distinct before/after reranking comparison. Reranked means K_in=70,
+K_out=10. These are exploratory Judge scores, not exact NHit scores.
+The only outstanding validation in this scope is the blind human legal audit.
+
+## Historical inventory and submission record
+
+The sections below preserve the initial state. References to pending jobs or
+the `available/` snapshot are historical and superseded by `final/` above.
 
 The initial inventory and fresh independent audit preceded every model call.
 Seventeen existing clean conditions passed: job hashes, A3 question identity,
