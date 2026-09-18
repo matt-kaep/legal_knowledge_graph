@@ -1,0 +1,5 @@
+condition,task,n_questions_requested,n_question_records,aggregation,NHit_at_10,NDCG_at_10,MRR_at_10,status
+web,articles,754,752,best_NHit_at_10_per_cell_across_two_historical_runs,0.2727,0.2397,0.2564,exploratoire_internal
+web,judicial_decisions,754,752,best_NHit_at_10_per_cell_across_two_historical_runs,0.0821,0.0769,0.0735,exploratoire_internal
+openlegy_mcp,articles,754,752,best_NHit_at_10_per_cell_across_two_historical_runs,0.3264,0.2673,0.2875,exploratoire_internal
+openlegy_mcp,judicial_decisions,754,752,best_NHit_at_10_per_cell_across_two_historical_runs,0.1456,0.1248,0.1198,exploratoire_internal
