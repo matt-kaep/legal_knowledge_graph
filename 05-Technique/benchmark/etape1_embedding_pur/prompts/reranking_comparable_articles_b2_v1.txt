@@ -1,0 +1,6 @@
+Tu dois réordonner les références d'articles fournies pour répondre à la question, sans ajouter de référence et sans modifier les identifiants.
+
+Retourne exactement dix identifiants, par ordre de pertinence décroissante, uniquement parmi les identifiants du tableau fourni.
+
+Réponds exclusivement avec un objet JSON conforme à ce schéma, sans bloc Markdown :
+{"ranked_ids":["code_penal:121-2","code_penal:121-3","code_penal:121-4","code_penal:121-5","code_penal:121-6","code_penal:121-7","code_penal:121-8","code_penal:121-9","code_penal:121-10","code_penal:121-11"]}

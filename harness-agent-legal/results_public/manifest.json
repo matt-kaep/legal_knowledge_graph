@@ -1,0 +1,42 @@
+{
+  "schema": "agentic_legal_public_aggregate_v1",
+  "status": "exploratoire_internal",
+  "benchmark": {
+    "scope": "French criminal-law retrieval; Articles and Judicial Decisions are separate tasks",
+    "questions_requested": 754,
+    "question_records_exported": 752,
+    "missing_records": 2,
+    "missing_records_cause": "historical filesystem filename-length failure; no score imputed"
+  },
+  "system": {
+    "model": "moonshotai/kimi-k2.6",
+    "provider": "OpenRouter",
+    "temperature": 0,
+    "maximum_references": 10,
+    "conditions": {
+      "web": "Brave Search through pi-web-access",
+      "openlegy_mcp": "OpenLegy / Legifrance MCP plus web access"
+    }
+  },
+  "aggregation": {
+    "historical_runs": 2,
+    "rule": "best observed NHit@10 per condition-task cell; NDCG@10 and MRR@10 from the same selected run",
+    "selection_scope": "historical evaluation outputs; not a train/CV selection"
+  },
+  "private_source_evidence": {
+    "handoff_sha256": "5f9525d89cf20113888cbfcf25ff14d2de1802915d3042ca79767f8225346dd8",
+    "baseline_summary_sha256": "f5c62b92c66f89ce7e80c2c874b4d29b9e8c61a9303ca05f107164443dde4dd6",
+    "per_question_manifest_sha256": "fb24fe94937b7b278e9301428e815000c92dd45fe604d8599b5fb087291e06fa",
+    "per_question_summary_sha256": "d2adc0dc0507ad7cbdaf2512d9796f3ab1dc0832e3030426652b73f8a010dfbb",
+    "historical_runner_sha256": "fc4779f42ea497352610dbbb642b1da98488521941b82caf2b9363dde7694ade",
+    "note": "Private files contain QIDs and ground-truth labels and are deliberately not versioned in this repository."
+  },
+  "public_artifacts": {
+    "aggregate_csv": "agentic_baseline_pool2runs.csv",
+    "aggregate_csv_sha256": "4c48156b98b89617b0efc5f768d40cd0a308d1244d3ef613f892c8fb9f56eefd"
+  },
+  "public_runner": {
+    "run_agents_py_sha256": "559efbe3fb7cc9c2ded6c05cad40962a86f5b3105ee4f9f3e30f9e42202d4d4e",
+    "difference_from_historical_runner": "Uses a deterministic hash-based artifact stem to avoid filename-length failures; scientific prompts and model settings are unchanged."
+  }
+}

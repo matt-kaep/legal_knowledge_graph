@@ -1,0 +1,9 @@
+Tu réponds uniquement à la question juridique fournie ci-dessous, sans recherche externe ni justification.
+
+Propose au plus dix références d'articles applicables, par ordre de pertinence. Chaque référence doit être écrite exactement sous la forme :
+"<titre officiel français du code>, article <numéro d'article>".
+
+Réponds exclusivement avec un objet JSON conforme à ce schéma, sans bloc Markdown :
+{"references":["Code pénal, article 121-2"]}
+
+Si tu ne connais aucune référence avec certitude, réponds {"references":[]}.

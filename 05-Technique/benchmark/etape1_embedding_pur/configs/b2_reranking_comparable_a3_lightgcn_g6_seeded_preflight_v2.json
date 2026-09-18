@@ -1,0 +1,87 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-lightgcn-g6-seeded-preflight-v2-2026-09-07",
+  "campaign_id": "b2-reranking-comparable-a3-lightgcn-g6-seeded-preflight-v2-2026-09-07",
+  "schema_version": "b2-comparable-reranking-lightgcn-g6-seeded-preflight.v2",
+  "experiment_id": "E029",
+  "status": "authorized_seeded_cpu_preflight_no_model_call",
+  "purpose": "Re-materialize only the full-text-compatible G6 LightGCN pools with the replay seed embedded in every record. This successor preserves the completed v1 preflight as immutable history and makes no model call.",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754,
+    "candidate_universe": {"articles": 13236, "jurisprudence": 114851}
+  },
+  "parent_preflight": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_lightgcn_g6_preflight_v1.json",
+    "manifest_sha256": "0e6ec4012c306a74d43f5869f4552b655b8a16e3d59c003f09c7eff6776e8120",
+    "receipt_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_fulltext_depths_a3_g6_v1_20260907/preflight_receipt.json",
+    "receipt_sha256": "b5b32784691016a8ba3fb927a0ea64320a8f9d06ae37ba2297087b1ce18188ce",
+    "reason_for_successor": "v1 correctly kept the three seeds in separate files, but its pool rows did not carry replay_seed. v2 keeps this dimension explicit in the immutable job payload."
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 256,
+    "max_input_tokens": 16128,
+    "tokenizer_counting": "exact apply_chat_template with add_generation_prompt=true; count input_ids, not the BatchEncoding mapping length"
+  },
+  "reranking_contract": {
+    "candidate_text_policy": "full_text_unmodified",
+    "truncation": "forbidden",
+    "overflow_behavior": "mark the condition model_incompatible_full_text and display --; never shorten, summarize or substitute candidate text",
+    "k_out": 10,
+    "questions_per_condition": 754,
+    "lightgcn_seed_policy": "each final replay seed is materialized, audited and later reranked independently; only the final metrics may be averaged arithmetically",
+    "compatible_conditions_per_seed": {
+      "article": [10, 20],
+      "jp": [10, 20, 30, 40, 50, 60, 70]
+    },
+    "incompatible_full_text": {
+      "article": [30, 40, 50, 60, 70, 80, 90, 100],
+      "jp": [80, 90, 100]
+    }
+  },
+  "frozen_sources": {
+    "lightgcn_g6_final_rankings": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_replay_v2_20260907/lightgcn_final/lightgcn_rankings_top100.parquet",
+      "sha256": "b1448dd5bfeda2438655dacdd5edb00445672d53a2f240a3f26f32879ee5a1fc",
+      "graph": "G6-citation-AA-knn5",
+      "replay_seeds": [42, 43, 44],
+      "article_method": "LightGCN-trained_K2",
+      "jurisprudence_method": "LightGCN-trained_K3"
+    },
+    "article_texts": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_all.parquet",
+      "sha256": "79ed64d48bbd066083d03ab7e8d8b728ed99975c9ba71cda8a98346c19025f6b"
+    },
+    "jurisprudence_texts": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summaries_penal.parquet",
+      "sha256": "e63e71cd7fea04b461bf67d85ed452f922f1967e5659e5082e7925f5c2bd810c"
+    }
+  },
+  "prompts": {
+    "article": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt", "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"},
+    "jp": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt", "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"}
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_fulltext_depths_a3_g6_seeded_v2_20260907",
+    "pool_pattern": "pools/lightgcn_{modality}_seed{seed}_k{k_in}.jsonl",
+    "audit_pattern": "fulltext_context_audit_lightgcn_g6_seed{seed}.json",
+    "receipt": "preflight_receipt.json"
+  },
+  "code_bundle": {
+    "pool_materializer": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/101_materialize_b2_reranking_pools.py", "sha256": "899666d2a291fbd335502dc1379675b2111e6ed65cb3ac2397383e1459124725"},
+    "reranking_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py", "sha256": "e03dd0bacdd0f6dbaf2f1791da9de7e027c8f652ff367e106600e9a14f12ddd7"},
+    "context_auditor": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_audit_b2_fulltext_context.py", "sha256": "39e17fd7e7b6c3a2bce774a294cd828e1c1495711fe2e94358ebb073c5565bb9"}
+  },
+  "execution_gate": {
+    "allowed": ["CPU-only materialization", "CPU-only token audit", "writing a new immutable receipt"],
+    "forbidden": ["any vLLM server or reranker model call", "truncation or substitution of candidate text", "merging replay seeds", "selection of graph, seed or retrieval configuration from evaluation"],
+    "next_gate": "Freeze a separate execution manifest after all 27 pool hashes and three audits have been checked."
+  },
+  "scientific_status": "exploratory_reranking_annex_preflight_only"
+}

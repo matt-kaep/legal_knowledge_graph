@@ -1,0 +1,39 @@
+{
+  "manifest_id": "b2-e030-llm-as-a-judge-a3-aggregation-audit-v1-2026-09-09",
+  "experiment_id": "E030",
+  "purpose": "Audit the frozen E030 v2 GPU70 shard outputs without converting invalid/error responses into scientific judgments or averaging incomplete LightGCN seeds.",
+  "execution_manifest": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_llm_as_judge_a3_execution_v2_gpu70.json",
+    "sha256": "7eb5d08758b3f833cfdb0f2c880066b8cbbe481cd2c252f20ed5582c8e3ea16f"
+  },
+  "aggregation_script": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/117_aggregate_b2_e030_audit.py",
+    "sha256": "09d2fb6d0d78100b67306177bf62998570bfe806b317e46c3fa4e13be23c21b9"
+  },
+  "remote_immutable_outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e030_a3_execution_v2_gpu70_20260909/aggregate_audit_v1",
+    "aggregation_receipt_sha256": "d6f3afa59efb9ec7ab04a0b5218d2ea9fc028b298efb60a6273484f7e471588a",
+    "per_shard_audit_sha256": "018acf30100187b75c419cea7d1614993966c97069ed3c0f9fb4c248fa8ee137",
+    "complete_clean_scores_sha256": "20514b0db028994a94f8258ca582cf8349badcc08a84fce37fbfe8e2f0ee0423"
+  },
+  "published_lightweight_exports": {
+    "root": "results/benchmark-a3-b1/e030-aggregation-audit-v1",
+    "per_shard_audit_sha256_lf": "0b9f8a8d31c4fa764ca878805949ae36e65111adc41f713f8d84ca7ed1803141",
+    "complete_clean_scores_sha256_lf": "462c3d3157df633c2be240cf9dd86434f943d19e81b8f77692188b6897f7eeeb",
+    "normalization": "CRLF source CSVs were normalized to LF for the tracked GitHub copies; source hashes remain in remote_immutable_outputs."
+  },
+  "audit_policy": {
+    "required_per_shard": ["jobs_sha256", "execution_manifest_sha256", "materialization_file_hashes", "754_questions", "fixed_10_positions", "unique_terminal_responses"],
+    "complete_clean": "all 7540 responses are status=ok",
+    "partial_technical": "any invalid or error response; score is not a usable judge result",
+    "lightgcn_seed_mean": "forbidden unless all three seeds are complete_clean for each modality"
+  },
+  "outcome": {
+    "shards_expected": 22,
+    "shards_complete_clean": 5,
+    "shards_partial_or_missing": 17,
+    "campaign_verdict": "incomplete_technical_failures",
+    "scientific_status": "exploratory_until_lawyer_audit",
+    "paper_status": "no E030 score is reportable"
+  }
+}

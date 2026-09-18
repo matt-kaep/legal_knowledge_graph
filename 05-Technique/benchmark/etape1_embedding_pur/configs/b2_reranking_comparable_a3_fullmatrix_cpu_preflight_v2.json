@@ -1,0 +1,89 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-fullmatrix-cpu-preflight-v2-2026-09-08",
+  "campaign_id": "b2-e029-reranking-comparable-a3-fullmatrix-v2-2026-09-08",
+  "schema_version": "b2-comparable-reranking-fullmatrix-cpu-preflight.v2",
+  "experiment_id": "E029",
+  "status": "authorized_cpu_pool_and_context_preflight_no_model_call",
+  "scientific_status": "exploratory_reranking_annex",
+  "purpose": "Build one homogeneous real-top-100 E029 pool matrix and audit exact Gemma chat-template context budgets before any model execution. The archived 42-condition E029 execution remains immutable and is not aggregated with this successor.",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754,
+    "candidate_universe": {"articles": 13236, "jurisprudence": 114851}
+  },
+  "model_for_context_audit": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 256,
+    "input_token_budget": 16128,
+    "tokenizer_requirement": "Download or load only the exact revision; hash tokenizer.json, tokenizer_config.json and chat_template.jinja before accepting this preflight."
+  },
+  "representation": {
+    "article": {"field": "texte", "policy": "complete_unmodified"},
+    "jp": {"field": "synthese", "policy": "complete_unmodified", "forbidden_fields": ["full_decision", "resume_avocat", "arguments"]},
+    "truncation": "forbidden",
+    "source_order_hidden_from_model": true,
+    "k_out": 10
+  },
+  "depth_grid": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+  "sources": {
+    "cosine": {
+      "ranking_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/cosine/rankings.parquet",
+      "ranking_sha256": "7de0504d5e7a7a7caef303d0beb8019c28faac7dec1f38997e581ca782597334",
+      "article": {"method": "B2-a", "selected_graph_version": null},
+      "jp": {"method": "B3-a", "selected_graph_version": null}
+    },
+    "ppr_g6": {
+      "article_ranking_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_final/ppr_rankings_top100.parquet",
+      "article_ranking_sha256": "8f15c4d3e1ba465af7030e24f0e78772cae776fe8f12f5020f578d600964a938",
+      "article": {"method": "PPR-sweep-k50-both-a0.5", "selected_graph_version": "G6-citation-AA-knn5"},
+      "jp_ranking_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_ppr_scoped_missing_replays_v2_20260908/ppr_rankings_top100.parquet",
+      "jp_ranking_sha256": "afd1aa5c70c618cd8b43248e91b14266fc5c72507cfc865553dd2cf04cbc14ec",
+      "jp": {
+        "method": "PPR-sweep-k20-both-a0.5",
+        "selected_graph_version": "G6-citation-AA-knn5",
+        "cv_champion_sha256": "8eee0902ed511720814bc17ac39ab8ffccde822b497a5f3c9f814d877847ed7a"
+      }
+    },
+    "lightgcn_g6": {
+      "ranking_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_g6_replay_v2_20260907/lightgcn_final/lightgcn_rankings_top100.parquet",
+      "ranking_sha256": "b1448dd5bfeda2438655dacdd5edb00445672d53a2f240a3f26f32879ee5a1fc",
+      "article": {"method": "LightGCN-trained_K2", "selected_graph_version": "G6-citation-AA-knn5", "replay_seeds": [42, 43, 44]},
+      "jp": {"method": "LightGCN-trained_K3", "selected_graph_version": "G6-citation-AA-knn5", "replay_seeds": [42, 43, 44]}
+    }
+  },
+  "text_sources": {
+    "article": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_all.parquet", "sha256": "79ed64d48bbd066083d03ab7e8d8b728ed99975c9ba71cda8a98346c19025f6b"},
+    "jp": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summaries_penal.parquet", "sha256": "e63e71cd7fea04b461bf67d85ed452f922f1967e5659e5082e7925f5c2bd810c"}
+  },
+  "expected_matrix": {
+    "cosine_conditions": 20,
+    "ppr_g6_conditions": 20,
+    "lightgcn_g6_conditions": 60,
+    "conditions": 100,
+    "questions_per_condition": 754,
+    "model_calls_if_all_conditions_are_context_compatible": 75400
+  },
+  "code_bundle": {
+    "pool_materializer": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/101_materialize_b2_reranking_pools.py", "sha256": "c02a48df1613dafc4cc687133c4ec4523ff8b3cd6e9f36f0e652a24c602cb988", "git_commit": "313e00aaab919ac71e36eaad0ad95fdb53536cc3"},
+    "context_auditor": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_audit_b2_fulltext_context.py", "sha256": "39e17fd7e7b6c3a2bce774a294cd828e1c1495711fe2e94358ebb073c5565bb9"},
+    "article_prompt": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt", "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"},
+    "jp_prompt": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt", "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"}
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_fullmatrix_cpu_preflight_v2_20260908",
+    "pool_pattern": "pools/{family}_{modality}_kin{k_in}{seed_suffix}.jsonl",
+    "context_audit": "fullmatrix_context_audit.json",
+    "receipt": "cpu_preflight_receipt.json"
+  },
+  "execution_gate": {
+    "allowed": ["hash-validate the listed inputs", "materialize only the listed real top-100 pools", "download/load the exact tokenizer revision", "count rendered prompts including the 256-token completion reserve", "write immutable pool and audit receipts"],
+    "forbidden": ["any reranker model call", "any text truncation", "fallback to another graph or seed", "mixing archived E029 responses with this successor", "using E029 outputs to select a method, graph, seed or depth"],
+    "next_gate": "A new GPU execution manifest may name only complete, hash-validated conditions with zero prompt overflows. If any requested condition overflows, stop and report it without changing representation."
+  }
+}

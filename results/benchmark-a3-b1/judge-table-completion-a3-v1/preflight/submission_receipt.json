@@ -1,0 +1,47 @@
+{
+  "manifest_sha256": "a22c65803bf1cb39a9992f563746b6fb26f564e7fc1fc0a704ebab789bd404ee",
+  "smoke_receipt_sha256": "e86576ecca38f21d4266400459552d31b14582457f6968df0ceaa85b31170e77",
+  "jobs": [
+    {
+      "condition": "cosine-jp",
+      "job_id": "992279",
+      "port": 18501,
+      "jobs_sha256": "9041b54c0b9b1a122e212d9894d62bd5e7cda38b35ffbe79a2fbd062e20b73e8"
+    },
+    {
+      "condition": "lightgcn-seed42-article",
+      "job_id": "992280",
+      "port": 18502,
+      "jobs_sha256": "22b581718f3561cbb9432cfad14e218584720113a3fef6e5652d8086e410aad2"
+    },
+    {
+      "condition": "lightgcn-seed42-jp",
+      "job_id": "992281",
+      "port": 18503,
+      "jobs_sha256": "7e6552e45b7c976567cff966912249855c8a9194ef255a7636559264aad9b0c9"
+    },
+    {
+      "condition": "ppr-article",
+      "job_id": "992282",
+      "port": 18504,
+      "jobs_sha256": "3c660bf33ea19f99371e74fdaf5e3fc90b4c9de66264a7ddbdcc8ff6ccb9c652"
+    },
+    {
+      "condition": "ppr-g6-jp",
+      "job_id": "992283",
+      "port": 18505,
+      "jobs_sha256": "157276e1e60f23c5ece857e9c50447944eb6456e0fad5f70519eb4fb4560684b"
+    },
+    {
+      "condition": "ppr-jp",
+      "job_id": "992284",
+      "port": 18506,
+      "jobs_sha256": "f367366039f99c08a9763d73029c079db1e81039604739ce289cace82f883eed"
+    }
+  ],
+  "aggregation_job": "992285",
+  "aggregation_script_sha256": "81516870560fde177059201d3176f311c8194e888233ee38aa1c12383a0af8ec",
+  "output": "/home/ids/kaeppelin-22/legal_knowledge_graph_e030_v3/results/benchmark-a3-b1/judge-table-completion-a3-v1/final",
+  "submission_script_sha256": "cfac4a386519390187883d47765ac04640f497180c53a1f52962385ee573318c",
+  "status": "submitted_no_new_scores"
+}

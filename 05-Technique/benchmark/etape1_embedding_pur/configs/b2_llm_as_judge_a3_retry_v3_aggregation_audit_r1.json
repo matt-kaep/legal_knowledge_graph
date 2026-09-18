@@ -1,0 +1,38 @@
+{
+  "manifest_id": "b2-e030-llm-as-a-judge-a3-retry-v3-aggregation-audit-r1-2026-09-10",
+  "experiment_id": "E030",
+  "purpose": "Materialize and audit the 17 completed E030 r6 retries without reusing any E030 v2 score.",
+  "execution_manifest": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_llm_as_judge_a3_retry_v3_preflight_r6.json",
+    "sha256": "b4bb39dcbfff639f3c2cc5a3aecc637f2ff6475c6f1e17dcf61a91a6472746cd",
+    "retry_shards": 17,
+    "archived_v2_complete_clean_diagnostic_only": 5
+  },
+  "code_bundle": {
+    "materialization_adapter": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/122_materialize_b2_e030_retry_v3.py",
+      "sha256": "1aaf27f0e37c562dc26724c2f076aaa6d5e39be5623724a6c266bfd0293dfcb9"
+    },
+    "aggregation_auditor": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/123_aggregate_b2_e030_retry_v3.py",
+      "sha256": "34136939cbf388a7baefa96ff1ecf1cae7c5b99b1add2bbdbf25258af2d4dd59"
+    }
+  },
+  "inputs": {
+    "response_statuses_allowed": ["ok", "zero_slot"],
+    "forbidden_response_statuses": ["invalid", "error"],
+    "questions_per_shard": 754,
+    "positions_per_question": 10,
+    "frozen_zero_slot_rule": "zero_slot must match exactly a frozen zero_slot job and receives non_jugeable gain 0"
+  },
+  "outputs": {
+    "remote_root": "doctrine_v3plus_bench/_campaign_b2_e030_a3_retry_v3_r6_20260909/aggregate_audit_r1",
+    "immutable": true
+  },
+  "aggregation_policy": {
+    "reuse_v2_scores": false,
+    "audit_global_conditions": 22,
+    "lightgcn_seed_mean": "allowed only for a modality with clean seeds 42;43;44 in this retry",
+    "scientific_status": "exploratory_until_lawyer_audit"
+  }
+}

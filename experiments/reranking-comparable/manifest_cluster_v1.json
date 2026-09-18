@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "experiment_id": "E021-reranking-comparable-v1-cluster-2026-08-18",
+  "parent_manifest": "experiments/reranking-comparable/manifest.json",
+  "status": "prepared_cluster_model_frozen_not_executed",
+  "scientific_status": "exploratory_not_executed",
+  "purpose": "Apply one frozen reranker to three independently materialized real JP pools.",
+  "dataset_split": "eval_rich_retrievable_strict",
+  "dataset_status": "already_consulted_internal_evaluation",
+  "questions": 754,
+  "k_in": 20,
+  "k_out": 10,
+  "candidate_families": ["cosine_bge_m3", "ppr", "lightgcn"],
+  "reranker": {
+    "provider": "vllm_openai_compatible",
+    "model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "model_revision": "3a7dcb639a4e7b230a0491ab4fa6fac081284d37",
+    "model_path_resolution": "LKG_RERANKER_MODEL",
+    "temperature": 0,
+    "prompt": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_v1.txt",
+    "prompt_sha256": "15654e1e545d3f7613b5d831382ab8d9dc6c9a88de5d240d60bf91d2951c7db0",
+    "parser": "strict_json_distinct_ids",
+    "tie_break": "candidate_input_order",
+    "retry_policy": "one_retry_only_same_input_and_parameters"
+  },
+  "runner": {
+    "materializer": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/69_materialize_e021_pools.py",
+      "sha256": "dd3550d8d0b3cc64e78d7bea259d55e2544dab144bd93eeed9844cd7a6238f72"
+    },
+    "executor": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/68_run_e021_reranking.py",
+      "sha256": "3a7c5da2976ec2f8658f87dc32640ff68235bef790468a9928d6037ab5220013"
+    }
+  },
+  "candidate_pool_contract": {
+    "source_must_be_real": true,
+    "same_questions": true,
+    "same_k_in": true,
+    "same_k_out": true,
+    "no_synthetic_or_cross_family_pool": true,
+    "required_input_sha256_per_question": true
+  },
+  "metrics": {
+    "articles": ["recall_at_10", "ndcg_at_10", "mrr_at_10"],
+    "jp": ["official_hit_at_10", "ndcg_at_10", "mrr_at_10"],
+    "exact_any_gold_at_10": "diagnostic_only_not_official_hit"
+  },
+  "resume_contract": {
+    "unit": "family/question",
+    "output": "one_jsonl_record_with_input_hash_and_response_hash",
+    "rerun_policy": "resume_only_missing_or_invalid_records"
+  },
+  "planned_calls": 2262,
+  "cost_note": "Estimate tokens and wall time after a measured 10-question pilot; no provider price is assumed.",
+  "outputs": {
+    "jobs": "results/reranking-comparable/E021-cluster-v1/jobs.jsonl",
+    "responses": "results/reranking-comparable/E021-cluster-v1/responses.jsonl",
+    "metrics": "results/reranking-comparable/E021-cluster-v1/metrics.json",
+    "audit": "results/reranking-comparable/E021-cluster-v1/audit.json"
+  }
+}

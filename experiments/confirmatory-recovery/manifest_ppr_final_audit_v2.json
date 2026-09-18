@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "experiment_id": "E022-ppr-final-audit-v2-2026-09-01",
+  "parent_manifest": "experiments/confirmatory-recovery/manifest_ppr_final_audit_v1.json",
+  "parent_manifest_sha256": "738409b1f338fd6f9bb805a3b2d080ee9194dce7d343f3a5a4868fe4bdd7d21a",
+  "status": "prepared_after_v1_audit_rejection",
+  "scientific_status": "internal_evaluation_results_pending_audit",
+  "purpose": "Validate immutable PPR final rankings without replaying PPR. Prove each historical summary at its stored top-20 depth and materialize the protocol-required top-10 metrics from the same rankings.",
+  "campaign_manifest": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2_repro_v1_cluster_node_runtime_v2.json",
+  "campaign_manifest_sha256_canonical": "0d3b38445cf79aa895dd0bb2bc3ba2199dfc8c903235a8522880feb50833671f",
+  "ppr_final_root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_final_grouped_v2",
+  "audit_output": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/ppr_final_audit_v2/audit.json",
+  "accepted_result_manifest_sha256s": [
+    "3787811ba0877278522db54bcccd6efdd6aa1b2d66132541f64a362cc5681c18",
+    "0d3b38445cf79aa895dd0bb2bc3ba2199dfc8c903235a8522880feb50833671f"
+  ],
+  "accepted_result_manifest_provenance": [
+    {
+      "canonical_sha256": "3787811ba0877278522db54bcccd6efdd6aa1b2d66132541f64a362cc5681c18",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2_repro_v1_cluster_node_runtime.json",
+      "file_sha256": "338de69003e4fdd566a8b3ee253bf8f701251479ca302f9bb542197a9ae720b5",
+      "graphs": ["G1"]
+    },
+    {
+      "canonical_sha256": "0d3b38445cf79aa895dd0bb2bc3ba2199dfc8c903235a8522880feb50833671f",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_grouped_v2_repro_v1_cluster_node_runtime_v2.json",
+      "file_sha256": "9caf8d5fc84c2917c8e7b7390fd62598a1c38eebf62829c28826a4c467fac840",
+      "graphs": [
+        "G6-citation-AA-knn5",
+        "G6-citation-JJ-knn5",
+        "G7-citation-AA-cit1-sem025-knn5",
+        "G7-citation-AA-cit1-sem050-knn5",
+        "G7-citation-AA-cit1-sem100-knn5",
+        "G7-citation-AA-cit025-sem1-knn5",
+        "G7-citation-JJ-cit1-sem025-knn5",
+        "G7-citation-JJ-cit1-sem050-knn5",
+        "G7-citation-JJ-cit1-sem100-knn5",
+        "G7-citation-JJ-cit025-sem1-knn5"
+      ]
+    }
+  ],
+  "selection_contract": {
+    "source": "existing _cv_grouped_v2 PPR champions",
+    "training_split": "train_augmented_retrievable_strict",
+    "selection_questions": 5603,
+    "folds": 5,
+    "new_hyperparameter_selection": false,
+    "families": ["ppr"],
+    "graph_count": 11
+  },
+  "audit_contract": {
+    "evaluation_split": "eval_rich_retrievable_strict",
+    "evaluation_questions": 754,
+    "reported_metrics_k": 10,
+    "historical_summary_metrics_k": 20,
+    "metric_duplicate_policy": "official metrics deduplicate ranked item IDs while retaining their first raw position",
+    "verify_rankings": true,
+    "verify_summary_metrics": true,
+    "verify_file_sha256": true,
+    "overwrite_historical_outputs": false,
+    "rerun_ppr": false
+  },
+  "cluster": {
+    "partition": "CPU",
+    "cpus_per_task": 2,
+    "memory": "12G",
+    "time_limit": "00:30:00",
+    "gpu_required": false
+  },
+  "scripts": {
+    "audit": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/71_audit_ppr_final_recovery.py",
+      "sha256": "9a1888b15a4880eff88793012a4f4bea7b7d1b7d4ca267bc9bfd2191c359b931"
+    },
+    "batch": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/sbatch_ppr_final_audit.sh",
+      "sha256": "596045de7916e7aefa9336b2fcc01f5eeb29120e68b05d315c82fa3cf317b71c"
+    }
+  }
+}

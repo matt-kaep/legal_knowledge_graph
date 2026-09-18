@@ -1,0 +1,231 @@
+{
+  "manifest_id": "checkpoint-a3-effective-retrieval-universe-2026-09-02",
+  "schema_version": "checkpoint-a3-retrieval-universe.v1",
+  "status": "checkpoint_a3_complete_no_full_campaign",
+  "purpose": "Seal the common graph-backed and representation-backed retrieval candidates before any A3 full campaign.",
+  "predecessor": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_candidate_coverage_v2.json",
+    "sha256": "784928dd9a88670bf09ae3cc4cfc061629bd9ca5190d1d564d93d61d6bd56555",
+    "immutable": true
+  },
+  "main_protocol_graphs": [
+    "G1",
+    "G6-citation-AA-knn5",
+    "G6-citation-JJ-knn5",
+    "G7-citation-AA-cit1-sem025-knn5",
+    "G7-citation-AA-cit1-sem050-knn5",
+    "G7-citation-AA-cit1-sem100-knn5",
+    "G7-citation-AA-cit025-sem1-knn5",
+    "G7-citation-JJ-cit1-sem025-knn5",
+    "G7-citation-JJ-cit1-sem050-knn5",
+    "G7-citation-JJ-cit1-sem100-knn5",
+    "G7-citation-JJ-cit025-sem1-knn5"
+  ],
+  "datasets": {
+    "train": {
+      "split": "train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/bench_global.json",
+      "questions": 5578,
+      "sha256": "5ca7f54b944456cb318c028978c35430571b302785d2581348a35db81f8285f5",
+      "question_ids_sha256": "5fcaa3dfc259b53d9186a6f4a7f4ad0dda4955fa357ed2456c4140e23e75d12b",
+      "question_embeddings_sha256": "d33f8734fee9cd23a464ef8933278e392c8304daad246897fdd5b6f6d8be1634",
+      "stats_sha256": "f391d6d2f1f450256e89b7bc22294f5199a9084bf8bcdc9bf5fa13ef3654ccdb"
+    },
+    "evaluation": {
+      "split": "eval_rich_retrievable_strict",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+      "questions": 754,
+      "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+      "byte_for_byte_identical_to_a2": true
+    }
+  },
+  "grouped_folds": {
+    "protocol_version": "grouped_v5_no_eval_overlap_effective_retrieval_v3",
+    "seed": 42,
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v5_no_eval_overlap_effective_retrieval_v3/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/fold_assignments.csv",
+    "sha256": "cc872759b5cc2f93aceb54ac2ac5c5c396e236e7198982f720978e82b3920f59",
+    "metadata_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_protocol/grouped_v5_no_eval_overlap_effective_retrieval_v3/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/fold_metadata.json",
+    "metadata_sha256": "ace15f32d7c4d3cf0c592dbec1512a94aa9fcbfa20d0ef77bd5a8bbb5888690e",
+    "fold_question_counts": {
+      "0": 1116,
+      "1": 1115,
+      "2": 1116,
+      "3": 1115,
+      "4": 1116
+    },
+    "provenance_groups_crossing_folds": 0,
+    "normalized_text_groups_crossing_folds": 0
+  },
+  "candidate_universes": {
+    "graph_node_universe": {
+      "definition": "All structural nodes in the reference hybrid graph; they remain available for propagation.",
+      "articles": {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy",
+        "sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a",
+        "unique_ids": 23859,
+        "stable_unique_sequence_sha256": "dee67f7672a6159a429a4f8a153b1980dcd1dc5490b48a3dae18033ad05eacfe"
+      },
+      "jurisprudence": {
+        "path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy",
+        "sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f",
+        "raw_rows": 117374,
+        "unique_ids": 115304,
+        "duplicate_rows": 2070,
+        "stable_unique_sequence_sha256": "ea4d4e62b9a22b1f942aefc0d263d6417e72072a16289c8a80173b74d7b2eb9a"
+      }
+    },
+    "retrieval_candidate_universe": {
+      "definition": "Stable representation order intersected with the reference graph, then deduplicated by first occurrence.",
+      "ranking_rule": "Cosine, PPR, and LightGCN may return only these identifiers.",
+      "articles": {
+        "representation_order_path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_order_all.npy",
+        "representation_order_sha256": "06f5551d6a38f8f7887d760461b7f7460b2e738e062a8bed4b9c598b34c0fbb0",
+        "representation_embeddings_path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_articles_all.npy",
+        "representation_embeddings_sha256": "9d10884944d7184aeeb95d64dfec79bc97044c3364c6e40ee60e940f61c1c944",
+        "representation_unique_ids": 31357,
+        "unique_ids": 13236,
+        "excluded_representation_only_ids": 18121,
+        "stable_unique_sequence_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c"
+      },
+      "jurisprudence": {
+        "representation_order_path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summary_order.npy",
+        "representation_order_sha256": "985e83bfbee610117fcf8873b8a58eb61ffd1e35bf1423f95985a375a3012c5b",
+        "representation_embeddings_path": "05-Technique/benchmark/etape1_embedding_pur/data/emb_jp_synthese.npy",
+        "representation_embeddings_sha256": "1f7eb3f6723c956d745dbdfc851730eba8af37a3dfea06c8354d191f433eead9",
+        "representation_unique_ids": 115588,
+        "unique_ids": 114851,
+        "excluded_representation_only_ids": 737,
+        "stable_unique_sequence_sha256": "065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a"
+      }
+    },
+    "auxiliary_non_returnable_nodes": {
+      "definition": "Reference graph nodes absent from the retrieval candidate universe; they may propagate information but cannot be ranked.",
+      "articles": {
+        "unique_ids": 10623,
+        "stable_unique_sequence_sha256": "4482b182e884ca5dbc4b2260d9a0f41ec30a0ad75a14ac3ef12d39275a93f7cb"
+      },
+      "jurisprudence": {
+        "unique_ids": 453,
+        "stable_unique_sequence_sha256": "a4949731f223e4967d009212f56d2cbaf10c2548890ecf4a13953876ba9b45c2"
+      }
+    }
+  },
+  "label_checks": {
+    "strict_articles_absent_train": 0,
+    "strict_jurisprudence_absent_train": 0,
+    "strict_articles_absent_evaluation": 0,
+    "strict_jurisprudence_absent_evaluation": 0,
+    "lightgcn_extended_article_positive_projection": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3/lightgcn_article_positive_projection.json",
+      "sha256": "54fe65d633234be1854ad99d2ff016c79858f1f4d5cb141197da922cdaa0545a",
+      "extended_label_occurrences": 51137,
+      "extended_labels_present": 46606,
+      "extended_labels_absent_explicitly": 4531,
+      "questions_with_absent_extended_labels": 2006,
+      "questions_without_retrievable_positive": 0
+    }
+  },
+  "a3_snapshot_manifest": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/effective_retrieval_universe_freeze_a3.json",
+    "sha256": "92af5d04ef2cfea473bf37d187570ebb890b7d4537c49ecae72c800e13456a6b"
+  },
+  "code_contract": {
+    "retrieval_candidate_universe": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/etape1/retrieval_candidate_universe.py",
+      "sha256": "6c0c6a22f03bc6507d32946feda8f19b468868b05dba9301901df2de754c6a77"
+    },
+    "graph_versions": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/etape1/graph_versions.py",
+      "sha256": "c96b7cc7b0a3dc32aacca40ca8831731ad9ca54ba2b131f50b6663486859783b"
+    },
+    "candidate_label_guards": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/benchmark_labels.py",
+      "sha256": "9d8d6d8a5203fe728cc220c3d4c506f2b4d2eafc57a2658e547bf0bbd213d2f4"
+    },
+    "protocol_registry": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/graph_protocol.py",
+      "sha256": "2d254890dfabeeb8952e251b4112be60f96a5d4f60cf9358c7e624978a35e336"
+    },
+    "cosine": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/26_eval_doctrine_v3plus_m1_m2.py",
+      "sha256": "2cd4607494207bb0dccfa267fae7a9136215f25e20f6ff058cdae3833ccb82b8"
+    },
+    "ppr": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/25_ppr_kin_sweep.py",
+      "sha256": "b998b384f6cf5dcc0fee7a944d97034d5e2f5e515d2fc4b034b4479c2399a47e"
+    },
+    "lightgcn": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/32_lightgcn_strict.py",
+      "sha256": "886a682e8118c35d795901d39cb4cb3dd8b19f0ea5ca018e4a4f8fa9e0725661"
+    },
+    "fold_generator": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/41_make_kfold_assignments.py",
+      "sha256": "d7cc243867768b76bf5ef9a6b74c833916087840e0820222226ded5dae5943ef"
+    },
+    "cv_ppr": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/43_run_cv_ppr.py",
+      "sha256": "3acef2e7a73303693802875d392437109a9f0fca0c4c8090c79f7ab99ac255d3"
+    },
+    "cv_lightgcn": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/44_run_cv_lightgcn.py",
+      "sha256": "634b90d84ae564d56ecb9ba1acc409eaa9d551f60bc1c95a90f14df996044ee0"
+    },
+    "a3_snapshot_generator": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/93_freeze_effective_retrieval_universe.py",
+      "sha256": "c5bc3653df53ac05d063190212d0062c03e98a50382ab5474b8a783778fcf7eb"
+    }
+  },
+  "verification": {
+    "full_test_suite": {
+      "command": "LKG_REPO=<repository> LKG_DATA_ROOT=<data-root> python -m pytest -q 05-Technique/benchmark/etape1_embedding_pur/tests",
+      "result": "295 passed",
+      "duration_seconds": 16.0,
+      "completed_at": "2026-09-02",
+      "scope": "full benchmark test suite; historical manifests remain immutable and detect code drift"
+    },
+    "all_eleven_graphs": {
+      "graphs_verified": 11,
+      "articles": 13236,
+      "jurisprudence": 114851,
+      "article_sequence_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c",
+      "jurisprudence_sequence_sha256": "065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a"
+    },
+    "smoke_tests": {
+      "scientific_status": "technical_smoke_only_not_reportable_metric",
+      "graph": "G6-citation-AA-knn5",
+      "cosine": {
+        "questions": 2,
+        "ranking_rows": 381,
+        "ranking_sha256": "8163e01485e58b96437b179f9ca18da5ebbc71de0a18afc0fe0e94625bcaf55d",
+        "outside_official_universe": 0,
+        "duplicate_ranking_rows": 0
+      },
+      "ppr": {
+        "questions": 2,
+        "configuration": "K_in=10, seed=both, alpha=0.5",
+        "ranking_rows": 40,
+        "ranking_sha256": "ac226a45376d463f4edbda35e2e9100065e5fc38942121ba54649129c05c4de0",
+        "outside_official_universe": 0,
+        "duplicate_ranking_rows": 0
+      },
+      "lightgcn": {
+        "fold": 0,
+        "train_questions_executed": 2,
+        "validation_questions_executed": 2,
+        "epochs": 1,
+        "ranking_rows": 40,
+        "ranking_sha256": "35b7c1c6e98d99a0774cf38e751de02020c9938662ead1b3be7d1007da0d2bf5",
+        "outside_official_universe": 0,
+        "duplicate_ranking_rows": 0
+      }
+    }
+  },
+  "archived_invalid_attempt": {
+    "status": "invalid_not_used",
+    "reason": "The first A3 generator used the representation order without intersecting it with graph nodes, yielding 31357 articles and 115588 decisions instead of the approved universe.",
+    "archive_directory": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_invalid_attempts/train_augmented_retrievable_strict_no_eval_overlap_effective_retrieval_v3_raw_representation_20260902",
+    "manifest_sha256": "7a3637f5953e160f1f9eb963039e8b53bf2faff301d93c831db3f5c91c8908e6",
+    "projection_sha256": "39e28e02b32cecbf56caff4154c44bb4b617382eb17b6c7227a7ad0553ea1784"
+  },
+  "next_authorized_work": "E024-E030 remain blocked until this Checkpoint A3 is reviewed; no full model campaign has been launched."
+}

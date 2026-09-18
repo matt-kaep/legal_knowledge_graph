@@ -1,0 +1,129 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-fulltext-v1-2026-09-07",
+  "campaign_id": "b2-reranking-comparable-a3-fulltext-v1-2026-09-07",
+  "schema_version": "b2-comparable-reranking-fulltext.v1",
+  "experiment_id": "E029",
+  "status": "context_validated_waiting_for_g6_final",
+  "purpose": "Comparable LLM reranking on real frozen Cosine/PPR pools with unmodified full candidate texts. This manifest freezes only conditions that fit the exact model chat-template context; it authorizes no model call before the complete G6 final path.",
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_questions": 754,
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "candidate_universe": {
+      "articles": 13236,
+      "jurisprudence": 114851
+    }
+  },
+  "parent_preflight": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_preflight_v1.json",
+    "sha256": "debfff6ff4a63440b7013671a2a49f9fc390a498f9201fc649e62edd39349984",
+    "status": "archived_blocked_no_model_call"
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 256,
+    "max_input_tokens": 16128,
+    "tokenizer_counting": "exact apply_chat_template with add_generation_prompt=true; count input_ids, not the BatchEncoding mapping length"
+  },
+  "full_text_policy": {
+    "candidate_text": "full_text_unmodified",
+    "truncation": "forbidden",
+    "overflow_behavior": "mark the family/modality/K_in cell as model_incompatible_full_text and display --; never shorten, summarize or substitute a candidate text",
+    "k_out": 10,
+    "k_in_sweep": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+    "questions_per_condition": 754,
+    "ranking_rule": "The LLM may output only ordered identifiers from the supplied frozen pool. Unknown, duplicate or malformed identifiers are handled deterministically by the runner and cannot introduce an outside candidate."
+  },
+  "frozen_sources": {
+    "cosine_ranking_top100": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/cosine/rankings.parquet",
+      "sha256": "7de0504d5e7a7a7caef303d0beb8019c28faac7dec1f38997e581ca782597334",
+      "article_method": "B2-a",
+      "jurisprudence_method": "B3-a"
+    },
+    "ppr_ranking_top100": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_final/ppr_rankings_top100.parquet",
+      "sha256": "8f15c4d3e1ba465af7030e24f0e78772cae776fe8f12f5020f578d600964a938",
+      "method": "PPR-sweep-k50-both-a0.5"
+    },
+    "article_texts": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_all.parquet",
+      "sha256": "79ed64d48bbd066083d03ab7e8d8b728ed99975c9ba71cda8a98346c19025f6b"
+    },
+    "jurisprudence_texts": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summaries_penal.parquet",
+      "sha256": "e63e71cd7fea04b461bf67d85ed452f922f1967e5659e5082e7925f5c2bd810c"
+    }
+  },
+  "context_audit": {
+    "invalid_archive_v3": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_fulltext_depths_a3_20260907/fulltext_context_audit_v3.json",
+      "sha256": "ed6498aae2f985c018422e3b7dfc5b775a90f7607707e76b1123d4d581049e9b",
+      "invalid_reason": "The former counter used len(BatchEncoding)=2 instead of len(input_ids); no compatibility conclusion may use this artifact."
+    },
+    "validated_v4": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_fulltext_depths_a3_20260907/fulltext_context_audit_v4.json",
+      "sha256": "91361409505268feb71557241a507d2cbeeb6e63db4f988325995ec5aea31170",
+      "slurm_job": "984753",
+      "exit_code": "0:0",
+      "conditions": 40,
+      "questions_per_condition": 754,
+      "candidate_text_policy": "full_text_unmodified",
+      "input_tokens_observed_min": 2588,
+      "input_tokens_observed_max": 91714
+    }
+  },
+  "condition_matrix": {
+    "compatible": [
+      {"family": "cosine", "modality": "jp", "k_in": 10, "max_input_tokens": 2588},
+      {"family": "cosine", "modality": "jp", "k_in": 20, "max_input_tokens": 4690},
+      {"family": "cosine", "modality": "jp", "k_in": 30, "max_input_tokens": 6674},
+      {"family": "cosine", "modality": "jp", "k_in": 40, "max_input_tokens": 8724},
+      {"family": "cosine", "modality": "jp", "k_in": 50, "max_input_tokens": 10666},
+      {"family": "cosine", "modality": "jp", "k_in": 60, "max_input_tokens": 12616},
+      {"family": "cosine", "modality": "jp", "k_in": 70, "max_input_tokens": 14412},
+      {"family": "ppr", "modality": "article", "k_in": 10, "max_input_tokens": 12592},
+      {"family": "ppr", "modality": "jp", "k_in": 10, "max_input_tokens": 2821},
+      {"family": "ppr", "modality": "jp", "k_in": 20, "max_input_tokens": 4839},
+      {"family": "ppr", "modality": "jp", "k_in": 30, "max_input_tokens": 6765},
+      {"family": "ppr", "modality": "jp", "k_in": 40, "max_input_tokens": 8760},
+      {"family": "ppr", "modality": "jp", "k_in": 50, "max_input_tokens": 10666},
+      {"family": "ppr", "modality": "jp", "k_in": 60, "max_input_tokens": 12522},
+      {"family": "ppr", "modality": "jp", "k_in": 70, "max_input_tokens": 14398}
+    ],
+    "incompatible_full_text": {
+      "cosine_article_k_in": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+      "cosine_jp_k_in": [80, 90, 100],
+      "ppr_article_k_in": [20, 30, 40, 50, 60, 70, 80, 90, 100],
+      "ppr_jp_k_in": [80, 90, 100]
+    }
+  },
+  "execution_gate": {
+    "before_model_calls": [
+      "validate all 120 G6 CV receipts",
+      "select G6 configurations on train/CV only",
+      "hash a G6 freeze before evaluation",
+      "complete and validate three G6 final replays"
+    ],
+    "allowed_after_gate": "Prepare and run only the 15 compatible E029 conditions from this matrix. All other cells remain --.",
+    "forbidden": ["E029 model calls before the G6 gate", "silent text truncation", "using E029 to select G6", "mixing E029 with E027 direct LLM or E030 LLM-as-a-Judge"]
+  },
+  "outputs": {
+    "rankings": "top-10 ordered results, with complete frozen-pool and response hashes",
+    "metrics": ["normalized_hit_at_10", "ndcg_at_10", "mrr_at_10"],
+    "tables": "Articles and jurisprudence separate; incompatible full-text cells are --; no aggregate hides missing cells.",
+    "scientific_status": "exploratory_reranking_annex"
+  },
+  "code_bundle": {
+    "pool_materializer": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/101_materialize_b2_reranking_pools.py", "sha256": "42bf7864600be85b448c2733a6b78787b4ee357a455dc429fe8c65b1581e88fe"},
+    "reranking_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py", "sha256": "63abb548c0391d9ab1b6c0bc188c4124ff901d90335965a0c52cabf34f9cc5d7"},
+    "context_auditor": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_audit_b2_fulltext_context.py", "sha256": "39e17fd7e7b6c3a2bce774a294cd828e1c1495711fe2e94358ebb073c5565bb9"},
+    "article_prompt": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt", "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"},
+    "jp_prompt": {"path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt", "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"}
+  }
+}

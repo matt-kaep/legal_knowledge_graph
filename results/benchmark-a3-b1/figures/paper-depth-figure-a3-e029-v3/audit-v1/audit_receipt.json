@@ -1,0 +1,69 @@
+{
+  "schema_version": "paper-depth-figure-audit.v1",
+  "audit_date": "2026-09-09",
+  "scope": "Read-only audit of the existing A3/E029 v3 figure; no model, retrieval, training, selection, or E030 work was run.",
+  "figure_root": "results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3",
+  "figure_manifest_sha256": "3954b06f9d383de21da7788993a6a16a7a68e5e48dad71195375e3466fb02f75",
+  "files": {
+    "pdf": {
+      "path": "paper_depth_figure.pdf",
+      "sha256": "e7f77012c544163e35c433c6c381650333744e13ea54561bec7f818cb87b61e2",
+      "format": "one-page vector PDF",
+      "layout": "2x2 panels"
+    },
+    "png": {
+      "path": "paper_depth_figure.png",
+      "sha256": "b5968ad16af04f68e49edc40751b70be9a9a9c9bd03d827e0bb7a2d6a26ea112",
+      "pixels": [2400, 1500],
+      "dpi": 320
+    },
+    "retrieval_tidy_csv": {
+      "path": "retrieval_depth_tidy.csv",
+      "sha256": "47693fd68e9573470d9edbd2d5e61d70f3b2b4b356011c47a3b4ef945e5d3c4b",
+      "rows": 600,
+      "coverage": "2 tasks x 3 methods x K=1..100"
+    },
+    "reranking_tidy_csv": {
+      "path": "reranking_depth_tidy.csv",
+      "sha256": "27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162",
+      "rows": 42,
+      "coverage": "2 tasks x 3 methods x K_in=10,20,30,40,50,60,70; K_out=10"
+    }
+  },
+  "sources": {
+    "a3_evaluation_questions": 754,
+    "retrieval": {
+      "r5_depth_curves_sha256": "c188b2faabf6951c761b587fbfb73aef07b9bd79da791dd9dfffc319e3e52b93",
+      "lightgcn_g6_depth_curves_sha256": "98f7db2e44a4ab8ce82f334e23d21e09dcaa366b727f7e6b62fb13d2a45e614d",
+      "ppr_g6_jp_scoped_depth_curves_sha256": "c3ce0b6e26d038aba5913c4bbd64dc0dc9e270869a08716ddbadc7b3ae8f09e1"
+    },
+    "reranking": {
+      "execution_manifest": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_output512_execution_v2.json",
+      "execution_manifest_sha256": "c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586",
+      "per_seed_exact_metrics_sha256": "7ba99db5b979c56b8685e6bb231231820716b4c8d6f70e9edd7daa77f4f9b8d6",
+      "seed_mean_exact_metrics_sha256": "2fdf5016be10bd2d7116e0f5f02ec78907ae81b18ecd5ed33655a6de055c0a04",
+      "output_256_used": false
+    }
+  },
+  "provenance_checks": {
+    "retrieval_jp_ppr_label": "PPR G7-AA",
+    "retrieval_jp_ppr_nhit_at_10": 0.230659,
+    "reranking_jp_ppr_label": "PPR G6-AA",
+    "reranking_jp_ppr_retriever_nhit_at_10": 0.22822723253757737,
+    "reranking_jp_ppr_k_in_70_nhit_at_10": 0.308576,
+    "reranking_curve_is_not_ppr_g7": true
+  },
+  "k_in_70_nhit_at_10": {
+    "statutory_articles": {"cosine": 0.569968, "ppr_g6_aa": 0.665781, "lightgcn_g6_seed_mean": 0.653859},
+    "judicial_decisions": {"cosine": 0.298187, "ppr_g6_aa": 0.308576, "lightgcn_g6_seed_mean": 0.328534}
+  },
+  "visual_checks": {
+    "english_titles_and_legend": true,
+    "stable_colors": {"cosine": "#0072B2", "ppr": "#E69F00", "lightgcn": "#009E73"},
+    "solid_reranking_dashed_retriever_baseline": true,
+    "error_bars_or_intervals": false,
+    "direct_llm_present": false,
+    "visual_render_reviewed": true
+  },
+  "scientific_status": "A3 retrieval is internal evaluation after train/CV freeze; E029 reranking is exploratory."
+}

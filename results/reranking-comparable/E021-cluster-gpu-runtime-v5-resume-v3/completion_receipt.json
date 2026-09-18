@@ -1,0 +1,136 @@
+{
+  "receipt_kind": "e021_reranking_resume_completion",
+  "status": "complete",
+  "jobs_sha256": "36f03198d39ec764095d3340ea1f8dc006b941e585245e30bd8e4c14a0a5afdf",
+  "responses_sha256": "d6ad733b0b9a827a085503fc26288f51920ef4e211f8e81ee271fc1de0e35274",
+  "metrics_sha256": "08b96023f25a9a36d8041c4f8ef5341e4927466dfae581a92b9e4156e12e2d1c",
+  "jobs": 2262,
+  "response_history_records": 2426,
+  "latest_valid_response_keys": 2262,
+  "expected_families": [
+    "cosine_bge_m3",
+    "ppr",
+    "lightgcn"
+  ],
+  "expected_questions_per_family": 754,
+  "families": {
+    "cosine_bge_m3": {
+      "status": "complete",
+      "checks": {
+        "job_question_count_matches": true,
+        "metrics_expected_questions_matches": true,
+        "metrics_valid_responses_matches": true,
+        "metrics_missing_questions_zero": true,
+        "metrics_coverage_complete": true,
+        "metrics_status_complete": true,
+        "response_history_has_every_key": true
+      },
+      "valid_response_keys": 754,
+      "missing_questions": 0,
+      "metrics": {
+        "expected_questions": 754,
+        "questions_with_gold": 754,
+        "valid_responses": 754,
+        "missing_questions": 0,
+        "missing_qids": [],
+        "coverage": 1.0,
+        "status": "complete",
+        "metrics": {
+          "recall_at_10": 0.2708885941644562,
+          "official_hit_at_10": 0.2708885941644562,
+          "ndcg_at_10": 0.2202137203940621,
+          "mrr_at_10": 0.20725811544777065,
+          "exact_any_gold_at_10": 0.28249336870026526
+        },
+        "dispersion": {
+          "recall_at_10": 0.43850079642961826,
+          "official_hit_at_10": 0.43850079642961826,
+          "ndcg_at_10": 0.3816775665306084,
+          "mrr_at_10": 0.3777762464492308,
+          "exact_any_gold_at_10": 0.450510869032766
+        },
+        "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+      }
+    },
+    "ppr": {
+      "status": "complete",
+      "checks": {
+        "job_question_count_matches": true,
+        "metrics_expected_questions_matches": true,
+        "metrics_valid_responses_matches": true,
+        "metrics_missing_questions_zero": true,
+        "metrics_coverage_complete": true,
+        "metrics_status_complete": true,
+        "response_history_has_every_key": true
+      },
+      "valid_response_keys": 754,
+      "missing_questions": 0,
+      "metrics": {
+        "expected_questions": 754,
+        "questions_with_gold": 754,
+        "valid_responses": 754,
+        "missing_questions": 0,
+        "missing_qids": [],
+        "coverage": 1.0,
+        "status": "complete",
+        "metrics": {
+          "recall_at_10": 0.276525198938992,
+          "official_hit_at_10": 0.276525198938992,
+          "ndcg_at_10": 0.22805469725764663,
+          "mrr_at_10": 0.21645404404025095,
+          "exact_any_gold_at_10": 0.29045092838196285
+        },
+        "dispersion": {
+          "recall_at_10": 0.44036844946464854,
+          "official_hit_at_10": 0.44036844946464854,
+          "ndcg_at_10": 0.38745535216943944,
+          "mrr_at_10": 0.3847236266135594,
+          "exact_any_gold_at_10": 0.4542718100464252
+        },
+        "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+      }
+    },
+    "lightgcn": {
+      "status": "complete",
+      "checks": {
+        "job_question_count_matches": true,
+        "metrics_expected_questions_matches": true,
+        "metrics_valid_responses_matches": true,
+        "metrics_missing_questions_zero": true,
+        "metrics_coverage_complete": true,
+        "metrics_status_complete": true,
+        "response_history_has_every_key": true
+      },
+      "valid_response_keys": 754,
+      "missing_questions": 0,
+      "metrics": {
+        "expected_questions": 754,
+        "questions_with_gold": 754,
+        "valid_responses": 754,
+        "missing_questions": 0,
+        "missing_qids": [],
+        "coverage": 1.0,
+        "status": "complete",
+        "metrics": {
+          "recall_at_10": 0.29288240495137047,
+          "official_hit_at_10": 0.29288240495137047,
+          "ndcg_at_10": 0.24367187435123838,
+          "mrr_at_10": 0.23235916382468108,
+          "exact_any_gold_at_10": 0.3090185676392573
+        },
+        "dispersion": {
+          "recall_at_10": 0.4476458218115361,
+          "official_hit_at_10": 0.4476458218115361,
+          "ndcg_at_10": 0.3969293744750484,
+          "mrr_at_10": 0.3949335717212527,
+          "exact_any_gold_at_10": 0.46239556624317385
+        },
+        "dispersion_definition": "sample_standard_deviation_over_valid_questions"
+      }
+    }
+  },
+  "resume_manifest_sha256": "a8c76737f99f08c436e1fbc33c1133a7e10ca3a7f854a481666a676319a213ec",
+  "resume_manifest": "/home/ids/kaeppelin-22/legal_knowledge_graph_repro_v1/experiments/reranking-comparable/manifest_cluster_gpu_runtime_v5_resume_v3.json",
+  "generated_at_utc": "2026-08-31T23:40:11.656192+00:00",
+  "finalizer_script_sha256": "73a957396b8f2e7a82bc1db63d5afd0625cf290c6cd6ffd83227e7b9586c327d"
+}

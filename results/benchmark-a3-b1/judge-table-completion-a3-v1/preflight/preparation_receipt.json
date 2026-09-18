@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "model_calls": 0,
+  "reused_clean": 17,
+  "new_conditions": 6,
+  "files": {
+    "reused_evidence_audit.json": "53118c939f9d86cfb3dd0067a959d621bece9afc472ace94d08773f5ece333d8",
+    "judge_table_completion_manifest.json": "a22c65803bf1cb39a9992f563746b6fb26f564e7fc1fc0a704ebab789bd404ee",
+    "missing_conditions.csv": "ca16eb41b8b91a8caf6d1ad9e3b731daf82f3590ed9bd6529d8a06288a3b8cb3"
+  }
+}

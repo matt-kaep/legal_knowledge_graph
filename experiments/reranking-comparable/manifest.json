@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "experiment_id": "E021",
+  "status": "proposed_not_executed",
+  "scientific_status": "exploratoire_non_execute",
+  "purpose": "Apply one frozen reranker to real cosine, PPR, and LightGCN candidate pools.",
+  "dataset_split": "eval_rich_retrievable_strict",
+  "dataset_status": "already_consulted_internal_evaluation",
+  "questions": 754,
+  "k_in": 20,
+  "k_out": 10,
+  "candidate_families": ["cosine_bge_m3", "ppr", "lightgcn"],
+  "reranker": {
+    "model_id": "TO_BE_FROZEN_BEFORE_RUN",
+    "provider": "TO_BE_FROZEN_BEFORE_RUN",
+    "temperature": 0,
+    "prompt": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_v1.txt",
+    "prompt_sha256": "TO_BE_COMPUTED_AFTER_MODEL_AND_PROMPT_FREEZE",
+    "parser": "strict_json_distinct_ids",
+    "tie_break": "candidate_input_order",
+    "retry_policy": "one_retry_only_same_input_and_parameters"
+  },
+  "candidate_pool_contract": {
+    "source_must_be_real": true,
+    "same_questions": true,
+    "same_k_in": true,
+    "same_k_out": true,
+    "no_synthetic_or_cross_family_pool": true,
+    "required_input_sha256_per_question": true
+  },
+  "metrics": {
+    "articles": ["recall_at_10", "ndcg_at_10", "mrr_at_10"],
+    "jp": ["hit_at_10", "ndcg_at_10", "mrr_at_10"],
+    "exact_any_gold_at_10": "diagnostic_only_not_official_hit"
+  },
+  "resume_contract": {
+    "unit": "family/question",
+    "output": "one_jsonl_record_with_input_hash_and_response_hash",
+    "rerun_policy": "resume_only_missing_or_invalid_records"
+  },
+  "execution_gate": {
+    "blocked_until": [
+      "cosine_candidate_pool_K20_is_hashed",
+      "ppr_internal_replay_candidate_pool_K20_exists",
+      "lightgcn_candidate_pool_K20_is_hashed",
+      "provider_and_model_are_frozen",
+      "redistribution_and_data_rights_are_checked"
+    ],
+    "planned_calls": 2262,
+    "cost_note": "Provider cost and token estimate are intentionally not claimed before model/tokenizer freeze."
+  },
+  "outputs": {
+    "jobs": "results/reranking-comparable/E021/jobs.jsonl",
+    "responses": "results/reranking-comparable/E021/responses.jsonl",
+    "rankings": "results/reranking-comparable/E021/rankings.parquet",
+    "metrics": "results/reranking-comparable/E021/metrics.csv",
+    "audit": "results/reranking-comparable/E021/audit.json"
+  }
+}

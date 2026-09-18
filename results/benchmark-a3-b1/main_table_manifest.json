@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "campaign": "B1_A3_G6_paper_ready_v2",
+  "scientific_status": "confirmatory_internal_evaluation_after_train_cv_freeze",
+  "a3_manifest_sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+  "source_metrics_path": "source_g6_metrics_at_10.csv",
+  "source_metrics_sha256": "9569ea74bb3d7fa50ef5fd80cd86cbc8879ec95fb41686ca8a34bdd79f20f7ad",
+  "source_rows": 6,
+  "tables": {
+    "articles": {
+      "path": "main_table_articles.csv",
+      "sha256": "44cb8a4bd81ccc5368cc8f802a242c352076f378100184613a0068159e0b1c9d",
+      "rows": 3
+    },
+    "jurisprudence": {
+      "path": "main_table_jurisprudence.csv",
+      "sha256": "0ad76a437f903c06acd3d4e8cf824939c0aa2813d158e7d4f41369fbe4c875b0",
+      "rows": 3
+    }
+  },
+  "metric_definition": "Hit@10 = |dedup(R_10(q)) intersect Y(q)| / min(|Y(q)|, 10)",
+  "scope": "Main B1/A3 table only. PPR uses its separately frozen train/CV champion per task; LightGCN is the prespecified G6 paper configuration, averaged across seeds 42/43/44."
+}

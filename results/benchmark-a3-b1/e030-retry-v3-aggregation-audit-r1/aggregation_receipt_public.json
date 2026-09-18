@@ -1,0 +1,21 @@
+{
+  "schema_version": "b2-e030-retry-v3-aggregation-audit-public.v1",
+  "experiment_id": "E030",
+  "scientific_status": "exploratory_until_lawyer_audit",
+  "execution_manifest_sha256": "b4bb39dcbfff639f3c2cc5a3aecc637f2ff6475c6f1e17dcf61a91a6472746cd",
+  "aggregation_script_sha256": "34136939cbf388a7baefa96ff1ecf1cae7c5b99b1add2bbdbf25258af2d4dd59",
+  "materialization_adapter_sha256": "1aaf27f0e37c562dc26724c2f076aaa6d5e39be5623724a6c266bfd0293dfcb9",
+  "retry_shards_expected": 17,
+  "retry_shards_complete_clean": 17,
+  "retry_shards_partial_or_missing": 0,
+  "archived_v2_complete_clean_diagnostic_only": 5,
+  "global_conditions_audited": 22,
+  "v2_scores_reused": false,
+  "lightgcn_seed_mean_allowed": true,
+  "campaign_verdict": "retry_complete_clean",
+  "remote_files": {
+    "per_shard_audit.csv": "1f6aa3e6a893ca4841181a341f4c228c1d19d7838e4f276ab56c6f531a0630ad",
+    "lightgcn_seed_mean_scores.csv": "942e35a2c05a3cd5c5b6cb2fd8f0557dee5bee347e2600fa5479c55a791b7f65",
+    "aggregation_receipt.json": "14cfda37fcce41bc4bf9b0e0a49da21b85b3d9ca5517655e4f90be950136d413"
+  }
+}

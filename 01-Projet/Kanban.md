@@ -41,6 +41,12 @@ kanban-plugin: basic
 ## En cours
 
 - [ ] Lire les papiers KG juridique (Belikov, Guha, Li, d'Amato, Colombo, Dhani, Neo4j, Lynx, NyayGraph) #phase-0
+- [ ] ECIR — E029 : audit de contexte K=10..100, puis matrice complète sans troncature #benchmark
+- [ ] ECIR — exporter le graphe complet, distinct du sous-graphe pénal #benchmark
+
+## Bloqué
+
+- [ ] ECIR — E030 : Judge après listes E029 complètes ; scores exploratoires jusqu'à `lawyer_agreement.json` #benchmark
 
 ## Termine
 

@@ -1,0 +1,79 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-k70-article192-output512-preflight-v1-2026-09-09",
+  "campaign_id": "b2-e029-reranking-comparable-a3-k70-article192-output512-v1-2026-09-09",
+  "schema_version": "b2-comparable-reranking-k70-article192-output512-preflight.v1",
+  "experiment_id": "E029",
+  "status": "authorized_cpu_preflight_no_model_call_v2",
+  "purpose": "Create an immutable CPU-only successor preflight after the sealed output-256 execution exposed JSON truncation for long Article identifiers. It reuses exactly the prior frozen question set, candidate pools, prompts and representation, but reserves 512 completion tokens and proves both input-context and completion-budget compatibility before any new model call.",
+  "scientific_status": "preflight_only_no_model_call",
+  "predecessor": {
+    "execution_manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_execution_v1.json",
+    "execution_manifest_sha256": "c9296ceaed851a01ace69e2e2ade42ad35b01dc70107fda21813840b554467c1",
+    "disposition": "archived_interrupted_non_reportable",
+    "reason_for_successor": "The frozen 256-token completion cap truncated valid JSON for long Article identifiers; a conservative candidate-ID audit found 28 output structures above 256 tokens and none above 512."
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754,
+    "retrieval_candidate_universe": {
+      "articles": 13236,
+      "decisions": 114851
+    }
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "snapshot": "/home/ids/kaeppelin-22/.cache/huggingface/hub/models--cyankiwi--gemma-4-26B-A4B-it-AWQ-4bit/snapshots/4033b16200f4152e55e100ea12dc388c537df622",
+    "temperature": 0,
+    "context_limit_tokens": 16384,
+    "max_output_tokens": 512,
+    "snapshot_policy": "offline_exact_revision"
+  },
+  "prompts": {
+    "article": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_articles_b2_v1.txt",
+      "sha256": "b1a52f1e4df1886ee82a90b9b5c48f8fa82fbfe55587dafbc91683253402cc88"
+    },
+    "jp": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/prompts/reranking_comparable_jp_b2_v1.txt",
+      "sha256": "3df17f482d81a14083d29b4187ca40d3813ef6cbaf3be4077243e188cc16ee64"
+    }
+  },
+  "reranking_contract": {
+    "depth_grid": [10, 20, 30, 40, 50, 60, 70],
+    "k_out": 10,
+    "representation": {
+      "article": {"source_field": "texte", "projection": "token_prefix", "token_cap": 192},
+      "jp": {"source_field": "synthese", "projection": "complete_unmodified"}
+    },
+    "unchanged_from_predecessor": ["questions", "candidate_ids", "candidate_text_representation", "prompts", "model_revision", "temperature", "depth_grid", "seeds"],
+    "changed_only": {"max_output_tokens": {"from": 256, "to": 512}}
+  },
+  "code_bundle": {
+    "reranking_runner": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py", "sha256": "3f169dd6b51cdb45323b0185e61215346a3ee95fe3b0a12191bb75b617a1b6dd"},
+    "context_auditor": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_audit_b2_fulltext_context.py", "sha256": "fbbf430f89393d9fba2b23c962b84636ab4e442b3938932ce6eda2314d3854b5"},
+    "completion_auditor": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/112_audit_b2_e029_completion_budget.py", "sha256": "6d9d66ba1ef75748c8c96645ca924e945da98d753a0a6ad336a94231393ad88f"},
+    "context_aggregator": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/105_aggregate_b2_fulltext_context_audits.py", "sha256": "0843cff35177383f8375d32697ce777875d431331c14948eaa6dbcc6f5ab4772"},
+    "preflight_launcher": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/113_prepare_b2_e029_output512_preflight.sh", "sha256": "9e102aeaab8d48942af77e3ee5f70a244911cf76199f8daf9f95d17f17abc3f8"}
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_preflight_v1_20260909",
+    "required": ["audits/cosine.json", "audits/ppr.json", "audits/lightgcn-seed42.json", "audits/lightgcn-seed43.json", "audits/lightgcn-seed44.json", "context_audit.json", "completion_budget_audit.json", "preflight_receipt.json"]
+  },
+  "shards": [
+    {"id": "cosine", "conditions": [{"family": "cosine", "modalities": ["article", "jp"], "depth_grid": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}], "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/cosine.jsonl", "sha256": "1173b12dc8337543a9d3bc0b2b146baca43630bfd1b1d06ccbddd6c4ee8f2b32", "count": 10556}},
+    {"id": "ppr", "conditions": [{"family": "ppr", "modalities": ["article", "jp"], "depth_grid": [10, 20, 30, 40, 50, 60, 70], "replay_seed": null}], "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/ppr.jsonl", "sha256": "664409d8ec3e01bb964ea5b68eacbb8633123e206a8b707bbfc10a54b8c3d7b8", "count": 10556}},
+    {"id": "lightgcn-seed42", "conditions": [{"family": "lightgcn", "modalities": ["article", "jp"], "depth_grid": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 42}], "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/lightgcn-seed42.jsonl", "sha256": "9dea121f2644f22dca6255b56b858fee2c7ccee22675f8b2ea6bab873ce8a8c5", "count": 10556}},
+    {"id": "lightgcn-seed43", "conditions": [{"family": "lightgcn", "modalities": ["article", "jp"], "depth_grid": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 43}], "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/lightgcn-seed43.jsonl", "sha256": "ceedfd8f1e15618445b13e3171b37fab8d73817123bb600c72f2c497474bad11", "count": 10556}},
+    {"id": "lightgcn-seed44", "conditions": [{"family": "lightgcn", "modalities": ["article", "jp"], "depth_grid": [10, 20, 30, 40, 50, 60, 70], "replay_seed": 44}], "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_preflight_v1_20260908/jobs/lightgcn-seed44.jsonl", "sha256": "e7aa2e5a65280baa0795cf92641da867713362ae1ee9f47011d901992a71650f", "count": 10556}}
+  ],
+  "totals": {"shards": 5, "conditions": 70, "questions_per_condition": 754, "model_calls": 52780},
+  "execution_gate": {
+    "model_calls_authorized": false,
+    "required_before_successor_execution_manifest": ["complete preflight receipt", "zero context overflow at output reserve 512", "zero completion-budget overflow at output reserve 512", "new immutable execution root"],
+    "forbidden": ["altering predecessor manifests", "reusing predecessor partial responses", "changing retrieval sources or candidate representation", "LLM-as-a-Judge execution"]
+  }
+}

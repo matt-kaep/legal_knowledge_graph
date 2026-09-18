@@ -1,0 +1,8 @@
+Tu réponds uniquement à la question juridique fournie ci-dessous, sans recherche externe ni justification.
+
+Propose au plus dix identifiants stables de décisions, par ordre de pertinence, mais seulement si tu connais l'identifiant exact. Un identifiant de décision doit être une chaîne hexadécimale minuscule de 24 caractères. Ne fournis ni nom de juridiction, ni date, ni numéro de pourvoi, ni ECLI.
+
+Réponds exclusivement avec un objet JSON conforme à ce schéma, sans bloc Markdown :
+{"references":["614024df7e15a6adfd695a23"]}
+
+Si tu ne connais aucun identifiant exact avec certitude, réponds {"references":[]}.

@@ -1,0 +1,44 @@
+{
+  "manifest_id": "b2-e029-reranking-comparable-a3-materialization-repair-v1-2026-09-08",
+  "campaign_id": "b2-reranking-comparable-a3-materialization-repair-v1-2026-09-08",
+  "schema_version": "b2-comparable-reranking-materialization-repair.v1",
+  "experiment_id": "E029",
+  "status": "authorized_recovery_no_model_calls",
+  "scientific_status": "exploratory_reranking_annex",
+  "purpose": "Recover missing derived artifacts after the immutable E029 GPU jobs completed model calls but failed in the materialize CLI branch. This successor consumes only the frozen jobs and their already-written terminal responses; it must never invoke a model, regenerate a pool, or alter a response.",
+  "predecessor": {
+    "execution_manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_execution_v1.json",
+    "execution_manifest_sha256": "259cff89780dfb4bfa39159cc0f608fdd295c559391858d376149170e8ff8515",
+    "immutable": true,
+    "failure": "The run subcommand completed all HTTP requests then the materialize subcommand raised AttributeError because main() accessed run-only prompt arguments before dispatch.",
+    "failure_phase": "post_inference_materialization",
+    "model_calls_to_make": 0
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3",
+    "evaluation_path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+    "evaluation_sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+    "evaluation_questions": 754
+  },
+  "code_bundle": {
+    "reranking_runner": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/102_run_b2_comparable_reranking.py",
+      "sha256": "6879a92c07df422b631bc8d9f03a3b636e30fbe38b8a5b9b05de27172daac03a",
+      "change": "Construct prompt paths only in prepare/run branches; materialize has no prompt arguments."
+    }
+  },
+  "repair_contract": {
+    "allowed": ["hash frozen jobs and response files", "materialize rankings_top10 and exact metrics from terminal responses", "write new materialization and recovery receipts"],
+    "forbidden": ["any model server", "any HTTP inference call", "response rewrite", "pool regeneration", "text truncation", "candidate substitution", "seed mixing", "configuration selection", "LLM-as-a-Judge"],
+    "output_immutability": "Each shard output directory must be absent before materialization; existing materializations are never overwritten."
+  },
+  "shards": [
+    {"id": "cosine-jp", "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/cosine-jp.jsonl", "sha256": "e626772d282a8a28863b845f9ba1f21dbdfda1ba5fdc2a9a52fba14d339715de", "count": 5278}, "responses": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_reranking_a3_execution_v1_20260908/shards/cosine-jp/responses.jsonl", "sha256": "2e5f2dc06f078cc2cdd9e80f5c65730ee72bd516fd0c04c8574eaf717f28886a", "terminal_count": 5278}},
+    {"id": "ppr", "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/ppr.jsonl", "sha256": "e08421536ae6577449c71b116b1c3523705bfee57bea116ee39b8bbdd51092b5", "count": 6032}, "responses": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_reranking_a3_execution_v1_20260908/shards/ppr/responses.jsonl", "sha256": "5cb2683b89014b45d980e6af6822a02886287bdf5f73c71001b1b5a8694f3f49", "terminal_count": 6032}},
+    {"id": "lightgcn-seed42", "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/lightgcn-seed42.jsonl", "sha256": "afac6f33596656a106245f1fd691b2d6f67d2f2be64b9dbaf435266a9d0b41fd", "count": 6786}, "responses": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_reranking_a3_execution_v1_20260908/shards/lightgcn-seed42/responses.jsonl", "sha256": "eaa7dd6d4595faed0a78332cb7f1b83da4026bdf958ebf85ed2103b7c45d4607", "terminal_count": 6786}},
+    {"id": "lightgcn-seed43", "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/lightgcn-seed43.jsonl", "sha256": "5586959c6a5b7759932961f7ef8bcea1756b12f7dd97d9940679ebe88cc27544", "count": 6786}, "responses": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_reranking_a3_execution_v1_20260908/shards/lightgcn-seed43/responses.jsonl", "sha256": "3e67d6b8f6f0e511c7c2e06cd1960d7ffdcaedbc9b58cb37140901e92cee5a60", "terminal_count": 6786}},
+    {"id": "lightgcn-seed44", "jobs": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_b2_e029_reranking_a3_jobs_v3_20260908/jobs/lightgcn-seed44.jsonl", "sha256": "72cc2497d097a94c42af92cf2fdc6329c9ee70097a2f9910762017c3769189c5", "count": 6786}, "responses": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_reranking_a3_execution_v1_20260908/shards/lightgcn-seed44/responses.jsonl", "sha256": "1eccf3eb2e86fe5e40837a0c2b16223555a77d1b59eb9f6c8fd441dc3239d891", "terminal_count": 6786}}
+  ],
+  "totals": {"shards": 5, "terminal_responses": 31668, "model_calls_to_make": 0}
+}

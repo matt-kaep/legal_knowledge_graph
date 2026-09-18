@@ -1,0 +1,11 @@
+{
+  "manifest_id": "confirmatory-campaign-b1-a3-ppr-scoped-missing-replays-v2-2026-09-08",
+  "campaign_id": "b1-a3-ppr-scoped-missing-replays-v2-2026-09-08",
+  "schema_version": "b1-a3-scoped-ppr-replay.v2",
+  "status": "authorized_successor_after_pre_evaluation_validation_failure",
+  "purpose": "Successor of the empty v1 attempt. It validates the graph through the hash-sealed champions.json parent directory, because the legacy local champion files do not redundantly store graph_version. No result from v1 exists and its output directory remains immutable.",
+  "supersedes": {"manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_ppr_scoped_missing_replays_v1.json", "manifest_sha256": "daaaabe650ab836876d455cf078d31e4d3193d8f0b5fa518fdaea5d354f3b88c", "reason": "v1 stopped before evaluation because it required an absent redundant graph_version field in otherwise hash-sealed local CV champions"},
+  "parent_manifest": {"path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_ppr_scoped_missing_replays_v1.json", "sha256": "daaaabe650ab836876d455cf078d31e4d3193d8f0b5fa518fdaea5d354f3b88c"},
+  "outputs": {"root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_ppr_scoped_missing_replays_v2_20260908"},
+  "code_bundle": {"scoped_replay": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/103_replay_b1_a3_scoped_ppr_v2.py", "sha256": "706b5a67d850b8d9a356274921565cb7a7898647d32664ec97aadbe6ecc21d1a"}, "replay_helper": {"path": "05-Technique/benchmark/etape1_embedding_pur/scripts/45_run_final_champions.py", "sha256": "4dcb1605768cc41370146e9117901d17dc980d83db90540c4e1f35270c39ad66"}}
+}

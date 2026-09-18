@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+
+# Private benchmark inputs and model traces.
+questions*.tsv
+ground_truth*.json
+jp_index*.json
+output/
+output_v1/
+results_final/
+*.log
+run_parallel_*.jsonl
+progress_*.log

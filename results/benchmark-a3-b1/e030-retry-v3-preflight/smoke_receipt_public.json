@@ -1,0 +1,28 @@
+{
+  "schema_version": "b2-e030-v3-smoke-public.v1",
+  "experiment_id": "E030",
+  "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/b2_llm_as_judge_a3_retry_v3_preflight_r1.json",
+  "manifest_sha256": "505e645ec2f1f1dc7950c22d01d09f1b6b27c68c9b02adb7d48e7a7771978d65",
+  "remote_smoke_receipt": {
+    "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e030_a3_retry_v3_r1_20260909/smoke/cosine-article/smoke_receipt.json",
+    "sha256": "6105396bd32e4212f5d3fc563b5e5ac5ab8ea01c01453835a7292a3140de792a"
+  },
+  "slurm": {
+    "job_id": "987291",
+    "state": "COMPLETED",
+    "elapsed": "00:01:57",
+    "node": "node05",
+    "gpu": "NVIDIA A100-PCIE-40GB, 40960 MiB"
+  },
+  "service_identity": {
+    "port": 18403,
+    "listener": "127.0.0.1",
+    "model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "model_revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "served_model_id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit@4033b16200f4152e55e100ea12dc388c537df622",
+    "v1_models_verified": true
+  },
+  "model_calls": 0,
+  "judge_scores": 0,
+  "verdict": "pass_full_retry_still_requires_explicit_authorization"
+}

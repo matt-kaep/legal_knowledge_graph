@@ -1,0 +1,67 @@
+{
+  "experiment_id": "E029",
+  "status": "exploratory_internal_A3",
+  "model_calls": 0,
+  "questions": 754,
+  "rows": 42,
+  "k_in": [
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70
+  ],
+  "k_out": 10,
+  "sources": {
+    "/home/ids/kaeppelin-22/legal_knowledge_graph_e030_v3/results/benchmark-a3-b1/figures/paper-depth-figure-a3-e029-v3/reranking_depth_tidy.csv": "27731e70636902acb147a9f48b27652191ede3f728a44be4f859e4bdcdaf0162",
+    "/home/ids/kaeppelin-22/legal_knowledge_graph_e030_v3/05-Technique/benchmark/etape1_embedding_pur/configs/b2_reranking_comparable_a3_k70_article192_output512_execution_v2.json": "c33f4474aa47224a884eabc7e9f616f7b7b7cd1d6db49113619449dce1522586",
+    "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/aggregate/aggregation_receipt.json": "abdf7471e39c18cf7d68c94399031ca64b489c0ed2f9f6b428eef92b0a470153",
+    "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/aggregate/per_seed_exact_metrics.csv": "7ba99db5b979c56b8685e6bb231231820716b4c8d6f70e9edd7daa77f4f9b8d6",
+    "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/aggregate/seed_mean_exact_metrics.csv": "2fdf5016be10bd2d7116e0f5f02ec78907ae81b18ecd5ed33655a6de055c0a04"
+  },
+  "rankings": {
+    "cosine": {
+      "path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/cosine/materialized/rankings_top10.parquet",
+      "sha256": "654b191a9a45b25e04581c2ebee75d69a5261a5c905cc9fe68e45b08a5256087",
+      "receipt_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/cosine/materialized/materialization_receipt.json",
+      "receipt_sha256": "f85fa3e676bc756b3dda428f0c407ffd611e3042fe1c3e813270cf8952380659",
+      "metrics_sha256": "4e88fc389d91ff71f95162cd71efd2b987317c6b5de708ec540ac48ac5f40cfd"
+    },
+    "ppr": {
+      "path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/ppr/materialized/rankings_top10.parquet",
+      "sha256": "4548450ecc0f6120c60159b890c407b9192a466e390e5f8539e962740e3a8146",
+      "receipt_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/ppr/materialized/materialization_receipt.json",
+      "receipt_sha256": "22a05792432033a6374b548383f8c65babe835f384ea95742d616cf521a83008",
+      "metrics_sha256": "67e106db06699b127aad05ac21f1b76fbd956282d44ae4521bf11376d45cb626"
+    },
+    "lightgcn-seed42": {
+      "path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/lightgcn-seed42/materialized/rankings_top10.parquet",
+      "sha256": "48645be980b6415888b00265b365c6c995ab398b0a8f9804b6a1e3db451ca4da",
+      "receipt_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/lightgcn-seed42/materialized/materialization_receipt.json",
+      "receipt_sha256": "54ee41e194710fc06262f83997ea97aec43dcb12f1f59c66d9db743c2446914d",
+      "metrics_sha256": "0e1c8e435d72282e7adedbb3e0e3001d44d5349fa514f4decc6855ba4c9aa64d"
+    },
+    "lightgcn-seed43": {
+      "path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/lightgcn-seed43/materialized/rankings_top10.parquet",
+      "sha256": "d097b5234baa2c2efd126d51d2332f2f452100e8957d7ac9270cf2c60df460ba",
+      "receipt_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/lightgcn-seed43/materialized/materialization_receipt.json",
+      "receipt_sha256": "7780d71a9485f4f7dd2b47cdb896af8e834a44607b1bdd730aac1790ef539b6a",
+      "metrics_sha256": "2ab16e70610f0ed8772e34ffe8dd7921821499ccd12ecc1a5e0401d69018b45e"
+    },
+    "lightgcn-seed44": {
+      "path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/lightgcn-seed44/materialized/rankings_top10.parquet",
+      "sha256": "d5a7cdc933b6a2c365252719dd12f2e62acba81f31466842cdf7489aa138a300",
+      "receipt_path": "/home/ids/kaeppelin-22/legal_knowledge_graph_b1_a3_data/05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b2_e029_a3_k70_article192_output512_execution_v2_20260909/shards/lightgcn-seed44/materialized/materialization_receipt.json",
+      "receipt_sha256": "1c28abaed59600deeb55053f315def1cdf758f7c7e8ef968df36e42cfe76534b",
+      "metrics_sha256": "e574be10098c654faa837a938acf62f1dda2046e1ba619bce7c55e9f33b0b853"
+    }
+  },
+  "files": {
+    "reranking_depth.csv": "8f00ba78e88c1b222fcee9061addbee442b5fdd4cf05fb050cdfd7fb437faf1a"
+  },
+  "script_sha256": "24e4e4b723814aa750ba36bf783770bfb96a23e83166f43b17b9467a3e1adb84",
+  "aggregation": "Arithmetic mean of independently evaluated seeds 42,43,44 for LightGCN only.",
+  "ppr_jp": "G6-AA reranking pools and their own raw baseline; not G7-AA from the main retrieval table."
+}

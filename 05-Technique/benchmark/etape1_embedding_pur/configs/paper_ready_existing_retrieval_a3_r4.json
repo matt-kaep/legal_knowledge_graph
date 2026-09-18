@@ -1,0 +1,89 @@
+{
+  "manifest_id": "paper-ready-existing-retrieval-a3-r4-2026-09-08",
+  "campaign_id": "b1-paper-ready-existing-retrieval-a3-r4-2026-09-08",
+  "schema_version": "paper-ready-existing-retrieval.v4",
+  "status": "frozen_authorized_derivation_from_frozen_rankings",
+  "purpose": "Derive paper-ready exact retrieval metrics and Hit@K curves from the already validated A3 cosine and frozen PPR top-100 rankings. This successor preserves r3 as an immutable historical derivation and records the current derivation script hash. It performs no model training, hyperparameter selection, retrieval, or evaluation access beyond deterministic scoring of frozen rankings.",
+  "scientific_status": "confirmatory_internal_evaluation_after_train_cv_freeze",
+  "supersedes": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/paper_ready_existing_retrieval_a3_r3.json",
+    "manifest_sha256": "670f44bfcf10ba6460678632ecd9fde0349d3eca0062b38c2b51d98606e9c83f",
+    "reason": "r3 and its outputs remain immutable evidence of the historical derivation. r4 uses the same frozen inputs and metric contract, but pins the current derivation script after the plotting-dependency preflight was added."
+  },
+  "a3": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/benchmark_freeze_no_eval_overlap_effective_retrieval_a3.json",
+    "manifest_id": "checkpoint-a3-effective-retrieval-universe-2026-09-02",
+    "sha256": "c4dda4279fa33fd15970cf78d10dd22a9456afb6f15d2831e5d8e9f73bbc14b3"
+  },
+  "source_campaign": {
+    "manifest_path": "05-Technique/benchmark/etape1_embedding_pur/configs/confirmatory_campaign_b1_a3_r1.json",
+    "manifest_sha256": "1b612a182742244dad59006e6d01b826a0285f01123aeeae67321b48c9de5e9a",
+    "immutable": true,
+    "historical_experiments_excluded": ["E017", "E021", "E022"]
+  },
+  "datasets": {
+    "evaluation": {
+      "split": "eval_rich_retrievable_strict",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/eval_rich_retrievable_strict/bench_global.json",
+      "questions": 754,
+      "sha256": "850adae1e411cd83e637ea86061aa742b3c4cd166ad3262ed6a2b8c10b9f5d59",
+      "byte_for_byte_identical_to_a3": true
+    }
+  },
+  "candidate_universe": {
+    "articles": {
+      "count": 13236,
+      "order_sha256": "c312dfaaa91a61fca49def5b4489b5b1443894f522c20b06b482276af4e0844c"
+    },
+    "jurisprudence": {
+      "count": 114851,
+      "order_sha256": "065c42517513d7cbf7f050d2b310d7d274b24067bd47db771395816590718b1a"
+    }
+  },
+  "candidate_inputs": {
+    "articles_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/articles_order_all.npy", "sha256": "06f5551d6a38f8f7887d760461b7f7460b2e738e062a8bed4b9c598b34c0fbb0"},
+    "jurisprudence_order": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/jp_summary_order.npy", "sha256": "985e83bfbee610117fcf8873b8a58eb61ffd1e35bf1423f95985a375a3012c5b"},
+    "shared_article_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/article_ids.npy", "sha256": "d58a51575b1b3a525b9162977b367b970e1dff3b52a249fb6322eb5c2f73392a"},
+    "shared_jp_ids": {"path": "05-Technique/benchmark/etape1_embedding_pur/data/hybrid_graphs/G6-citation-AA-knn5/jp_ids.npy", "sha256": "7bb8914b63762bb04b107634688315a437970684e11695c7a754dcb2b2a1fa4f"}
+  },
+  "frozen_rankings": {
+    "cosine": {
+      "method": "cosine_bge_m3",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/cosine/rankings.parquet",
+      "sha256": "7de0504d5e7a7a7caef303d0beb8019c28faac7dec1f38997e581ca782597334",
+      "questions_per_target": 754,
+      "top_k": 100
+    },
+    "ppr": {
+      "method": "ppr_train_cv_frozen_champions",
+      "path": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_effective_retrieval_r1_20260902/ppr_final/ppr_rankings_top100.parquet",
+      "sha256": "8f15c4d3e1ba465af7030e24f0e78772cae776fe8f12f5020f578d600964a938",
+      "questions_per_target": 754,
+      "top_k": 100,
+      "frozen_selection": {
+        "selection_data": "train_cv_only",
+        "articles": "G6-citation-AA-knn5 / PPR-sweep-k50-both-a0.5",
+        "jurisprudence": "G7-citation-AA-cit1-sem025-knn5 / PPR-sweep-k50-both-a0.5"
+      }
+    }
+  },
+  "metrics": {
+    "primary": "normalized_hit_at_k",
+    "formula": "Hit@K = |dedup(R_K) intersect Y| / min(|Y|, K)",
+    "range": [1, 100],
+    "secondary": ["ndcg_at_10", "mrr_at_10"],
+    "forbidden_alias": "exact_any_gold_at_10",
+    "article_hit_equals_recall_at_10": true,
+    "depth_curve_dispersion": "standard_deviation_across_seed_means_after_per_question_aggregation"
+  },
+  "outputs": {
+    "root": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_existing_retrieval_r4_20260908",
+    "depth_curves": "05-Technique/benchmark/etape1_embedding_pur/data/doctrine_v3plus_bench/_campaign_b1_a3_paper_ready_existing_retrieval_r4_20260908/depth_curves"
+  },
+  "code_bundle": {
+    "depth_curves": {
+      "path": "05-Technique/benchmark/etape1_embedding_pur/scripts/97_build_b1_depth_curves.py",
+      "sha256": "6ed1c895c29d262d2bea9a2a518e1b03ce4a1ca3960d4627d93bac7b77dedd20"
+    }
+  }
+}
